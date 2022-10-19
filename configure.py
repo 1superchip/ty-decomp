@@ -14,7 +14,11 @@ from typing import List, Tuple
 import pprint
 from tools.ppcdis.ppcdis.fileutil import load_from_yaml # needed for flag overrides
 
-#pprint.pprint(vars())
+import yaml
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
 
 from ninja_syntax import Writer
 
@@ -71,7 +75,6 @@ os.makedirs(c.BUILDDIR, exist_ok=True)
 
 n.variable("python", c.PYTHON)
 n.variable("ppcdis", c.PPCDIS)
-n.variable("relextern", c.RELEXTERN)
 n.variable("analyser", c.ANALYSER)
 n.variable("disassembler", c.DISASSEMBLER)
 n.variable("orderstrings", c.ORDERSTRINGS)

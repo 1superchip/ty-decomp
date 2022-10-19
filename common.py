@@ -181,7 +181,6 @@ ASSETS = "assets"
 # ppcdis
 PPCDIS = "tools/ppcdis"
 PPCDIS_INCDIR = f"{PPCDIS}/include"
-RELEXTERN = f"{PYTHON} {PPCDIS}/relextern.py"
 ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
 ORDERSTRINGS = f"{PYTHON} {PPCDIS}/orderstrings.py"
@@ -190,7 +189,6 @@ ASSETRIP = f"{PYTHON} {PPCDIS}/assetrip.py"
 ASSETINC = f"{PYTHON} {PPCDIS}/assetinc.py"
 FORCEFILESGEN = f"{PYTHON} {PPCDIS}/forcefilesgen.py"
 ELF2DOL = f"{PYTHON} {PPCDIS}/elf2dol.py"
-ELF2REL = f"{PYTHON} {PPCDIS}/elf2rel.py"
 SLICES = f"{PYTHON} {PPCDIS}/slices.py"
 PROGRESS = f"{PYTHON} {PPCDIS}/progress.py"
 SYMBOLS = f"{PYTHON} {PPCDIS}/symbols.py"
@@ -288,15 +286,6 @@ CFLAGS = [
 ]
 
 BASE_DOL_CFLAGS = CFLAGS
-""" + [
-    "-inline deferred",
-    "-sdata 4",
-    f"-sdata2 {DOL_SDATA2_SIZE}"
-]"""
-
-DATAVAL_CFLAGS = CFLAGS + [
-    "-pool off"
-]
 
 LOCAL_CFLAGS = [
     "-proc gekko",

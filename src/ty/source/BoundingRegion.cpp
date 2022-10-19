@@ -38,7 +38,6 @@ bool BoundingRegion::ArePointsWithinAndAdjacent(Vector* pPoint, Vector* pPoint1)
 }
 
 bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
-    //Vector* pLastVector;
     Vector* pLastVector = (pSegment->points + pSegment->count) - 1;
     Vector* pPoints = pSegment->points;
     

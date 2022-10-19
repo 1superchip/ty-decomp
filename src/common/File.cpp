@@ -5,11 +5,6 @@
 
 #define MAX_FILES 8
 
-
-// this was placed in "src/common/ps2/" for the ps2 build
-// placing this in "src/common/" for now
-// 15 files that are known were placed in "src/common/ps2" for the ps2 build
-
 FileEntry gcFiles[MAX_FILES];
 
 extern "C" void memset(void*, char, int);
