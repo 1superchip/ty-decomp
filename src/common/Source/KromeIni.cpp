@@ -9,25 +9,6 @@ extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" int sscanf(const char*, const char*, ...);
 
-// this function was inlined everytime
-// declared in the header?
-/*inline KromeIniLine* KromeIni::GetNextLine(void) {
-    KromeIniLine* line;
-    if (pFileMem == NULL) {
-        line = NULL;
-    } else {
-        if (unk34 < nmbrOfLines) {
-            unk34++;
-        }
-        if (unk34 < nmbrOfLines) {
-            line = &pLines[unk34];
-        } else {
-            line = NULL;
-        }
-    }
-    return line;
-}*/
-
 // https://decomp.me/scratch/JYbFf
 bool KromeIni::Init(char* pName) {
     unk34 = 0;

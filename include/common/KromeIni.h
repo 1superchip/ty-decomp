@@ -22,7 +22,7 @@ struct KromeIni {
     int unk38; // count for "[]" sections
 	
 	inline KromeIniLine* GetNextLine(void);
-	bool Init(char*); // bool?
+	bool Init(char*);
 	void ParseData(void);
     void Deinit(void);
 	KromeIniLine* GotoLine(char*, char*);
@@ -67,6 +67,6 @@ struct Parser {
     bool IsComment(void);
     bool IsName(void);
     void SkipData(void);
-    void SkipSpaces(void); // returns a bool?
+    void SkipSpaces(void); // returns a bool
     void ResetCurrLine(void);
 };

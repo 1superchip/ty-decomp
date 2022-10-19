@@ -5,6 +5,7 @@ build/
 expected
 out/
 asm/
+pickles/
 disasm.txt
 *.dol
 *.rel
