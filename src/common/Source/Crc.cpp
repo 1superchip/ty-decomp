@@ -7,7 +7,6 @@ bool crcTableComputed;
 // .bss
 int crcTable[0x100];
 
-// exists in Ty 3 and Spyro
 void Crc_MakeTable(void) {
     uint c;
     if (crcTableComputed == false) {
@@ -28,8 +27,6 @@ void Crc_MakeTable(void) {
     }
 }
 
-//https://decomp.me/scratch/IcQXq
-// is this Crc_Update__FUiPCvi?
 inline u32 makeCrcTable(const u8* buf, int len) {
     u32 crc = 0xffffffff;
 	Crc_MakeTable();

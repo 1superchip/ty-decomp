@@ -323,7 +323,6 @@ int LanguageSortCompare(const void* arg0, const void* arg1) {
     return pEntry1->shorts[0] - pEntry->shorts[0];
 }
 
-// https://decomp.me/scratch/J5MAj
 void FileSys_OutputFileOrder(void) {
     void* sortedEntries = Heap_MemAlloc(data.nmbrOfEntries << 2);
     char* stringBuf = (char*)Heap_MemAlloc(0x2200);

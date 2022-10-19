@@ -1,8 +1,5 @@
 #include "common/StdMath.h"
 
-// several inlines in this file?
-// inlines to get the next seed??
-
 // move 0.0f to the beginning of .sdata2
 bool Orderfloats(float x) {
 	return x < 0.0f;
@@ -225,7 +222,6 @@ inline int GetInt(float x) {
 }
 
 // check param names
-// https://decomp.me/scratch/cDU3N
 int RandomIR(int* pSeed, int min, int max) {
     int temp_r7;
     int curr;
@@ -240,7 +236,6 @@ int RandomIR(int* pSeed, int min, int max) {
     return min + (curr % temp_r7);
 }
 
-// https://decomp.me/scratch/cBHG3
 int RandomI(int *pSeed) {
     int curr;
 	// fix?
@@ -248,7 +243,6 @@ int RandomI(int *pSeed) {
     return (curr >> 8) & 0xFFFFFF;
 }
 
-// https://decomp.me/scratch/I8KKm
 // uses a common union as _table_sinf?
 float RandomFR(int* pSeed, float min, float max) {
     int sp8;
@@ -261,7 +255,6 @@ float RandomFR(int* pSeed, float min, float max) {
     return min + num * (max - min);
 }
 
-// https://decomp.me/scratch/RfM32
 float _table_sinf(float arg0) {
     float sp8;
     float temp_f6;
@@ -279,7 +272,6 @@ float _table_sinf(float arg0) {
     return data.xf;
 }
 
-// https://decomp.me/scratch/eaMxQ
 float NormaliseAngle(float angle) {
     float temp_f5;
     float var_f1;

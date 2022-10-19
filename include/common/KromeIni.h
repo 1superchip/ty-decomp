@@ -1,17 +1,4 @@
 
-
-
-/*
-section = unk4/name?
-field = unk8?
-data = unkC?
-comment = unk0?
-*/
-
-
-// elementCount
-// pos = -2989, 240, 8238 // 3 elements: {-2989, 240, 8238}
-// effect = 0,none // 2 elements: {0, none}
 struct KromeIniLine {
     char* comment;
     char* section;

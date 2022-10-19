@@ -23,7 +23,6 @@ inline float sqrtf(float x)
 	return x;
 }
 
-// from Kinematics.h
 inline float kin_sqrtf(float x) {
     static const double _half=.5;
 	static const double _three=3.0;

@@ -36,9 +36,7 @@ void DirectLight::Set(Vector* pLightArray) {
     RecalcMatrices();
 }
 
-// https://decomp.me/scratch/BZmR0
 void DirectLight::SetLight(int lightIndex, Vector* pLight, Vector* pColour) {
-	// line 183?
     lightArray[lightIndex].Normalise(pLight);
     lightArray[lightIndex + 3] = *pColour;
     RecalcMatrices();

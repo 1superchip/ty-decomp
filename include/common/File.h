@@ -15,7 +15,7 @@ struct FileEntry {
     int unk54;
 };
 
-// default struct to compile
+// put these structs in proper files
 
 typedef struct
 {
@@ -68,5 +68,5 @@ int File_Length(char*);
 char* File_FileServerFilename(char*);
 int File_Sync(int, int);
 bool File_IsAnyBusy(void);
-char* File_FileServerOutputFilename(char*); // may return a char* (returns param_1)
+char* File_FileServerOutputFilename(char*);
 int File_Write(int, void*, int);

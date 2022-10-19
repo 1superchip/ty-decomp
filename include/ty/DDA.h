@@ -58,7 +58,7 @@ struct DDAUnk18 {
     u16 unk24;
     u16 unk26;
     u16 unk28;
-    u8 damageCause; //  unk2A
+    u8 damageCause;
     u8 unk2B;
     u8 unk2C;
     u8 unk2D;

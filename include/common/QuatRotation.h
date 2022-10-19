@@ -1,10 +1,6 @@
 #include "types.h"
 #include "common/StdMath.h" // _table_sinf
 
-//need to decomp vector
-
-//QuatRotation::ConvertRotation(AxisRotation*)
-
 struct AxisRotation {
     Vector rot;
     float unkC;

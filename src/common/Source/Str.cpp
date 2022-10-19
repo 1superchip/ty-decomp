@@ -12,7 +12,6 @@ int bufferIndex;
 
 extern "C" int strlen(char*);
 
-// https://decomp.me/scratch/DXZ38
 char* Str_Printf(char* str, ...) {
     char* currStr = &buffer[bufferIndex];
     va_list args;
@@ -29,7 +28,6 @@ char* Str_Printf(char* str, ...) {
     return currStr;
 }
 
-// https://decomp.me/scratch/xHplT
 char* Str_CopyString(char* string, int len) {
     char* bufString = &buffer[bufferIndex];
     int idx = 0;
@@ -49,7 +47,6 @@ char* Str_CopyString(char* string, int len) {
     return bufString;
 }
 
-// https://decomp.me/scratch/ZXsLN
 char* Str_FindChar(char* str, int val) {
     while(*str != 0) {
         if (*str == val) {

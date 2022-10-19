@@ -123,7 +123,7 @@ struct Model {
             u8 b7 : 1;
         } bits;
         u8 flagData;
-    } flags; // how would have this been written?
+    } flags;
 	Vector colour;
 	Matrix matrices[1]; // Model has at least 1 matrix in it, more are allocated
 	
@@ -146,7 +146,7 @@ struct Model {
 	int GetSubObjectIndex(char*);
 	int GetSubObjectMatrixIndex(int);
 	Vector* GetSubObjectOrigin(int);
-	static void List(void); // doesn't take `this`
+	static void List(void);
 	void GetCentre(Vector*);
 	int GetNmbrOfMatrices(void);
 	int GetNmbrOfSubObjects(void);

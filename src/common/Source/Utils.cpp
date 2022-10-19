@@ -8,8 +8,6 @@ int strnicmp(const char*, const char*, int);
 int gEmptyPtrList[2] = {0x00000000, 0x00000000};
 int gEmptyPtrListDL[2] = {0x00000000, 0x00000000};
 
-// https://decomp.me/scratch/h7q99
-// TODO name variables
 void* Util_BinarySearch(void *arg0, void *arg1, int arg2, int arg3, int (*compareFunc)(void *, void *)) {
 	s32 temp_r3;
 	s32 var_r31;
@@ -35,9 +33,6 @@ void* Util_BinarySearch(void *arg0, void *arg1, int arg2, int arg3, int (*compar
 	return 0;
 }
 
-
-
-// https://decomp.me/scratch/PlXwN
 bool Util_WildcardPatternMatch(char *str, char *pattern) {
     u8 var_r26;
     char *temp_r4;
