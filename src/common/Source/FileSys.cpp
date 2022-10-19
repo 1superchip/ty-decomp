@@ -13,17 +13,16 @@ extern "C" char* strstr(char*, char*);
 extern "C" void qsort(void*, int, int, int (*compar)(const void*,const void*));
 char* System_GetCommandLineParameter(char*);
 
-// inline "GetEntry"?
 // TODO clean up RkvFileEntry
 
 // .bss
-RkvTOC data;
-RkvTOC patch;
+static RkvTOC data;
+static RkvTOC patch;
 
 // .sbss
-void* (*pLoadInterceptHandler)(char*, int*, void*, int*);
-u8 (*pExistInterceptHandler)(char*, int*, int);
-s16 fileOrderId;
+static void* (*pLoadInterceptHandler)(char*, int*, void*, int*);
+static u8 (*pExistInterceptHandler)(char*, int*, int);
+static s16 fileOrderId;
 
 // for RkvTOC
 template <typename T> 
@@ -45,7 +44,7 @@ void FileSys_Update(void) {
 	return;
 }
 
-int EntryCompare(void* arg0, void* arg1) {
+static int EntryCompare(void* arg0, void* arg1) {
 	return stricmp((char*)arg0, (char*)arg1);
 }
 
@@ -236,7 +235,6 @@ void FileSys_SetOrder(RkvFileEntry *pEntry) {
     }
 }
 
-// https://decomp.me/scratch/3kTyR
 void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int memsize) {
     int foundFd = -1;
     RkvFileEntry *pEntry = 0;
@@ -307,14 +305,14 @@ int FileSys_Save(char* name, bool arg1, void* arg2, int arg3) {
 }
 
 // local
-int FileOrderSortCompare(const void* arg0, const void* arg1) {
+static int FileOrderSortCompare(const void* arg0, const void* arg1) {
     RkvFileEntry* pEntry1 = *(RkvFileEntry**)arg0;
     RkvFileEntry* pEntry = *(RkvFileEntry**)arg1;
     return pEntry1->shorts[0] - pEntry->shorts[0];
 }
 
 // local
-int LanguageSortCompare(const void* arg0, const void* arg1) {
+static int LanguageSortCompare(const void* arg0, const void* arg1) {
     RkvFileEntry* pEntry1 = *(RkvFileEntry**)arg0;
     RkvFileEntry* pEntry = *(RkvFileEntry**)arg1;
     if ((pEntry1->shorts[1] - pEntry->shorts[1]) != 0) {

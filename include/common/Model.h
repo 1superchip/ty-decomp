@@ -60,7 +60,7 @@ struct Vertex {
 struct SubObjectMaterial {
 	union {
 		char* pMaterialName;
-		Material* pMaterial; // Material_GC.h?
+		Material* pMaterial;
 	};
 	void* pStripData;
 	u16 maxOffset;
@@ -129,7 +129,7 @@ struct Model {
 	
 	static Model* Create(char*, char*);
 	void Destroy(void);
-	static void Purge(void); // doesn't take `this`?
+	static void Purge(void);
 	void SetPosition(Vector*);
 	void SetRotation(Vector*);
 	void SetAnimation(Animation*);

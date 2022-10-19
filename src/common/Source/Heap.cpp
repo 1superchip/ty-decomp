@@ -6,8 +6,8 @@ extern "C" int OSGetConsoleSimulatedMemSize(void);
 extern "C" void printf(char*, ...);
 extern "C" void exit(int);
 
-// .sbss
-bool heapInitialised;
+
+static bool heapInitialised;
 
 void Heap_InitModule(int arg0) {
 	heapInitialised = true;

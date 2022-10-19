@@ -30,7 +30,7 @@ struct RkvTOC {
 void FileSys_InitModule(void);
 void FileSys_DeinitModule(void);
 void FileSys_Update(void);
-int EntryCompare(void*, void*);
+static int EntryCompare(void*, void*);
 void* FileSys_SetLoadInterceptHandler(void* (*)(char*, int*, void*, int*));
 bool FileSys_Exists(char*, int*);
 void* FileSys_Load(char*, int*, void*, int);

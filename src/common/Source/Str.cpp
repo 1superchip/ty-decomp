@@ -1,16 +1,15 @@
 #include "common/Str.h"
 
-// .bss
-char buffer[STR_BUFFER_SIZE];
+static char buffer[STR_BUFFER_SIZE];
 
-// .sdata
 char gNullStr[] = "";
 
-// .sbss
 bool gAssertBool;
-int bufferIndex;
+static int bufferIndex;
 
 extern "C" int strlen(char*);
+
+// add the bufferIndex inline
 
 char* Str_Printf(char* str, ...) {
     char* currStr = &buffer[bufferIndex];
@@ -20,7 +19,7 @@ char* Str_Printf(char* str, ...) {
     vsprintf(currStr, str, args);
     
     int len = strlen(currStr);
-    bufferIndex += (len + 0x10) & 0xFFFFFFF0; // think this is rounding
+    bufferIndex += (len + 0x10) & 0xFFFFFFF0;
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }
@@ -38,8 +37,7 @@ char* Str_CopyString(char* string, int len) {
     }
 
     bufString[idx] = 0;
-    bufferIndex += (idx + 0x10) & 0xFFFFFFF0; // think this is rounding
-
+    bufferIndex += (idx + 0x10) & 0xFFFFFFF0;
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }

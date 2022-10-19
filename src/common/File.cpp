@@ -5,7 +5,7 @@
 
 #define MAX_FILES 8
 
-FileEntry gcFiles[MAX_FILES];
+static FileEntry gcFiles[MAX_FILES];
 
 extern "C" void memset(void*, char, int);
 extern "C" void memmove(void*, void*, int);
@@ -103,7 +103,7 @@ int File_Read(int fd, void* arg1, int arg2, int arg3) {
                 entry->unk40 = arg1;
             }
             gcFiles[fd].unk50 = 3;
-            Heap_Check("File.cpp", 0xce); // line 206
+            Heap_Check("File.cpp", 0xce);
             int readPrioCode = DVDReadAsyncPrio((DVDFileInfo*)entry, entry->unk44, alignedSize, entry->unk48, entry->callback, 2);
             Heap_Check("File.cpp", 0xd0);
             if (readPrioCode != 0) {

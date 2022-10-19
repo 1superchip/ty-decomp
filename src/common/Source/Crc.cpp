@@ -2,10 +2,10 @@
 #include "common/Crc.h"
 
 // .sbss
-bool crcTableComputed;
+static bool crcTableComputed;
 
 // .bss
-int crcTable[0x100];
+static int crcTable[0x100];
 
 void Crc_MakeTable(void) {
     uint c;
