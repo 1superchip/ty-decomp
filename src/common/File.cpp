@@ -17,8 +17,8 @@ volatile u32 BUS_SPEED : 0x800000f8;
 extern "C" int DVDReadPrio(DVDFileInfo*, void*, int, int, int);
 extern "C" BOOL DVDReadAsyncPrio(DVDFileInfo *, void *, int length, int offset, uint callback, int prio);
 extern "C" int DVDClose(void*);
-extern "C" int DVDOpen(char*, void*);                            /* extern */
-extern "C" void strcpy(char*, char*);                                 /* extern */
+extern "C" int DVDOpen(char*, void*);
+extern "C" void strcpy(char*, char*);
 
 void File_InitModule(void) {
     int i = 0;
@@ -29,7 +29,6 @@ void File_InitModule(void) {
     }
 }
 
-// https://decomp.me/scratch/yP9L0
 int File_Open(char* filepath, int openMode) {
     int fd = 0;
     for (; fd < MAX_FILES; fd++) {
@@ -65,7 +64,6 @@ int File_Open(char* filepath, int openMode) {
     return fd;
 }
 
-// https://decomp.me/scratch/Xh8i9
 int File_Close(int fd) {
     if (gcFiles[fd].unk48 != -1) {
         int closeCode = DVDClose((void*)&gcFiles[fd]);
@@ -77,7 +75,6 @@ int File_Close(int fd) {
     return -1;
 }
 
-// https://decomp.me/scratch/XAqSM
 int File_Read(int fd, void* arg1, int arg2, int arg3) {
     int alignedSize = (arg2 + 0x1f) & ~0x1f;
     FileEntry* entry = &gcFiles[fd];
@@ -116,7 +113,6 @@ int File_Read(int fd, void* arg1, int arg2, int arg3) {
     return -1;
 }
 
-// https://decomp.me/scratch/m9XvZ
 void File_ReadCallback(long arg0, DVDFileInfo* arg1) {
     int data = (int)arg1->cb.userData;
     if (DVDGetCommandBlockStatus((DVDFileInfo*)&gcFiles[data]) == 0) {
@@ -124,7 +120,6 @@ void File_ReadCallback(long arg0, DVDFileInfo* arg1) {
     }
 }
 
-// https://decomp.me/scratch/TCRag
 void* File_Seek(int fd, int arg1, int arg2) {
     switch(arg2) {
         case 0:
@@ -141,7 +136,6 @@ void* File_Seek(int fd, int arg1, int arg2) {
     return (void*)gcFiles[fd].unk48;
 }
 
-// https://decomp.me/scratch/D9wny
 int File_Length(char* filename) {
     int fd = File_Open(filename, 0);
     int length = -1;
@@ -164,7 +158,6 @@ char* File_FileServerFilename(char* pFilename) {
 	return pFilename;
 }
 
-// https://decomp.me/scratch/lXVMK
 int File_Sync(int fd, int arg1) {
     if (gcFiles[fd].unk48 == -1 || gcFiles[fd].callback == 0) {
         return 0;
