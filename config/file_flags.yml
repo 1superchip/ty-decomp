@@ -1,0 +1,7 @@
+
+
+# any files that have extra flags are placed here with the flags
+# these flags will be added to the default flags
+
+ty/source/DataVal.cpp:
+    .flags: "-pool off"

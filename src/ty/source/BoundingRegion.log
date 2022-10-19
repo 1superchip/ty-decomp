@@ -1,0 +1,636 @@
+Starting function IsWithin
+--------------------------------------------------------------------------------
+Removing unreachable code at: 4
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 20
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function IsPointInBoundaryRect
+--------------------------------------------------------------------------------
+Removing unreachable code at: 10
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 36
+Found propagatable expression assignment at: 56
+Found propagatable expression assignment at: 76
+Found propagatable expression assignment at: 83
+Found expression propagation at 91 from 83
+Removing dead assignment 83
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Replacing common sub at 30 with 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 41
+Found propagatable expression assignment at: 61
+Found propagatable expression assignment at: 81
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function Init
+--------------------------------------------------------------------------------
+Removing unreachable code at: 1
+*****************
+Dumps for pass=0
+*****************
+*****************
+Dumps for pass=1
+*****************
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function IsPointWithin
+--------------------------------------------------------------------------------
+Removing unreachable code at: 12
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Found propagatable assignment at: 95
+Found propagation at 97 from 95
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 36
+Found propagatable expression assignment at: 56
+Found propagatable expression assignment at: 76
+Found propagatable expression assignment at: 83
+Found propagatable expression assignment at: 90
+Found propagatable expression assignment at: 95
+Found expression propagation at 136 from 83
+Found expression propagation at 92 from 90
+Found expression propagation at 97 from 90
+Removing dead assignment 83
+Removing dead assignment 95
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Replacing common sub at 30 with 20
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 41
+Found propagatable expression assignment at: 61
+Found propagatable expression assignment at: 81
+Found propagatable expression assignment at: 98
+Found expression propagation at 143 from 98
+Removing dead assignment 98
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 41
+Found propagatable assignment at: 61
+Found propagatable assignment at: 81
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function ArePointsWithinAndAdjacent
+--------------------------------------------------------------------------------
+Removing unreachable code at: 22
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Found propagatable assignment at: 95
+Found propagatable assignment at: 107
+Found propagatable assignment at: 111
+Found propagatable assignment at: 115
+Found propagatable assignment at: 139
+Found propagatable assignment at: 159
+Found propagatable assignment at: 179
+Found propagatable assignment at: 198
+Found propagation at 97 from 95
+Found propagation at 200 from 198
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 36
+Found propagatable expression assignment at: 56
+Found propagatable expression assignment at: 76
+Found propagatable expression assignment at: 83
+Found propagatable expression assignment at: 90
+Found propagatable expression assignment at: 95
+Found expression propagation at 223 from 83
+Found expression propagation at 92 from 90
+Found expression propagation at 97 from 90
+Found propagatable expression assignment at: 107
+Found propagatable expression assignment at: 111
+Found propagatable expression assignment at: 115
+Found propagatable expression assignment at: 139
+Found propagatable expression assignment at: 159
+Found propagatable expression assignment at: 179
+Found propagatable expression assignment at: 186
+Found propagatable expression assignment at: 193
+Found propagatable expression assignment at: 198
+Found expression propagation at 226 from 186
+Found expression propagation at 195 from 193
+Found expression propagation at 200 from 193
+Removing dead assignment 83
+Removing dead assignment 95
+Removing dead assignment 186
+Removing dead assignment 198
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 36
+Found propagatable assignment at: 56
+Found propagatable assignment at: 76
+Found propagatable assignment at: 110
+Found propagatable assignment at: 114
+Found propagatable assignment at: 118
+Found propagatable assignment at: 142
+Found propagatable assignment at: 162
+Found propagatable assignment at: 182
+Replacing common sub at 30 with 20
+Replacing common sub at 123 with 17
+Replacing common sub at 136 with 126
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 44
+Found propagatable assignment at: 64
+Found propagatable assignment at: 84
+Found propagatable assignment at: 118
+Found propagatable assignment at: 122
+Found propagatable assignment at: 126
+Found propagatable assignment at: 157
+Found propagatable assignment at: 177
+Found propagatable assignment at: 197
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 44
+Found propagatable assignment at: 64
+Found propagatable assignment at: 84
+Found propagatable assignment at: 118
+Found propagatable assignment at: 122
+Found propagatable assignment at: 126
+Found propagatable assignment at: 157
+Found propagatable assignment at: 177
+Found propagatable assignment at: 197
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 12
+Found propagatable expression assignment at: 44
+Found propagatable expression assignment at: 64
+Found propagatable expression assignment at: 84
+Found propagatable expression assignment at: 101
+Found expression propagation at 243 from 101
+Found propagatable expression assignment at: 118
+Found propagatable expression assignment at: 122
+Found propagatable expression assignment at: 126
+Found propagatable expression assignment at: 157
+Found propagatable expression assignment at: 177
+Found propagatable expression assignment at: 197
+Found propagatable expression assignment at: 214
+Found expression propagation at 248 from 214
+Removing dead assignment 101
+Removing dead assignment 214
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 44
+Found propagatable assignment at: 64
+Found propagatable assignment at: 84
+Found propagatable assignment at: 123
+Found propagatable assignment at: 127
+Found propagatable assignment at: 131
+Found propagatable assignment at: 162
+Found propagatable assignment at: 182
+Found propagatable assignment at: 202
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 12
+Found propagatable assignment at: 44
+Found propagatable assignment at: 64
+Found propagatable assignment at: 84
+Found propagatable assignment at: 123
+Found propagatable assignment at: 127
+Found propagatable assignment at: 131
+Found propagatable assignment at: 162
+Found propagatable assignment at: 182
+Found propagatable assignment at: 202
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function setPolyBoundingRect
+--------------------------------------------------------------------------------
+Removing unreachable code at: 15
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Found propagatable expression assignment at: 14
+Found propagatable expression assignment at: 21
+Found propagatable expression assignment at: 25
+Found propagatable expression assignment at: 29
+Found propagatable expression assignment at: 33
+Found propagatable expression assignment at: 37
+Found propagatable expression assignment at: 52
+Found propagatable expression assignment at: 66
+Found propagatable expression assignment at: 84
+Found propagatable expression assignment at: 102
+IRO_FindLoops_Unroll:Found loop with header 10
+Loop includes: 1-10
+Killed in loop: 3-7
+IsLoopUnrollable:No due to LP_INDUCTION_NOT_FOUND 
+LoopUnroll:loop with header 10 not unrolled because IsLoopUnrollable failed
+IRO_FindLoops:Found loop with header 10
+Loop includes: 1-10
+Killed in loop: 3-7
+Expressions
+
+   1: 44 FN:1 CE:1 NS:0 Depends: 0,3
+
+   2: 49 FN:2 CE:1 NS:0 Depends: 0,3
+
+   3: 58 FN:3 CE:1 NS:0 Depends: 0,3
+
+   4: 63 FN:4 CE:1 NS:0 Depends: 0,3
+
+   5: 74 FN:5 CE:1 NS:0 Depends: 0,3
+
+   6: 81 FN:6 CE:1 NS:0 Depends: 0,3
+
+   7: 92 FN:7 CE:1 NS:0 Depends: 0,3
+
+   8: 99 FN:8 CE:1 NS:0 Depends: 0,3
+
+
+IRO_FindLoopTailsAndExits:For  header 10, Loop exits and loop tails are  
+Loop Exits: 10
+Loop Tails: 9
+LoopExitNum=1: 
+LoopExitSuccessor node =11: 
+Killed in loop: 3-7
+Expressions
+
+   1: 44 FN:1 CE:1 NS:0 Depends: 0,3
+
+   2: 49 FN:2 CE:1 NS:0 Depends: 0,3
+
+   3: 58 FN:3 CE:1 NS:0 Depends: 0,3
+
+   4: 63 FN:4 CE:1 NS:0 Depends: 0,3
+
+   5: 78 FN:5 CE:1 NS:0 Depends: 0,3
+
+   6: 89 FN:6 CE:1 NS:0 Depends: 0,3
+
+   7: 104 FN:7 CE:1 NS:0 Depends: 0,3
+
+   8: 115 FN:8 CE:1 NS:0 Depends: 0,3
+
+
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Replacing common sub at 49 with 44
+Replacing common sub at 58 with 44
+Replacing common sub at 63 with 44
+Replacing common sub at 89 with 78
+Replacing common sub at 104 with 78
+Replacing common sub at 115 with 78
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Found propagatable assignment at: 57
+Found propagatable assignment at: 75
+Found propagatable assignment at: 114
+Found propagatable assignment at: 152
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Found propagatable assignment at: 57
+Found propagatable assignment at: 75
+Found propagatable assignment at: 114
+Found propagatable assignment at: 152
+Found propagatable expression assignment at: 14
+Found propagatable expression assignment at: 21
+Found propagatable expression assignment at: 25
+Found propagatable expression assignment at: 29
+Found propagatable expression assignment at: 33
+Found propagatable expression assignment at: 37
+Found propagatable expression assignment at: 57
+Found propagatable expression assignment at: 75
+Found propagatable expression assignment at: 114
+Found propagatable expression assignment at: 152
+IRO_FindEmptyLoops:Found loop with header 10
+Loop includes: 1-10
+Killed in loop: 3-7,9-10
+NonStandard while loop layout
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Found propagatable assignment at: 57
+Found propagatable assignment at: 75
+Found propagatable assignment at: 114
+Found propagatable assignment at: 152
+Found propagatable assignment at: 25
+Found propagatable assignment at: 29
+Found propagatable assignment at: 33
+Found propagatable assignment at: 37
+Found propagatable assignment at: 57
+Found propagatable assignment at: 75
+Found propagatable assignment at: 114
+Found propagatable assignment at: 152
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function getIntersectCount
+--------------------------------------------------------------------------------
+Removing unreachable code at: 8
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+IRO_FindLoops_Unroll:Found loop with header 4
+Loop includes: 1-4
+Killed in loop: 0-2
+Found induction variable the old way: intersectCount
+Found induction variable the old way: i
+Induction Used in loop
+Induction Used in loop
+IsLoopUnrollable:No due to LP_LOOP_HAS_CALLS 
+LoopUnroll:loop with header 4 not unrolled because IsLoopUnrollable failed
+IRO_FindLoops:Found loop with header 4
+Loop includes: 1-4
+Killed in loop: 0-2
+Found induction variable the old way: intersectCount
+Found induction variable the old way: i
+Expressions
+
+   1: 16 FN:1 CE:0 NS:0 Depends: 2
+
+   2: 19 FN:1 CE:1 NS:0 Depends: 0,3
+
+   3: 20 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   4: 22 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   5: 26 FN:1 CE:0 NS:0 Depends: 2
+
+   6: 29 FN:1 CE:1 NS:0 Depends: 0,3
+
+   7: 30 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   8: 32 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   9: 54 FN:4 CE:1 NS:0 Depends: 0,3
+
+  10: 55 FN:4 CE:1 NS:0 Depends: 0,3
+
+  11: 56 FN:4 CE:1 NS:0 Depends: 0,3
+
+  12: 58 FN:4 CE:1 NS:0 Depends: 0,3
+
+
+IRO_FindLoopTailsAndExits:For  header 4, Loop exits and loop tails are  
+Loop Exits: 4
+Loop Tails: 3
+LoopExitNum=1: 
+LoopExitSuccessor node =5: 
+Induction Used in loop
+Induction Used in loop
+Killed in loop: 0-2
+Found induction variable the old way: intersectCount
+Found induction variable the old way: i
+Expressions
+
+   1: 16 FN:1 CE:0 NS:0 Depends: 2
+
+   2: 19 FN:1 CE:1 NS:0 Depends: 0,3
+
+   3: 20 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   4: 22 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   5: 26 FN:1 CE:0 NS:0 Depends: 2
+
+   6: 29 FN:1 CE:1 NS:0 Depends: 0,3
+
+   7: 30 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   8: 32 FN:1 CE:1 NS:0 Depends: 0,2-3
+
+   9: 54 FN:4 CE:1 NS:0 Depends: 0,3
+
+  10: 55 FN:4 CE:1 NS:0 Depends: 0,3
+
+  11: 56 FN:4 CE:1 NS:0 Depends: 0,3
+
+  12: 58 FN:4 CE:1 NS:0 Depends: 0,3
+
+
+Found reduction in strength: 26
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagation at 103 from 8
+Replacing common sub at 19 with 54
+Replacing common sub at 29 with 54
+Replacing common sub at 65 with 54
+Replacing common sub at 74 with 58
+Replacing common sub at 79 with 54
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 15
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 15
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 8
+Found propagatable expression assignment at: 15
+IRO_FindEmptyLoops:Found loop with header 4
+Loop includes: 1-4
+Killed in loop: 0-2,6-8
+Found induction variable the old way: intersectCount
+Found induction variable the new way: @103
+Found induction variable the old way: i
+NonStandard while loop layout
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 15
+Found propagatable assignment at: 4
+Found propagatable assignment at: 8
+Found propagatable assignment at: 15
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function isIntersect
+--------------------------------------------------------------------------------
+Removing unreachable code at: 5
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 52
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Found propagatable expression assignment at: 4
+Found propagatable expression assignment at: 52
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Found propagatable assignment at: 4
+Found propagatable assignment at: 52
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes
+Starting function isCounterClockWise
+--------------------------------------------------------------------------------
+Removing unreachable code at: 4
+*****************
+Dumps for pass=0
+*****************
+Found propagatable assignment at: 44
+Found propagatable assignment at: 50
+Found propagatable expression assignment at: 44
+Found propagatable expression assignment at: 50
+Found propagatable assignment at: 44
+Found propagatable assignment at: 50
+Moving common sub from node 12 to 39
+Replacing common sub at 24 with 12
+Moving common sub from node 3 to 39
+Replacing common sub at 33 with 3
+Found propagatable assignment at: 60
+Found propagatable assignment at: 66
+*****************
+Dumps for pass=1
+*****************
+Found propagatable assignment at: 60
+Found propagatable assignment at: 66
+Found propagatable expression assignment at: 60
+Found propagatable expression assignment at: 66
+Found propagatable assignment at: 60
+Found propagatable assignment at: 66
+Found propagatable assignment at: 60
+Found propagatable assignment at: 66
+Rebuilding ELORs and ELANDs
+Rebuilding ECONDs
+Generating ECONDASSes

@@ -1,0 +1,105 @@
+#decompiled code slices go here
+
+ty/source/BoundingRegion.cpp:
+    .text: [0x80147018, 0x80147464]
+    .rodata: [0x8023e628, 0x8023e638]
+    .sdata2: [0x80400170, 0x80400178]
+
+ty/source/Kinematics.cpp:
+    .text: [0x8016e404, 0x8016e964]
+    .sdata2: [0x80400a98, 0x80400ac0]
+
+ty/source/MessageMap.cpp:
+    .text: [0x80179c14, 0x80179ca0]
+
+#ty/source/Messages.cpp:
+#    .text: [0x80179ca0, 0x
+#    .data: [0x80265750, 0x
+#    .sdata: [0x803f8b80, 0x
+#    .sbss: [0x803fa9b8, 0x
+
+ty/source/quadratic.cpp:
+    .text: [0x80189454, 0x8018975C]
+    .sdata2: [0x80401038, 0x80401058]
+
+ty/source/DataVal.cpp:
+    .text: [0x80156434, 0x80157c48]
+    .data: [0x80261bd8, 0x802621d0]
+    .sdata2: [0x80400498, 0x80400548]
+
+ty/source/DDA.cpp:
+    .text: [0x80157c48, 0x8015860c]
+    .data: [0x802621d0, 0x80262208]
+    .bss: [0x802b0d40, 0x802b0db8]
+    .sdata: [0x803f8518, 0x803f8520]
+    .sbss: [0x803fa888, 0x803fa8a0]
+
+common/Source/Crc.cpp:
+    .text: [0x80211380, 0x802115c0]
+    .bss: [0x802dee50, 0x802df250]
+    .sbss: [0x803fb248, 0x803fb250]
+
+common/Source/DirectLight.cpp:
+    .text: [0x802115c0, 0x802118dc]
+    .data: [0x80274168, 0x802741d8]
+    .sbss: [0x803fb250, 0x803fb258]
+    .sdata2: [0x80402278, 0x80402280]
+
+common/Source/FileSys.cpp:
+    .text: [0x802118dc, 0x80212734]
+    .data: [0x802741d8, 0x80274288]
+    .bss: [0x802df250, 0x802df308]
+    .sdata: [0x803f9838, 0x803f9848]
+    .sbss: [0x803fb258, 0x803fb268]
+
+common/Source/Heap.cpp:
+    .text: [0x80214a10, 0x80214bc8]
+    .data: [0x80274370, 0x802743c0]
+    .sbss: [0x803fb280, 0x803fb288]
+
+common/Source/KromeIni.cpp:
+    .text: [0x80214bc8, 0x802166f8]
+    .sdata: [0x803f9850, 0x803f9880]
+    .sdata2: [0x804022d0, 0x804022d8]
+
+common/Source/Model.cpp:
+    .text: [0x8021fcec, 0x80220d94]
+    .sdata: [0x803f9928, 0x803f9940]
+    .sbss: [0x803fb2f8, 0x803fb320]
+    .sdata2: [0x80402380, 0x80402388]
+
+common/Source/Utils.cpp:
+    .text: [0x802247A8, 0x802249C0]
+    .sdata: [0x803F99D0, 0x803f99e0]
+
+common/Source/Vector.cpp:
+    .text: [0x802249c0, 0x802250dc]
+    .data: [0x802759c8, 0x802759f8]
+    .sdata2: [0x80402410, 0x80402440]
+
+#common/Source/QuatRotation.cpp:
+#    .text: [0x80223894, 0x80223b88]
+#    .sdata2: [0x804023d0, 0x804023e8]
+
+common/Source/StdMath.cpp:
+    .text: [0x80223b88, 0x80223D80]
+    .data: [0x802747f0, 0x802757f8]
+    .sdata2: [0x804023e8, 0x80402410]
+
+common/Source/Str.cpp:
+    .text: [0x80223D80, 0x80223EFC]
+    .bss: [0x802e4a00, 0x802E8A00]
+    .sdata: [0x803f9948, 0x803F9950]
+    .sbss: [0x803fb338, 0x803fb340]
+
+common/Source/Timer.cpp:
+    .text: [0x80223efc, 0x802240EC]
+
+common/File.cpp:
+    .text: [0x80225994, 0x80226398]
+    .rodata: [0x8023fca0, 0x8023fea0]
+    .data: [0x802764d8, 0x802764e8]
+    .bss: [0x8036eaa0, 0x8036ed60]
+
+
+

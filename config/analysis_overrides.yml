@@ -1,0 +1,7 @@
+blocked_pointers:
+  - 0x801fdcc0
+  - 0x801fdd94
+
+forced_types:
+  0x801fc300: FUNCTION # TRKExceptionHandler
+  0x801fc460: FUNCTION # TRKInterruptHandlerEnableInterrupts

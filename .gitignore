@@ -1,0 +1,14 @@
+__pycache__/
+.vscode/
+assets/
+build/
+expected
+out/
+asm/
+disasm.txt
+*.dol
+*.rel
+*.exe
+*.dll
+build.ninja
+order.txt
