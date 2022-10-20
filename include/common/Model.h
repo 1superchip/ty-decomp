@@ -1,3 +1,4 @@
+#include "types.h"
 #include "common/Vector.h" // this has Matrix in it for now
 //#include "common/Matrix.h"
 

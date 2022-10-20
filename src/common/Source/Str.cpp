@@ -1,4 +1,6 @@
+#include "types.h"
 #include "common/Str.h"
+#include "Dolphin/stl.h"
 
 static char buffer[STR_BUFFER_SIZE];
 

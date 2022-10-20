@@ -1,3 +1,4 @@
+#include "types.h"
 #include "common/PtrListDL.h"
 
 enum DDADamageCause {

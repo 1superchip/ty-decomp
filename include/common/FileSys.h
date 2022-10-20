@@ -33,6 +33,7 @@ void FileSys_Update(void);
 static int EntryCompare(void*, void*);
 void* FileSys_SetLoadInterceptHandler(void* (*)(char*, int*, void*, int*));
 bool FileSys_Exists(char*, int*);
+static void FileSys_SetOrder(RkvFileEntry*);
 void* FileSys_Load(char*, int*, void*, int);
 int FileSys_Save(char*, bool, void*, int) ;
 void FileSys_OutputFileOrder(void);

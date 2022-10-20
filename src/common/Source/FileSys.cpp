@@ -63,7 +63,7 @@ void RkvTOC::Init(char *pName) {
 
     if (rkvFd >= 0) {
         // alloc and read header
-        void *pBuf = Heap_MemAlloc(32);
+        void *pBuf = Heap_MemAlloc(0x20);
         File_Seek(rkvFd, -0x20, 2);
         File_Read(rkvFd, pBuf, 0x20, 0x20);
         nmbrOfEntries = *(int *)((int)pBuf + 0x18);
@@ -75,7 +75,7 @@ void RkvTOC::Init(char *pName) {
         File_Seek(rkvFd, fileLength - (fileSize + 8), 0);
         pFileEntries = (RkvFileEntry *)Heap_MemAlloc(fileSize);
 
-        unk50 = (int)pFileEntries + ((nmbrOfEntries << 6) & ~0x3f);
+        unk50 = (int)pFileEntries + nmbrOfEntries * 0x40;
         File_Read(rkvFd, (void *)pFileEntries, fileSize, fileSize);
 
         int entryIndex = 0;
@@ -137,7 +137,7 @@ bool FileSys_Exists(char *arg0, int *arg1) {
     return !!pEntry;
 }
 
-void FileSys_SetOrder(RkvFileEntry *pEntry) {
+static void FileSys_SetOrder(RkvFileEntry *pEntry) {
     if (pEntry->shorts[0] != 0) {
         return;
     }
@@ -304,14 +304,12 @@ int FileSys_Save(char* name, bool arg1, void* arg2, int arg3) {
     return fd >> 31;
 }
 
-// local
 static int FileOrderSortCompare(const void* arg0, const void* arg1) {
     RkvFileEntry* pEntry1 = *(RkvFileEntry**)arg0;
     RkvFileEntry* pEntry = *(RkvFileEntry**)arg1;
     return pEntry1->shorts[0] - pEntry->shorts[0];
 }
 
-// local
 static int LanguageSortCompare(const void* arg0, const void* arg1) {
     RkvFileEntry* pEntry1 = *(RkvFileEntry**)arg0;
     RkvFileEntry* pEntry = *(RkvFileEntry**)arg1;

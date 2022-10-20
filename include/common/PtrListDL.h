@@ -1,4 +1,7 @@
+#include "types.h"
 #include "common/Heap.h"
+
+extern int gEmptyPtrListDL[2]; // Utils.cpp
 
 // should this be a template?
 // inlines of IsFull() and IsEmpty()
@@ -9,6 +12,7 @@ template <typename T>
 struct PtrListDL {
     T *pMem;
     void Init(int, int);
+	void Deinit(void);
     void* GetEnd(void) {
         void* ptr = pMem;
         while ((int*)(*(int*)ptr) != 0) {
@@ -24,8 +28,6 @@ struct PtrListDL {
     }
 };
 
-// defining this in the struct with "-inline auto" does inline this function but defining it here doesn't auto inline
-// need the inline def here
 template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
     // count * size = structure array size
@@ -35,8 +37,7 @@ inline void PtrListDL<T>::Init(int count, int size) {
     pMem = (T*)Heap_MemAlloc(count * size + 8 + count * 4);
     T* memory = pMem;
     int* arrayEnd = (int*)((int)memory + count * size); // go to array memory end
-    pMem = (T*)arrayEnd; // set mem pointer to end of array
-    *arrayEnd = 0;
+    *(int*)(pMem = (T*)arrayEnd) = 0; // set mem pointer to end of array
     int i = 0;
     while(i < count) {
         int* pNext = (int*)pMem + 1;
@@ -45,7 +46,27 @@ inline void PtrListDL<T>::Init(int count, int size) {
         memory = ((T*)memory + 1);
         i++;
     }
-    void* last = (void*)((int*)pMem + 1);
-    pMem = (T*)last;
-    *(int*)last = 0;
+    *(++(int*)pMem) = NULL;
+}
+
+template <typename T>
+inline void PtrListDL<T>::Deinit(void) {
+    T** ptrs = (T**)pMem;
+    T* memory = pMem;
+    T* temp = memory;
+    while ((int*)*--(int*)temp != NULL) {
+        if (*(T**)temp < memory) {
+            memory = *(T**)temp;
+        }
+    }
+    if (temp != (T*)&gEmptyPtrListDL[0]) {
+        while(*(HeatFlare**)ptrs != NULL) {
+            if (*(T**)ptrs < (T*)memory) {
+                memory = *(T**)ptrs;
+            }
+            ((T**)ptrs)++;
+        }
+        Heap_MemFree(memory);
+    }
+    pMem = NULL;
 }

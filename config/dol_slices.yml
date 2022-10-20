@@ -5,6 +5,11 @@ ty/source/BoundingRegion.cpp:
     .rodata: [0x8023e628, 0x8023e638]
     .sdata2: [0x80400170, 0x80400178]
 
+ty/source/heatflare.cpp:
+    .text: [0x80164938, 0x80164b18]
+    .sdata: [0x803f8958, 0x803f8960]
+    .sbss: [0x803fa928, 0x803fa938]
+
 ty/source/Kinematics.cpp:
     .text: [0x8016e404, 0x8016e964]
     .sdata2: [0x80400a98, 0x80400ac0]

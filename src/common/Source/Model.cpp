@@ -68,7 +68,7 @@ void Model_DeinitModule(void) {
 
 extern "C" void strcpy(char*, char*);
 extern "C" char* strtok(char*, char*);
-//extern "C" void memset(void*, int, int);
+extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
 extern "C" void DCStoreRange(uint*, int);
 extern "C" int stricmp(char*, char*);
