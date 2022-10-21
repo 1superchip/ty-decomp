@@ -18,6 +18,13 @@ ty/source/Kinematics.cpp:
     .text: [0x8016e404, 0x8016e964]
     .sdata2: [0x80400a98, 0x80400ac0]
 
+ty/source/LensFlare.cpp:
+    .text: [0x80171dbc, 0x80171EF8]
+    .bss: [0x802b3670, 0x802b36a0]
+    .sdata: [0x803f8a30, 0x803f8a48]
+    .sbss: [0x803fa970, 0x803fa980]
+    .sdata2: [0x80400b98, 0x80400ba0]
+
 ty/source/MessageMap.cpp:
     .text: [0x80179c14, 0x80179ca0]
 
