@@ -1,5 +1,9 @@
 #decompiled code slices go here
 
+ty/source/controlval.cpp:
+   .text: [0x801511E4, 0x801513FC]
+   .bss: [0x802b06e8, 0x802b0768]
+
 ty/source/BoundingRegion.cpp:
     .text: [0x80147018, 0x80147464]
     .rodata: [0x8023e628, 0x8023e638]
@@ -99,6 +103,13 @@ common/Source/Str.cpp:
 
 common/Source/Timer.cpp:
     .text: [0x80223efc, 0x802240EC]
+
+#common/Source/Translation.cpp:
+#    .text: [0x802240ec, 0x802247a8]
+#    .data: [0x802757f8, 0x802759c8]
+#    .bss: [0x802e8a00, 0x802eaa60]
+#    .sdata: [0x803f9950, 0x803f99d0
+#    .sbss: [0x803fb340, 0x803fb350]
 
 common/File.cpp:
     .text: [0x80225994, 0x80226398]
