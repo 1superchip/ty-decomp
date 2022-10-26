@@ -5,3 +5,9 @@
 
 ty/source/DataVal.cpp:
     .flags: "-pool off"
+
+ty/source/GameObject.cpp:
+    .flags: "-pool off"
+
+#common/Source/Translation.cpp:
+#    .flags: "-pool off"

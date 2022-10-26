@@ -1,0 +1,251 @@
+#include "types.h"
+#include "ty/GameObject.h"
+#include "ty/MessageMap.h"
+
+extern "C" void memset(void*, int, int);
+extern "C" void strncpy(char*, char*, int);
+extern "C" int stricmp(char*, char*);
+void Tools_StripExtension(char*, char const*);
+bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
+bool LoadLevel_LoadFloat(KromeIniLine*, char*, float*);
+
+extern bool gAssertBool; // from Str.cpp
+
+ModuleInfoBase* ModuleInfoBase::pList;
+
+void ModuleInfoBase::Reset(void) {
+    pData->unk18 = 0;
+    pData->bUpdate = false;
+}
+
+void ModuleInfoBase::AddToModuleList(ModuleInfoBase* base) {
+    if ((pData->flags & 3) == 0) {
+        return;
+    }
+    ModuleInfoBase* list = ModuleInfoBase::pList;
+    ModuleInfoBase* list1 = list;
+    while (list != NULL) {
+        if (list == this) {
+            return;
+        }
+        list = list->pData->pNext;
+    }
+    pData->pNext = list1;
+    ModuleInfoBase::pList = this;
+}
+
+void GameObject::Init(GameObjDesc* pDesc) {
+    pDescriptor = pDesc;
+    pModel = NULL;
+    pNext = NULL;
+    pPrev = NULL;
+    pNextOfThisType = NULL;
+    unk10 = 0; // ID?
+    unk14 = 0.0f;
+    unk1C = 1.0f;
+    detailLevel = 0;
+    distSquared = 0.0f;
+    pLocalToWorld = NULL;
+    pNextUpdated = NULL;
+    pPrevUpdated = NULL;
+    rejectionResult = 0;
+    flags = 0;
+}
+
+void GameObject::Deinit(void) {
+	if (pModel != NULL) {
+		pModel->Destroy();
+		pModel = NULL;
+	}
+	return;
+}
+
+void GameObject::Update(void) {
+	return;
+}
+
+void GameObject::Draw(void) {
+	if (pModel != NULL) {
+		pModel->Draw(NULL);
+	}
+	return;
+}
+
+void GameObject::Reset(void) {
+	return;
+}
+
+bool WaterVolume_IsWithin(Vector*, float*);
+
+void GameObject::Message(MKMessage* pMessage) {
+    switch (pMessage->unk0) {
+        case MKMSG_Reset:
+            Reset();
+            break;
+        case MKMSG_Deinit:
+            Deinit();
+            break;
+        case 2:
+            if (pLocalToWorld != NULL) {
+                Vector vec = {0.0f, 0.0f, 0.0f, 1.0f};
+                if (pDescriptor->pVolume != NULL) {
+                    vec.x = pDescriptor->pVolume->v1.x + 0.5f * pDescriptor->pVolume->v2.x;
+                    vec.y = pDescriptor->pVolume->v1.y + 0.5f * pDescriptor->pVolume->v2.y;
+                    vec.z = pDescriptor->pVolume->v1.z + 0.5f * pDescriptor->pVolume->v2.z;
+                }
+                vec.ApplyMatrix(&vec, pLocalToWorld);
+                if (WaterVolume_IsWithin(&vec, NULL) != false) {
+                    flags |= In_WaterVolume;
+                }
+            }
+            break;
+    }
+}
+
+bool GameObject::LoadLine(KromeIniLine* pLine) {
+	return LoadLevel_LoadInt(pLine, "ID", &unk10);
+}
+
+void GameObject::LoadDone(void) {
+	return;
+}
+
+void GameObject::InitModule(void) {
+	return;
+}
+
+void GameObject::DeinitModule(void) {
+	return;
+}
+
+void GameObject::UpdateModule(void) {
+	return;
+}
+
+void GameObject::DrawModule(void) {
+	return;
+}
+
+int GameObject::Allocate(void) {
+	return 0;
+}
+
+void GameObject::Deallocate(GameObject* pObj) {
+	return;
+}
+
+// maybe a ternary would match this as well as DrawDynamicProps?
+uint GameObject::CalcDetailLevel(void) {
+    int _detail = 8;
+    int detail = (int)(8.0f * (1.0f - (1.0f - distSquared / (pDescriptor->maxDrawDist * pDescriptor->maxDrawDist)) * (1.0f - distSquared / (pDescriptor->maxDrawDist * pDescriptor->maxDrawDist))));
+    if (detail <= 8) {
+        _detail = detail;
+    }
+    detailLevel = (char)_detail;
+    return detailLevel;
+}
+
+// these structs are from Messages.cpp
+extern MessageMap mkMessageMap;
+extern MessageMap globalMessageMap;
+
+int GameObject::GetMessageIdFromString(char* string) {
+    int result = mkMessageMap.GetIdFromString(string);
+    if (result == 0) {
+        result = globalMessageMap.GetIdFromString(string);
+        if (stricmp(string, "Reset") == 0) {
+            return -1;
+        }
+    }
+    return result;
+}
+
+void Tools_StripExtension(char*, char const*);
+
+void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int param_4, int _flags) {
+    pMod->Init(pMod);
+    unk80 = NULL;
+    flags = _flags;
+    searchMask = param_4;
+    pModule = pMod;
+    if (pMod->pData->flags & 8) {
+        flags |= 0x100000;
+    }
+    flags |= 0xC;
+    maxUpdateDist = 6000.0f;
+    maxDrawDist = 6000.0f;
+    maxScissorDist = 1000.0f;
+    drawLayer = 1;
+    strncpy(descrName, pDescrName, 0x20);
+    Tools_StripExtension(modelName, pMdlName);
+    pName = descrName;
+    pNext = NULL;
+}
+
+u8* GameObjDesc::SetUpMem(u8* pMem) {
+    if (0 < unk74) {
+        unk78 = (GameObject*)pMem;
+        memset((void*)unk78, unk74, unk74 * pModule->pData->instanceSize);
+        unk7C = (u8*)unk78;
+        pMem += unk74 * pModule->pData->instanceSize;
+    }
+    return pMem;
+}
+
+void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
+    GameObject* pObject;
+    if (pModule->pData->bUpdate == false) {
+        pModule->pData->InitModule();
+        pModule->pData->bUpdate = true;
+    }
+    pLine = pIni->GetLineWithLine(pLine);
+    while (pLine != NULL && pLine->section == NULL) {
+        while (pLine->comment == NULL && pLine->pFieldName == NULL) {
+            pLine = pIni->GetLineWithLine(pLine);
+        }
+        pObject = CreateObject();
+        pObject->Init(this);
+        while (pLine != NULL && (pLine->pFieldName || pLine->comment)) {
+            if (pLine->pFieldName != NULL) {
+                pObject->LoadLine(pLine);
+            }
+            pLine = pIni->GetLineWithLine(pLine);
+        }
+        pObject->LoadDone();
+        while (pLine != NULL && pLine->pFieldName == NULL && pLine->section == NULL) {
+            pLine = pIni->GetLineWithLine(pLine);
+        }
+    }
+}
+
+GameObject* GameObjDesc::CreateObject(void) {
+    if (flags & 0x100000) {
+        return (GameObject*)ConstructObject(pModule->pData->pAllocate());
+    }
+    void* mem = unk7C;
+    unk7C = unk7C + pModule->pData->instanceSize;
+    return (GameObject*)ConstructObject(mem);
+}
+
+void GameObjDesc::Load(KromeIni* pIni) {
+    KromeIniLine* pLine = pIni->GotoLine(modelName, NULL);
+    while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
+        if (pLine->pFieldName != NULL) {
+            bool assert = false;
+            if (LoadLevel_LoadInt(pLine, "drawLayer", &drawLayer) || LoadLevel_LoadFloat(pLine, "maxDrawDist", &maxDrawDist) || 
+                LoadLevel_LoadFloat(pLine, "maxScissorDist", &maxScissorDist) || LoadLevel_LoadFloat(pLine, "maxUpdateDist", &maxUpdateDist)) {
+                assert = true;
+				}
+            gAssertBool = assert;
+        }
+        pLine = pIni->GetLineWithLine(pLine);
+    }
+}
+
+BeginStruct GameObjDesc::Begin(void) {
+    BeginStruct beginRet = {0, 0};
+    beginRet.unk0 = (int)unk78;
+    beginRet.unk4 = (int)unk78 + (pModule->pData->instanceSize * unk74);
+    return beginRet;
+}
+

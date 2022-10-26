@@ -157,6 +157,8 @@ struct Model {
 	void SetAlphaLightIntensity(int, float);
 	void SetRenderTypeOverride(int);
 	Material* GetSubObjectMaterial(int, int);
+	
+	void Draw(u16*); // from Model_GC.cpp
 };
 
 void Model_UnpackTemplate(ModelTemplate*);

@@ -4,7 +4,7 @@
 
 static char buffer[STR_BUFFER_SIZE];
 
-char gNullStr[] = "";
+char gNullStr[4] = "";
 
 bool gAssertBool;
 static int bufferIndex;

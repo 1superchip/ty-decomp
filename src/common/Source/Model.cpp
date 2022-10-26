@@ -76,7 +76,7 @@ extern "C" int stricmp(char*, char*);
 Model* Model::Create(char* pMeshName, char* pAnimName) {
     char mesh[0x20];
     char anim[0x20];
-    int fileSize; // is this the file size?
+    int fileSize;
     Model* pModel;
     ModelTemplate* pModelTemplate;
     strcpy(mesh, pMeshName);
@@ -195,6 +195,8 @@ void Model::SetRotation(Vector* pRot) {
     }
 }
 
+// https://decomp.me/scratch/kkyBc
+// clean this up when Animation is decomped
 void Model::SetAnimation(Animation* pAnim) {
     pAnimation = pAnim;
     if (pTemplate->pModelData->nmbrOfAnimNodes == 0) {

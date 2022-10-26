@@ -9,6 +9,15 @@ ty/source/BoundingRegion.cpp:
     .rodata: [0x8023e628, 0x8023e638]
     .sdata2: [0x80400170, 0x80400178]
 
+ty/source/GameObject.cpp:
+    .text: [0x8015faf0, 0x8016051c]
+    .rodata: [0x8023e908, 0x8023e918]
+    .data: [0x80262be0, 0x80262c98]
+    .sdata: [0x803f86c8, 0x803f8700]
+    .sbss: [0x803fa8e8, 0x803fa8f0]
+    .sdata2: [0x80400710, 0x80400728]
+    .sbss2: [0x80402768, 0x80402770]
+
 ty/source/heatflare.cpp:
     .text: [0x80164938, 0x80164b18]
     .sdata: [0x803f8958, 0x803f8960]
@@ -77,6 +86,15 @@ common/Source/KromeIni.cpp:
     .text: [0x80214bc8, 0x802166f8]
     .sdata: [0x803f9850, 0x803f9880]
     .sdata2: [0x804022d0, 0x804022d8]
+
+#common/Source/MKSceneManager.cpp:
+#    .text: [0x8021d3d8, 0x8021FCEC]
+#    .ctors: [0x8023ca98, 0x8023CA9C]
+#    .data: [0x80274758, 0x80274778]
+#    .bss: [0x802e3428, 0x802e49a8]
+#    .sdata: [0x803f9918, 0x803f9928]
+#    .sbss: [0x803fb2f0, 0x803fb2f8]
+#    .sdata2: [0x80402360, 0x80402380]
 
 common/Source/Model.cpp:
     .text: [0x8021fcec, 0x80220d94]

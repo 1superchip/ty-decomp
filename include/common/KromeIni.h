@@ -22,6 +22,7 @@ struct KromeIni {
     int unk38; // count for "[]" sections
 	
 	inline KromeIniLine* GetNextLine(void);
+	inline KromeIniLine* GetLineWithLine(KromeIniLine*);
 	bool Init(char*);
 	void ParseData(void);
     void Deinit(void);
@@ -41,6 +42,24 @@ inline KromeIniLine* KromeIni::GetNextLine(void) {
             line = &pLines[unk34];
         } else {
             line = NULL;
+        }
+    }
+    return line;
+}
+
+inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
+    KromeIniLine* line;
+    if (pFileMem == NULL) {
+        line = NULL;
+    } else {
+        unk34 = ((int)pLine + 0x14 - (int)pLines) / sizeof(KromeIniLine);
+        if (unk34 > nmbrOfLines) {
+            unk34 = nmbrOfLines;
+        }
+        if (unk34 < nmbrOfLines) {
+            line = &pLines[unk34];
+        } else {
+            return NULL;
         }
     }
     return line;
