@@ -77,8 +77,8 @@ void GameObject::Reset(void) {
 
 bool WaterVolume_IsWithin(Vector*, float*);
 
-void GameObject::Message(MKMessage* pMessage) {
-    switch (pMessage->unk0) {
+void GameObject::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
         case MKMSG_Reset:
             Reset();
             break;
@@ -193,7 +193,7 @@ u8* GameObjDesc::SetUpMem(u8* pMem) {
 }
 
 void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
-    GameObject* pObject;
+    GameObject* pObj;
     if (pModule->pData->bUpdate == false) {
         pModule->pData->InitModule();
         pModule->pData->bUpdate = true;
@@ -203,15 +203,15 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
         while (pLine->comment == NULL && pLine->pFieldName == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
-        pObject = CreateObject();
-        pObject->Init(this);
+        pObj = CreateObject();
+        pObj->Init(this);
         while (pLine != NULL && (pLine->pFieldName || pLine->comment)) {
             if (pLine->pFieldName != NULL) {
-                pObject->LoadLine(pLine);
+                pObj->LoadLine(pLine);
             }
             pLine = pIni->GetLineWithLine(pLine);
         }
-        pObject->LoadDone();
+        pObj->LoadDone();
         while (pLine != NULL && pLine->pFieldName == NULL && pLine->section == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
@@ -244,8 +244,8 @@ void GameObjDesc::Load(KromeIni* pIni) {
 
 BeginStruct GameObjDesc::Begin(void) {
     BeginStruct beginRet = {0, 0};
-    beginRet.unk0 = (int)unk78;
-    beginRet.unk4 = (int)unk78 + (pModule->pData->instanceSize * unk74);
+    beginRet.unk0 = (u8*)unk78;
+    beginRet.unk4 = (u8*)unk78 + (pModule->pData->instanceSize * unk74);
     return beginRet;
 }
 

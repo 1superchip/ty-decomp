@@ -18,6 +18,14 @@ ty/source/GameObject.cpp:
     .sdata2: [0x80400710, 0x80400728]
     .sbss2: [0x80402768, 0x80402770]
 
+ty/source/GameObjectManager.cpp:
+    .text: [0x8016051c, 0x8016110c]
+    .data: [0x80262c98, 0x80262cb8]
+    .bss: [0x802b1ad8, 0x802b1ae8]
+    .sdata: [0x803f8700, 0x803f8710]
+    .sdata2: [0x80400728, 0x80400730]
+    .sbss2: [0x80402770, 0x80402778]
+
 ty/source/heatflare.cpp:
     .text: [0x80164938, 0x80164b18]
     .sdata: [0x803f8958, 0x803f8960]

@@ -23,7 +23,7 @@ struct MKPropDescriptor {
 	float maxUpdateDist;
 	float maxDrawDist;
 	uint searchMask;
-	int drawLayer; // is this correct?
+	int drawLayer; // should be named "layer"
 	uint flags;
 	BoundingVolume* pVolume;
 	// 24 and 28 = pInstances and pNext?

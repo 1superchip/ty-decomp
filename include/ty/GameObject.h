@@ -8,12 +8,12 @@
 struct ModuleInfoBase;
 
 struct ModuleInfoBaseObject {
-	void* (*InitModule)(void);
-	void* DeinitModule;
-	void* pUpdateModule;
-	void* pDrawModule;
+	void (*InitModule)(void);
+	void (*DeinitModule)(void);
+	void (*pUpdateModule)(void);
+	void (*pDrawModule)(void);
 	int* (*pAllocate)(void);
-	void* pDeallocate;
+	void (*pDeallocate)(void);
 	int unk18;
 	int instanceSize;
 	bool bUpdate;
@@ -41,13 +41,22 @@ struct ModuleInfo {
     virtual void* ConstructObject(void*);
 };
 
+struct GameObject;
+
 // fix this???
 struct BeginStruct {
-    int unk0;
-    int unk4;
+    u8* unk0;
+    u8* unk4;
+    GameObject* GetPointers(void) {
+        GameObject* ret;
+        if (unk0 < unk4) {
+            ret = (GameObject*)unk0;
+        } else {
+            ret = NULL;
+        }
+        return ret;
+    }
 };
-
-struct GameObject;
 
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
@@ -67,7 +76,7 @@ struct GameObjDesc : MKPropDescriptor {
 	int unk74;
 	GameObject* unk78;
 	u8* unk7C;
-	GameObject* unk80;
+	GameObjDesc* unk80;
 };
 
 struct GameObject : MKProp {

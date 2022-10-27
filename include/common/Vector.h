@@ -49,4 +49,7 @@ struct Matrix {
 	void SetIdentity(void);
 	void SetTranslation(Vector*);
 	void SetRotationPYR(Vector*);
+	Vector* Row3(void) {
+		return (Vector*)&data[3][0];
+	}
 };
