@@ -57,11 +57,11 @@ ty/source/LensFlare.cpp:
 ty/source/MessageMap.cpp:
     .text: [0x80179c14, 0x80179ca0]
 
-#ty/source/Messages.cpp:
-#    .text: [0x80179ca0, 0x80179e44]
-#    .data: [0x80265750, 0x80265a20]
-#    .sdata: [0x803f8b80, 0x803f8bf8]
-#    .sbss: [0x803fa9b8, 0x803fa9c0]
+ty/source/Messages.cpp:
+    .text: [0x80179ca0, 0x80179e44]
+    .data: [0x80265750, 0x80265a20]
+    .sdata: [0x803f8b80, 0x803f8bf8]
+    .sbss: [0x803fa9b8, 0x803fa9c0]
 
 ty/source/quadratic.cpp:
     .text: [0x80189454, 0x8018975C]
