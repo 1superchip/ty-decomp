@@ -282,7 +282,6 @@ CFLAGS = [
     "-inline auto",
     "-enum int",
     "-str reuse"
-    
 ]
 
 BASE_DOL_CFLAGS = CFLAGS

@@ -1,5 +1,17 @@
 #decompiled code slices go here
 
+Dolphin/__ppc_eabi_init.s:
+   .text: [0x801DC058, 0x801DC0AC]
+
+ty/source/props/WaterVolume.cpp:
+   .text: [0x801191f8, 0x80119788]
+   .ctors: [0x8023C9E0, 0x8023C9E4]
+   .data: [0x8025e1b8, 0x8025e2b0]
+   .bss: [0x802ade58, 0x802adee0]
+   .sdata: [0x803f7e28, 0x803f7e58]
+   .sbss: [0x803fa6a8, 0x803fa6b0]
+   .sdata2: [0x803ff7e8, 0x803ff7f8]
+
 ty/source/controlval.cpp:
    .text: [0x801511E4, 0x801513FC]
    .bss: [0x802b06e8, 0x802b0768]
@@ -46,10 +58,10 @@ ty/source/MessageMap.cpp:
     .text: [0x80179c14, 0x80179ca0]
 
 #ty/source/Messages.cpp:
-#    .text: [0x80179ca0, 0x
-#    .data: [0x80265750, 0x
-#    .sdata: [0x803f8b80, 0x
-#    .sbss: [0x803fa9b8, 0x
+#    .text: [0x80179ca0, 0x80179e44]
+#    .data: [0x80265750, 0x80265a20]
+#    .sdata: [0x803f8b80, 0x803f8bf8]
+#    .sbss: [0x803fa9b8, 0x803fa9c0]
 
 ty/source/quadratic.cpp:
     .text: [0x80189454, 0x8018975C]

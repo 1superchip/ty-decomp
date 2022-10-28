@@ -1,60 +1,34 @@
 #include "types.h"
+#include "common/Heap.h"
 //#include "common/KromeIni.h"
 #include "common/MKSceneManager.h"
 
 #define GOMSG_Last 0x10
 #define In_WaterVolume 0x40000000
 
-struct ModuleInfoBase;
-
-struct ModuleInfoBaseObject {
-	void (*InitModule)(void);
-	void (*DeinitModule)(void);
-	void (*pUpdateModule)(void);
-	void (*pDrawModule)(void);
-	int* (*pAllocate)(void);
-	void (*pDeallocate)(void);
-	int unk18;
-	int instanceSize;
-	bool bUpdate;
-	int flags;
-	ModuleInfoBase* pNext;
-};
+struct ModuleInfoBaseObject;
 
 struct ModuleInfoBase {
-	// has an empty vtable except for RTTI, probably due to inheritance
-    // is this correct?
+    ModuleInfoBase()  {
+        pData = NULL;
+    }
     virtual void Init(ModuleInfoBase*) = 0;
     virtual void* ConstructObject(void*) = 0;
 	void Reset(void);
-	void AddToModuleList(ModuleInfoBase*);
+	static void AddToModuleList(ModuleInfoBase*);
 	
 	ModuleInfoBaseObject* pData;
 
     static ModuleInfoBase* pList;
 };
 
-// not used in this file
-template <typename T>
-struct ModuleInfo {
-	virtual void Init(ModuleInfoBase*);
-    virtual void* ConstructObject(void*);
-};
-
 struct GameObject;
 
-// fix this???
 struct BeginStruct {
     u8* unk0;
     u8* unk4;
     GameObject* GetPointers(void) {
-        GameObject* ret;
-        if (unk0 < unk4) {
-            ret = (GameObject*)unk0;
-        } else {
-            ret = NULL;
-        }
-        return ret;
+        return (unk0 < unk4) ? (GameObject*)unk0 : NULL;
     }
 };
 
@@ -81,13 +55,12 @@ struct GameObjDesc : MKPropDescriptor {
 
 struct GameObject : MKProp {
 	
-	// all of these except for CalcDetailLevel might be static
-	void InitModule(void);
-	void DeinitModule(void);
-	void UpdateModule(void);
-	void DrawModule(void);
-	int Allocate(void);
-	void Deallocate(GameObject*);
+	static void InitModule(void);
+	static void DeinitModule(void);
+	static void UpdateModule(void);
+	static void DrawModule(void);
+	static int* Allocate(void);
+	static void Deallocate(GameObject*);
 	uint CalcDetailLevel(void);
 	
 	static int GetMessageIdFromString(char*);
@@ -101,4 +74,55 @@ struct GameObject : MKProp {
 	virtual void Message(MKMessage*);
 	virtual void Init(GameObjDesc*);
 	virtual void Deinit(void);
+};
+
+
+struct ModuleInfoBaseObject {
+	void (*InitModule)(void);
+	void (*DeinitModule)(void);
+	void (*pUpdateModule)(void);
+	void (*pDrawModule)(void);
+	int* (*pAllocate)(void);
+	void (*pDeallocate)(GameObject*);
+	int unk18; // entity count?
+	int instanceSize;
+	bool bUpdate;
+	int flags;
+	ModuleInfoBase* pNext;
+};
+
+inline void* operator new(size_t size, void* mem) {
+    return (void*)mem;
+}
+
+template <typename T>
+struct ModuleInfo : ModuleInfoBase {
+    
+	virtual void Init(ModuleInfoBase*) {
+        if (pData == NULL) {
+            pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
+        }
+        Reset();
+        pData->flags = 0;
+        pData->InitModule = GameObject::InitModule;
+        pData->DeinitModule = GameObject::DeinitModule;
+        pData->pUpdateModule = GameObject::UpdateModule;
+        pData->pDrawModule = GameObject::DrawModule;
+        pData->pAllocate = GameObject::Allocate;
+        pData->pDeallocate = GameObject::Deallocate;
+        pData->instanceSize = sizeof(T);
+        if (pData->pUpdateModule != GameObject::UpdateModule) {
+            pData->flags |= 1;
+        }
+        if (pData->pDrawModule != GameObject::DrawModule) {
+            pData->flags |= 2;
+        }
+        if (pData->pAllocate != GameObject::Allocate) {
+            pData->flags |= 8;
+        }
+        AddToModuleList(this);
+    }
+    virtual void* ConstructObject(void* ptr) {
+        return new(ptr) T;
+    }
 };

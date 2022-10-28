@@ -18,20 +18,20 @@ void ModuleInfoBase::Reset(void) {
     pData->bUpdate = false;
 }
 
-void ModuleInfoBase::AddToModuleList(ModuleInfoBase* base) {
-    if ((pData->flags & 3) == 0) {
+void ModuleInfoBase::AddToModuleList(ModuleInfoBase* pModule) {
+    if ((pModule->pData->flags & 3) == 0) {
         return;
     }
     ModuleInfoBase* list = ModuleInfoBase::pList;
     ModuleInfoBase* list1 = list;
     while (list != NULL) {
-        if (list == this) {
+        if (list == pModule) {
             return;
         }
         list = list->pData->pNext;
     }
-    pData->pNext = list1;
-    ModuleInfoBase::pList = this;
+    pModule->pData->pNext = list1;
+    ModuleInfoBase::pList = pModule;
 }
 
 void GameObject::Init(GameObjDesc* pDesc) {
@@ -126,8 +126,8 @@ void GameObject::DrawModule(void) {
 	return;
 }
 
-int GameObject::Allocate(void) {
-	return 0;
+int* GameObject::Allocate(void) {
+	return NULL;
 }
 
 void GameObject::Deallocate(GameObject* pObj) {

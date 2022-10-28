@@ -27,4 +27,3 @@ struct GameObjectManager {
 	BeginStruct Begin(void);
 	int CountEntities(KromeIni*, KromeIniLine*);
 };
-
