@@ -1,9 +1,16 @@
 
-// fix this
+
 struct RkvFileEntry {
-    int data[8];
-    uint data1[7];
-    short shorts[2];
+	char name[0x20];
+    int unk20;
+    int length;
+    int unk28;
+    int unk2C;
+    uint unk30;
+    uint unk34;
+    int unk38;
+    short unk3C;
+    short unk3E;
 };
 
 struct RkvTOC {

@@ -4,10 +4,9 @@
 
 // operator new is from System_GC.cpp?
 
-// .sbss
 DirectLight* DirectLight::pDefaultLight;
 
-Vector defaultLightSetup[7] = {{-0.2f, -1.0f, 0.7f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, 
+static Vector defaultLightSetup[7] = {{-0.2f, -1.0f, 0.7f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, 
 								{0.2f, -1.0f, 0.5f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, 
 								{0.0f, 1.0f, 0.0f, 0.0f}, {0.2f, 0.2f, 0.2f, 0.0f}, {0.3f, 0.3f, 0.3f, 0.0f}};
 

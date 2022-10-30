@@ -30,8 +30,8 @@ void ControlVal::Init(int setting) {
     UseControlConfig(setting);
 }
 
-void ControlVal::UseControlConfig(int config) {
-    switch (config) {
+void ControlVal::UseControlConfig(int controlConfig) {
+    switch (controlConfig) {
         case 0:
             activeControls[0] = buttonVals[6];
             activeControls[2] = buttonVals[7];

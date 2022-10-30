@@ -7,8 +7,8 @@ struct DirectLight {
     Vector lightArray[6];
 	Vector ambient;
 	
-	void InitModule(void);
-	void DeinitModule(void);
+	static void InitModule(void);
+	static void DeinitModule(void);
 	void Init(void);
 	void Set(Vector*);
 	void SetLight(int, Vector*, Vector*);
