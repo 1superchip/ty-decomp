@@ -117,7 +117,7 @@ struct Model {
         {
             u8 b0 : 2;
             u8 bHasAnimation : 1;
-            u8 b3 : 1;
+            bool b3 : 1; // "bScissoring"?
             u8 b4 : 1;
             u8 b5 : 1;
             u8 b6 : 1;
@@ -158,7 +158,7 @@ struct Model {
 	void SetRenderTypeOverride(int);
 	Material* GetSubObjectMaterial(int, int);
 	
-	void Draw(u16*); // from Model_GC.cpp
+	int Draw(u16*); // from Model_GC.cpp
 };
 
 void Model_UnpackTemplate(ModelTemplate*);

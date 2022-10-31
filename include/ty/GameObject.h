@@ -23,14 +23,7 @@ struct ModuleInfoBase {
 };
 
 struct GameObject;
-
-struct BeginStruct {
-    u8* unk0;
-    u8* unk4;
-    GameObject* GetPointers(void) {
-        return (unk0 < unk4) ? (GameObject*)unk0 : NULL;
-    }
-};
+struct BeginStruct;
 
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
@@ -124,5 +117,16 @@ struct ModuleInfo : ModuleInfoBase {
     }
     virtual void* ConstructObject(void* ptr) {
         return new(ptr) T;
+    }
+};
+
+struct BeginStruct {
+    u8* unk0;
+    u8* unk4;
+    GameObject* GetPointers(void) {
+        return (unk0 < unk4) ? (GameObject*)unk0 : NULL;
+    }
+    void UpdatePointers(void) {
+        unk0 += static_cast<GameObjDesc*>(((GameObject *)unk0)->pDescriptor)->pModule->pData->instanceSize;
     }
 };

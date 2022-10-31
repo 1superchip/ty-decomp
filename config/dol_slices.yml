@@ -20,6 +20,16 @@ ty/source/props/WaterVolume.cpp:
    .sbss: [0x803fa6a8, 0x803fa6b0]
    .sdata2: [0x803ff7e8, 0x803ff7f8]
 
+#WaterWheel is the slice between WaterVolume and WeatherProp
+
+ty/source/props/WeatherProp.cpp:
+   .text: [0x80119c0c, 0x8011a2e4]
+   .ctors: [0x8023c9e8, 0x8023c9ec]
+   .data: [0x8025e408, 0x8025e538]
+   .bss: [0x802adff0, 0x802ae078]
+   .sdata: [0x803f7eb0, 0x803f7ef8]
+   .sbss: [0x803fa6b8, 0x803fa6c8]
+
 ty/source/controlval.cpp:
    .text: [0x801511E4, 0x801513FC]
    .bss: [0x802b06e8, 0x802b0768]

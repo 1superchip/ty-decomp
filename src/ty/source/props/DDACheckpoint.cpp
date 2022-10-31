@@ -6,8 +6,8 @@ extern GameObjectManager objectManager;
 extern DDASession dda;
 bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
-GameObjDesc ddaCheckpointDesc;
-ModuleInfo<DDACheckpoint> ddaCheckpointModule;
+static GameObjDesc ddaCheckpointDesc;
+static ModuleInfo<DDACheckpoint> ddaCheckpointModule;
 
 void DDACheckpoint_LoadResources(KromeIni* pIni) {
 	ddaCheckpointDesc.Init(&ddaCheckpointModule, "DDACheckpoint", "DDACheckpoint", 0, 0);

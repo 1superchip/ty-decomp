@@ -46,7 +46,7 @@ void GameObjectManager::DeinitLevel(void) {
     BeginStruct begin = Begin();
     while (begin.GetPointers()) {
         begin.GetPointers()->Deinit();
-        begin.unk0 += static_cast<GameObjDesc*>(((GameObject*)begin.unk0)->pDescriptor)->pModule->pData->instanceSize;
+        begin.UpdatePointers();
     }
 
     gSceneManager.Deinit();
@@ -136,9 +136,6 @@ void CheckVolume(GameObject* pObj, BoundingVolume* pBV) {
 void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume* pBV) {
     pObj->pLocalToWorld = pLTW;
     pObj->pDescriptor->pVolume = pBV;
-    //if (pBV == NULL) {
-    //    pObj->pDescriptor->pVolume = &bv;
-    //}
 	CheckVolume(pObj, pBV);
     if (pObj->pLocalToWorld == NULL) {
         pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~0x3) | 2;
@@ -153,9 +150,6 @@ void GameObjectManager::AddObject(GameObject* pObj, Model* pModel) {
     GameObjDesc* pDesc = static_cast<GameObjDesc*>(pObj->pDescriptor);
     pObj->pDescriptor->pVolume = pModelVolume;
 	CheckVolume(pObj, pModelVolume);
-    //if (pModelVolume == NULL) {
-    //    pObj->pDescriptor->pVolume = &bv;
-    //}
     if (pObj->pLocalToWorld == NULL) {
         pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~0x3) | 2;
     }
@@ -202,7 +196,7 @@ GameObject* GameObjectManager::GetObjectFromID(uint id) {
         if (begin.GetPointers()->unk10 == id) {
             return begin.GetPointers();
         }
-        begin.unk0 += static_cast<GameObjDesc*>(((GameObject*)begin.unk0)->pDescriptor)->pModule->pData->instanceSize;
+        begin.UpdatePointers();
     }
     return NULL;
 }

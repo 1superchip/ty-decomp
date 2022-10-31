@@ -3,8 +3,8 @@
 
 extern GameObjectManager objectManager;
 
-ModuleInfo<WaterVolume> waterVolumeModule;
-GameObjDesc waterVolumeDesc;
+static ModuleInfo<WaterVolume> waterVolumeModule;
+static GameObjDesc waterVolumeDesc;
 
 // decomp the file this is in
 struct CritterField2LoadInfo {
@@ -98,7 +98,7 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
                 }
             }
         }
-        descStruct.unk0 += static_cast<GameObjDesc *>(((GameObject *)descStruct.unk0)->pDescriptor)->pModule->pData->instanceSize;
+        descStruct.UpdatePointers();
     }
     return isWithin;
 }
