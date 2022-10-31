@@ -1,5 +1,13 @@
 #decompiled code slices go here
 
+ty/source/props/DDACheckpoint.cpp:
+   .text: [0x800e9090, 0x800e936c]
+   .ctors: [0x8023c908, 0x8023c90c]
+   .data: [0x80257b90, 0x80257c40]
+   .bss: [0x802a7e08, 0x802a7e90]
+   .sdata: [0x803f69b8, 0x803f69f0]
+   .sbss: [0x803fa3c0, 0x803fa3c8]
+
 Dolphin/__ppc_eabi_init.s:
    .text: [0x801DC058, 0x801DC0AC]
 
@@ -66,6 +74,14 @@ ty/source/Messages.cpp:
 ty/source/quadratic.cpp:
     .text: [0x80189454, 0x8018975C]
     .sdata2: [0x80401038, 0x80401058]
+
+#ty/source/RangeCheck.cpp:
+#    .text: [0x8018975c, 0x8018a99c]
+#    .data: [0x80266848, 0x802b49f8]
+#    .bss: [0x802b49d8, 0x802b4a58]
+#    .sdata: [0x803f8e88, 0x803f8ee8]
+#    .sbss: [0x803faa40, 0x803faa48]
+#    .sdata2: [0x80401058, 0x80401078]
 
 ty/source/DataVal.cpp:
     .text: [0x80156434, 0x80157c48]
