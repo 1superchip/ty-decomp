@@ -130,3 +130,8 @@ struct BeginStruct {
         unk0 += static_cast<GameObjDesc*>(((GameObject *)unk0)->pDescriptor)->pModule->pData->instanceSize;
     }
 };
+
+template <typename T>
+T descr_cast(MKPropDescriptor* pDesc) {
+    return static_cast<T>(pDesc);
+}

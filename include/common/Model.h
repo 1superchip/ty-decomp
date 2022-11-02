@@ -30,11 +30,11 @@ struct Animation {
     Matrix* pMatrix;
     char padding[0x78];
 	
-	
-    void SetLocalToWorldDirty(void);
+	void SetLocalToWorldDirty(void);
 	void Destroy(void);
+	void CalculateMatrices(void);
 	static Animation* Create(char*, Matrix*);
-    Matrix* GetNodeMatrix(int);
+	Matrix* GetNodeMatrix(int);
 	
     FrameInstance frames[];
 };

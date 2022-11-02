@@ -11,3 +11,6 @@ ty/source/GameObject.cpp:
 
 #common/Source/Translation.cpp:
 #    .flags: "-pool off"
+
+ty/source/RangeCheck.cpp:
+    .flags: "-pool off"

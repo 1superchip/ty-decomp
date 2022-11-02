@@ -50,6 +50,13 @@ struct Matrix {
 	void SetTranslation(Vector*);
 	void SetRotationPYR(Vector*);
 	void Inverse(Matrix*);
+	void Scale(Matrix*, Vector*);
+	void InverseSimple(Matrix*);
+	void Translate(Matrix*, Vector*);
+	void RotatePYR(Matrix*, Vector*);
+	Vector* Row0(void) {
+		return (Vector*)&data[0][0];
+	}
 	Vector* Row3(void) {
 		return (Vector*)&data[3][0];
 	}
