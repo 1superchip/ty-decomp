@@ -1,3 +1,4 @@
+#pragma once on
 
 struct KromeIniLine {
     char* comment;

@@ -319,7 +319,7 @@ void DDASession::LoadStatsInfo(void) {
 }
 
 void DDASession::SaveCurrentSession(void) {
-    if (bSaveEnabled == false) { // DDASession::bSaveEnabled should be in .sdata?
+    if (bSaveEnabled == false) {
         return;
     }
     if (gb.y[0xe84] == false) {

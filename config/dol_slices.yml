@@ -1,5 +1,14 @@
 #decompiled code slices go here
 
+ty/source/props/D1_Prop.cpp:
+   .text: [0x800e8604, 0x800e8ad4]
+   .ctors: [0x8023c900, 0x8023c904]
+   .data: [0x80257998, 0x80257a58]
+   .bss: [0x802a7c60, 0x802a7ce8]
+   .sdata: [0x803f6918, 0x803f6950]
+   .sbss: [0x803fa3a8, 0x803fa3b8]
+   .sdata2: [0x803fea98, 0x803feaa0]
+
 ty/source/props/DDACheckpoint.cpp:
    .text: [0x800e9090, 0x800e936c]
    .ctors: [0x8023c908, 0x8023c90c]
@@ -16,6 +25,15 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sdata: [0x803f79e8, 0x803f7a80]
 #   .sbss: [0x803fa5f8, 0x803fa610]
 #   .sdata2: [0x803ff5f8, 0x803ff638]
+
+#ty/source/props/SoundProp.cpp:
+#   .text: [0x8010d5dc, 0x8010ddf8]
+#   .ctors: [0x8023c9a0, 0x8023c9a4]
+#   .data: [0x8025c758, 0x8025c830]
+#   .bss: [0x802ab930, 0x802ab9b8]
+#   .sdata: [0x803f78a8, 0x803f78f0]
+#   .sbss: [0x803fa5c8, 0x803fa5d0]
+#   .sdata2: [0x803ff530, 0x803ff540]
 
 Dolphin/__ppc_eabi_init.s:
    .text: [0x801DC058, 0x801DC0AC]
