@@ -11,7 +11,7 @@ static int bufferIndex;
 
 extern "C" int strlen(char*);
 
-// add the bufferIndex inline
+// bufferIndex inline
 
 char* Str_Printf(char* str, ...) {
     char* currStr = &buffer[bufferIndex];

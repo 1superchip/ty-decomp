@@ -58,7 +58,7 @@ float Kin_GetDiscreteDistance(float* arg0, float* arg1, float* arg2, float* arg3
     if (arg3 != NULL) {
         return 0.0f;
     }
-    return *arg2 * (1.0f + *arg0 + *arg1) / 2.0f; // 2.0f matched the function instead of multiplying by 0.5f (original float is 0.5f)
+    return *arg2 * (1.0f + *arg0 + *arg1) / 2.0f;
 }
 
 float Kin_GetDiscreteInitialVelocity(float* arg0, float* arg1, float* arg2, float* arg3) {

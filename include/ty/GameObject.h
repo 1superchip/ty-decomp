@@ -1,3 +1,5 @@
+#pragma once on
+
 #include "types.h"
 #include "common/Heap.h"
 //#include "common/KromeIni.h"

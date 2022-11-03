@@ -80,15 +80,15 @@ inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
 }
 
 bool WaterVolume_IsWithin(Vector *point, float *arg1) {
-    Vector localVec;
+    Vector transformedPoint;
     bool isWithin = false;
     float fVar1 = -1e+11f;
     BeginStruct descStruct = waterVolumeDesc.Begin();
     while (descStruct.GetPointers()) {
         WaterVolume *volume = (WaterVolume *)descStruct.GetPointers();
         if (point->y < volume->unkC0 && point->y > volume->unkBC) {
-            localVec.ApplyMatrix(point, &volume->matrix);
-            if (BoundingVolume_CheckPoint(&waterBoundingVolume, &localVec) != false) {
+            transformedPoint.ApplyMatrix(point, &volume->matrix);
+            if (BoundingVolume_CheckPoint(&waterBoundingVolume, &transformedPoint) != false) {
                 fVar1 = (fVar1 > volume->unkC0) ? fVar1 : volume->unkC0;
                 if (arg1 != NULL) {
                     *arg1 = fVar1;

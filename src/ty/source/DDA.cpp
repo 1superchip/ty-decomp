@@ -19,11 +19,11 @@ extern "C" int ty[0x1178]; // from Ty.cpp
 bool DDASession::bInitialised;
 bool DDASession::bSessionStarted;
 bool DDASession::bConvertToReadable;
-int pDDAMenu;
-int pDDADrawEnabled;
-int pDDADrawCameraEnabled;
-int pDDASaveEnabled;
-int pDDAConvertToReadable;
+static int pDDAMenu;
+static int pDDADrawEnabled;
+static int pDDADrawCameraEnabled;
+static int pDDASaveEnabled;
+static int pDDAConvertToReadable;
 
 
 // .sdata
@@ -40,7 +40,6 @@ void DDASession::Init(void) {
     pDDADrawCameraEnabled = 0;
     pDDASaveEnabled = 0;
     pDDAConvertToReadable = 0;
-    // uses structs/create structs for these
     unk10.Init(0x26, sizeof(DDAUnk18));
     unk14.Init(0x26, sizeof(DDAUnk14));
     unk1C = 0;

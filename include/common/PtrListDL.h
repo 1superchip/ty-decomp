@@ -3,10 +3,8 @@
 
 extern int gEmptyPtrListDL[2]; // Utils.cpp
 
-// should this be a template?
 // inlines of IsFull() and IsEmpty()
 // void PtrListDL<T>InitSized(char*,int,int);
-// is InitSized what DDASession uses?
 // Init calls InitSized
 template <typename T>
 struct PtrListDL {

@@ -3,8 +3,6 @@
 extern "C" int strlen(char*);
 int strnicmp(const char*, const char*, int);
 
-// these are used by other files
-// .sdata
 int gEmptyPtrList[2] = {0x00000000, 0x00000000};
 int gEmptyPtrListDL[2] = {0x00000000, 0x00000000};
 
@@ -33,6 +31,8 @@ void* Util_BinarySearch(void *arg0, void *arg1, int arg2, int arg3, int (*compar
 	return 0;
 }
 
+// ';' is the delimiter for patterns
+// '*' is a wildcard
 bool Util_WildcardPatternMatch(char *str, char *pattern) {
     u8 var_r26;
     char *temp_r4;
@@ -57,7 +57,6 @@ bool Util_WildcardPatternMatch(char *str, char *pattern) {
         while (pattern[var_r5] != 0 && pattern[var_r5] != ';' && pattern[var_r5] != '*') {
 			var_r5++;
 		}
-    
 		if (pattern[var_r5] == '*') {
 			var_r23 = &pattern[var_r5] + 1;
 			var_r3 = var_r23;
@@ -95,7 +94,7 @@ bool Util_WildcardPatternMatch(char *str, char *pattern) {
         }
         pattern += idx;
         while (*pattern == ';') {
-            pattern++;
+            pattern++; // goto the next string
         }
     }
     return false;
