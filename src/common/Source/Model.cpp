@@ -94,6 +94,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     }
     ModelTemplate* pFoundTemplate = *pTemplates;
     if (pFoundTemplate != NULL) {
+		// if this template isn't a new instance, increment the reference count
         pFoundTemplate->referenceCount++;
         pModelTemplate = pFoundTemplate;
     } else {
@@ -108,14 +109,11 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         Model_UnpackTemplate(pModelTemplate);
         DCStoreRange((uint*)pModelTemplate->pModelData, fileSize);
         pModelTemplate->referenceCount = 1;
-        modelTemplates.pPointers--;
-        *modelTemplates.pPointers = pModelTemplate;
+        modelTemplates.AddEntry(pModelTemplate);
     }
     int modelSize = (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) + sizeof(Model) + (pModelTemplate->pModelData->nmbrOfMatrices * 4);
     Model* out = (Model*)Heap_MemAlloc(pModelTemplate->pModelData->nmbrOfSubObjects + modelSize);
-    Model** pInstances = modelInstances.pPointers - 1;
-    modelInstances.pPointers = pInstances;
-    pModel = *pInstances = out;
+    pModel = modelInstances.AddEntry(out);
     pModel->pTemplate = pModelTemplate;
     pModel->pMatrices = (Matrix*)&pModel->matrices;
     pModel->unkC = (float*)(pModel->pMatrices + pModelTemplate->pModelData->nmbrOfMatrices);
@@ -173,9 +171,7 @@ void Model::Purge(void) {
                 (*ppModels)->pTemplate = NULL;
             }
             Heap_MemFree(*ppModels);
-            Model **pNext = modelInstances.pPointers;
-            modelInstances.pPointers = pNext + 1;
-            *ppModels = *pNext;
+            *ppModels = modelInstances.GetUnkEntry();
         }
         ppModels++;
     }

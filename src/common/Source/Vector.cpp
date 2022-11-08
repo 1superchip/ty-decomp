@@ -1,5 +1,6 @@
 #include "types.h"
 #include "common/Vector.h"
+#include "common/Matrix.h"
 
 // .data
 Vector gXAxis = {1.0f, 0.0f, 0.0f, 0.0f};

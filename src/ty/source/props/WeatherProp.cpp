@@ -2,7 +2,6 @@
 #include "ty/props/WeatherProp.h"
 
 extern GameObjectManager objectManager;
-bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 int Weather_GetType(void);
 void Weather_Enable(bool);
 void Weather_SetType(int);

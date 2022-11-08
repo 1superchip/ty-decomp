@@ -1,6 +1,9 @@
+#ifndef COMMON_MODEL
+#define COMMON_MODEL
+
 #include "types.h"
-#include "common/Vector.h" // this has Matrix in it for now
-//#include "common/Matrix.h"
+#include "common/Vector.h"
+#include "common/Matrix.h"
 
 void Model_InitModule(void);
 void Model_DeinitModule(void);
@@ -162,3 +165,5 @@ struct Model {
 };
 
 void Model_UnpackTemplate(ModelTemplate*);
+
+#endif // COMMON_MODEL

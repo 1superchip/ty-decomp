@@ -6,8 +6,6 @@ extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
 extern "C" int stricmp(char*, char*);
 void Tools_StripExtension(char*, char const*);
-bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
-bool LoadLevel_LoadFloat(KromeIniLine*, char*, float*);
 
 extern bool gAssertBool; // from Str.cpp
 

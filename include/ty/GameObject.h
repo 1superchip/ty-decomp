@@ -137,3 +137,102 @@ template <typename T>
 T descr_cast(MKPropDescriptor* pDesc) {
     return static_cast<T>(pDesc);
 }
+
+
+template <typename T>
+void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {
+    GameObjDesc* desc = NULL;
+    KromeIniLine* pLine = pIni->GotoLine(name, NULL);
+    GameObjDesc* p = desc;
+    while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
+        char* pString = NULL;
+        if (pLine->pFieldName != NULL && pLine->AsString(0, &pString) != false) {
+            p = (GameObjDesc*)Heap_MemAlloc(sizeof(T));
+            memset(p, 0, sizeof(T));
+            new ((void*)p) T;
+            static_cast<T*>(p)->Init(pDesc->pModule, pString, pLine->pFieldName, pDesc->searchMask, pDesc->flags);
+            static_cast<GameObjDesc*>(p)->unk80 = desc;
+            desc = (GameObjDesc*)p;
+        }
+        pLine = pIni->GetLineWithLine(pLine);
+    }
+    while (desc != NULL) {
+        GameObjDesc* p = desc;
+        desc = p->unk80;
+        p->Load(pIni);
+        objectManager.AddDescriptor(p);
+    }
+}
+
+// place these in the proper header
+
+struct NameFlagPair {
+    char* name;
+    int flag;
+};
+bool LoadLevel_LoadBool(KromeIniLine*, char*, bool*);
+bool LoadLevel_LoadFlags(KromeIniLine*, char*, NameFlagPair*, int, int*);
+bool LoadLevel_LoadVector(KromeIniLine*, char*, Vector*);
+bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
+bool LoadLevel_LoadFloat(KromeIniLine*, char*, float*);
+bool LoadLevel_LoadString(KromeIniLine*, char*, char*, int, int);
+
+enum CommonGameObjFlags {
+    GameObjFlags_Active = 1,
+    GameObjFlags_Enabled = 2,
+    GameObjFlags_Visible = 4
+};
+
+struct CommonGameObjFlagsComponent {
+    u16 flags;
+
+    void Clear(CommonGameObjFlags objFlags) {
+        flags &= ~objFlags;
+    }
+    void Set(CommonGameObjFlags objFlags) {
+        flags |= objFlags;
+    }
+	void Init(CommonGameObjFlags objFlags) {
+		flags = objFlags;
+	}
+    bool LoadFlag(KromeIniLine* pLine, char* str, CommonGameObjFlags objFlags) {
+        bool tmp = false;
+        bool levelRet = LoadLevel_LoadBool(pLine, str, &tmp);
+        if (levelRet != false) {
+            if (tmp) {
+                Set(objFlags);
+            } else {
+                Clear(objFlags);
+            }
+            return true;
+        }
+        return false;
+    }
+    bool LoadLine(KromeIniLine* pLine) {
+        return LoadFlag(pLine, "bActive", GameObjFlags_Active) || 
+            LoadFlag(pLine, "bEnabled", GameObjFlags_Enabled) ||
+            LoadFlag(pLine, "bVisible", GameObjFlags_Visible);
+    }
+	void Message(MKMessage* pMsg) {
+        switch (pMsg->unk0) {
+            case 10:
+                Set(GameObjFlags_Active);
+                break;
+            case 11:
+                Clear(GameObjFlags_Active);
+                break;
+            case 14:
+                Set(GameObjFlags_Visible);
+                break;
+            case 15:
+                Clear(GameObjFlags_Visible);
+                break;
+            case 12:
+                Set(GameObjFlags_Enabled);
+                break;
+            case 13:
+                Clear(GameObjFlags_Enabled);
+                break;
+        }
+    }
+};

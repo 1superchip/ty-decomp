@@ -1,5 +1,7 @@
-#include "types.h"
-#include "common/StdMath.h" // _table_sinf
+#ifndef COMMON_QUATROTATION
+#define COMMON_QUATROTATION
+
+#include "common/Vector.h"
 
 struct AxisRotation {
     Vector rot;
@@ -13,3 +15,5 @@ struct QuatRotation {
 	void ConvertVector(Vector*);
 	void Multiply(QuatRotation*, QuatRotation*); //https://decomp.me/scratch/cue99
 };
+
+#endif // COMMON_QUATROTATION

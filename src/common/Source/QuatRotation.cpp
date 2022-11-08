@@ -1,4 +1,6 @@
+#include "types.h"
 #include "common/QuatRotation.h"
+#include "common/StdMath.h" // _table_sinf
 
 void QuatRotation::ConvertRotation(AxisRotation* pRotation) {
     float wRot = 0.5f * pRotation->unkC;

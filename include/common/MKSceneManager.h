@@ -1,5 +1,6 @@
 #include "types.h"
-//#include "common/Vector.h" // has matrix in it currently
+#include "common/Vector.h"
+#include "common/Matrix.h"
 #include "common/Model.h"
 #include "common/KromeIni.h"
 
@@ -23,16 +24,15 @@ struct MKPropDescriptor {
 	float maxUpdateDist;
 	float maxDrawDist;
 	uint searchMask;
-	int drawLayer; // should be named "layer"
+	int drawLayer; // should be named layer?
 	uint flags;
 	BoundingVolume* pVolume;
-	// 24 and 28 = pInstances and pNext?
     int unk1C;
     float maxScissorDist;
     int unk24;
 	MKProp* pNext;
 	
-	static void* pDrawListDescs;
+	static MKPropDescriptor* pDrawListDescs;
 };
 
 struct MKProp {
@@ -40,10 +40,10 @@ struct MKProp {
 	Model* pModel;
 	Matrix* pLocalToWorld;
 	int flags;
-	int unk10; // some count 
+	int unk10;
 	float unk14;
 	u16 detailLevel;
-	u16 rejectionResult; // result from Model_TrivialRejectTest, named "visibility"
+	u16 rejectionResult;
 	float unk1C;
 	float distSquared;
 	MKProp* pNext;
@@ -63,22 +63,22 @@ struct MKProp {
 struct SMNode {
 	BoundingVolume volume;
 	// next/prev?
-	SMNode* unk20;
-	SMNode* unk24;
-	MKProp* pProp;
+	SMNode* unk20[2];
+	void* pData;
 	float drawDist;
 };
 
 struct SMTree {
 	SMNode* pNodes;
 	SMNode* pLastNode;
-	int nmbrOfSubObjects; // leaves
+	int nmbrOfSubObjects;
 	int unkC;
-	int propCount; // nodes
+	int propCount;
 	
 	void Deinit(void);
 	void PairUp(int, int);
 	void LinkUp(void);
+    void LinkUpRow(int, int, int);
 };
 
 struct MKSceneManagerInit {
@@ -125,5 +125,3 @@ struct MKSceneManager {
 	void RemoveProp(MKProp*);
 	int GetPropsInRange(MKProp**, int, Vector*, float, int, int, bool);
 };
-
-//static void SMDrawProp(void*, int, float, float);

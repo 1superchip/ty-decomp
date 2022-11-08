@@ -8,6 +8,12 @@ struct PtrList {
     T **pPointers;
     void Init(int);
 	void Destroy(T*);
+    T* AddEntry(T* p) {
+        return *--pPointers = p;
+    }
+    T* GetUnkEntry(void) {
+        return *pPointers++;
+    }
 };
 
 template <typename T>

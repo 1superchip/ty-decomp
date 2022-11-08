@@ -4,7 +4,6 @@
 #include "ty/MessageMap.h"
 
 extern "C" int stricmp(char*, char*);
-bool LoadLevel_LoadInt(KromeIniLine *, char *, int *);
 
 extern GameObjectManager objectManager;
 

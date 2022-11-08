@@ -17,3 +17,6 @@ ty/source/RangeCheck.cpp:
 
 #ty/source/props/StaticProp.cpp:
 #    .flags: "-pool off"
+
+ty/source/props/SoundProp.cpp:
+    .flags: "-pool off"

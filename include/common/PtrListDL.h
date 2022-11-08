@@ -4,8 +4,6 @@
 extern int gEmptyPtrListDL[2]; // Utils.cpp
 
 // inlines of IsFull() and IsEmpty()
-// void PtrListDL<T>InitSized(char*,int,int);
-// Init calls InitSized
 template <typename T>
 struct PtrListDL {
     T *pMem;
@@ -33,7 +31,7 @@ template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
     // count * size = structure array size
     // count * 4 = pointer array size
-    // 8 byte header for memory pointer and (name pointer?)
+    // 8 byte header for memory pointer
     pMem = (T*)Heap_MemAlloc(count * size + (count + 2) * 4);
     T* memory = pMem;
     int* arrayEnd = (int*)((int)memory + count * size); // go to array memory end

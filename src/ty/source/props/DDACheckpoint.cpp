@@ -4,7 +4,6 @@
 
 extern GameObjectManager objectManager;
 extern DDASession dda;
-bool LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
 static GameObjDesc ddaCheckpointDesc;
 static ModuleInfo<DDACheckpoint> ddaCheckpointModule;

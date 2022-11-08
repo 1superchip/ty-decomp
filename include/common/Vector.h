@@ -1,4 +1,7 @@
-#pragma once on
+#ifndef COMMON_VECTOR
+#define COMMON_VECTOR
+
+//#include "common/Matrix.h"
 
 struct Matrix;
 
@@ -36,29 +39,6 @@ struct Vector {
 		y = y1;
 		z = z1;
 	}
-	/*inline Vector operator=(const Vector other)
-	    {
-		    x = other.x;
-		    y = other.y;
-		    z = other.z;
-		    return *this;
-	    }*/
 };
 
-struct Matrix {
-	float data[4][4];
-	void SetIdentity(void);
-	void SetTranslation(Vector*);
-	void SetRotationPYR(Vector*);
-	void Inverse(Matrix*);
-	void Scale(Matrix*, Vector*);
-	void InverseSimple(Matrix*);
-	void Translate(Matrix*, Vector*);
-	void RotatePYR(Matrix*, Vector*);
-	Vector* Row0(void) {
-		return (Vector*)&data[0][0];
-	}
-	Vector* Row3(void) {
-		return (Vector*)&data[3][0];
-	}
-};
+#endif COMMON_VECTOR
