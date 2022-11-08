@@ -24,6 +24,9 @@ struct PtrListDL {
     inline bool IsFull(void) {
         return (int*)*((int*)pMem - 1) == 0;
     }
+    inline T* GetNextEntry(void) {
+        return *--(T**)pMem;
+    }
 };
 
 template <typename T>
@@ -31,8 +34,7 @@ inline void PtrListDL<T>::Init(int count, int size) {
     // count * size = structure array size
     // count * 4 = pointer array size
     // 8 byte header for memory pointer and (name pointer?)
-    // name pointer most likely unused
-    pMem = (T*)Heap_MemAlloc(count * size + 8 + count * 4);
+    pMem = (T*)Heap_MemAlloc(count * size + (count + 2) * 4);
     T* memory = pMem;
     int* arrayEnd = (int*)((int)memory + count * size); // go to array memory end
     *(int*)(pMem = (T*)arrayEnd) = 0; // set mem pointer to end of array
@@ -58,7 +60,7 @@ inline void PtrListDL<T>::Deinit(void) {
         }
     }
     if (temp != (T*)&gEmptyPtrListDL[0]) {
-        while(*(HeatFlare**)ptrs != NULL) {
+        while(*(T**)ptrs != NULL) {
             if (*(T**)ptrs < (T*)memory) {
                 memory = *(T**)ptrs;
             }

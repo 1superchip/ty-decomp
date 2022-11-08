@@ -2,7 +2,6 @@
 #include "common/PtrListDL.h"
 #include "common/Model.h" // material is currently in this
 
-// .sbss
 Material* pCaptureMaterial;
 static PtrListDL<HeatFlare> heatFlares;
 static bool bHeatFlares;

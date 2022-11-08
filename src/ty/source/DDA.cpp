@@ -3,9 +3,6 @@
 #include "common/Heap.h"
 #include "common/Timer.h"
 
-// clean this file up
-// including structures
-
 // from a different file
 extern "C" union {
 u8 y[0xe84];
@@ -15,7 +12,6 @@ u32 x[0x6f0];
 extern "C" void memset(void*, int, int);
 extern "C" int ty[0x1178]; // from Ty.cpp
 
-// .sbss
 bool DDASession::bInitialised;
 bool DDASession::bSessionStarted;
 bool DDASession::bConvertToReadable;
@@ -25,11 +21,8 @@ static int pDDADrawCameraEnabled;
 static int pDDASaveEnabled;
 static int pDDAConvertToReadable;
 
-
-// .sdata
 bool DDASession::bSaveEnabled = true;
 
-// .data
 DDASession dda;
 
 // https://decomp.me/scratch/bJko0
@@ -116,11 +109,8 @@ void DDASession::NewCheckpoint(int arg1) {
     if(unk10.IsFull() == true) {
         return;
     }
-    DDAUnk18* ptr = (DDAUnk18*)((int*)*((int*)&unk10) - 1);
-    unk10.pMem = ptr;
-    currentCheckpoint = (DDAUnk18*)*(int*)ptr;
+    currentCheckpoint = unk10.GetNextEntry();
     currentCheckpoint->unk0 = unk10.GetSize();
-    // some inline to initialize this struct?
     currentCheckpoint->unk4 = 0;
     currentCheckpoint->unk8 = arg1;
     currentCheckpoint->unk9 = ty[0x1178 / 4];
@@ -171,10 +161,7 @@ void DDASession::StoreDeathInfo(void) {
     if (unk14.IsFull() != false) {
         return;
     }
-    ptr = (DDAUnk14*)unk14.pMem;
-    int* p = (int*)ptr - 1;
-    (int*)unk14.pMem = p;
-    pInfo = (DDAUnk14*)*p;
+    pInfo = unk14.GetNextEntry();
     *(int*)pInfo = *(int*)currentCheckpoint;
 
     pInfo->deathPosX = (int)pHero[0x40 / 4];
