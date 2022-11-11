@@ -223,3 +223,10 @@ common/File.cpp:
 #    .sdata: [0x803f9a08, 0x803f9af0]
 #    .sbss: [0x803fb3b0, 0x803fb3e8]
 #    .sdata2: [0x804024c0, 0x80402538]
+
+common/Source/Texture.cpp:
+    .text: [0x80236008, 0x802368f8]
+    .bss: [0x803ef140, 0x803ef150]
+    .sdata: [0x803f9b50, 0x803f9b60]
+    .sbss: [0x803fb500, 0x803fb510]
+    .sdata2: [0x80402648, 0x80402660]

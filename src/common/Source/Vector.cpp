@@ -183,8 +183,8 @@ void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {
     z = pVector->z + pMatrix->data[3][2];
 }
 
-void Vector::CClamp(Vector* pVector, float arg1, float arg2) {
-    float clamp = pVector->x;
+void Vector::CClamp(Vector* pColour, float arg1, float arg2) {
+    float clamp = pColour->x;
     if (clamp < arg1) {
         clamp = arg1;
     } else if (clamp > arg2) {
@@ -192,7 +192,7 @@ void Vector::CClamp(Vector* pVector, float arg1, float arg2) {
     }
     x = clamp;
     
-    clamp = pVector->y;
+    clamp = pColour->y;
     if (clamp < arg1) {
         clamp = arg1;
     } else if (clamp > arg2) {
@@ -200,7 +200,7 @@ void Vector::CClamp(Vector* pVector, float arg1, float arg2) {
     }
     y = clamp;
     
-    clamp = pVector->z;
+    clamp = pColour->z;
     if (clamp < arg1) {
         clamp = arg1;
     } else if (clamp > arg2) {
@@ -208,7 +208,7 @@ void Vector::CClamp(Vector* pVector, float arg1, float arg2) {
     }
     z = clamp;
     
-    clamp = pVector->w;
+    clamp = pColour->w;
     if (clamp < arg1) {
         clamp = arg1;
     } else if (clamp > arg2) {

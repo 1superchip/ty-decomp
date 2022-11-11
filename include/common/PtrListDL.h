@@ -1,14 +1,25 @@
+#ifndef COMMON_PTRLISTDL
+#define COMMON_PTRLISTDL
+
 #include "types.h"
 #include "common/Heap.h"
 
 extern int gEmptyPtrListDL[2]; // Utils.cpp
 
-// inlines of IsFull() and IsEmpty()
+template <typename T>
+inline void Swap(T& p, T& p1) {
+    T tmp = p;
+    p = p1;
+    p1 = tmp;
+}
+
 template <typename T>
 struct PtrListDL {
     T *pMem;
     void Init(int, int);
 	void Deinit(void);
+    void Destroy(T**);
+    void Destroy(T*);
     void* GetEnd(void) {
         void* ptr = pMem;
         while ((int*)(*(int*)ptr) != 0) {
@@ -31,7 +42,6 @@ template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
     // count * size = structure array size
     // count * 4 = pointer array size
-    // 8 byte header for memory pointer
     pMem = (T*)Heap_MemAlloc(count * size + (count + 2) * 4);
     T* memory = pMem;
     int* arrayEnd = (int*)((int)memory + count * size); // go to array memory end
@@ -68,3 +78,22 @@ inline void PtrListDL<T>::Deinit(void) {
     }
     pMem = NULL;
 }
+
+template <typename T>
+inline void PtrListDL<T>::Destroy(T** p) {
+    Swap<T*>(*((T**)pMem)++, *p);
+}
+
+template <typename T>
+inline void PtrListDL<T>::Destroy(T* p) {
+    T** memPtr = (T**)pMem;
+    while (*memPtr != NULL) {
+        if (*memPtr == p) {
+            Destroy(memPtr);
+            break;
+        }
+        memPtr++;
+    }
+}
+
+#endif COMMON_PTRLISTDL

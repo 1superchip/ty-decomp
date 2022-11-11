@@ -82,14 +82,14 @@ void SoundProp::Reset(void) {
 void SoundProp::Update(void) {
     switch (unk80) {
         case 1:
-            if (gameObjFlags.flags & 1) {
+            if (gameObjFlags.flags & GameObjFlags_Active) {
                 Play();
                 unk80 = 2;
             }
             break;
         case 2:
             unk7C.Update(unk84, false, true, this, 0, -1.0f, 0);
-            if (!(gameObjFlags.flags & 1)) {
+            if (!(gameObjFlags.flags & GameObjFlags_Active)) {
                 SoundBank_Stop(&unk7C.unk0);
                 unk80 = 1;
                 break;

@@ -1,3 +1,5 @@
+#ifndef COMMON_HEAP
+#define COMMON_HEAP
 
 void Heap_InitModule(int);
 void Heap_DeinitModule(void);
@@ -7,3 +9,5 @@ void Heap_MemFreeAligned(void*);
 void* Heap_MemAlloc(int);
 void Heap_MemFree(void*);
 int Heap_Check(char*, int);
+
+#endif COMMON_HEAP
