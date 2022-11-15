@@ -160,6 +160,10 @@ common/Source/KromeIni.cpp:
     .sdata: [0x803f9850, 0x803f9880]
     .sdata2: [0x804022d0, 0x804022d8]
 
+common/Source/Matrix.cpp:
+    .text: [0x802166f8, 0x8021850c]
+    .sdata2: [0x804022d8, 0x804022f0]
+
 #common/Source/MKSceneManager.cpp:
 #    .text: [0x8021d3d8, 0x8021FCEC]
 #    .ctors: [0x8023ca98, 0x8023CA9C]

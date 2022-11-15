@@ -18,7 +18,7 @@ struct Vector {
 	void Cross(Vector*, Vector*);
 	void Projection(Vector*, Vector*);
 	void InterpolateLinear(Vector*, Vector*, float);
-	void ApplyMatrix(Vector*, Matrix*); // Matrix needs to be defined
+	void ApplyMatrix(Vector*, Matrix*);
 	void ApplyMatrixW(Vector*, Matrix*);
 	void ApplyRotMatrix(Vector*, Matrix*);
 	void ApplyTransMatrix(Vector*, Matrix*);
@@ -38,6 +38,22 @@ struct Vector {
 		x = x1;
 		y = y1;
 		z = z1;
+	}
+	inline void Set(float x1, float y1, float z1, float w1) {
+		x = x1;
+		y = y1;
+		z = z1;
+		w = w1;
+	}
+	void Copy(Vector* src) {
+		x = src->x;
+		y = src->y;
+		z = src->z;
+	}
+    void Add(Vector* pSrc, Vector* pImm) {
+		x = pSrc->x + pImm->x;
+		y = pSrc->y + pImm->y;
+		z = pSrc->z + pImm->z;
 	}
 };
 

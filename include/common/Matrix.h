@@ -20,6 +20,7 @@ struct Matrix {
 	void SetRotationToScale(float);
 	void SetRotationToScaleXYZ(Vector*);
 	void Transpose(Matrix*);
+	void Transpose3x3(Matrix*);
 	void InverseSimple(Matrix*);
 	void Multiply(Matrix*, Matrix*);
 	void Multiply3x3(Matrix*, Matrix*);
@@ -37,6 +38,12 @@ struct Matrix {
 	
 	Vector* Row0(void) {
 		return (Vector*)&data[0][0];
+	}
+	Vector* Row1(void) {
+		return (Vector*)&data[1][0];
+	}
+	Vector* Row2(void) {
+		return (Vector*)&data[2][0];
 	}
 	Vector* Row3(void) {
 		return (Vector*)&data[3][0];
