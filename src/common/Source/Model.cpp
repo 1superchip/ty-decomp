@@ -5,8 +5,6 @@
 #include "common/Str.h"
 #include "common/PtrList.h"
 
-//need to decomp matrix
-
 // from Str.cpp
 extern bool gAssertBool;
 
@@ -19,7 +17,6 @@ struct MKDefaults {
 };
 extern MKDefaults gMKDefaults;
 
-// .sbss
 bool moduleInitialised;
 PtrList<Model> modelInstances;
 PtrList<ModelTemplate> modelTemplates;

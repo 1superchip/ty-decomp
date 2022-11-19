@@ -35,6 +35,25 @@ struct Matrix {
 	void RotatePYR(Matrix*, Vector*);
 	void GetRotationPYR(Vector*);
 	void Inverse(Matrix*);
+	void SetLookAt(Vector* arg1, Vector* arg2) {
+		Vector cross;
+		Vector up;
+		Vector normalizedDiff;
+		normalizedDiff.x = arg2->x - arg1->x;
+		normalizedDiff.y = arg2->y - arg1->y;
+		normalizedDiff.z = arg2->z - arg1->z;
+		normalizedDiff.Normalise(&normalizedDiff);
+		up.Set(0.0f, 1.0f, 0.0f);
+		cross.Cross(&normalizedDiff, &up);
+		cross.Normalise(&cross);
+		up.Cross(&cross, &normalizedDiff);
+		Row0()->Copy(&cross);
+		data[0][3] = 0.0f;
+		Row1()->Copy(&up);
+		data[1][3] = 0.0f;
+		Row2()->Copy(&normalizedDiff);
+		data[2][3] = 0.0f;
+	}
 	
 	Vector* Row0(void) {
 		return (Vector*)&data[0][0];

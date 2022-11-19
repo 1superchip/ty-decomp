@@ -4,7 +4,7 @@
 // clean this up
 struct DirectLight {
 	Vector pad[8];
-    Vector lightArray[6];
+    Vector lightArray[6]; // colors
 	Vector ambient;
 	
 	static void InitModule(void);

@@ -2,7 +2,6 @@
 #include "common/Vector.h"
 #include "common/Matrix.h"
 
-// .data
 Vector gXAxis = {1.0f, 0.0f, 0.0f, 0.0f};
 Vector gYAxis = {0.0f, 1.0f, 0.0f, 0.0f};
 Vector gZAxis = {0.0f, 0.0f, 1.0f, 0.0f};

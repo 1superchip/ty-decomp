@@ -348,7 +348,6 @@ void DataVal::Load(void) {
     CalcYStep(glideJumpGravity, glideJumpHeight, &glideJumpYStep);
 }
 
-// float issues?
 void DataVal::WS::Init(void) {
     WSIDSlowSlow = 6.0f;
     WSIDSlowNormal = 10.0f;

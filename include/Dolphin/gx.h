@@ -35,6 +35,12 @@ struct GXTlutObj {
     u32 data[3];
 };
 
+struct GXLightObj {
+    int unk0[3];
+    uint color;
+    uint unk10[12];
+};
+
 #define _GX_TF_CTF 0x20
 #define _GX_TF_ZTF 0x10
 
@@ -103,7 +109,7 @@ typedef enum _GXTexFmt {
 
 void GXSetTevColor(int, GXColor*);
 void GXSetTevDirect(int);
-void GXSetDstAlpha(int, int);
+void GXSetDstAlpha(int, u8);
 void GXSetBlendMode(int, int, int, int);
 void GXSetAlphaCompare(int, int, int, int, int);
 void GXSetTexCoordGen2(int, int, int, int, int, int);
@@ -121,6 +127,7 @@ void GXSetNumTevStages(u8);
 void GXSetNumIndStages(u8);
 void GXLoadTexMtxImm(float*, int, int); // takes a Matrix pointer 2x4 or 3x4
 void GXSetTexCoordGen2(int, int, int, int, int, int);
+// next two functions aren't from GX?
 void C_MTXOrtho(Mtx44* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void C_MTXIdentity(Mtx44*);
 void GXSetIndTexMtx(int, float*, u8);
@@ -152,6 +159,21 @@ void GXSetTevColorIn(int, int, int, int, int);
 void GXSetTevColorOp(int, int, int, int, int, int);
 void GXSetTevAlphaIn(int, int, int, int, int);
 void GXSetTevAlphaOp(int, int, int, int, int, int);
+void GXLoadPosMtxImm(float*, int);
+void GXLoadNrmMtxImm(float*, int);
+void GXInitLightColor(GXLightObj*, GXColor);
+void GXInitLightPos(GXLightObj*, float, float, float);
+void GXLoadLightObjImm(GXLightObj*, int);
+void GXSetChanAmbColor(int, GXColor);
+void GXSetAlphaUpdate(int);
+
+extern volatile union {
+    u8 c;
+    short s;
+    int i;
+    void * p;
+    float f;
+} WGPIPE : 0xcc008000;
 
 #ifdef __cplusplus
 };

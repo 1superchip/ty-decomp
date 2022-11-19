@@ -234,3 +234,9 @@ common/Source/Texture.cpp:
     .sdata: [0x803f9b50, 0x803f9b60]
     .sbss: [0x803fb500, 0x803fb510]
     .sdata2: [0x80402648, 0x80402660]
+
+common/gc/View_GC.cpp:
+    .text: [0x80239364, 0x8023aaa4]
+    .bss: [0x803f33c0, 0x803f3440]
+    .sbss: [0x803fb550, 0x803fb558]
+    .sdata2: [0x80402688, 0x804026e0]

@@ -5,8 +5,6 @@
 
 extern "C" double atan2(double, double);
 
-// has a function that was inlined "SetLookAt"
-
 void Matrix::CopyRotation(Matrix* pMatrix) {
     *Row0() = *pMatrix->Row0();
     *Row1() = *pMatrix->Row1();

@@ -55,6 +55,11 @@ struct Vector {
 		y = pSrc->y + pImm->y;
 		z = pSrc->z + pImm->z;
 	}
+    void Scale(float scalar) {
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
+	}
 };
 
 #endif COMMON_VECTOR
