@@ -41,6 +41,18 @@ struct GXLightObj {
     uint unk10[12];
 };
 
+// Compare types.
+typedef enum _SDK_GXCompare {
+	GX_NEVER,   // Always false.
+	GX_LESS,    //<
+	GX_EQUAL,   //=
+	GX_LEQUAL, //<=
+	GX_GREATER, //>
+	GX_NEQUAL, //!=
+	GX_GEQUAL, //>=
+	GX_ALWAYS   // Always true.
+} GXCompare;
+
 #define _GX_TF_CTF 0x20
 #define _GX_TF_ZTF 0x10
 
@@ -135,7 +147,7 @@ void GXSetIndTexOrder(int, int, int);
 void GXSetTevIndWarp(int, int, int, int, int);
 void GXSetIndTexCoordScale(int, int, int);
 void GXSetBlendMode(int, int, int, int);
-void GXSetZMode(u8, int, u8);
+void GXSetZMode(u8, GXCompare, u8);
 void GXSetZCompLoc(bool);
 void GXSetTevOp(int, int);
 void GXSetColorUpdate(int);
@@ -148,7 +160,7 @@ void GXSetProjection(float*, int);
 void GXClearVtxDesc(void);
 void GXSetVtxDesc(int, int);
 void GXSetTexCopySrc(int, int, int, int);
-void GXSetTexCopyDst(int, int, int, int);
+void GXSetTexCopyDst(int, int, GXTexFmt, int);
 void GXCopyTex(void*, int);
 void GXSetCopyFilter(u8, u8*, int, u8*);
 void GXSetCurrentMtx(int);

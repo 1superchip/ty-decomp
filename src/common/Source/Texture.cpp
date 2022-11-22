@@ -45,9 +45,7 @@ int Texture_filterType = 2;
 
 void Texture::InitModule(void) {
     textures.Init(0x200, sizeof(Texture)); // max of 512 textures
-    Texture_Color.z = 0.0f;
-    Texture_Color.y = 0.0f;
-    Texture_Color.x = 0.0f;
+    Texture_Color.x = Texture_Color.y = Texture_Color.z = 0.0f;
     initialised = true;
 }
 

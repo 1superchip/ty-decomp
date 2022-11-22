@@ -219,14 +219,14 @@ common/File.cpp:
     .data: [0x802764d8, 0x802764e8]
     .bss: [0x8036eaa0, 0x8036ed60]
 
-#common/Material_GC.cpp:
-#    .text: [0x8022825c, 0x0x8022bb50]
-#    .rodata: [0x8023fec8, 0x8023ffb0]
-#    .data: [0x80276a80, 0x80296d58]
-#    .bss: [0x8036f760, 0x8037f7e0]
-#    .sdata: [0x803f9a08, 0x803f9af0]
-#    .sbss: [0x803fb3b0, 0x803fb3e8]
-#    .sdata2: [0x804024c0, 0x80402538]
+common/Source/Material_GC.cpp:
+    .text: [0x8022825c, 0x8022bb50]
+    .rodata: [0x8023fec8, 0x8023ffb0]
+    .data: [0x80276a80, 0x80296d58]
+    .bss: [0x8036f760, 0x8037f7e0]
+    .sdata: [0x803f9a08, 0x803f9af0]
+    .sbss: [0x803fb3b0, 0x803fb3e8]
+    .sdata2: [0x804024c0, 0x80402538]
 
 common/Source/Texture.cpp:
     .text: [0x80236008, 0x802368f8]

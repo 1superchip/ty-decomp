@@ -15,25 +15,25 @@ inline void Swap(T& p, T& p1) {
 
 template <typename T>
 struct PtrListDL {
-    T *pMem;
-    void Init(int, int);
+	T *pMem;
+	void Init(int, int);
 	void Deinit(void);
-    void Destroy(T**);
-    void Destroy(T*);
-    void* GetEnd(void) {
+	void Destroy(T** p);
+	void Destroy(T* p);
+	void* GetEnd(void) {
         void* ptr = pMem;
         while ((int*)(*(int*)ptr) != 0) {
-        ((int*)ptr)++;
+			((int*)ptr)++;
         }
         return ptr;
     }
-    inline int GetSize(void) {
+	inline int GetSize(void) {
         return ((int)GetEnd() - (int)pMem) / 4;
     }
-    inline bool IsFull(void) {
+	inline bool IsFull(void) {
         return (int*)*((int*)pMem - 1) == 0;
     }
-    inline T* GetNextEntry(void) {
+	inline T* GetNextEntry(void) {
         return *--(T**)pMem;
     }
 };

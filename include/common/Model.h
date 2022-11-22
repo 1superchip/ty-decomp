@@ -4,6 +4,7 @@
 #include "types.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
+#include "common/Material.h"
 
 void Model_InitModule(void);
 void Model_DeinitModule(void);
@@ -12,13 +13,6 @@ void Model_DeinitModule(void);
 struct BoundingVolume {
 	Vector v1;
 	Vector v2;
-};
-
-// Material_GC.h
-struct Material {
-    char* pName;
-	void Destroy(void);
-	static Material* Create(char*);
 };
 
 // Animation.h

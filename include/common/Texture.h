@@ -7,9 +7,9 @@ struct Texture {
 	int height;
 	int referenceCount;
 	bool bMpegTarget; // only set to true by CreateMpegTarget
-	int unk30;
-	int unk34;
-	int unk38;
+	void* unk30;
+	void* unk34;
+	void* unk38;
 	void* pFileData;
 	bool bTlut;
 	GXTexObj texObj;

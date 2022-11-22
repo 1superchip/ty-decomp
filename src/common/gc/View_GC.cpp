@@ -328,7 +328,7 @@ void View::ClearZBuffer(void) {
     GXSetProjection((float*)&proj[1][3], 1);
     GXSetCurrentMtx(3);
     Material::UseNone(-1);
-    GXSetZMode(1, 7, 1);
+    GXSetZMode(1, GX_ALWAYS, 1);
     GXSetAlphaUpdate(0);
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
@@ -374,7 +374,7 @@ void View::ClearZBuffer(void) {
     WGPIPE.f = 0.0f;
     GXSetProjectionv((float*)&proj);
     GXSetCurrentMtx(0);
-    GXSetZMode(1, 3, 1);
+    GXSetZMode(1, GX_LEQUAL, 1);
     GXSetAlphaUpdate(1);
 }
 
@@ -407,7 +407,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
         dstAlpha = (alpha > 0xff) ? 0xff : alpha;
     }
     GXSetDstAlpha(1, dstAlpha);
-    GXSetZMode(1, 7, 1);
+    GXSetZMode(1, GX_ALWAYS, 1);
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xB, 1);
@@ -452,7 +452,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.f = 0.0f;
     GXSetProjectionv((float*)&proj);
     GXSetCurrentMtx(0);
-    GXSetZMode(1, 3, 1);
+    GXSetZMode(1, GX_LEQUAL, 1);
 }
 
 void View::SetFogColour(uint colour) {

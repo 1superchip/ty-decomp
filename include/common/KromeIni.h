@@ -24,9 +24,10 @@ struct KromeIni {
 	
 	inline KromeIniLine* GetNextLine(void);
 	inline KromeIniLine* GetLineWithLine(KromeIniLine*);
+	inline KromeIniLine* GetLine3(void);
 	bool Init(char*);
 	void ParseData(void);
-    void Deinit(void);
+	void Deinit(void);
 	KromeIniLine* GotoLine(char*, char*);
 	void Warning(char*);
 };
@@ -64,6 +65,14 @@ inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
         }
     }
     return line;
+}
+
+inline KromeIniLine* KromeIni::GetLine3(void) {
+    KromeIniLine* line;
+    if (pFileMem == NULL) {
+        return NULL;
+    }
+    return (unk34 >= 0 && unk34 < nmbrOfLines) ? &pLines[unk34] : NULL;
 }
 
 // all of parser was inlined

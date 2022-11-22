@@ -1,5 +1,6 @@
 #include "types.h"
-#include "common/Model.h" // has Material defined in it
+#include "common/Model.h"
+#include "common/Material.h"
 #include "ty/LensFlare.h"
 
 // from another file

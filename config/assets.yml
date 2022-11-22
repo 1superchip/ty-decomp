@@ -1,0 +1,6 @@
+#asset config file
+
+config/dol.yml:
+
+    materialgc_rawCaptureData:
+        addrs: [0x80276A80, 0x80296a80]

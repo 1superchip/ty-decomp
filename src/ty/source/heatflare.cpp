@@ -1,6 +1,6 @@
 #include "ty/heatflare.h"
 #include "common/PtrListDL.h"
-#include "common/Model.h" // material is currently in this
+#include "common/Material.h"
 
 Material* pCaptureMaterial;
 static PtrListDL<HeatFlare> heatFlares;
