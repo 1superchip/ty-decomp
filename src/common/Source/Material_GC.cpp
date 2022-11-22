@@ -165,7 +165,7 @@ char *Material::InitFromMatDefs(char *pName) {
     KromeIniLine *pLine = materialIni.GotoLine(name, NULL);
     if (pLine != NULL) {
         do {
-            pLine = materialIni.GetLine3();
+            pLine = materialIni.GetCurrentLine();
             if (pLine == NULL) {
                 break;
             }

@@ -24,7 +24,7 @@ struct KromeIni {
 	
 	inline KromeIniLine* GetNextLine(void);
 	inline KromeIniLine* GetLineWithLine(KromeIniLine*);
-	inline KromeIniLine* GetLine3(void);
+	inline KromeIniLine* GetCurrentLine(void);
 	bool Init(char*);
 	void ParseData(void);
 	void Deinit(void);
@@ -67,7 +67,7 @@ inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
     return line;
 }
 
-inline KromeIniLine* KromeIni::GetLine3(void) {
+inline KromeIniLine* KromeIni::GetCurrentLine(void) {
     KromeIniLine* line;
     if (pFileMem == NULL) {
         return NULL;
