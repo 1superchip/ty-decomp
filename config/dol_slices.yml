@@ -108,6 +108,13 @@ ty/source/Messages.cpp:
     .sdata: [0x803f8b80, 0x803f8bf8]
     .sbss: [0x803fa9b8, 0x803fa9c0]
 
+ty/source/Mist.cpp:
+    .text: [0x8017a618, 0x8017a7b0]
+    .data: [0x80265b78, 0x80265b88]
+    .sdata: [0x803f8c58, 0x803f8c60]
+    .sbss: [0x803fa9c8, 0x803fa9d0]
+    .sdata2: [0x80400c78, 0x80400c88]
+
 ty/source/quadratic.cpp:
     .text: [0x80189454, 0x8018975C]
     .sdata2: [0x80401038, 0x80401058]

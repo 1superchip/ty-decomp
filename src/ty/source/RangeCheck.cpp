@@ -26,7 +26,7 @@ extern struct Ty {
     int state;
 } ty;
 
-extern struct GlovalVar {
+extern struct GlobalVar {
     char padding[0x660];
     float zones[8];
 } gb;
