@@ -71,13 +71,13 @@ Texture *Texture::Create(char *pName) {
 		// switch texture format
         switch (*(int *)texFile) {
         case 0:
-		// RGB5A3
+			// RGB5A3
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
             GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_RGB5A3, 1, 1, 0);
             break;
         case 1:
-		// Indexed
+			// Indexed
             pTex->bTlut = true;
             memset((void *)&pTex->tlutObj, 0, 0xC);
             if (Texture_bColourKey != false) {
@@ -93,7 +93,7 @@ Texture *Texture::Create(char *pName) {
             GXInitTexObjCI(&pTex->texObj, (void *)((int)texFile + 0x220), pTex->width, pTex->height, GX_TF_CI8, 1, 1, 0);
             break;
         case 2:
-		// CMPR
+			// CMPR
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
             GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_CMPR, 1, 1, 1);

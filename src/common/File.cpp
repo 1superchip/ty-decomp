@@ -129,7 +129,8 @@ void* File_Seek(int fd, int arg1, int arg2) {
             gcFiles[fd].unk48 += arg1;
             break;
         case 2:
-            gcFiles[fd].unk48 = gcFiles[fd].unk34 + arg1;
+			// unk34 is a field in DVDFileInfo
+            gcFiles[fd].unk48 = gcFiles[fd].unk34 + arg1; // seek from end of the file
         default:
             break;
     }

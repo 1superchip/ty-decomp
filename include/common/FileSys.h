@@ -2,12 +2,12 @@
 
 struct RkvFileEntry {
 	char name[0x20];
-    int unk20;
+    int directoryIndex;
     int length;
     int unk28;
-    int unk2C;
-    uint unk30;
-    uint unk34;
+    int offset; // offset of file in RKV
+    uint crc;
+    uint timestamp;
     int unk38;
     short unk3C;
     short unk3E;
@@ -23,11 +23,11 @@ struct RkvTOC {
     int unk34;
     int unk38;
     int unk3C;
-    int rkvFd; // 0x40
+    int rkvFd;
     int nmbrOfEntries;
     int unk48;
     RkvFileEntry* pFileEntries;
-    int unk50;
+    int unk50; // directory entry pointer
     int unk54;
     bool unk58;
 	

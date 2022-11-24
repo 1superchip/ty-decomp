@@ -77,12 +77,12 @@ void RkvTOC::Init(char *pName) {
 
         int entryIndex = 0;
         while (entryIndex < nmbrOfEntries) {
-            ByteReverse<int>(pFileEntries[entryIndex].unk20);
+            ByteReverse<int>(pFileEntries[entryIndex].directoryIndex);
             ByteReverse<int>(pFileEntries[entryIndex].length);
             ByteReverse<int>(pFileEntries[entryIndex].unk28);
-            ByteReverse<int>(pFileEntries[entryIndex].unk2C);
-            ByteReverse<uint>(pFileEntries[entryIndex].unk30);
-            ByteReverse<uint>(pFileEntries[entryIndex].unk34);
+            ByteReverse<int>(pFileEntries[entryIndex].offset);
+            ByteReverse<uint>(pFileEntries[entryIndex].crc);
+            ByteReverse<uint>(pFileEntries[entryIndex].timestamp);
             pFileEntries[entryIndex].unk38 = 0;
             pFileEntries[entryIndex].unk3C = 0;
             pFileEntries[entryIndex].unk3E = 0;
@@ -113,7 +113,7 @@ bool FileSys_Exists(char *arg0, int *arg1) {
     RkvFileEntry *pEntry = 0;
     if (patch.rkvFd >= 0) {
         pEntry = (RkvFileEntry *)Util_BinarySearch((void *)arg0, (void *)patch.pFileEntries, patch.nmbrOfEntries, 0x40, EntryCompare);
-        if (pEntry != 0 && pEntry->unk2C < 0) {
+        if (pEntry != 0 && pEntry->offset < 0) {
             pEntry = 0;
         }
     }
@@ -121,7 +121,7 @@ bool FileSys_Exists(char *arg0, int *arg1) {
         pEntry = 0;
         if (data.rkvFd >= 0) {
             pEntry = (RkvFileEntry *)Util_BinarySearch((void *)arg0, (void *)data.pFileEntries, data.nmbrOfEntries, 0x40, EntryCompare);
-            if (pEntry != 0 && pEntry->unk2C < 0) {
+            if (pEntry != 0 && pEntry->offset < 0) {
                 pEntry = 0;
             }
         }
@@ -169,7 +169,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
             RkvFileEntry *pFoundEntry = 0;
             if (toc->rkvFd >= 0) {
                 pFoundEntry = (RkvFileEntry *)Util_BinarySearch(entryLanguage, (void *)toc->pFileEntries, toc->nmbrOfEntries, 0x40, EntryCompare);
-                if (pFoundEntry != 0 && pFoundEntry->unk2C < 0) {
+                if (pFoundEntry != 0 && pFoundEntry->offset < 0) {
                     pFoundEntry = 0;
                 }
             }
@@ -211,7 +211,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
             RkvFileEntry *pFoundEntry = 0;
             if (toc->rkvFd >= 0) {
                 pFoundEntry = (RkvFileEntry *)Util_BinarySearch(entryLanguage, (void *)toc->pFileEntries, toc->nmbrOfEntries, 0x40, EntryCompare);
-                if (pFoundEntry != 0 && pFoundEntry->unk2C < 0) {
+                if (pFoundEntry != 0 && pFoundEntry->offset < 0) {
                     pFoundEntry = 0;
                 }
             }
@@ -234,7 +234,7 @@ void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int space
     RkvFileEntry *pFoundEntry;
     if (patch.rkvFd >= 0) {
         pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)patch.pFileEntries, patch.nmbrOfEntries, 0x40, EntryCompare);
-        if (pEntry != 0 && (int)pEntry->unk2C < 0) {
+        if (pEntry != 0 && (int)pEntry->offset < 0) {
             pEntry = 0;
         }
     }
@@ -245,7 +245,7 @@ void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int space
         pEntry = 0;
         if (data.rkvFd >= 0) {
             pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)data.pFileEntries, data.nmbrOfEntries, 0x40, EntryCompare);
-            if (pEntry != 0 && (int)pEntry->unk2C < 0) {
+            if (pEntry != 0 && (int)pEntry->offset < 0) {
                 pEntry = 0;
             }
         }
@@ -274,7 +274,7 @@ void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int space
             spaceAllocated = pFoundEntry->length;
         }
         if (pFoundEntry->length != 0) {
-            File_Seek(foundFd, pFoundEntry->unk2C, 0);
+            File_Seek(foundFd, pFoundEntry->offset, 0);
             File_Read(foundFd, pMemoryAllocated, pFoundEntry->length, spaceAllocated);
         }
         FileSys_SetOrder(pFoundEntry);
@@ -356,7 +356,7 @@ void FileSys_OutputFileOrder(void) {
         RkvFileEntry* sorted = (RkvFileEntry*)sortedEntries;
         while(index < data.nmbrOfEntries) {
             RkvFileEntry* pCurrEntry = *(RkvFileEntry**)((int)sorted + (index << 2));
-            if (pCurrEntry->unk2C != -1) {
+            if (pCurrEntry->offset != -1) {
                 strcat(stringBuf, Str_Printf("%s\r\n", pCurrEntry->name));
                 bufferIndex++;
             }
@@ -386,7 +386,7 @@ int FileSys_Open(char *pFilename, int *arg1, bool arg2) {
     if (patch.rkvFd >= 0) {
         pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)patch.pFileEntries, patch.nmbrOfEntries, 0x40, EntryCompare);
         // fix the struct access
-        if (pEntry != 0 && pEntry->unk2C < 0) {
+        if (pEntry != 0 && pEntry->offset < 0) {
             pEntry = 0;
         }
     }
@@ -405,7 +405,7 @@ int FileSys_Open(char *pFilename, int *arg1, bool arg2) {
         pEntry = 0;
         if (data.rkvFd >= 0) {
             pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)data.pFileEntries, data.nmbrOfEntries, 0x40, EntryCompare);
-            if (pEntry != 0 && pEntry->unk2C < 0) {
+            if (pEntry != 0 && pEntry->offset < 0) {
                 pEntry = 0;
             }
         }
@@ -427,7 +427,7 @@ int FileSys_Open(char *pFilename, int *arg1, bool arg2) {
         if (arg1 != 0) {
             *arg1 = pFoundEntry->length;
         }
-        File_Seek(foundFd, pFoundEntry->unk2C, 0);
+        File_Seek(foundFd, pFoundEntry->offset, 0);
     }
     return foundFd;
 }
@@ -453,7 +453,7 @@ int FileSys_GetOffset(char* pFilename) {
     RkvFileEntry* pFoundEntry;
     if (patch.rkvFd >= 0) {
         pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)patch.pFileEntries, patch.nmbrOfEntries, 0x40, EntryCompare);
-        if (pEntry != 0 && pEntry->unk2C < 0) {
+        if (pEntry != 0 && pEntry->offset < 0) {
             pEntry = 0;
         }
     }
@@ -463,14 +463,14 @@ int FileSys_GetOffset(char* pFilename) {
         pEntry = 0;
         if (data.rkvFd >= 0) {
             pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFilename, (void *)data.pFileEntries, data.nmbrOfEntries, 0x40, EntryCompare);
-            if (pEntry != 0 && pEntry->unk2C < 0) {
+            if (pEntry != 0 && pEntry->offset < 0) {
                 pEntry = 0;
             }
         }
         pFoundEntry = pEntry;
     }
     if (pFoundEntry != 0) {
-        return pFoundEntry->unk2C;
+        return pFoundEntry->offset;
     }
     return -1;
 }

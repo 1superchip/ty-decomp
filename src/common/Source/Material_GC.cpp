@@ -1016,7 +1016,7 @@ void Material::UseNone(int arg0) {
 }
 
 void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4) {
-    void* imgPtrs;
+    void* imgPtr;
     u16 width;
     u16 height;
     int format;
@@ -1027,7 +1027,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     if (pTex->pFileData == NULL) {
         return;
     }
-    GXGetTexObjAll(&pTex->texObj, &imgPtrs, &width, &height, (u8*)&format, (u8*)&wrap_s, (u8*)&wrap_t, (u8*)&mipmap);
+    GXGetTexObjAll(&pTex->texObj, &imgPtr, &width, &height, (u8*)&format, (u8*)&wrap_s, (u8*)&wrap_t, (u8*)&mipmap);
     pCaptureTexture = pTex;
     _GXRenderModeObj* rmodeObj = DEMOGetRenderModeObj();
     GXSetCopyFilter(0, 0, 0, 0);
@@ -1133,7 +1133,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     WGPIPE.f = 0.875f;
     GXSetTexCopySrc(0, 0, width, height);
     GXSetTexCopyDst(width, height, (GXTexFmt)format, 0);
-    GXCopyTex(imgPtrs, 1);
+    GXCopyTex(imgPtr, 1);
 
     GXLoadTexObj(&restorationTexObj, 0);
 
@@ -1263,7 +1263,6 @@ void Material::Update(void) {
     }
 }
 
-// https://decomp.me/scratch/LZqSE
 void Material::ScrollUVOffset(float arg1, float arg2) {
     arg1 = unk60.data[3][0] + arg1;
     if (arg1 < 0.0f) {
