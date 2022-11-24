@@ -25,7 +25,7 @@ struct RkvTOC {
     int unk3C;
     int rkvFd;
     int nmbrOfEntries;
-    int unk48;
+    int unk48; // directory entry count
     RkvFileEntry* pFileEntries;
     int unk50; // directory entry pointer
     int unk54;
