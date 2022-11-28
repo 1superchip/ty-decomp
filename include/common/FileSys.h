@@ -9,7 +9,7 @@ struct RkvFileEntry {
     uint crc;
     uint timestamp;
     int unk38;
-    short unk3C;
+    short unk3C; // load order id?
     short unk3E;
 };
 

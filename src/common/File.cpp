@@ -238,6 +238,6 @@ char* File_FileServerOutputFilename(char* name) {
 	return name;
 }
 
-int File_Write(int arg0, void* arg1, int arg2) {
+int File_Write(int fd, void* pData, int len) {
 	return 0;
 }
