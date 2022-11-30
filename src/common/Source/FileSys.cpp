@@ -25,6 +25,7 @@ static s16 fileOrderId;
 template <typename T> 
 void ByteReverse(T& data);
 
+// Star Wars GetEntry__6RkvTOCFPCc
 RkvFileEntry* RkvTOC_GetFileEntry(RkvTOC* pRkv, char* pFileName) {
     RkvFileEntry* pEntry = NULL;
     if (pRkv->rkvFd >= 0) {
@@ -113,18 +114,18 @@ void* FileSys_SetLoadInterceptHandler(void* loadInterceptFunc(char*, int*, void*
     return oldHandler;
 }
 
-bool FileSys_Exists(char *arg0, int *arg1) {
+bool FileSys_Exists(char *pFilename, int *pOutLen) {
     if (pExistInterceptHandler != NULL) {
-        if (pExistInterceptHandler(arg0, arg1, 0) != false) {
+        if (pExistInterceptHandler(pFilename, pOutLen, 0) != false) {
             return true;
         }
     }
-    RkvFileEntry* pEntry = RkvTOC_GetFileEntry(&patch, arg0);
+    RkvFileEntry* pEntry = RkvTOC_GetFileEntry(&patch, pFilename);
     if (pEntry == NULL) {
-        pEntry = RkvTOC_GetFileEntry(&data, arg0);
+        pEntry = RkvTOC_GetFileEntry(&data, pFilename);
     }
-    if (pEntry != NULL && arg1 != NULL) {
-        *arg1 = pEntry->length;
+    if (pEntry != NULL && pOutLen != NULL) {
+        *pOutLen = pEntry->length;
     }
     return pEntry != NULL;
 }
@@ -208,7 +209,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
     }
 }
 
-void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int spaceAllocated) {
+void *FileSys_Load(char *pFilename, int *pOutLen, void *pMemoryAllocated, int spaceAllocated) {
     int foundFd = -1;
     RkvFileEntry *pFoundEntry = RkvTOC_GetFileEntry(&patch, pFilename);
     if (pFoundEntry) {
@@ -221,14 +222,14 @@ void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int space
     }
     if (pLoadInterceptHandler != NULL) {
         int unkArg = 0;
-        void* pFileData = pLoadInterceptHandler(pFilename, arg1, pMemoryAllocated, &unkArg);
+        void* pFileData = pLoadInterceptHandler(pFilename, pOutLen, pMemoryAllocated, &unkArg);
         if (pFileData != NULL) {
             return pFileData;
         }
     }
     if (pFoundEntry != NULL) {
-        if (arg1 != NULL) {
-            *arg1 = pFoundEntry->length;
+        if (pOutLen != NULL) {
+            *pOutLen = pFoundEntry->length;
         }
         if (pMemoryAllocated == NULL) {
 			// if memory isn't already allocated, allocate the memory
@@ -249,16 +250,16 @@ void *FileSys_Load(char *pFilename, int *arg1, void *pMemoryAllocated, int space
     return 0;
 }
 
-int FileSys_Save(char* name, bool arg1, void* arg2, int arg3) {
+int FileSys_Save(char* name, bool arg1, void* pData, int dataLen) {
     arg1 = (arg1 & 0xff);
-    arg1 = static_cast<bool>(arg1); // why?
+    arg1 = static_cast<bool>(arg1);
     int fd = arg1 + 2;
     fd = File_Open(File_FileServerOutputFilename(name), fd);
     if (fd >= 0) {
-        File_Write(fd, arg2, arg3);
+        File_Write(fd, pData, dataLen);
         File_Close(fd);
     }
-    return fd >> 31;
+    return (fd < 0) ? -1 : 0;
 }
 
 static int FileOrderSortCompare(const void* arg0, const void* arg1) {
@@ -340,7 +341,7 @@ void FileSys_OutputFileOrder(void) {
     Heap_MemFree(sortedEntries);
 }
 
-int FileSys_Open(char *pFilename, int *arg1, bool arg2) {
+int FileSys_Open(char *pFilename, int *pOutLen, bool arg2) {
     int foundFd = -1;
     RkvFileEntry* pFoundEntry = RkvTOC_GetFileEntry(&patch, pFilename);
     if (pFoundEntry != NULL) {
@@ -369,8 +370,8 @@ int FileSys_Open(char *pFilename, int *arg1, bool arg2) {
         }
     }
     if (foundFd != -1) {
-        if (arg1 != NULL) {
-            *arg1 = pFoundEntry->length;
+        if (pOutLen != NULL) {
+            *pOutLen = pFoundEntry->length;
         }
         File_Seek(foundFd, pFoundEntry->offset, 0);
     }

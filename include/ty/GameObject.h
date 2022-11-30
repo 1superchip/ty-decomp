@@ -1,4 +1,5 @@
-#pragma once on
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
 #include "types.h"
 #include "common/Heap.h"
@@ -11,8 +12,8 @@
 struct ModuleInfoBaseObject;
 
 struct ModuleInfoBase {
-    ModuleInfoBase()  {
-        pData = NULL;
+    ModuleInfoBase() {
+		pData = NULL;
     }
     virtual void Init(ModuleInfoBase*) = 0;
     virtual void* ConstructObject(void*) = 0;
@@ -20,7 +21,6 @@ struct ModuleInfoBase {
 	static void AddToModuleList(ModuleInfoBase*);
 	
 	ModuleInfoBaseObject* pData;
-
     static ModuleInfoBase* pList;
 };
 
@@ -92,7 +92,7 @@ inline void* operator new(size_t size, void* mem) {
 
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
-    
+	
 	virtual void Init(ModuleInfoBase*) {
         if (pData == NULL) {
             pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
@@ -236,3 +236,5 @@ struct CommonGameObjFlagsComponent {
         }
     }
 };
+
+#endif // GAMEOBJECT_H

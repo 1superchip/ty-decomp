@@ -25,7 +25,6 @@ bool DDASession::bSaveEnabled = true;
 
 DDASession dda;
 
-// https://decomp.me/scratch/bJko0
 void DDASession::Init(void) {
     bInitialised = true;
     pDDAMenu = 0;
@@ -33,8 +32,9 @@ void DDASession::Init(void) {
     pDDADrawCameraEnabled = 0;
     pDDASaveEnabled = 0;
     pDDAConvertToReadable = 0;
-    unk10.Init(0x26, sizeof(DDAUnk18));
-    unk14.Init(0x26, sizeof(DDAUnk14));
+	// 38 entries total
+    unk10.Init(38, sizeof(DDAUnk18));
+    unk14.Init(38, sizeof(DDAUnk14));
     unk1C = 0;
     unk20 = 0;
     unk24[19] = 0;
@@ -64,7 +64,7 @@ void DDASession::DrawDebugStats(void) {
 void DDASession::StartSession(void) {
     TimerInfo startTime;
     bSessionStarted = true;
-    currentCheckpoint = 0;
+    currentCheckpoint = NULL;
     memset(this, 0, 0x10);
     unk0 = 0;
     levelNumber = gb.x[0x6ec / 4];
@@ -74,10 +74,10 @@ void DDASession::StartSession(void) {
     startHour = startTime.hours;
     startMinutes = startTime.minutes;
     startSeconds = startTime.seconds;
-    while ((int*)*(int*)unk10.pMem != 0) {
+    while ((int*)*(int*)unk10.pMem != NULL) {
         ((int*)unk10.pMem)++;
     }
-    while ((int*)*(int*)unk14.pMem != 0) {
+    while ((int*)*(int*)unk14.pMem != NULL) {
         ((int*)unk14.pMem)++;
     }
 }
@@ -102,7 +102,7 @@ void DDASession::NewCheckpoint(int arg1) {
     TimerInfo checkpointTime;
     if (currentCheckpoint != NULL) {
         if (currentCheckpoint->unk8 == arg1) {
-            return;
+            return; // return if this is the same checkpoint
         }
         EndCheckpoint();
     }
@@ -152,7 +152,6 @@ void DDASession::EndCheckpoint(void) {
 extern "C" float* pHero;
 
 void DDASession::StoreDeathInfo(void) {
-    DDAUnk14* ptr;
     DDAUnk14* pInfo;
     TimerInfo deathTime;
     if (currentCheckpoint == NULL) {
@@ -176,7 +175,7 @@ void DDASession::StoreDeathInfo(void) {
 }
 
 void DDASession::StoreDamageInfo(DDADamageCause damageCause) {
-    if (currentCheckpoint == 0) {
+    if (currentCheckpoint == NULL) {
         return;
     }
     

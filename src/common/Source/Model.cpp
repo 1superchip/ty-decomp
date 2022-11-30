@@ -129,11 +129,9 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     pModel->flags.bits.b5 = 0;
     pModel->colour.Set(1.0f, 1.0f, 1.0f);
     pModel->colour.w = 1.0f;
-    int matrixIdx = 0;
-    while (matrixIdx < pModel->pTemplate->pModelData->nmbrOfMatrices) {
+    for (int matrixIdx = 0; matrixIdx < pModel->pTemplate->pModelData->nmbrOfMatrices; matrixIdx++) {
         pModel->pMatrices[matrixIdx].SetIdentity();
         pModel->unkC[matrixIdx] = 1.0f;
-        matrixIdx++;
     }
     memset(pModel->subobjectData, 0, pModelTemplate->pModelData->nmbrOfSubObjects);
     return pModel;
@@ -223,13 +221,11 @@ void Model::EnableSubObject(int subObjectIndex, bool arg2) {
 }
 
 void Model::EnableOnlySubObject(int subObjectIndex, bool arg2) {
-    int i = 0;
-    while (i < pTemplate->pModelData->nmbrOfSubObjects) {
+    for (int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
         subobjectData[i] &= ~1;
-        if (!(subObjectIndex - i) != arg2) {
+        if ((i == subObjectIndex) != arg2) {
             subobjectData[i] |= 1;
         }
-        i++;
     }
 }
 
@@ -373,7 +369,7 @@ char* Model::GetName(void){
 void Model::SetAlphaLightIntensity(int subObjectIndex, float intensity) {
     if (subObjectIndex == -1) {
         for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
-            pTemplate->pModelData->pSubObjects[i].alphaLightIntensity = intensity;
+            pTemplate->pModelData->pSubObjects[i].alphaLightIntensity = intensity; // set intensity for all subobjects if index is -1
         }
         return;
     }

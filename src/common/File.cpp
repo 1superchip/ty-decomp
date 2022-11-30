@@ -23,7 +23,7 @@ extern "C" void strcpy(char*, char*);
 void File_InitModule(void) {
     int i = 0;
     while (i < MAX_FILES) {
-        memset(&gcFiles[i], 0, 0x58);
+        memset(&gcFiles[i], 0, sizeof(FileEntry));
         gcFiles[i].unk48 = -1;
         i++;
     }
@@ -70,7 +70,7 @@ int File_Close(int fd) {
         gcFiles[fd].unk48 = -1;
         gcFiles[fd].unk50 = 0;
         gcFiles[fd].callback = 0;
-        return (-closeCode | closeCode) >> 31;
+        return (closeCode == 0) ? 0 : -1;
     }
     return -1;
 }
@@ -103,9 +103,9 @@ int File_Read(int fd, void* arg1, int arg2, int arg3) {
                 entry->unk40 = arg1;
             }
             gcFiles[fd].unk50 = 3;
-            Heap_Check("File.cpp", 0xce);
+            Heap_Check("File.cpp", 206);
             int readPrioCode = DVDReadAsyncPrio((DVDFileInfo*)entry, entry->unk44, alignedSize, entry->unk48, entry->callback, 2);
-            Heap_Check("File.cpp", 0xd0);
+            Heap_Check("File.cpp", 208);
             if (readPrioCode != 0) {
                 return 0;
             }
@@ -160,7 +160,7 @@ char* File_FileServerFilename(char* pFilename) {
 }
 
 int File_Sync(int fd, int arg1) {
-    if (gcFiles[fd].unk48 == -1 || gcFiles[fd].callback == 0) {
+    if (gcFiles[fd].unk48 == -1 || gcFiles[fd].callback == NULL) {
         return 0;
     }
     u32 startTick = OSGetTick();
@@ -208,21 +208,21 @@ bool File_IsAnyBusy(void) {
             } else if ((entry->unk50 == 3) || (DVDGetCommandBlockStatus((DVDFileInfo*)entry) != 0)) {
                 var_r0 = 1;
             } else {
-                Heap_Check("File.cpp", 0x141);
+                Heap_Check("File.cpp", 321);
                 if (entry->unk40 != NULL) {
                     memmove(entry->unk40, entry->unk44, entry->unk4C);
                     DCStoreRange((uint*)entry->unk40, entry->unk4C);
                 } else {
                     DCStoreRange((uint*)entry->unk44, entry->unk4C);
                 }
-                Heap_Check("File.cpp", 0x14B);
+                Heap_Check("File.cpp", 331);
                 if (entry->unk54 > 0) {
                     Heap_MemFree(entry->unk44);
                     entry->unk44 = NULL;
                     entry->unk54 = NULL;
                 }
                 entry->unk50 = 2;
-                Heap_Check("File.cpp", 0x153);
+                Heap_Check("File.cpp", 339);
                 var_r0 = 0;
             }
             if (var_r0 != 0) {

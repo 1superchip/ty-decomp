@@ -40,11 +40,7 @@ void WaterVolume::Deinit(void) {
 }
 
 bool WaterVolume::LoadLine(KromeIniLine* pLine) {
-    bool ret = false;
-    if (GameObject::LoadLine(pLine) || wvLoadInfo.LoadLine(pLine)) {
-        ret = true;
-    }
-    return ret;
+    return GameObject::LoadLine(pLine) || wvLoadInfo.LoadLine(pLine);
 }
 
 void WaterVolume::LoadDone(void) {

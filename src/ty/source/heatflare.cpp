@@ -11,7 +11,6 @@ void HeatFlare_LoadResources(void) {
 	pCaptureMaterial = Material::Create("capture");
 }
 
-// https://decomp.me/scratch/Yr0Jr
 void HeatFlare_Init(void) {
     if (bHeatFlares == false) {
         heatFlares.Init(200, sizeof(HeatFlare));

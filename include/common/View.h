@@ -77,9 +77,9 @@ struct View {
 	
 	static void InitModule(void);
 	static void DeinitModule(void);
-    static View* pCurrentView;
-    static View* pDefaultView;
-    static View* GetCurrent(void) {
+	static View* pCurrentView;
+	static View* pDefaultView;
+	static View* GetCurrent(void) {
 		return pCurrentView;
 	}
 };

@@ -93,7 +93,7 @@ void DataVal::Load(void) {
     glideRollRange = 0.25f;
     glideRollSmooth = 0.2f;
     glideRollFactor = 0.5f;
-    rollEpsilon = 0.00001f; // 1.0E-5
+    rollEpsilon = 0.00001f;
     swimDeceleration = 0.95f;
     swimMinSpeed = 0.7f;
     bunyipLifeSpan = 25;
