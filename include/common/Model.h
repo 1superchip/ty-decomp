@@ -48,8 +48,8 @@ struct RefPoint {
 struct Vertex {
 	float pos[3];
 	s16 unkC;
-	s8 matrix1;
-	s8 matrix2;
+	u8 matrix1;
+	u8 matrix2;
 	s16 uv[2];
 	s8 normal[3];
 	s8 color[4];

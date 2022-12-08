@@ -277,7 +277,6 @@ CFLAGS = [
     "-lang c++",
     "-Cpp_exceptions off",
     "-O4,p",
-    "-sym on",
     "-fp hard",
     "-inline auto",
     "-enum int",

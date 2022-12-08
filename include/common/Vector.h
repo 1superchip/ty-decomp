@@ -34,16 +34,16 @@ struct Vector {
         float dz = z - pVector->z;
         return dx * dx + dy * dy + dz * dz;
     }
-	inline void Set(float x1, float y1, float z1) {
-		x = x1;
-		y = y1;
-		z = z1;
+	inline void Set(float _x, float _y, float _z) {
+		x = _x;
+		y = _y;
+		z = _z;
 	}
-	inline void Set(float x1, float y1, float z1, float w1) {
-		x = x1;
-		y = y1;
-		z = z1;
-		w = w1;
+	inline void Set(float _x, float _y, float _z, float _w) {
+		x = _x;
+		y = _y;
+		z = _z;
+		w = _w;
 	}
 	void Copy(Vector* src) {
 		x = src->x;

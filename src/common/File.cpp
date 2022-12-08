@@ -21,11 +21,9 @@ extern "C" int DVDOpen(char*, void*);
 extern "C" void strcpy(char*, char*);
 
 void File_InitModule(void) {
-    int i = 0;
-    while (i < MAX_FILES) {
+    for(int i = 0; i < MAX_FILES; ++i) {
         memset(&gcFiles[i], 0, sizeof(FileEntry));
         gcFiles[i].unk48 = -1;
-        i++;
     }
 }
 
@@ -44,7 +42,7 @@ int File_Open(char* filepath, int openMode) {
     char* pBuf = buffer;
     strcpy(pBuf, filepath);
     pBuf = buffer;
-    while (*pBuf != 0) {
+    while (*pBuf != '\0') {
         if (*pBuf == '\\') {
             *pBuf = '/';
         }

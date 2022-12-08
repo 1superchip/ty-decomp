@@ -17,6 +17,16 @@ ty/source/props/DDACheckpoint.cpp:
    .sdata: [0x803f69b8, 0x803f69f0]
    .sbss: [0x803fa3c0, 0x803fa3c8]
 
+#ty/source/props/gem.cpp:
+#   .text: [0x800eff94, 0x800f2dd8]
+#   .ctors: [0x8023c92c, 0x8023c930]
+#   .rodata: [0x8023dd10, 0x8023dd50]
+#   .data: [0x80258720, 0x80258b68]
+#   .bss: [0x802a85b0, 0x802a88c8]
+#   .sdata: [0x803f6cd8, 0x803f6d68]
+#   .sbss: [0x803fa420, 0x803fa448]
+#   .sdata2: [0x803fecc0, 0x803fedb8]
+
 #ty/source/props/StaticProp.cpp:
 #   .text: [0x8010f924, 0x80111560]
 #   .ctors: [0x8023c9b4, 0x8023c9b8]
@@ -65,6 +75,12 @@ ty/source/BoundingRegion.cpp:
     .text: [0x80147018, 0x80147464]
     .rodata: [0x8023e628, 0x8023e638]
     .sdata2: [0x80400170, 0x80400178]
+
+#ty/source/GameData.cpp:
+#    .text: [0x8015e2fc, 0x8015faf0]
+#    .ctors: [0x8023ca40, 0x8023ca44]
+#    .sbss: [0x803fa8d8, 0x803fa8e8]
+#    .sdata2: [0x804006f0, 0x80400710]
 
 ty/source/GameObject.cpp:
     .text: [0x8015faf0, 0x8016051c]
@@ -171,14 +187,14 @@ common/Source/Matrix.cpp:
     .text: [0x802166f8, 0x8021850c]
     .sdata2: [0x804022d8, 0x804022f0]
 
-#common/Source/MKSceneManager.cpp:
-#    .text: [0x8021d3d8, 0x8021FCEC]
-#    .ctors: [0x8023ca98, 0x8023CA9C]
-#    .data: [0x80274758, 0x80274778]
-#    .bss: [0x802e3428, 0x802e49a8]
-#    .sdata: [0x803f9918, 0x803f9928]
-#    .sbss: [0x803fb2f0, 0x803fb2f8]
-#    .sdata2: [0x80402360, 0x80402380]
+common/Source/MKSceneManager.cpp:
+    .text: [0x8021d3d8, 0x8021FCEC]
+    .ctors: [0x8023ca98, 0x8023CA9C]
+    .data: [0x80274758, 0x80274778]
+    .bss: [0x802e3428, 0x802e49a8]
+    .sdata: [0x803f9918, 0x803f9928]
+    .sbss: [0x803fb2f0, 0x803fb2f8]
+    .sdata2: [0x80402360, 0x80402380]
 
 common/Source/Model.cpp:
     .text: [0x8021fcec, 0x80220d94]
@@ -234,6 +250,12 @@ common/Source/Material_GC.cpp:
     .sdata: [0x803f9a08, 0x803f9af0]
     .sbss: [0x803fb3b0, 0x803fb3e8]
     .sdata2: [0x804024c0, 0x80402538]
+    
+#common/gc/ModelGC.cpp:
+#    .text: [0x80230890, 0x80232398]
+#    .bss: [0x8038dde0, 0x803df1e0]
+#    .sbss: [0x803fb430, 0x803fb448]
+#    .sdata2: [0x80402568, 0x804025b0]
 
 common/Source/Texture.cpp:
     .text: [0x80236008, 0x802368f8]
