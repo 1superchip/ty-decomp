@@ -105,26 +105,6 @@ GXColor Material_MixedColor = {0xff, 0xff, 0xff, 0xff};
 // extra 16 bytes to match rodata length
 const Vector MaterialGC_rodata_hack = {};
 
-template <typename T>
-inline void Swap(Material*& p, Material*& p1) {
-    Material* tmp = p;
-    p = p1;
-    p1 = tmp;
-}
-inline void PtrListDL<Material>::Destroy(Material* p) {
-    Material** memPtr = (Material**)pMem;
-    while (*memPtr != NULL) {
-        if (*memPtr == p) {
-            Destroy(memPtr);
-            break;
-        }
-        memPtr++;
-    }
-}
-inline void PtrListDL<Material>::Destroy(Material** p) {
-	Swap<Material*>(*((Material**)pMem)++, *p);
-}
-
 char *Material::InitFromMatDefs(char *pName) {
     char *zwrite;
     char *pTextureName;
@@ -759,7 +739,7 @@ void Material::Use(void) {
     int numIndStages = 0;
     if (*(uint*)&Material_MixedColor != -1) {
         GXColor color = Material_MixedColor;
-        GXSetTevColor(1, &color);
+        GXSetTevColor(1, color);
         GXSetTevOrder(1, 0xff, 0xff, 0xff);
         GXSetTevColorIn(1, 0xf, 0, 2, 0xf);
         GXSetTevColorOp(1, 0, 0, 0, 0, 0);

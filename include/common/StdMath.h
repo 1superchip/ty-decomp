@@ -1,5 +1,18 @@
 #include "types.h"
 
+template <typename T>
+inline T Min(T x, T y) {
+    return (x < y) ? x : y;
+}
+template <typename T>
+inline T Max(T x, T y) {
+    return (x > y) ? x : y;
+}
+template <typename T>
+inline T Sqr(T x) {
+    return x * x;
+}
+
 union sindata {
     float xf;
     int xi;

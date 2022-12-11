@@ -76,11 +76,11 @@ ty/source/BoundingRegion.cpp:
     .rodata: [0x8023e628, 0x8023e638]
     .sdata2: [0x80400170, 0x80400178]
 
-#ty/source/GameData.cpp:
-#    .text: [0x8015e2fc, 0x8015faf0]
-#    .ctors: [0x8023ca40, 0x8023ca44]
-#    .sbss: [0x803fa8d8, 0x803fa8e8]
-#    .sdata2: [0x804006f0, 0x80400710]
+ty/source/GameData.cpp:
+    .text: [0x8015e2fc, 0x8015faf0]
+    .ctors: [0x8023ca40, 0x8023ca44]
+    .sbss: [0x803fa8d8, 0x803fa8e8]
+    .sdata2: [0x804006f0, 0x80400710]
 
 ty/source/GameObject.cpp:
     .text: [0x8015faf0, 0x8016051c]

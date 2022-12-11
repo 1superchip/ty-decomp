@@ -119,7 +119,7 @@ typedef enum _GXTexFmt {
 } GXTexFmt;
 */
 
-void GXSetTevColor(int, GXColor*);
+void GXSetTevColor(int, GXColor);
 void GXSetTevDirect(int);
 void GXSetDstAlpha(int, u8);
 void GXSetBlendMode(int, int, int, int);

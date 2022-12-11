@@ -2,6 +2,7 @@
 #include "common/View.h"
 #include "common/MKSceneManager.h"
 #include "common/Heap.h"
+#include "common/StdMath.h"
 
 extern "C" void memset(void*, int, int);
 
@@ -16,20 +17,6 @@ float terrainDrawDist[12];
 
 static int occlusionObjects;
 MKPropDescriptor* MKPropDescriptor::pDrawListDescs;
-
-// put in a common header
-template <typename T>
-inline T Min(T x, T y) {
-    return (x < y) ? x : y;
-}
-template <typename T>
-inline T Max(T x, T y) {
-    return (x > y) ? x : y;
-}
-template <typename T>
-inline T Sqr(T x) {
-    return x * x;
-}
 
 void MKSceneManager::InitModule(void) {
 	return;
