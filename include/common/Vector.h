@@ -60,6 +60,9 @@ struct Vector {
 		y *= scalar;
 		z *= scalar;
 	}
+    void SetZero(void) {
+        x = y = z = 0.0f;
+    }
 };
 
 #endif COMMON_VECTOR

@@ -52,5 +52,7 @@ struct LODManager {
 	void InternalUpdate(Model*, int, float);
 	bool Draw(Model*, int, float, float, bool);
 	void EnableSubObjects(Model*);
-	bool TestLOD(int);
+	bool TestLOD(int testFlag) {
+		return testFlag & ((subobjectEnableFlags >= 0) ? (1 << subobjectEnableFlags) : 0x40000000);
+	}
 };

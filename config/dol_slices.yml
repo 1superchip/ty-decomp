@@ -27,15 +27,6 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa420, 0x803fa448]
 #   .sdata2: [0x803fecc0, 0x803fedb8]
 
-#ty/source/props/StaticProp.cpp:
-#   .text: [0x8010f924, 0x80111560]
-#   .ctors: [0x8023c9b4, 0x8023c9b8]
-#   .rodata: [0x8023dee8, 0x8023e008]
-#   .data: [0x8025cbe0, 0x8025ce28]
-#   .sdata: [0x803f79e8, 0x803f7a80]
-#   .sbss: [0x803fa5f8, 0x803fa610]
-#   .sdata2: [0x803ff5f8, 0x803ff638]
-
 ty/source/props/SoundProp.cpp:
    .text: [0x8010d5dc, 0x8010ddf8]
    .ctors: [0x8023c9a0, 0x8023c9a4]
@@ -44,6 +35,15 @@ ty/source/props/SoundProp.cpp:
    .sdata: [0x803f78a8, 0x803f78f0]
    .sbss: [0x803fa5c8, 0x803fa5d0]
    .sdata2: [0x803ff530, 0x803ff540]
+
+#ty/source/props/StaticProp.cpp:
+#   .text: [0x8010f924, 0x80111560]
+#   .ctors: [0x8023c9b4, 0x8023c9b8]
+#   .rodata: [0x8023dee8, 0x8023e008]
+#   .data: [0x8025cbe0, 0x8025ce28]
+#   .sdata: [0x803f79e8, 0x803f7a80]
+#   .sbss: [0x803fa5f8, 0x803fa610]
+#   .sdata2: [0x803ff5f8, 0x803ff638]
 
 Dolphin/__ppc_eabi_init.s:
    .text: [0x801DC058, 0x801DC0AC]

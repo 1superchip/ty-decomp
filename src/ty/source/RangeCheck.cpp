@@ -47,10 +47,6 @@ void LOD_Deinit(void) {
 	lodEntryPool = NULL;
 }
 
-bool LODManager::TestLOD(int testFlag) {
-    return testFlag & ((subobjectEnableFlags >= 0) ? (1 << subobjectEnableFlags) : 0x40000000);
-}
-
 int Range_WhichZone(Vector* point, float* arg1) {
     Vector diff;
     diff.x = point->x - cameraPos.x;
