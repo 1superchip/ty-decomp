@@ -1,3 +1,6 @@
+#ifndef COMMON_VIEW
+#define COMMON_VIEW
+
 #include "types.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
@@ -83,3 +86,5 @@ struct View {
 		return pCurrentView;
 	}
 };
+
+#endif // COMMON_VIEW

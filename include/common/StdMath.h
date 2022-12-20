@@ -1,3 +1,6 @@
+#ifndef COMMON_STDMATH
+#define COMMON_STDMATH
+
 #include "types.h"
 
 template <typename T>
@@ -26,3 +29,5 @@ float NormaliseAngle(float);
 
 #define PI2 1.5707964f
 #define _table_cosf(angle) _table_sinf(angle + PI2)
+
+#endif // COMMON_STDMATH

@@ -71,20 +71,20 @@ extern "C" void DCStoreRange(uint*, int);
 extern "C" int stricmp(char*, char*);
 
 Model* Model::Create(char* pMeshName, char* pAnimName) {
-    char mesh[0x20];
-    char anim[0x20];
-    int fileSize;
+    char meshName[0x20];
+    char animName[0x20];
+    int size;
     Model* pModel;
     ModelTemplate* pModelTemplate;
-    strcpy(mesh, pMeshName);
-    strtok(mesh, ".");
+    strcpy(meshName, pMeshName);
+    strtok(meshName, ".");
     if (pAnimName != NULL) {
-        strcpy(anim, pAnimName);
-        strtok(anim, ".");
+        strcpy(animName, pAnimName);
+        strtok(animName, ".");
     }
     ModelTemplate** pTemplates = modelTemplates.pPointers;
     while (*pTemplates != NULL) {
-        if (stricmp((*pTemplates)->name, mesh) == 0) {
+        if (stricmp((*pTemplates)->name, meshName) == 0) {
             break;
         }
         pTemplates++;
@@ -95,16 +95,16 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         pFoundTemplate->referenceCount++;
         pModelTemplate = pFoundTemplate;
     } else {
-        char* fileName = Str_Printf("%s%s", mesh, ".gmd");
-        FileSys_Exists(fileName, &fileSize);
+        char* fileName = Str_Printf("%s%s", meshName, ".gmd");
+        FileSys_Exists(fileName, &size);
         pModelTemplate = (ModelTemplate*)Heap_MemAlloc(sizeof(ModelTemplate));
         memset(pModelTemplate, 0, sizeof(ModelTemplate));
-        strncpy(pModelTemplate->name, mesh, 31);
-        fileName = Str_Printf("%s%s", mesh, ".gmd");
-        pModelTemplate->pModelData = (ModelData*)FileSys_Load(fileName, &fileSize, NULL, -1);
-        pModelTemplate->templateDataSize = fileSize;
+        strncpy(pModelTemplate->name, meshName, 31);
+        fileName = Str_Printf("%s%s", meshName, ".gmd");
+        pModelTemplate->pModelData = (ModelData*)FileSys_Load(fileName, &size, NULL, -1);
+        pModelTemplate->templateDataSize = size;
         Model_UnpackTemplate(pModelTemplate);
-        DCStoreRange((uint*)pModelTemplate->pModelData, fileSize);
+        DCStoreRange((uint*)pModelTemplate->pModelData, size);
         pModelTemplate->referenceCount = 1;
         modelTemplates.AddEntry(pModelTemplate);
     }
@@ -116,7 +116,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     pModel->unkC = (float*)(pModel->pMatrices + pModelTemplate->pModelData->nmbrOfMatrices);
     pModel->subobjectData = (u8*)(pModel->unkC + pModelTemplate->pModelData->nmbrOfMatrices);
     if (pAnimName != NULL) {
-        pModel->SetAnimation(Animation::Create(anim, pModel->pMatrices));
+        pModel->SetAnimation(Animation::Create(animName, pModel->pMatrices));
         pModel->flags.bits.bHasAnimation = 1;
     } else {
         pModel->pAnimation = NULL;
@@ -127,8 +127,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     pModel->flags.bits.b3 = 0;
     pModel->flags.bits.b4 = 0;
     pModel->flags.bits.b5 = 0;
-    pModel->colour.Set(1.0f, 1.0f, 1.0f);
-    pModel->colour.w = 1.0f;
+    pModel->colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
     for (int matrixIdx = 0; matrixIdx < pModel->pTemplate->pModelData->nmbrOfMatrices; matrixIdx++) {
         pModel->pMatrices[matrixIdx].SetIdentity();
         pModel->unkC[matrixIdx] = 1.0f;

@@ -7,4 +7,4 @@ char* Str_FindChar(char*, int);
 
 #define STR_BUFFER_SIZE 0x4000
 
-#endif COMMON_STR
+#endif // COMMON_STR

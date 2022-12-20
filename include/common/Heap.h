@@ -10,4 +10,4 @@ void* Heap_MemAlloc(int);
 void Heap_MemFree(void*);
 int Heap_Check(char*, int);
 
-#endif COMMON_HEAP
+#endif // COMMON_HEAP

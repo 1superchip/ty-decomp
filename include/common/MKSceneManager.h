@@ -1,8 +1,11 @@
+#ifndef COMMON_MKSCENEMANAGER
+#define COMMON_MKSCENEMANAGER
+
 #include "types.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
-#include "common/Model.h"
 #include "common/KromeIni.h"
+#include "common/Model.h"
 
 #define MKPROP_TypeMask 3
 #define MKPROP_Static 0
@@ -125,3 +128,5 @@ struct MKSceneManager {
 	void RemoveProp(MKProp*);
 	int GetPropsInRange(MKProp**, int, Vector*, float, int, int, bool);
 };
+
+#endif // COMMON_MKSCENEMANAGER

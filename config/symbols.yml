@@ -8908,7 +8908,7 @@ global:
     #0x800055f0: _bss_init_info
     #0x803fb860: _SDA_BASE_
     #0x804035a0: _SDA2_BASE_
-    #0x8023c780: _ctors
+    #0x8023C780: _ctors
     #0x8023caa0: _dtors
     #0x80005658: _eti_init_info
 

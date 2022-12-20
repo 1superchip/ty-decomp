@@ -47,20 +47,31 @@ struct RefPoint {
 
 struct Vertex {
 	float pos[3];
-	s16 unkC;
+	s16 weight;
 	u8 matrix1;
 	u8 matrix2;
 	s16 uv[2];
 	s8 normal[3];
-	s8 color[4];
+	u8 color[4];
 };
+
+#pragma pack(push, 1)
+struct DisplayList {
+    u8 primitive;
+    u16 vertexCount;
+    u16 vertexIndex;
+    u16 normalIndex;
+    u16 colorIndex;
+    u16 uvIndex;
+};
+#pragma pack(pop)
 
 struct SubObjectMaterial {
 	union {
 		char* pMaterialName;
 		Material* pMaterial;
 	};
-	void* pStripData;
+	DisplayList* pStripData;
 	u16 maxOffset;
 	int nmbrOfStrips;
 };
@@ -101,6 +112,9 @@ struct ModelTemplate {
 	ModelData* pModelData;
 };
 
+struct ModelExplorer_GC;
+struct ModelExplorer;
+
 struct Model {
 	ModelTemplate* pTemplate;
 	Animation* pAnimation;
@@ -124,6 +138,7 @@ struct Model {
     } flags;
 	Vector colour;
 	Matrix matrices[1]; // Model has at least 1 matrix in it, more are allocated
+	static int disableTrivialRejection;
 	
 	static Model* Create(char*, char*);
 	void Destroy(void);
@@ -155,9 +170,72 @@ struct Model {
 	void SetRenderTypeOverride(int);
 	Material* GetSubObjectMaterial(int, int);
 	
-	int Draw(u16*); // from Model_GC.cpp
+	int Draw(u16*);
+    ModelExplorer_GC* Explore(int*, int*, int*);
+    int ExploreNextFace(ModelExplorer*);
+    int ExploreNextMaterial(ModelExplorer*);
+    int ExploreNextSubObject(ModelExplorer*);
+	void ExploreClose(ModelExplorer*);
+};
+
+struct ModelExplorerVertex {
+    Vector pos;
+    float normal[3];
+    int unk3;
+    Vector color;
+    float uv[2];
+    int subObjectMatrixIdx;
+    int matrix2;
+    float weights[2];
+};
+
+struct ModelExplorer {
+    Material* pMaterial;
+    int subObjectIdx;
+    int unk8;
+    int triangleCount;
+    int unk10;
+    ModelExplorerVertex vertices[3];
+    Model* pModel;
+    DisplayList* pStripData;
+    int materialIdx;
+    int stripNum;
+    int currentVertex;
+    int vertexCount;
+};
+
+struct ModelExplorer_GC {
+    Material* pMaterial;
+    int subObjectIdx;
+    int unk8;
+    int triangleCount;
+    int unk10;
+    ModelExplorerVertex vertices[3];
+    Model* pModel;
+    DisplayList* pStripData;
+    int materialIdx;
+    int stripNum;
+    int currentVertex;
+    uint vertexCount;
+    u16* vertexIndices;
+    u16* normalIndices;
+    u16* uvIndices;
+    u16* colorIndices;
+
+    void PrimeMaterial(void);
+    void PrimeStrip(void);
+    void BuildVertex(int);
 };
 
 void Model_UnpackTemplate(ModelTemplate*);
+int Model_TrivialRejectTest(BoundingVolume*, Matrix*);
+
+struct EffectDat {
+    void* pStripData;
+    int maxOffset;
+    int matEffect;
+    float minW;
+    float maxW;
+};
 
 #endif // COMMON_MODEL

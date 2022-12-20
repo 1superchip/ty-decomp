@@ -1,3 +1,6 @@
+#ifndef COMMON_MATERIAL
+#define COMMON_MATERIAL
+
 #include "common/KromeIni.h"
 #include "common/Texture.h"
 #include "common/Vector.h"
@@ -88,3 +91,5 @@ struct Material {
     static int frameCounter;
 	static int updateEnabled;
 };
+
+#endif // COMMON_MATERIAL

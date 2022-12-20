@@ -85,7 +85,7 @@ void GameData_New(void) {
     gameData->settings.unk3 = 0;
     gameData->settings.unk4 = 0;
     gameData->settings.unk5 = 0;
-    gameData->settings.unk8 = 0;
+    gameData->settings.controlConfig = 0;
     gameData->settings.unk6 = 1;
     gameData->settings.unk7 = 1;
     gameData->settings.unk9 = 1;
@@ -383,8 +383,6 @@ int GameData::GetTotalGalleryCount(void) {
     int count = 0;
     u8* galleryArray = pSaveData->galleryImages;
     for(int i = 0; i < 512; i++) {
-		// (i >> 3) computes what byte should be accessed (i / 8)
-		// (1 << (i & 7)) computes bit index for bit
         if (CheckArrayByBitIndex(galleryArray, i)) {
             count++;
         }
@@ -460,8 +458,7 @@ int GameData::GetTimeAttackLastTime(LevelNumber level) {
 
 void GameData::RescueBilby(BilbyType type) {
     pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 1;
-    int freeBilbyCount = GetFreeBilbyCount();
-    if (freeBilbyCount == 5) {
+    if (GetFreeBilbyCount() == 5) {
         pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 2;
     }
     Hud_ShowBilbies();

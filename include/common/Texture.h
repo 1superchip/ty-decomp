@@ -1,3 +1,6 @@
+#ifndef COMMON_TEXTURE
+#define COMMON_TEXTURE
+
 #include "types.h"
 #include "Dolphin/gx.h"
 
@@ -27,3 +30,5 @@ struct Texture {
 	static Texture* CreateFromRawData(char*, void*, int, int, int);
 	static Texture* CreateMpegTarget(char*, void*, int, int);
 };
+
+#endif // COMMON_TEXTURE

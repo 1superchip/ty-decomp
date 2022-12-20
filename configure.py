@@ -12,7 +12,7 @@ import os
 import re
 from typing import List, Tuple
 import pprint
-from tools.ppcdis.ppcdis.fileutil import load_from_yaml # needed for flag overrides
+#from tools.ppcdis.ppcdis.fileutil import load_from_yaml # needed for flag overrides
 
 import yaml
 try:
@@ -217,6 +217,17 @@ n.rule(
     command = "$iconv $in $out",
     description = "iconv $in",
 )
+
+def load_from_yaml(path: str, default=None):
+    """Loads an object from a yaml file"""
+
+    if default is None:
+        default = {}
+    with open(path) as f:
+        ret = yaml.load(f.read(), Loader)
+        if ret is None:
+            ret = default
+        return ret
 
 ##########
 # Assets #

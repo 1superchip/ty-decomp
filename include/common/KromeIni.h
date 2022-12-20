@@ -1,4 +1,5 @@
-#pragma once on
+#ifndef COMMON_KROMEINI
+#define COMMON_KROMEINI
 
 struct KromeIniLine {
     char* comment;
@@ -99,3 +100,5 @@ struct Parser {
     void SkipSpaces(void); // returns a bool
     void ResetCurrLine(void);
 };
+
+#endif // COMMON_KROMEINI

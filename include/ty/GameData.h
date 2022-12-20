@@ -29,7 +29,7 @@ struct GameDataSettings {
     u8 unk5;
     char unk6;
     char unk7;
-    char unk8;
+    u8 controlConfig;
     char unk9;
     char unkA;
     char unkB;

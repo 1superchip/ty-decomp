@@ -1,8 +1,9 @@
 #include "types.h"
-#include "common/View.h"
 #include "common/MKSceneManager.h"
+#include "common/View.h"
 #include "common/Heap.h"
 #include "common/StdMath.h"
+#include "common/Model.h"
 
 extern "C" void memset(void*, int, int);
 
@@ -229,19 +230,19 @@ void SMTree::Deinit(void) {
 	}
 }
 
-inline void Vector_Average(Vector* pOut, Vector* pIn, Vector* pIn2) {
+static inline void Vector_Average(Vector* pOut, Vector* pIn, Vector* pIn2) {
     pOut->x = (pIn->x + 0.5f * pIn2->x);
     pOut->y = (pIn->y + 0.5f * pIn2->y);
     pOut->z = (pIn->z + 0.5f * pIn2->z);
 }
 
-inline void Vector_Sub(Vector* pOut, Vector* pIn, Vector* pIn2) {
+static inline void Vector_Sub(Vector* pOut, Vector* pIn, Vector* pIn2) {
     pOut->x = (pIn2->x - pIn->x);
     pOut->y = (pIn2->y - pIn->y);
     pOut->z = (pIn2->z - pIn->z);
 }
 
-inline void BoundingVolume_Center(BoundingVolume* volume, BoundingVolume* volume1, Vector* pOut) {
+static inline void BoundingVolume_Center(BoundingVolume* volume, BoundingVolume* volume1, Vector* pOut) {
     pOut->x = (volume->v1.x + 0.5f * volume->v2.x);// - (volume1->v1.x + 0.5f * volume1->v2.x);
     pOut->y = (volume->v1.y + 0.5f * volume->v2.y);// - (volume1->v1.y + 0.5f * volume1->v2.y);
     pOut->z = (volume->v1.z + 0.5f * volume->v2.z);// - (volume1->v1.z + 0.5f * volume1->v2.z);
@@ -294,7 +295,7 @@ void SMTree::PairUp(int arg1, int arg2) {
     }
 }
 
-inline void SMNode_ComputeVolume(SMNode* pThis, SMNode* pNode1, SMNode* pNode2) {
+void SMNode_ComputeVolume(SMNode* pThis, SMNode* pNode1, SMNode* pNode2) {
     float xMax = Max<float>(pNode2->volume.v1.x + pNode2->volume.v2.x, pNode1->volume.v1.x + pNode1->volume.v2.x);
     float yMax = Max<float>(pNode2->volume.v1.y + pNode2->volume.v2.y, pNode1->volume.v1.y + pNode1->volume.v2.y);
     float zMax = Max<float>(pNode2->volume.v1.z + pNode2->volume.v2.z, pNode1->volume.v1.z + pNode1->volume.v2.z);
@@ -424,13 +425,13 @@ void MKSceneManager::MakePropTree(void) {
     }
 }
 
-inline void Subtract(Vector* diff, Vector* arg1, Vector* arg0) {
+static inline void Subtract(Vector* diff, Vector* arg1, Vector* arg0) {
     diff->x = arg1->x - arg0->x;
     diff->y = arg1->y - arg0->y;
     diff->z = arg1->z - arg0->z;
 }
 
-inline void Multiply(Vector* vec, float t) {
+static inline void Multiply(Vector* vec, float t) {
     vec->x = t * vec->x;
     vec->y = t * vec->y;
     vec->z = t * vec->z;
@@ -502,12 +503,9 @@ void MKSceneManager::DrawTerrain(int arg1) {
     }
 }
 
-s16 Model_TrivialRejectTest(BoundingVolume*, Matrix*);
-
 void MKSceneManager::DrawRecursiveTerrain(SMNode *node, int arg2) {
-    int test = 0;
+    s16 test = 0;
     if (!(arg2 & 1)) {
-        test = 0;
         test = Model_TrivialRejectTest(&node->volume, &View::GetCurrent()->unk1C8);
         if (test == 0) {
             return;
@@ -535,7 +533,7 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode *node, int arg2) {
 static void SMDrawProp(void* pData, int arg1, float distSq, float arg3);
 
 void MKSceneManager::DrawRecursiveProps(SMNode *node, int arg2) {
-    int test = 0;
+    s16 test = 0;
     float distSq = 0.0f;
     MKProp *data = (MKProp *)node->pData;
     float fVar19 = 0.0f;
@@ -549,7 +547,6 @@ void MKSceneManager::DrawRecursiveProps(SMNode *node, int arg2) {
         }
     }
     if (!(arg2 & 1)) {
-        test = 0;
         test = Model_TrivialRejectTest(&node->volume, &View::GetCurrent()->unk1C8);
         if (test == 0) {
             return;
@@ -626,7 +623,7 @@ void MKSceneManager::DrawDynamicProps(int arg1) {
     while (next != &dynamicPropArray[arg1]) {
         matrix.Multiply4x4(next->pLocalToWorld, &View::GetCurrent()->unk1C8);
         MKPropDescriptor *pDesc = next->pDescriptor;
-        int rejectResult = Model_TrivialRejectTest(pDesc->pVolume, &matrix);
+        s16 rejectResult = Model_TrivialRejectTest(pDesc->pVolume, &matrix);
         float fVar19 = 0.0f;
         float distSq = 0.0f;
         pDesc = next->pDescriptor;

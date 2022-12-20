@@ -178,6 +178,11 @@ void GXInitLightPos(GXLightObj*, float, float, float);
 void GXLoadLightObjImm(GXLightObj*, int);
 void GXSetChanAmbColor(int, GXColor);
 void GXSetAlphaUpdate(int);
+void GXSetFog(u8, GXColor, f32, f32, f32, f32);
+void GXSetArray(int, void*, int);
+void GXSetChanMatColor(int, GXColor);
+void GXSetChanCtrl(int, int, int, int, int, int, int);
+void GXCallDisplayList(void*, int);
 
 extern volatile union {
     u8 c;
