@@ -7,6 +7,9 @@ Dump a copy of the game
  - Place main.dol in orig/
  - Place CodeWarrior 1.3.2 in tools/1.3.2/
  - Install DevkitPPC, Ninja and Python
+	- DevkitPPC r39
+	- Ninja 1.3
+ - Install the required modules from requirements.txt (`pip install -r requirements.txt`) 
  - Run configure.py
  - Run ninja
  
