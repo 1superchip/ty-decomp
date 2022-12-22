@@ -219,7 +219,7 @@ void StaticProp::LoadDone(void) {
 }
 
 void StaticProp::Draw(void) {
-    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, (flags >> 30) & 1);
+    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, flags & 0x40000000);
 }
 
 void StaticFXProp::Init(GameObjDesc* pDesc) {
@@ -293,8 +293,8 @@ void StaticFXProp::Update(void) {
 }
 
 void StaticFXProp::Draw(void) {
-    if (bVisible != false) {
-        lodManager.Draw(pModel, detailLevel, unk1C, distSquared, (flags >> 30) & 1);
+    if (bVisible) {
+        lodManager.Draw(pModel, detailLevel, unk1C, distSquared, flags & 0x40000000);
     }
 }
 

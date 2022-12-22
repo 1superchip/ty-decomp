@@ -515,11 +515,10 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode *node, int arg2) {
         }
     }
     if (node->pData != NULL) {
-        s16 t = test;
         u16 object = terrainSubObjects[0];
         object = object + 1;
         terrainSubObjects[0] = object;
-        terrainSubObjects[object] = ((int)node->pData) - 1 | ((t == 1) ? 0x8000 : 0);
+        terrainSubObjects[object] = ((int)node->pData) - 1 | ((test == 1) ? 0x8000 : 0);
         return;
     }
     if (node->unk20[0] != NULL) {
@@ -740,11 +739,11 @@ void MKSceneManager::UpdateProps(void) {
     }
 }
 
-void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vector *arg3, float arg4) {
+void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vector *pPos, float radius) {
     int i;
     int index;
     if (arg2 != false) {
-        float radiusSq = arg4 * arg4;
+        float radiusSq = radius * radius;
         for (i = 0; i < 4; i++) {
             SMNode *node = staticPropTree[i].pNodes;
             index = 0;
@@ -752,9 +751,9 @@ void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vect
                 MKProp *currProp = (MKProp *)node->pData;
                 node++;
                 if (currProp != NULL && (mask == 0 || mask & currProp->pDescriptor->searchMask)) {
-                    if (arg3 != NULL) {
+                    if (pPos != NULL) {
                         Vector *pLTWTrans = currProp->pLocalToWorld->Row3();
-                        float distSq = Sqr<float>(pLTWTrans->x - arg3->x) + Sqr<float>(pLTWTrans->y - arg3->y) + Sqr<float>(pLTWTrans->z - arg3->z);
+                        float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
                         if (distSq < radiusSq) {
                             currProp->Message(pMessage);
                         }
@@ -766,15 +765,15 @@ void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vect
             }
         }
     }
-    float radiusSq = arg4 * arg4;
+    float radiusSq = radius * radius;
     for (i = 0; i < 4; i++) {
         MKProp *dynamicProp = dynamicPropArray[i].pNext;
         while (dynamicProp != &dynamicPropArray[i]) {
             prop1C0 = dynamicProp->pNext;
             if (mask == 0 || mask & dynamicProp->pDescriptor->searchMask) { // if the mask is equal to zero, send a message
-                if (arg3 != NULL) {
+                if (pPos != NULL) {
                     Vector *pLTWTrans = dynamicProp->pLocalToWorld->Row3();
-                    float distSq = Sqr<float>(pLTWTrans->x - arg3->x) + Sqr<float>(pLTWTrans->y - arg3->y) + Sqr<float>(pLTWTrans->z - arg3->z);
+                    float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
                     if (distSq < radiusSq) {
                         dynamicProp->Message(pMessage);
                     }

@@ -1,5 +1,1291 @@
 #decompiled code slices go here
 
+#extab_: [0x80005620, 0x80005640]
+#extabindex_: [0x80005640, 0x80005680]
+
+#CameraOverride.cpp:
+#   .text: [0x80005680, 0x800088ec]
+#   .ctors: [0x8023c784, 0x8023c788]
+#   .rodata: [0x8023cac0, 0x8023cae0]
+#   .data: [0x80240000, 0x80240280]
+#   .bss: [0x80298b60, 0x80298c20]
+#   .sdata: [0x803f3860, 0x803f3868]
+#   .sbss: [0x803f9b80, 0x803f9b88]
+#   .sdata2: [0x803fb5a0, 0x803fb5e8]
+
+#GameCamera.cpp:
+#   .text: [0x800088ec, 0x8001baf8]
+#   .ctors: [0x8023c788, 0x8023c78c]
+#   .rodata: [0x8023cae0, 0x8023cc88]
+#   .data: [0x80240280, 0x80240ed0]
+#   .bss: [0x80298c20, 0x80299cf0]
+#   .sdata: [0x803f3868, 0x803f38c0]
+#   .sbss: [0x803f9b88, 0x803f9bd8]
+#   .sdata2: [0x803fb5e8, 0x803fb7a0]
+
+#GameCameraTools.cpp:
+#   .text: [0x8001baf8, 0x8001e788]
+#   .rodata: [0x8023cc88, 0x8023ccc8]
+#   .data: [0x80240ed0, 0x80240f40]
+#   .sdata: [0x803f38c0, 0x803f3908]
+#   .sdata2: [0x803fb7a0, 0x803fb7d8]
+
+#Bird.cpp:
+#   .text: [0x8001e788, 0x8001ed4c]
+#   .ctors: [0x8023c78c, 0x8023c790]
+#   .data: [0x80240f40, 0x80241150]
+#   .bss: [0x80299cf0, 0x80299f48]
+#   .sdata: [0x803f3908, 0x803f3990]
+#   .sbss: [0x803f9bd8, 0x803f9be0]
+#   .sdata2: [0x803fb7d8, 0x803fb7f8]
+
+#Cattle.cpp:
+#   .text: [0x8001ed4c, 0x8001fef0]
+#   .ctors: [0x8023c790, 0x8023c794]
+#   .rodata: [0x8023ccc8, 0x8023cce8]
+#   .data: [0x80241150, 0x802412f8]
+#   .bss: [0x80299f48, 0x8029a0e0]
+#   .sdata: [0x803f3990, 0x803f3a20]
+#   .sbss: [0x803f9be0, 0x803f9be8]
+#   .sdata2: [0x803fb7f8, 0x803fb870]
+
+#CritterDefs.cpp:
+#   .text: [0x8001fef0, 0x800205a8]
+#   .sdata2: [0x803fb870, 0x803fb8a0]
+
+#Critterfield.cpp:
+#   .text: [0x800205a8, 0x800223cc]
+#   .ctors: [0x8023c794, 0x8023c798]
+#   .rodata: [0x8023cce8, 0x8023cd58]
+#   .data: [0x802412f8, 0x802416a8]
+#   .sdata: [0x803f3a20, 0x803f3ac0]
+#   .sbss: [0x803f9be8, 0x803f9bf8]
+#   .sdata2: [0x803fb8a0, 0x803fb8d0]
+
+#Critters.cpp:
+#   .text: [0x800223cc, 0x80022510]
+#   .bss: [0x8029a0e0, 0x8029a0f0]
+#   .sbss: [0x803f9bf8, 0x803f9c00]
+#   .sdata2: [0x803fb8d0, 0x803fb8d8]
+
+#CuttleFish.cpp:
+#   .text: [0x80022510, 0x80022fd8]
+#   .ctors: [0x8023c798, 0x8023c79c]
+#   .rodata: [0x8023cd58, 0x8023cd78]
+#   .data: [0x802416a8, 0x802417d8]
+#   .bss: [0x8029a0f0, 0x8029a1a0]
+#   .sdata: [0x803f3ac0, 0x803f3b08]
+#   .sbss: [0x803f9c00, 0x803f9c10]
+#   .sdata2: [0x803fb8d8, 0x803fb920]
+
+#Fish.cpp:
+#   .text: [0x80022fd8, 0x80023950]
+#   .rodata: [0x8023cd78, 0x8023cd88]
+#   .data: [0x802417d8, 0x802417f0]
+#   .sbss: [0x803f9c10, 0x803f9c28]
+#   .sdata2: [0x803fb920, 0x803fb970]
+
+#FishShoal.cpp:
+#   .text: [0x80023950, 0x80024fa4]
+#   .ctors: [0x8023c79c, 0x8023c7a0]
+#   .rodata: [0x8023cd88, 0x8023ce28]
+#   .data: [0x802417f0, 0x80241b70]
+#   .bss: [0x8029a1a0, 0x8029a908]
+#   .sdata: [0x803f3b08, 0x803f3bb0]
+#   .sbss: [0x803f9c28, 0x803f9c40]
+#   .sdata2: [0x803fb970, 0x803fb9c8]
+
+#Fly.cpp:
+#   .text: [0x80024fa4, 0x8002646c]
+#   .ctors: [0x8023c7a0, 0x8023c7a4]
+#   .data: [0x80241b70, 0x80241e40]
+#   .bss: [0x8029a908, 0x8029ad90]
+#   .sdata: [0x803f3bb0, 0x803f3c60]
+#   .sbss: [0x803f9c40, 0x803f9c60]
+#   .sdata2: [0x803fb9c8, 0x803fba70]
+
+#Frog.cpp:
+#   .text: [0x8002646c, 0x80028650]
+#   .ctors: [0x8023c7a4, 0x8023c7a8]
+#   .rodata: [0x8023ce28, 0x8023ce88]
+#   .data: [0x80241e40, 0x802422f0]
+#   .bss: [0x8029ad90, 0x8029b138]
+#   .sdata: [0x803f3c60, 0x803f3d30]
+#   .sbss: [0x803f9c60, 0x803f9c98]
+#   .sdata2: [0x803fba70, 0x803fbad8]
+
+#Gecko.cpp:
+#   .text: [0x80028650, 0x800294a8]
+#   .ctors: [0x8023c7a8, 0x8023c7ac]
+#   .rodata: [0x8023ce88, 0x8023cec8]
+#   .data: [0x802422f0, 0x802424c0]
+#   .bss: [0x8029b138, 0x8029b1f0]
+#   .sdata: [0x803f3d30, 0x803f3da0]
+#   .sbss: [0x803f9c98, 0x803f9ca0]
+#   .sdata2: [0x803fbad8, 0x803fbb20]
+
+#Grasshopper2.cpp:
+#   .text: [0x800294a8, 0x80029c8c]
+#   .ctors: [0x8023c7ac, 0x8023c7b0]
+#   .data: [0x802424c0, 0x802425f0]
+#   .bss: [0x8029b1f0, 0x8029b2a0]
+#   .sdata: [0x803f3da0, 0x803f3de0]
+#   .sbss: [0x803f9ca0, 0x803f9ca8]
+#   .sdata2: [0x803fbb20, 0x803fbb60]
+
+#Ibis.cpp:
+#   .text: [0x80029c8c, 0x8002a8c4]
+#   .ctors: [0x8023c7b0, 0x8023c7b4]
+#   .data: [0x802425f0, 0x80242878]
+#   .bss: [0x8029b2a0, 0x8029b350]
+#   .sdata: [0x803f3de0, 0x803f3e50]
+#   .sbss: [0x803f9ca8, 0x803f9cb0]
+#   .sdata2: [0x803fbb60, 0x803fbba8]
+
+#KingFisher.cpp:
+#   .text: [0x8002a8c4, 0x8002bc40]
+#   .ctors: [0x8023c7b4, 0x8023c7b8]
+#   .rodata: [0x8023cec8, 0x8023cf08]
+#   .data: [0x80242878, 0x80242b00]
+#   .bss: [0x8029b350, 0x8029b648]
+#   .sdata: [0x803f3e50, 0x803f3ef8]
+#   .sbss: [0x803f9cb0, 0x803f9cd0]
+#   .sdata2: [0x803fbba8, 0x803fbbe8]
+
+#Moth.cpp:
+#   .text: [0x8002bc40, 0x8002c620]
+#   .ctors: [0x8023c7b8, 0x8023c7bc]
+#   .rodata: [0x8023cf08, 0x8023cf28]
+#   .data: [0x80242b00, 0x80242c50]
+#   .bss: [0x8029b648, 0x8029b7a8]
+#   .sdata: [0x803f3ef8, 0x803f3f50]
+#   .sbss: [0x803f9cd0, 0x803f9cd8]
+#   .sdata2: [0x803fbbe8, 0x803fbc30]
+
+#SmallCrab.cpp:
+#   .text: [0x8002c620, 0x8002d6bc]
+#   .ctors: [0x8023c7bc, 0x8023c7c0]
+#   .rodata: [0x8023cf28, 0x8023cf88]
+#   .data: [0x80242c50, 0x80242e80]
+#   .bss: [0x8029b7a8, 0x8029b918]
+#   .sdata: [0x803f3f50, 0x803f3fd8]
+#   .sbss: [0x803f9cd8, 0x803f9ce0]
+#   .sdata2: [0x803fbc30, 0x803fbc78]
+
+#Spider.cpp:
+#   .text: [0x8002d6bc, 0x8002de30]
+#   .rodata: [0x8023cf88, 0x8023cfa0]
+#   .bss: [0x8029b918, 0x8029b928]
+#   .sdata: [0x803f3fd8, 0x803f3fe0]
+#   .sbss: [0x803f9ce0, 0x803f9cf0]
+#   .sdata2: [0x803fbc78, 0x803fbca8]
+
+#Turtle.cpp:
+#   .text: [0x8002de30, 0x8002ee8c]
+#   .data: [0x80242e80, 0x80242ec0]
+#   .bss: [0x8029b928, 0x8029b948]
+#   .sdata: [0x803f3fe0, 0x803f3fe8]
+#   .sbss: [0x803f9cf0, 0x803f9d00]
+#   .sdata2: [0x803fbca8, 0x803fbcd8]
+
+#WaterDragon.cpp:
+#   .text: [0x8002ee8c, 0x8002fa8c]
+#   .rodata: [0x8023cfa0, 0x8023cfc0]
+#   .data: [0x80242ec0, 0x80242ed8]
+#   .bss: [0x8029b948, 0x8029b978]
+#   .sdata: [0x803f3fe8, 0x803f4008]
+#   .sbss: [0x803f9d00, 0x803f9d10]
+#   .sdata2: [0x803fbcd8, 0x803fbd20]
+
+#LetterBox.cpp:
+#   .text: [0x8002fa8c, 0x8002fec0]
+#   .rodata: [0x8023cfc0, 0x8023cfd0]
+#   .data: [0x80242ed8, 0x80242ef8]
+#   .bss: [0x8029b978, 0x8029b990]
+#   .sdata2: [0x803fbd20, 0x803fbd40]
+
+#DialogEffect.cpp:
+#   .text: [0x8002fec0, 0x80032224]
+#   .ctors: [0x8023c7c0, 0x8023c7c4]
+#   .data: [0x80242ef8, 0x802433e0]
+#   .bss: [0x8029b990, 0x8029be10]
+#   .sdata: [0x803f4008, 0x803f40b8]
+#   .sbss: [0x803f9d10, 0x803f9d20]
+#   .sdata2: [0x803fbd40, 0x803fbd70]
+
+#DialogPlayer.cpp:
+#   .text: [0x80032224, 0x800372c0]
+#   .rodata: [0x8023cfd0, 0x8023cfe0]
+#   .data: [0x802433e0, 0x80243550]
+#   .bss: [0x8029be10, 0x8029be50]
+#   .sdata: [0x803f40b8, 0x803f4198]
+#   .sbss: [0x803f9d20, 0x803f9d28]
+#   .sdata2: [0x803fbd70, 0x803fbdd0]
+
+#Avalanche.cpp:
+#   .text: [0x800372c0, 0x800377dc]
+#   .data: [0x80243550, 0x80243630]
+#   .bss: [0x8029be50, 0x8029bf38]
+#   .sdata: [0x803f4198, 0x803f41a0]
+#   .sbss: [0x803f9d28, 0x803f9d30]
+#   .sdata2: [0x803fbdd0, 0x803fbe10]
+
+#Bubble.cpp:
+#   .text: [0x800377dc, 0x80037b70]
+#   .bss: [0x8029bf38, 0x8029bfb0]
+#   .sdata: [0x803f41a0, 0x803f41b0]
+#   .sbss: [0x803f9d30, 0x803f9d38]
+#   .sdata2: [0x803fbe10, 0x803fbe30]
+
+#ChronorangEffects.cpp:
+#   .text: [0x80037b70, 0x8003877c]
+#   .data: [0x80243630, 0x80243690]
+#   .bss: [0x8029bfb0, 0x8029c638]
+#   .sdata: [0x803f41b0, 0x803f41c0]
+#   .sbss: [0x803f9d38, 0x803f9d40]
+#   .sdata2: [0x803fbe30, 0x803fbe78]
+
+#Explosion.cpp:
+#   .text: [0x8003877c, 0x80039c3c]
+#   .data: [0x80243690, 0x80243710]
+#   .bss: [0x8029c638, 0x8029c648]
+#   .sdata: [0x803f41c0, 0x803f41d0]
+#   .sdata2: [0x803fbe78, 0x803fbf30]
+
+#Flame.cpp:
+#   .text: [0x80039c3c, 0x8003a1f8]
+#   .data: [0x80243710, 0x80243768]
+#   .bss: [0x8029c648, 0x8029c6c0]
+#   .sdata: [0x803f41d0, 0x803f41d8]
+#   .sdata2: [0x803fbf30, 0x803fbf58]
+
+#GreySmoke.cpp:
+#   .text: [0x8003a1f8, 0x8003a3c8]
+#   .data: [0x80243768, 0x802437e8]
+#   .bss: [0x8029c6c0, 0x8029c738]
+#   .sdata: [0x803f41d8, 0x803f41e0]
+#   .sbss: [0x803f9d40, 0x803f9d48]
+#   .sdata2: [0x803fbf58, 0x803fbf80]
+
+#Lightning.cpp:
+#   .text: [0x8003a3c8, 0x8003ae90]
+#   .data: [0x802437e8, 0x802439a0]
+#   .sdata: [0x803f41e0, 0x803f41e8]
+#   .sbss: [0x803f9d48, 0x803f9d60]
+#   .sdata2: [0x803fbf80, 0x803fbf98]
+
+#Rain.cpp:
+#   .text: [0x8003ae90, 0x8003b208]
+#   .data: [0x802439a0, 0x802439e0]
+#   .sdata: [0x803f41e8, 0x803f41f0]
+#   .sbss: [0x803f9d60, 0x803f9d68]
+#   .sdata2: [0x803fbf98, 0x803fbfb0]
+
+#RainbowEffect.cpp:
+#   .text: [0x8003b208, 0x8003bda8]
+#   .rodata: [0x8023cfe0, 0x8023d060]
+#   .data: [0x802439e0, 0x80243a80]
+#   .bss: [0x8029c738, 0x8029c7b0]
+#   .sdata: [0x803f41f0, 0x803f41f8]
+#   .sbss: [0x803f9d68, 0x803f9d70]
+#   .sdata2: [0x803fbfb0, 0x803fc008]
+
+#SawDust.cpp:
+#   .text: [0x8003bda8, 0x8003c098]
+#   .data: [0x80243a80, 0x80243ad8]
+#   .bss: [0x8029c7b0, 0x8029c828]
+#   .sdata: [0x803f41f8, 0x803f4208]
+#   .sbss: [0x803f9d70, 0x803f9d78]
+#   .sdata2: [0x803fc008, 0x803fc040]
+
+#SnowBall.cpp:
+#   .text: [0x8003c098, 0x8003c260]
+#   .data: [0x80243ad8, 0x80243b38]
+#   .bss: [0x8029c828, 0x8029c8a0]
+#   .sdata: [0x803f4208, 0x803f4210]
+#   .sbss: [0x803f9d78, 0x803f9d80]
+#   .sdata2: [0x803fc040, 0x803fc068]
+
+#SnowFootEffects.cpp:
+#   .text: [0x8003c260, 0x8003cedc]
+#   .data: [0x80243b38, 0x80243c58]
+#   .bss: [0x8029c8a0, 0x8029caa0]
+#   .sdata: [0x803f4210, 0x803f4230]
+#   .sbss: [0x803f9d80, 0x803f9d90]
+#   .sdata2: [0x803fc068, 0x803fc100]
+
+#SpeedboatWake.cpp:
+#   .text: [0x8003cedc, 0x8003dc44]
+#   .rodata: [0x8023d060, 0x8023d080]
+#   .sdata: [0x803f4230, 0x803f4238]
+#   .sdata2: [0x803fc100, 0x803fc168]
+
+#Steam.cpp:
+#   .text: [0x8003dc44, 0x8003ded8]
+#   .data: [0x80243c58, 0x80243cc8]
+#   .bss: [0x8029caa0, 0x8029cb18]
+#   .sdata: [0x803f4238, 0x803f4248]
+#   .sbss: [0x803f9d90, 0x803f9d98]
+#   .sdata2: [0x803fc168, 0x803fc190]
+
+#Teleport.cpp:
+#   .text: [0x8003ded8, 0x8003e11c]
+#   .data: [0x80243cc8, 0x80243d80]
+#   .bss: [0x8029cb18, 0x8029cb90]
+#   .sdata: [0x803f4248, 0x803f4250]
+#   .sbss: [0x803f9d98, 0x803f9da0]
+#   .sdata2: [0x803fc190, 0x803fc1c8]
+
+#Trails.cpp:
+#   .text: [0x8003e11c, 0x8003e5a4]
+#   .sdata2: [0x803fc1c8, 0x803fc1d8]
+
+#Waterdrip.cpp:
+#   .text: [0x8003e5a4, 0x8003e784]
+#   .data: [0x80243d80, 0x80243de0]
+#   .bss: [0x8029cb90, 0x8029cc08]
+#   .sdata: [0x803f4250, 0x803f4258]
+#   .sbss: [0x803f9da0, 0x803f9da8]
+#   .sdata2: [0x803fc1d8, 0x803fc1e8]
+
+#Weather.cpp:
+#   .text: [0x8003e784, 0x8003ecac]
+#   .data: [0x80243de0, 0x80243df0]
+#   .bss: [0x8029cc08, 0x8029ccc0]
+#   .sdata: [0x803f4258, 0x803f4260]
+#   .sbss: [0x803f9da8, 0x803f9db8]
+
+#BadBoonie.cpp:
+#   .text: [0x8003ecac, 0x80040af4]
+#   .ctors: [0x8023c7c4, 0x8023c7c8]
+#   .rodata: [0x8023d080, 0x8023d0a0]
+#   .data: [0x80243df0, 0x802441d8]
+#   .bss: [0x8029ccc0, 0x8029ce78]
+#   .sdata: [0x803f4260, 0x803f42e8]
+#   .sbss: [0x803f9db8, 0x803f9dc8]
+#   .sdata2: [0x803fc1e8, 0x803fc250]
+
+#Barracuda.cpp:
+#   .text: [0x80040af4, 0x8004236c]
+#   .ctors: [0x8023c7c8, 0x8023c7cc]
+#   .data: [0x802441d8, 0x80244508]
+#   .bss: [0x8029ce78, 0x8029d020]
+#   .sdata: [0x803f42e8, 0x803f4328]
+#   .sbss: [0x803f9dc8, 0x803f9de0]
+#   .sdata2: [0x803fc250, 0x803fc2b8]
+
+#Bat.cpp:
+#   .text: [0x8004236c, 0x80044340]
+#   .ctors: [0x8023c7cc, 0x8023c7d0]
+#   .data: [0x80244508, 0x802447f8]
+#   .bss: [0x8029d020, 0x8029d1d0]
+#   .sdata: [0x803f4328, 0x803f4390]
+#   .sbss: [0x803f9de0, 0x803f9df0]
+#   .sdata2: [0x803fc2b8, 0x803fc368]
+
+#BlueTongue.cpp:
+#   .text: [0x80044340, 0x80046a74]
+#   .ctors: [0x8023c7d0, 0x8023c7d4]
+#   .data: [0x802447f8, 0x80244d30]
+#   .bss: [0x8029d1d0, 0x8029d3a0]
+#   .sdata: [0x803f4390, 0x803f4400]
+#   .sbss: [0x803f9df0, 0x803f9e00]
+#   .sdata2: [0x803fc368, 0x803fc3b0]
+
+#BlueTongueRock.cpp:
+#   .text: [0x80046a74, 0x80048b48]
+#   .ctors: [0x8023c7d4, 0x8023c7d8]
+#   .data: [0x80244d30, 0x80245338]
+#   .bss: [0x8029d3a0, 0x8029d698]
+#   .sdata: [0x803f4400, 0x803f44b0]
+#   .sbss: [0x803f9e00, 0x803f9e28]
+#   .sdata2: [0x803fc3b0, 0x803fc408]
+
+#BossCass.cpp:
+#   .text: [0x80048b48, 0x80048e10]
+#   .ctors: [0x8023c7d8, 0x8023c7dc]
+#   .data: [0x80245338, 0x80245478]
+#   .bss: [0x8029d698, 0x8029d830]
+#   .sdata: [0x803f44b0, 0x803f44f0]
+#   .sbss: [0x803f9e28, 0x803f9e30]
+
+#bull.cpp:
+#   .text: [0x80048e10, 0x80050574]
+#   .ctors: [0x8023c7dc, 0x8023c7e0]
+#   .rodata: [0x8023d0a0, 0x8023d1e8]
+#   .data: [0x80245478, 0x80245f88]
+#   .bss: [0x8029d830, 0x8029dae0]
+#   .sdata: [0x803f44f0, 0x803f4618]
+#   .sbss: [0x803f9e30, 0x803f9e40]
+#   .sdata2: [0x803fc408, 0x803fc590]
+
+#CaveBat.cpp:
+#   .text: [0x80050574, 0x800523e4]
+#   .ctors: [0x8023c7e0, 0x8023c7e4]
+#   .rodata: [0x8023d1e8, 0x8023d208]
+#   .data: [0x80245f88, 0x80246368]
+#   .bss: [0x8029dae0, 0x8029dd30]
+#   .sdata: [0x803f4618, 0x803f4688]
+#   .sbss: [0x803f9e40, 0x803f9e58]
+#   .sdata2: [0x803fc590, 0x803fc5d8]
+
+#Crikey.cpp:
+#   .text: [0x800523e4, 0x800582f8]
+#   .ctors: [0x8023c7e4, 0x8023c7e8]
+#   .rodata: [0x8023d208, 0x8023d228]
+#   .data: [0x80246368, 0x80246a88]
+#   .bss: [0x8029dd30, 0x8029df10]
+#   .sdata: [0x803f4688, 0x803f46e0]
+#   .sbss: [0x803f9e58, 0x803f9e78]
+#   .sdata2: [0x803fc5d8, 0x803fc708]
+
+#croc.cpp:
+#   .text: [0x800582f8, 0x8005a6a0]
+#   .ctors: [0x8023c7e8, 0x8023c7ec]
+#   .data: [0x80246a88, 0x80246f88]
+#   .bss: [0x8029df10, 0x8029e0b8]
+#   .sdata: [0x803f46e0, 0x803f4758]
+#   .sbss: [0x803f9e78, 0x803f9e80]
+#   .sdata2: [0x803fc708, 0x803fc778]
+
+#Dennis.cpp:
+#   .text: [0x8005a6a0, 0x8005bf10]
+#   .ctors: [0x8023c7ec, 0x8023c7f0]
+#   .data: [0x80246f88, 0x802472b8]
+#   .bss: [0x8029e0b8, 0x8029e2c8]
+#   .sdata: [0x803f4758, 0x803f47e8]
+#   .sbss: [0x803f9e80, 0x803f9e88]
+#   .sdata2: [0x803fc778, 0x803fc7a8]
+
+#Eel.cpp:
+#   .text: [0x8005bf10, 0x8005dc74]
+#   .ctors: [0x8023c7f0, 0x8023c7f4]
+#   .rodata: [0x8023d228, 0x8023d248]
+#   .data: [0x802472b8, 0x802475f8]
+#   .bss: [0x8029e2c8, 0x8029e478]
+#   .sdata: [0x803f47e8, 0x803f4838]
+#   .sbss: [0x803f9e88, 0x803f9ea0]
+#   .sdata2: [0x803fc7a8, 0x803fc858]
+
+#Enemies.cpp:
+#   .text: [0x8005dc74, 0x80063274]
+#   .rodata: [0x8023d248, 0x8023d2d8]
+#   .data: [0x802475f8, 0x80247998]
+#   .bss: [0x8029e478, 0x8029e580]
+#   .sdata: [0x803f4838, 0x803f48f0]
+#   .sbss: [0x803f9ea0, 0x803f9eb0]
+#   .sdata2: [0x803fc858, 0x803fc918]
+
+#EnemySpawner.cpp:
+#   .text: [0x80063274, 0x80064834]
+#   .ctors: [0x8023c7f4, 0x8023c7f8]
+#   .data: [0x80247998, 0x80247ad0]
+#   .bss: [0x8029e580, 0x8029e608]
+#   .sdata: [0x803f48f0, 0x803f4940]
+#   .sbss: [0x803f9eb0, 0x803f9eb8]
+#   .sdata2: [0x803fc918, 0x803fc950]
+
+#Fluffy.cpp:
+#   .text: [0x80064834, 0x8006ae3c]
+#   .ctors: [0x8023c7f8, 0x8023c7fc]
+#   .rodata: [0x8023d2d8, 0x8023d338]
+#   .data: [0x80247ad0, 0x80248828]
+#   .bss: [0x8029e608, 0x8029ea58]
+#   .sdata: [0x803f4940, 0x803f4a80]
+#   .sbss: [0x803f9eb8, 0x803f9ed8]
+#   .sdata2: [0x803fc950, 0x803fcab8]
+
+#FrillBike.cpp:
+#   .text: [0x8006ae3c, 0x8006e0d0]
+#   .ctors: [0x8023c7fc, 0x8023c800]
+#   .rodata: [0x8023d338, 0x8023d358]
+#   .data: [0x80248828, 0x80248ca0]
+#   .bss: [0x8029ea58, 0x8029ec48]
+#   .sdata: [0x803f4a80, 0x803f4b10]
+#   .sbss: [0x803f9ed8, 0x803f9ee8]
+#   .sdata2: [0x803fcab8, 0x803fcbb8]
+
+#frilllizard.cpp:
+#   .text: [0x8006e0d0, 0x80073144]
+#   .ctors: [0x8023c800, 0x8023c804]
+#   .data: [0x80248ca0, 0x802496c8]
+#   .bss: [0x8029ec48, 0x8029f258]
+#   .sdata: [0x803f4b10, 0x803f4bb0]
+#   .sbss: [0x803f9ee8, 0x803f9ef8]
+#   .sdata2: [0x803fcbb8, 0x803fcc38]
+
+#FrillSpeedboat.cpp:
+#   .text: [0x80073144, 0x800757c8]
+#   .ctors: [0x8023c804, 0x8023c808]
+#   .rodata: [0x8023d358, 0x8023d368]
+#   .data: [0x802496c8, 0x80249b80]
+#   .bss: [0x8029f258, 0x8029f4e0]
+#   .sdata: [0x803f4bb0, 0x803f4c60]
+#   .sbss: [0x803f9ef8, 0x803f9f10]
+#   .sdata2: [0x803fcc38, 0x803fccb0]
+
+#Grouper.cpp:
+#   .text: [0x800757c8, 0x8007780c]
+#   .ctors: [0x8023c808, 0x8023c80c]
+#   .rodata: [0x8023d368, 0x8023d388]
+#   .data: [0x80249b80, 0x80249f98]
+#   .bss: [0x8029f4e0, 0x8029f698]
+#   .sdata: [0x803f4c60, 0x803f4cd0]
+#   .sbss: [0x803f9f10, 0x803f9f18]
+#   .sdata2: [0x803fccb0, 0x803fcd50]
+
+#leech.cpp:
+#   .text: [0x8007780c, 0x80079b54]
+#   .ctors: [0x8023c80c, 0x8023c810]
+#   .rodata: [0x8023d388, 0x8023d3a8]
+#   .data: [0x80249f98, 0x8024a558]
+#   .bss: [0x8029f698, 0x8029f858]
+#   .sdata: [0x803f4cd0, 0x803f4d48]
+#   .sbss: [0x803f9f18, 0x803f9f20]
+#   .sdata2: [0x803fcd50, 0x803fce00]
+
+#LilNeddy.cpp:
+#   .text: [0x80079b54, 0x8007bc68]
+#   .ctors: [0x8023c810, 0x8023c814]
+#   .data: [0x8024a558, 0x8024ab60]
+#   .bss: [0x8029f858, 0x8029fa88]
+#   .sdata: [0x803f4d48, 0x803f4dd0]
+#   .sbss: [0x803f9f20, 0x803f9f38]
+#   .sdata2: [0x803fce00, 0x803fce60]
+
+#muddie.cpp:
+#   .text: [0x8007bc68, 0x8007e0dc]
+#   .ctors: [0x8023c814, 0x8023c818]
+#   .data: [0x8024ab60, 0x8024aff0]
+#   .bss: [0x8029fa88, 0x8029fe68]
+#   .sdata: [0x803f4dd0, 0x803f4e90]
+#   .sbss: [0x803f9f38, 0x803f9f48]
+#   .sdata2: [0x803fce60, 0x803fcec8]
+
+#neddy.cpp:
+#   .text: [0x8007e0dc, 0x800813e4]
+#   .ctors: [0x8023c818, 0x8023c81c]
+#   .data: [0x8024aff0, 0x8024b600]
+#   .bss: [0x8029fe68, 0x802a0088]
+#   .sdata: [0x803f4e90, 0x803f4f20]
+#   .sbss: [0x803f9f48, 0x803f9f50]
+#   .sdata2: [0x803fcec8, 0x803fcfa0]
+
+#NinjaGecko.cpp:
+#   .text: [0x800813e4, 0x80083afc]
+#   .ctors: [0x8023c81c, 0x8023c820]
+#   .data: [0x8024b600, 0x8024be10]
+#   .bss: [0x802a0088, 0x802a0330]
+#   .sdata: [0x803f4f20, 0x803f4fb8]
+#   .sbss: [0x803f9f50, 0x803f9f60]
+#   .sdata2: [0x803fcfa0, 0x803fd008]
+
+#Rhino.cpp:
+#   .text: [0x80083afc, 0x800864bc]
+#   .ctors: [0x8023c820, 0x8023c824]
+#   .data: [0x8024be10, 0x8024c3b0]
+#   .bss: [0x802a0330, 0x802a0528]
+#   .sdata: [0x803f4fb8, 0x803f5030]
+#   .sbss: [0x803f9f60, 0x803f9f70]
+#   .sdata2: [0x803fd008, 0x803fd080]
+
+#RhinoGround.cpp:
+#   .text: [0x800864bc, 0x800886d8]
+#   .ctors: [0x8023c824, 0x8023c828]
+#   .rodata: [0x8023d3a8, 0x8023d448]
+#   .data: [0x8024c3b0, 0x8024c888]
+#   .bss: [0x802a0528, 0x802a06e8]
+#   .sdata: [0x803f5030, 0x803f5098]
+#   .sbss: [0x803f9f70, 0x803f9f88]
+#   .sdata2: [0x803fd080, 0x803fd100]
+
+#Roach.cpp:
+#   .text: [0x800886d8, 0x8008b0d0]
+#   .ctors: [0x8023c828, 0x8023c82c]
+#   .rodata: [0x8023d448, 0x8023d530]
+#   .data: [0x8024c888, 0x8024ce08]
+#   .bss: [0x802a06e8, 0x802a08b0]
+#   .sdata: [0x803f5098, 0x803f5120]
+#   .sbss: [0x803f9f88, 0x803f9fa0]
+#   .sdata2: [0x803fd100, 0x803fd1a8]
+
+#rufus.cpp:
+#   .text: [0x8008b0d0, 0x8008ecc8]
+#   .ctors: [0x8023c82c, 0x8023c830]
+#   .data: [0x8024ce08, 0x8024d488]
+#   .bss: [0x802a08b0, 0x802a0a80]
+#   .sdata: [0x803f5120, 0x803f5198]
+#   .sbss: [0x803f9fa0, 0x803f9fa8]
+#   .sdata2: [0x803fd1a8, 0x803fd220]
+
+#ScrubTurkey.cpp:
+#   .text: [0x8008ecc8, 0x800919b4]
+#   .ctors: [0x8023c830, 0x8023c834]
+#   .rodata: [0x8023d530, 0x8023d560]
+#   .data: [0x8024d488, 0x8024da00]
+#   .bss: [0x802a0a80, 0x802a0c48]
+#   .sdata: [0x803f5198, 0x803f5238]
+#   .sbss: [0x803f9fa8, 0x803f9fb8]
+#   .sdata2: [0x803fd220, 0x803fd2a8]
+
+#ScubaFrill.cpp:
+#   .text: [0x800919b4, 0x800947fc]
+#   .ctors: [0x8023c834, 0x8023c838]
+#   .rodata: [0x8023d560, 0x8023d580]
+#   .data: [0x8024da00, 0x8024df28]
+#   .bss: [0x802a0c48, 0x802a0ec0]
+#   .sdata: [0x803f5238, 0x803f52e0]
+#   .sbss: [0x803f9fb8, 0x803f9fd8]
+#   .sdata2: [0x803fd2a8, 0x803fd380]
+
+#ShadowBat.cpp:
+#   .text: [0x800947fc, 0x80098678]
+#   .ctors: [0x8023c838, 0x8023c83c]
+#   .rodata: [0x8023d580, 0x8023d590]
+#   .data: [0x8024df28, 0x8024e740]
+#   .bss: [0x802a0ec0, 0x802a10b0]
+#   .sdata: [0x803f52e0, 0x803f5358]
+#   .sbss: [0x803f9fd8, 0x803f9fe0]
+#   .sdata2: [0x803fd380, 0x803fd438]
+
+#Shark.cpp:
+#   .text: [0x80098678, 0x8009b7b8]
+#   .ctors: [0x8023c83c, 0x8023c840]
+#   .data: [0x8024e740, 0x8024eb98]
+#   .bss: [0x802a10b0, 0x802a1250]
+#   .sdata: [0x803f5358, 0x803f53b0]
+#   .sbss: [0x803f9fe0, 0x803f9ff8]
+#   .sdata2: [0x803fd438, 0x803fd4f0]
+
+#Skink.cpp:
+#   .text: [0x8009b7b8, 0x8009fd24]
+#   .ctors: [0x8023c840, 0x8023c844]
+#   .rodata: [0x8023d590, 0x8023d5a0]
+#   .data: [0x8024eb98, 0x8024f3c0]
+#   .bss: [0x802a1250, 0x802a15a0]
+#   .sdata: [0x803f53b0, 0x803f5490]
+#   .sbss: [0x803f9ff8, 0x803fa010]
+#   .sdata2: [0x803fd4f0, 0x803fd5c0]
+
+#Sly.cpp:
+#   .text: [0x8009fd24, 0x800a23e0]
+#   .ctors: [0x8023c844, 0x8023c848]
+#   .rodata: [0x8023d5a0, 0x8023d600]
+#   .data: [0x8024f3c0, 0x8024f9f0]
+#   .bss: [0x802a15a0, 0x802a1868]
+#   .sdata: [0x803f5490, 0x803f5560]
+#   .sbss: [0x803fa010, 0x803fa030]
+#   .sdata2: [0x803fd5c0, 0x803fd620]
+
+#SnowRoo.cpp:
+#   .text: [0x800a23e0, 0x800a3ce8]
+#   .ctors: [0x8023c848, 0x8023c84c]
+#   .data: [0x8024f9f0, 0x8024fe88]
+#   .bss: [0x802a1868, 0x802a1af0]
+#   .sdata: [0x803f5560, 0x803f55f8]
+#   .sbss: [0x803fa030, 0x803fa040]
+#   .sdata2: [0x803fd620, 0x803fd670]
+
+#SnowSpider.cpp:
+#   .text: [0x800a3ce8, 0x800a5ebc]
+#   .ctors: [0x8023c84c, 0x8023c850]
+#   .rodata: [0x8023d600, 0x8023d6c8]
+#   .data: [0x8024fe88, 0x802502a0]
+#   .bss: [0x802a1af0, 0x802a1cb0]
+#   .sdata: [0x803f55f8, 0x803f5688]
+#   .sbss: [0x803fa040, 0x803fa050]
+#   .sdata2: [0x803fd670, 0x803fd718]
+
+#SpiderTrapdoor.cpp:
+#   .text: [0x800a5ebc, 0x800a62e8]
+#   .ctors: [0x8023c850, 0x8023c854]
+#   .data: [0x802502a0, 0x80250430]
+#   .bss: [0x802a1cb0, 0x802a1dd0]
+#   .sdata: [0x803f5688, 0x803f56e8]
+#   .sbss: [0x803fa050, 0x803fa058]
+#   .sdata2: [0x803fd718, 0x803fd720]
+
+#SynkerBlueTongue.cpp:
+#   .text: [0x800a62e8, 0x800a6624]
+#   .ctors: [0x8023c854, 0x8023c858]
+#   .data: [0x80250430, 0x80250568]
+#   .bss: [0x802a1dd0, 0x802a1e78]
+#   .sdata: [0x803f56e8, 0x803f5738]
+#   .sbss: [0x803fa058, 0x803fa060]
+
+#SynkerFrill.cpp:
+#   .text: [0x800a6624, 0x800a6960]
+#   .ctors: [0x8023c858, 0x8023c85c]
+#   .data: [0x80250568, 0x802506a0]
+#   .bss: [0x802a1e78, 0x802a1f20]
+#   .sdata: [0x803f5738, 0x803f5788]
+#   .sbss: [0x803fa060, 0x803fa068]
+
+#Tick.cpp:
+#   .text: [0x800a6960, 0x800a8ba8]
+#   .ctors: [0x8023c85c, 0x8023c860]
+#   .rodata: [0x8023d6c8, 0x8023d6e8]
+#   .data: [0x802506a0, 0x80250c58]
+#   .bss: [0x802a1f20, 0x802a20d8]
+#   .sdata: [0x803f5788, 0x803f57f8]
+#   .sbss: [0x803fa068, 0x803fa070]
+#   .sdata2: [0x803fd720, 0x803fd7d8]
+
+#TrapdoorSpider.cpp:
+#   .text: [0x800a8ba8, 0x800ac378]
+#   .ctors: [0x8023c860, 0x8023c864]
+#   .rodata: [0x8023d6e8, 0x8023d7b0]
+#   .data: [0x80250c58, 0x802512f0]
+#   .bss: [0x802a20d8, 0x802a2358]
+#   .sdata: [0x803f57f8, 0x803f58a0]
+#   .sbss: [0x803fa070, 0x803fa088]
+#   .sdata2: [0x803fd7d8, 0x803fd8a0]
+
+#WhiteBat.cpp:
+#   .text: [0x800ac378, 0x800ad5b8]
+#   .ctors: [0x8023c864, 0x8023c868]
+#   .data: [0x802512f0, 0x802514f8]
+#   .bss: [0x802a2358, 0x802a24f0]
+#   .sdata: [0x803f58a0, 0x803f58e8]
+#   .sbss: [0x803fa088, 0x803fa0a0]
+#   .sdata2: [0x803fd8a0, 0x803fd910]
+
+#Wombat.cpp:
+#   .text: [0x800ad5b8, 0x800b0814]
+#   .ctors: [0x8023c868, 0x8023c86c]
+#   .rodata: [0x8023d7b0, 0x8023d7c0]
+#   .data: [0x802514f8, 0x80251d70]
+#   .bss: [0x802a24f0, 0x802a2a18]
+#   .sdata: [0x803f58e8, 0x803f5988]
+#   .sbss: [0x803fa0a0, 0x803fa0b0]
+#   .sdata2: [0x803fd910, 0x803fd9f8]
+
+#Yabby.cpp:
+#   .text: [0x800b0814, 0x800b2918]
+#   .ctors: [0x8023c86c, 0x8023c870]
+#   .rodata: [0x8023d7c0, 0x8023d800]
+#   .data: [0x80251d70, 0x80252138]
+#   .bss: [0x802a2a18, 0x802a2bd8]
+#   .sdata: [0x803f5988, 0x803f59f8]
+#   .sbss: [0x803fa0b0, 0x803fa0c0]
+#   .sdata2: [0x803fd9f8, 0x803fda80]
+
+#Aurora.cpp:
+#   .text: [0x800b2918, 0x800b37bc]
+#   .ctors: [0x8023c870, 0x8023c874]
+#   .data: [0x80252138, 0x802522f8]
+#   .bss: [0x802a2bd8, 0x802a2cc8]
+#   .sdata: [0x803f59f8, 0x803f5a78]
+#   .sbss: [0x803fa0c0, 0x803fa0d0]
+#   .sdata2: [0x803fda80, 0x803fdaa8]
+
+#AuroraKid.cpp:
+#   .text: [0x800b37bc, 0x800b51b4]
+#   .ctors: [0x8023c874, 0x8023c878]
+#   .data: [0x802522f8, 0x80252618]
+#   .bss: [0x802a2cc8, 0x802a3160]
+#   .sdata: [0x803f5a78, 0x803f5b00]
+#   .sbss: [0x803fa0d0, 0x803fa0f0]
+#   .sdata2: [0x803fdaa8, 0x803fdb18]
+
+#BunyipElder.cpp:
+#   .text: [0x800b51b4, 0x800b5a60]
+#   .ctors: [0x8023c878, 0x8023c87c]
+#   .data: [0x80252618, 0x80252880]
+#   .bss: [0x802a3160, 0x802a3248]
+#   .sdata: [0x803f5b00, 0x803f5b78]
+#   .sbss: [0x803fa0f0, 0x803fa100]
+#   .sdata2: [0x803fdb18, 0x803fdb28]
+
+#C3_MiniGame_Rex_Elle.cpp:
+#   .text: [0x800b5a60, 0x800b763c]
+#   .ctors: [0x8023c87c, 0x8023c880]
+#   .data: [0x80252880, 0x80252e10]
+#   .bss: [0x802a3248, 0x802a34b0]
+#   .sdata: [0x803f5b78, 0x803f5c08]
+#   .sdata2: [0x803fdb28, 0x803fdb70]
+
+#farlapp.cpp:
+#   .text: [0x800b763c, 0x800b8a94]
+#   .ctors: [0x8023c880, 0x8023c884]
+#   .data: [0x80252e10, 0x80252fd0]
+#   .bss: [0x802a34b0, 0x802a35a8]
+#   .sdata: [0x803f5c08, 0x803f5c90]
+#   .sbss: [0x803fa100, 0x803fa108]
+#   .sdata2: [0x803fdb70, 0x803fdbe8]
+
+#Friend.cpp:
+#   .text: [0x800b8a94, 0x800b9880]
+#   .ctors: [0x8023c884, 0x8023c888]
+#   .rodata: [0x8023d800, 0x8023d820]
+#   .data: [0x80252fd0, 0x802530f0]
+#   .sdata: [0x803f5c90, 0x803f5ce0]
+#   .sbss: [0x803fa108, 0x803fa110]
+#   .sdata2: [0x803fdbe8, 0x803fdc08]
+
+#julius.cpp:
+#   .text: [0x800b9880, 0x800baa70]
+#   .ctors: [0x8023c888, 0x8023c88c]
+#   .data: [0x802530f0, 0x802534d8]
+#   .bss: [0x802a35a8, 0x802a36a0]
+#   .sdata: [0x803f5ce0, 0x803f5d58]
+#   .sbss: [0x803fa110, 0x803fa118]
+#   .sdata2: [0x803fdc08, 0x803fdc20]
+
+#KenOath.cpp:
+#   .text: [0x800baa70, 0x800bb1bc]
+#   .ctors: [0x8023c88c, 0x8023c890]
+#   .data: [0x802534d8, 0x80253648]
+#   .bss: [0x802a36a0, 0x802a3790]
+#   .sdata: [0x803f5d58, 0x803f5dd8]
+#   .sbss: [0x803fa118, 0x803fa120]
+#   .sdata2: [0x803fdc20, 0x803fdc38]
+
+#Lenny.cpp:
+#   .text: [0x800bb1bc, 0x800be8e8]
+#   .ctors: [0x8023c890, 0x8023c894]
+#   .rodata: [0x8023d820, 0x8023d840]
+#   .data: [0x80253648, 0x80253b40]
+#   .bss: [0x802a3790, 0x802a38f8]
+#   .sdata: [0x803f5dd8, 0x803f5e60]
+#   .sbss: [0x803fa120, 0x803fa138]
+#   .sdata2: [0x803fdc38, 0x803fdcd8]
+
+#maurie.cpp:
+#   .text: [0x800be8e8, 0x800bfddc]
+#   .ctors: [0x8023c894, 0x8023c898]
+#   .rodata: [0x8023d840, 0x8023d850]
+#   .data: [0x80253b40, 0x80253e88]
+#   .bss: [0x802a38f8, 0x802a39f0]
+#   .sdata: [0x803f5e60, 0x803f5ec0]
+#   .sbss: [0x803fa138, 0x803fa140]
+#   .sdata2: [0x803fdcd8, 0x803fdd28]
+
+#shazza.cpp:
+#   .text: [0x800bfddc, 0x800c0400]
+#   .ctors: [0x8023c898, 0x8023c89c]
+#   .data: [0x80253e88, 0x80254018]
+#   .bss: [0x802a39f0, 0x802a3ad8]
+#   .sdata: [0x803f5ec0, 0x803f5f08]
+#   .sbss: [0x803fa140, 0x803fa148]
+#   .sdata2: [0x803fdd28, 0x803fdd30]
+
+#sheila.cpp:
+#   .text: [0x800c0400, 0x800c0b8c]
+#   .ctors: [0x8023c89c, 0x8023c8a0]
+#   .data: [0x80254018, 0x802541c8]
+#   .bss: [0x802a3ad8, 0x802a3bc8]
+#   .sdata: [0x803f5f08, 0x803f5f80]
+#   .sbss: [0x803fa148, 0x803fa150]
+
+#FrontEnd.cpp:
+#   .text: [0x800c0b8c, 0x800c16bc]
+#   .rodata: [0x8023d850, 0x8023d880]
+#   .data: [0x802541c8, 0x80254388]
+#   .bss: [0x802a3bc8, 0x802a4070]
+#   .sdata: [0x803f5f80, 0x803f5f88]
+#   .sbss: [0x803fa150, 0x803fa158]
+#   .sdata2: [0x803fdd30, 0x803fdd70]
+
+#FrontEnd_Credits.cpp:
+#   .text: [0x800c16bc, 0x800c2bdc]
+#   .data: [0x80254388, 0x802544b0]
+#   .bss: [0x802a4070, 0x802a4340]
+#   .sdata: [0x803f5f88, 0x803f6030]
+#   .sbss: [0x803fa158, 0x803fa170]
+#   .sdata2: [0x803fdd70, 0x803fddb0]
+
+#FrontEnd_Extras.cpp:
+#   .text: [0x800c2bdc, 0x800c34ec]
+#   .data: [0x802544b0, 0x802544f0]
+#   .bss: [0x802a4340, 0x802a4400]
+#   .sbss: [0x803fa170, 0x803fa178]
+#   .sdata2: [0x803fddb0, 0x803fdde8]
+
+#FrontEnd_Gallery.cpp:
+#   .text: [0x800c34ec, 0x800c3b34]
+#   .data: [0x802544f0, 0x80254500]
+#   .bss: [0x802a4400, 0x802a44a0]
+#   .sdata: [0x803f6030, 0x803f6040]
+#   .sbss: [0x803fa178, 0x803fa180]
+#   .sdata2: [0x803fdde8, 0x803fde08]
+
+#FrontEnd_LanguageSelect.cpp:
+#   .text: [0x800c3b34, 0x800c3f20]
+#   .data: [0x80254500, 0x80254520]
+#   .bss: [0x802a44a0, 0x802a44d0]
+#   .sdata2: [0x803fde08, 0x803fde28]
+
+#FrontEnd_LoadGame.cpp:
+#   .text: [0x800c3f20, 0x800c44f8]
+#   .rodata: [0x8023d880, 0x8023d890]
+#   .data: [0x80254520, 0x80254530]
+#   .bss: [0x802a44d0, 0x802a4538]
+#   .sbss: [0x803fa180, 0x803fa188]
+#   .sdata2: [0x803fde28, 0x803fde30]
+
+#FrontEnd_LoadLevel.cpp:
+#   .text: [0x800c44f8, 0x800c5120]
+#   .data: [0x80254530, 0x80254578]
+#   .bss: [0x802a4538, 0x802a4640]
+#   .sdata: [0x803f6040, 0x803f6060]
+#   .sbss: [0x803fa188, 0x803fa1b8]
+#   .sdata2: [0x803fde30, 0x803fde78]
+
+#FrontEnd_MainMenu.cpp:
+#   .text: [0x800c5120, 0x800c5ef4]
+#   .rodata: [0x8023d890, 0x8023d8b0]
+#   .data: [0x80254578, 0x802545a8]
+#   .bss: [0x802a4640, 0x802a4728]
+#   .sdata: [0x803f6060, 0x803f6070]
+#   .sbss: [0x803fa1b8, 0x803fa1c8]
+#   .sdata2: [0x803fde78, 0x803fdec8]
+
+#FrontEnd_Title.cpp:
+#   .text: [0x800c5ef4, 0x800c62d4]
+#   .rodata: [0x8023d8b0, 0x8023d8c0]
+#   .data: [0x802545a8, 0x802545b8]
+#   .bss: [0x802a4728, 0x802a47d0]
+#   .sdata: [0x803f6070, 0x803f6078]
+#   .sbss: [0x803fa1c8, 0x803fa1d0]
+#   .sdata2: [0x803fdec8, 0x803fdef0]
+
+#FrontEnd_Videos.cpp:
+#   .text: [0x800c62d4, 0x800c69d4]
+#   .data: [0x802545b8, 0x802545e0]
+#   .bss: [0x802a47d0, 0x802a4888]
+#   .sdata: [0x803f6078, 0x803f6080]
+#   .sbss: [0x803fa1d0, 0x803fa1e0]
+#   .sdata2: [0x803fdef0, 0x803fdf18]
+
+#PauseScreen.cpp:
+#   .text: [0x800c69d4, 0x800c8774]
+#   .rodata: [0x8023d8c0, 0x8023d900]
+#   .data: [0x802545e0, 0x80254790]
+#   .bss: [0x802a4888, 0x802a4f18]
+#   .sdata: [0x803f6080, 0x803f60d8]
+#   .sbss: [0x803fa1e0, 0x803fa1e8]
+#   .sdata2: [0x803fdf18, 0x803fdfd0]
+
+#PauseScreen_Continue.cpp:
+#   .text: [0x800c8774, 0x800c8ccc]
+#   .data: [0x80254790, 0x80254810]
+#   .bss: [0x802a4f18, 0x802a5048]
+#   .sdata: [0x803f60d8, 0x803f60e0]
+#   .sbss: [0x803fa1e8, 0x803fa1f0]
+#   .sdata2: [0x803fdfd0, 0x803fdfe8]
+
+#PauseScreen_GameInfo.cpp:
+#   .text: [0x800c8ccc, 0x800ca7b4]
+#   .rodata: [0x8023d900, 0x8023d930]
+#   .data: [0x80254810, 0x802549a0]
+#   .bss: [0x802a5048, 0x802a55b0]
+#   .sdata: [0x803f60e0, 0x803f60e8]
+#   .sbss: [0x803fa1f0, 0x803fa220]
+#   .sdata2: [0x803fdfe8, 0x803fe098]
+
+#PauseScreen_GameTotals.cpp:
+#   .text: [0x800ca7b4, 0x800cb710]
+#   .rodata: [0x8023d930, 0x8023d950]
+#   .data: [0x802549a0, 0x80254a78]
+#   .bss: [0x802a55b0, 0x802a5b70]
+#   .sdata: [0x803f60e8, 0x803f60f8]
+#   .sbss: [0x803fa220, 0x803fa228]
+#   .sdata2: [0x803fe098, 0x803fe108]
+
+#PauseScreen_Map.cpp:
+#   .text: [0x800cb710, 0x800ccb8c]
+#   .ctors: [0x8023c8a0, 0x8023c8a4]
+#   .rodata: [0x8023d950, 0x8023da08]
+#   .data: [0x80254a78, 0x80254ff0]
+#   .sdata: [0x803f60f8, 0x803f6110]
+#   .sdata2: [0x803fe108, 0x803fe238]
+
+#PauseScreen_OptionControls.cpp:
+#   .text: [0x800ccb8c, 0x800cddb4]
+#   .rodata: [0x8023da08, 0x8023da70]
+#   .data: [0x80254ff0, 0x80255000]
+#   .bss: [0x802a5b70, 0x802a5cd8]
+#   .sdata: [0x803f6110, 0x803f6118]
+#   .sbss: [0x803fa228, 0x803fa230]
+#   .sdata2: [0x803fe238, 0x803fe2b0]
+
+#PauseScreen_Options.cpp:
+#   .text: [0x800cddb4, 0x800ce234]
+#   .bss: [0x802a5cd8, 0x802a5d80]
+#   .sdata2: [0x803fe2b0, 0x803fe2c8]
+
+#PauseScreen_OptionScreen.cpp:
+#   .text: [0x800ce234, 0x800cecf0]
+#   .bss: [0x802a5d80, 0x802a5e48]
+#   .sbss: [0x803fa230, 0x803fa238]
+#   .sdata2: [0x803fe2c8, 0x803fe2f8]
+
+#PauseScreen_OptionSound.cpp:
+#   .text: [0x800cecf0, 0x800cfd5c]
+#   .bss: [0x802a5e48, 0x802a5f10]
+#   .sdata: [0x803f6118, 0x803f6128]
+#   .sbss: [0x803fa238, 0x803fa250]
+#   .sdata2: [0x803fe2f8, 0x803fe340]
+
+#PauseScreen_RangInfo.cpp:
+#   .text: [0x800cfd5c, 0x800d0368]
+#   .bss: [0x802a5f10, 0x802a5f70]
+#   .sbss: [0x803fa250, 0x803fa260]
+#   .sdata2: [0x803fe340, 0x803fe380]
+
+#PauseScreen_SaveGame.cpp:
+#   .text: [0x800d0368, 0x800d0490]
+#   .bss: [0x802a5f70, 0x802a5fa0]
+
+#ProgressBar.cpp:
+#   .text: [0x800d0490, 0x800d0e60]
+#   .sdata2: [0x803fe380, 0x803fe3a0]
+
+#StartupScreens.cpp:
+#   .text: [0x800d0e60, 0x800d1674]
+#   .data: [0x80255000, 0x80255178]
+#   .bss: [0x802a5fa0, 0x802a6060]
+#   .sdata: [0x803f6128, 0x803f6190]
+#   .sbss: [0x803fa260, 0x803fa280]
+#   .sdata2: [0x803fe3a0, 0x803fe3d0]
+
+#UITools.cpp:
+#   .text: [0x800d1674, 0x800d23b8]
+#   .rodata: [0x8023da70, 0x8023da90]
+#   .data: [0x80255178, 0x802551c0]
+#   .sdata: [0x803f6190, 0x803f61b0]
+#   .sdata2: [0x803fe3d0, 0x803fe420]
+
+#MiniGame_A2.cpp:
+#   .text: [0x800d23b8, 0x800d3a68]
+#   .rodata: [0x8023da90, 0x8023dab0]
+#   .data: [0x802551c0, 0x80255380]
+#   .bss: [0x802a6060, 0x802a60b8]
+#   .sdata: [0x803f61b0, 0x803f61b8]
+#   .sbss: [0x803fa280, 0x803fa288]
+#   .sdata2: [0x803fe420, 0x803fe488]
+
+#MiniGame_B1.cpp:
+#   .text: [0x800d3a68, 0x800d4b0c]
+#   .ctors: [0x8023c8a4, 0x8023c8a8]
+#   .data: [0x80255380, 0x80255458]
+#   .bss: [0x802a60b8, 0x802a6160]
+#   .sdata: [0x803f61b8, 0x803f61f8]
+#   .sbss: [0x803fa288, 0x803fa298]
+#   .sdata2: [0x803fe488, 0x803fe4e0]
+
+#MiniGame_B3.cpp:
+#   .text: [0x800d4b0c, 0x800d6030]
+#   .ctors: [0x8023c8a8, 0x8023c8ac]
+#   .rodata: [0x8023dab0, 0x8023db40]
+#   .data: [0x80255458, 0x802555f0]
+#   .bss: [0x802a6160, 0x802a6428]
+#   .sdata: [0x803f61f8, 0x803f6248]
+#   .sbss: [0x803fa298, 0x803fa2b0]
+#   .sdata2: [0x803fe4e0, 0x803fe548]
+
+#MiniGame_C2.cpp:
+#   .text: [0x800d6030, 0x800d76b4]
+#   .ctors: [0x8023c8ac, 0x8023c8b0]
+#   .data: [0x802555f0, 0x80255798]
+#   .bss: [0x802a6428, 0x802a65f8]
+#   .sdata: [0x803f6248, 0x803f62b8]
+#   .sbss: [0x803fa2b0, 0x803fa2c0]
+#   .sdata2: [0x803fe548, 0x803fe5b8]
+
+#MiniGame_C3.cpp:
+#   .text: [0x800d76b4, 0x800d8154]
+#   .rodata: [0x8023db40, 0x8023dbc0]
+#   .data: [0x80255798, 0x802557b0]
+#   .bss: [0x802a65f8, 0x802a6718]
+#   .sdata: [0x803f62b8, 0x803f62c8]
+#   .sdata2: [0x803fe5b8, 0x803fe5f8]
+
+#MiniGame_E4.cpp:
+#   .text: [0x800d8154, 0x800d81cc]
+
+#MiniGameObjective.cpp:
+#   .text: [0x800d81cc, 0x800d8810]
+#   .ctors: [0x8023c8b0, 0x8023c8b4]
+#   .data: [0x802557b0, 0x80255938]
+#   .bss: [0x802a6718, 0x802a67a0]
+#   .sdata: [0x803f62c8, 0x803f6308]
+#   .sbss: [0x803fa2c0, 0x803fa2d0]
+
+#A1_FrillObjective.cpp:
+#   .text: [0x800d8810, 0x800d8fc8]
+#   .ctors: [0x8023c8b4, 0x8023c8b8]
+#   .data: [0x80255938, 0x80255a60]
+#   .bss: [0x802a67a0, 0x802a6828]
+#   .sdata: [0x803f6308, 0x803f6340]
+#   .sbss: [0x803fa2d0, 0x803fa2d8]
+#   .sdata2: [0x803fe5f8, 0x803fe608]
+
+#AnimatingProp.cpp:
+#   .text: [0x800d8fc8, 0x800d9ed8]
+#   .ctors: [0x8023c8b8, 0x8023c8bc]
+#   .data: [0x80255a60, 0x80255c30]
+#   .sdata: [0x803f6340, 0x803f63b0]
+#   .sbss: [0x803fa2d8, 0x803fa2e0]
+#   .sdata2: [0x803fe608, 0x803fe610]
+
+#Aquarang.cpp:
+#   .text: [0x800d9ed8, 0x800da3e8]
+#   .ctors: [0x8023c8bc, 0x8023c8c0]
+#   .data: [0x80255c30, 0x80255d30]
+#   .bss: [0x802a6828, 0x802a6908]
+#   .sdata: [0x803f63b0, 0x803f63f0]
+#   .sbss: [0x803fa2e0, 0x803fa2f0]
+#   .sdata2: [0x803fe610, 0x803fe630]
+
+#BeachHut.cpp:
+#   .text: [0x800da3e8, 0x800dab6c]
+#   .ctors: [0x8023c8c0, 0x8023c8c4]
+#   .data: [0x80255d30, 0x80255e10]
+#   .bss: [0x802a6908, 0x802a69e8]
+#   .sdata: [0x803f63f0, 0x803f6428]
+#   .sbss: [0x803fa2f0, 0x803fa2f8]
+#   .sdata2: [0x803fe630, 0x803fe678]
+
+#BonusPickup.cpp:
+#   .text: [0x800dab6c, 0x800dd85c]
+#   .ctors: [0x8023c8c4, 0x8023c8c8]
+#   .rodata: [0x8023dbc0, 0x8023dbd0]
+#   .data: [0x80255e10, 0x802562c8]
+#   .bss: [0x802a69e8, 0x802a6d90]
+#   .sdata: [0x803f6428, 0x803f6490]
+#   .sbss: [0x803fa2f8, 0x803fa310]
+#   .sdata2: [0x803fe678, 0x803fe750]
+
+#Bouncer.cpp:
+#   .text: [0x800dd85c, 0x800ddc58]
+#   .ctors: [0x8023c8c8, 0x8023c8cc]
+#   .data: [0x802562c8, 0x802563d8]
+#   .bss: [0x802a6d90, 0x802a6eb0]
+#   .sdata: [0x803f6490, 0x803f64f0]
+#   .sbss: [0x803fa310, 0x803fa318]
+#   .sdata2: [0x803fe750, 0x803fe760]
+
+#BubbleSpawner.cpp:
+#   .text: [0x800ddc58, 0x800de1f0]
+#   .ctors: [0x8023c8cc, 0x8023c8d0]
+#   .data: [0x802563d8, 0x802564c8]
+#   .bss: [0x802a6eb0, 0x802a6f90]
+#   .sdata: [0x803f64f0, 0x803f6530]
+#   .sbss: [0x803fa318, 0x803fa320]
+#   .sdata2: [0x803fe760, 0x803fe790]
+
+#BunyipStone.cpp:
+#   .text: [0x800de1f0, 0x800dec40]
+#   .ctors: [0x8023c8d0, 0x8023c8d4]
+#   .data: [0x802564c8, 0x802565c8]
+#   .bss: [0x802a6f90, 0x802a7070]
+#   .sdata: [0x803f6530, 0x803f6568]
+#   .sbss: [0x803fa320, 0x803fa328]
+#   .sdata2: [0x803fe790, 0x803fe7f0]
+
+#Burnable.cpp:
+#   .text: [0x800dec40, 0x800dfd80]
+#   .ctors: [0x8023c8d4, 0x8023c8d8]
+#   .data: [0x802565c8, 0x802567d8]
+#   .bss: [0x802a7070, 0x802a7190]
+#   .sdata: [0x803f6568, 0x803f65d0]
+#   .sbss: [0x803fa328, 0x803fa338]
+#   .sdata2: [0x803fe7f0, 0x803fe830]
+
+#Burner.cpp:
+#   .text: [0x800dfd80, 0x800e06cc]
+#   .ctors: [0x8023c8d8, 0x8023c8dc]
+#   .data: [0x802567d8, 0x80256990]
+#   .bss: [0x802a7190, 0x802a72f0]
+#   .sdata: [0x803f65d0, 0x803f6638]
+#   .sbss: [0x803fa338, 0x803fa348]
+#   .sdata2: [0x803fe830, 0x803fe840]
+
+#BurningTree.cpp:
+#   .text: [0x800e06cc, 0x800e11bc]
+#   .ctors: [0x8023c8dc, 0x8023c8e0]
+#   .data: [0x80256990, 0x80256b30]
+#   .bss: [0x802a72f0, 0x802a7410]
+#   .sdata: [0x803f6638, 0x803f66a8]
+#   .sbss: [0x803fa348, 0x803fa350]
+#   .sdata2: [0x803fe840, 0x803fe868]
+
+#BuzzSaw2.cpp:
+#   .text: [0x800e11bc, 0x800e21cc]
+#   .ctors: [0x8023c8e0, 0x8023c8e4]
+#   .rodata: [0x8023dbd0, 0x8023dc10]
+#   .data: [0x80256b30, 0x80256c20]
+#   .bss: [0x802a7410, 0x802a74f0]
+#   .sdata: [0x803f66a8, 0x803f66e8]
+#   .sbss: [0x803fa350, 0x803fa360]
+#   .sdata2: [0x803fe868, 0x803fe8a8]
+
+#C1Water.cpp:
+#   .text: [0x800e21cc, 0x800e24ec]
+#   .ctors: [0x8023c8e4, 0x8023c8e8]
+#   .data: [0x80256c20, 0x80256cf0]
+#   .bss: [0x802a74f0, 0x802a75d0]
+#   .sdata: [0x803f66e8, 0x803f6728]
+#   .sbss: [0x803fa360, 0x803fa368]
+
+#C3_Chest.cpp:
+#   .text: [0x800e24ec, 0x800e2a88]
+#   .ctors: [0x8023c8e8, 0x8023c8ec]
+#   .data: [0x80256cf0, 0x80256dc0]
+#   .bss: [0x802a75d0, 0x802a76b0]
+#   .sdata: [0x803f6728, 0x803f6770]
+#   .sbss: [0x803fa368, 0x803fa370]
+#   .sdata2: [0x803fe8a8, 0x803fe8b8]
+
+#C3_Ringo.cpp:
+#   .text: [0x800e2a88, 0x800e51f8]
+#   .ctors: [0x8023c8ec, 0x8023c8f0]
+#   .rodata: [0x8023dc10, 0x8023dc20]
+#   .data: [0x80256dc0, 0x80257508]
+#   .bss: [0x802a76b0, 0x802a7920]
+#   .sdata: [0x803f6770, 0x803f67e8]
+#   .sbss: [0x803fa370, 0x803fa380]
+#   .sdata2: [0x803fe8b8, 0x803fe940]
+
+#CableCar.cpp:
+#   .text: [0x800e51f8, 0x800e5b04]
+#   .ctors: [0x8023c8f0, 0x8023c8f4]
+#   .data: [0x80257508, 0x80257618]
+#   .bss: [0x802a7920, 0x802a7a10]
+#   .sdata: [0x803f67e8, 0x803f6830]
+#   .sbss: [0x803fa380, 0x803fa388]
+#   .sdata2: [0x803fe940, 0x803fe980]
+
+#Coconut.cpp:
+#   .text: [0x800e5b04, 0x800e6430]
+#   .ctors: [0x8023c8f4, 0x8023c8f8]
+#   .rodata: [0x8023dc20, 0x8023dc30]
+#   .data: [0x80257618, 0x80257718]
+#   .bss: [0x802a7a10, 0x802a7b00]
+#   .sdata: [0x803f6830, 0x803f6880]
+#   .sbss: [0x803fa388, 0x803fa390]
+#   .sdata2: [0x803fe980, 0x803fe9b0]
+
+#Collapsible.cpp:
+#   .text: [0x800e6430, 0x800e6e6c]
+#   .ctors: [0x8023c8f8, 0x8023c8fc]
+#   .data: [0x80257718, 0x802577f8]
+#   .sdata: [0x803f6880, 0x803f68c0]
+#   .sbss: [0x803fa390, 0x803fa398]
+#   .sdata2: [0x803fe9b0, 0x803fea00]
+
+#CrikeyProps.cpp:
+#   .text: [0x800e6e6c, 0x800e8604]
+#   .ctors: [0x8023c8fc, 0x8023c900]
+#   .rodata: [0x8023dc30, 0x8023dc50]
+#   .data: [0x802577f8, 0x80257998]
+#   .bss: [0x802a7b00, 0x802a7c60]
+#   .sdata: [0x803f68c0, 0x803f6918]
+#   .sbss: [0x803fa398, 0x803fa3a8]
+#   .sdata2: [0x803fea00, 0x803fea98]
+
 ty/source/props/D1_Prop.cpp:
    .text: [0x800e8604, 0x800e8ad4]
    .ctors: [0x8023c900, 0x8023c904]
@@ -9,6 +1295,15 @@ ty/source/props/D1_Prop.cpp:
    .sbss: [0x803fa3a8, 0x803fa3b8]
    .sdata2: [0x803fea98, 0x803feaa0]
 
+#Damageable.cpp:
+#   .text: [0x800e8ad4, 0x800e9090]
+#   .ctors: [0x8023c904, 0x8023c908]
+#   .data: [0x80257a58, 0x80257b90]
+#   .bss: [0x802a7ce8, 0x802a7e08]
+#   .sdata: [0x803f6950, 0x803f69b8]
+#   .sbss: [0x803fa3b8, 0x803fa3c0]
+#   .sdata2: [0x803feaa0, 0x803feaa8]
+
 ty/source/props/DDACheckpoint.cpp:
    .text: [0x800e9090, 0x800e936c]
    .ctors: [0x8023c908, 0x8023c90c]
@@ -17,7 +1312,83 @@ ty/source/props/DDACheckpoint.cpp:
    .sdata: [0x803f69b8, 0x803f69f0]
    .sbss: [0x803fa3c0, 0x803fa3c8]
 
-#ty/source/props/gem.cpp:
+#E4_Door.cpp:
+#   .text: [0x800e936c, 0x800e9b28]
+#   .ctors: [0x8023c90c, 0x8023c910]
+#   .rodata: [0x8023dc50, 0x8023dc70]
+#   .data: [0x80257c40, 0x80257d98]
+#   .bss: [0x802a7e90, 0x802a7f70]
+#   .sdata: [0x803f69f0, 0x803f6a40]
+#   .sbss: [0x803fa3c8, 0x803fa3d0]
+#   .sdata2: [0x803feaa8, 0x803feac8]
+
+#E4_FlameThrower.cpp:
+#   .text: [0x800e9b28, 0x800eb394]
+#   .ctors: [0x8023c910, 0x8023c914]
+#   .rodata: [0x8023dc70, 0x8023dca0]
+#   .data: [0x80257d98, 0x80257ef8]
+#   .bss: [0x802a7f70, 0x802a8090]
+#   .sdata: [0x803f6a40, 0x803f6aa0]
+#   .sbss: [0x803fa3d0, 0x803fa3e0]
+#   .sdata2: [0x803feac8, 0x803feb38]
+
+#Elevator.cpp:
+#   .text: [0x800eb394, 0x800ec920]
+#   .ctors: [0x8023c914, 0x8023c918]
+#   .rodata: [0x8023dca0, 0x8023dd00]
+#   .data: [0x80257ef8, 0x802580a0]
+#   .bss: [0x802a8090, 0x802a8150]
+#   .sdata: [0x803f6aa0, 0x803f6b18]
+#   .sbss: [0x803fa3e0, 0x803fa3f0]
+#   .sdata2: [0x803feb38, 0x803feb80]
+
+#FallGuideProp.cpp:
+#   .text: [0x800ec920, 0x800ecf70]
+#   .ctors: [0x8023c918, 0x8023c91c]
+#   .data: [0x802580a0, 0x80258178]
+#   .bss: [0x802a8150, 0x802a81d8]
+#   .sdata: [0x803f6b18, 0x803f6b50]
+#   .sbss: [0x803fa3f0, 0x803fa3f8]
+#   .sdata2: [0x803feb80, 0x803feb98]
+
+#FireDrum.cpp:
+#   .text: [0x800ecf70, 0x800edde4]
+#   .ctors: [0x8023c91c, 0x8023c920]
+#   .data: [0x80258178, 0x802582a8]
+#   .bss: [0x802a81d8, 0x802a82b8]
+#   .sdata: [0x803f6b50, 0x803f6ba0]
+#   .sbss: [0x803fa3f8, 0x803fa408]
+#   .sdata2: [0x803feb98, 0x803fec00]
+
+#FlamingLog.cpp:
+#   .text: [0x800edde4, 0x800ee380]
+#   .ctors: [0x8023c920, 0x8023c924]
+#   .data: [0x802582a8, 0x802583c8]
+#   .bss: [0x802a82b8, 0x802a83b0]
+#   .sdata: [0x803f6ba0, 0x803f6be0]
+#   .sbss: [0x803fa408, 0x803fa410]
+#   .sdata2: [0x803fec00, 0x803fec20]
+
+#Furnace.cpp:
+#   .text: [0x800ee380, 0x800ef5dc]
+#   .ctors: [0x8023c924, 0x8023c928]
+#   .data: [0x802583c8, 0x80258650]
+#   .bss: [0x802a83b0, 0x802a84d0]
+#   .sdata: [0x803f6be0, 0x803f6c90]
+#   .sbss: [0x803fa410, 0x803fa418]
+#   .sdata2: [0x803fec20, 0x803fec78]
+
+#GasJet.cpp:
+#   .text: [0x800ef5dc, 0x800eff94]
+#   .ctors: [0x8023c928, 0x8023c92c]
+#   .rodata: [0x8023dd00, 0x8023dd10]
+#   .data: [0x80258650, 0x80258720]
+#   .bss: [0x802a84d0, 0x802a85b0]
+#   .sdata: [0x803f6c90, 0x803f6cd8]
+#   .sbss: [0x803fa418, 0x803fa420]
+#   .sdata2: [0x803fec78, 0x803fecc0]
+
+#gem.cpp:
 #   .text: [0x800eff94, 0x800f2dd8]
 #   .ctors: [0x8023c92c, 0x8023c930]
 #   .rodata: [0x8023dd10, 0x8023dd50]
@@ -26,6 +1397,268 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sdata: [0x803f6cd8, 0x803f6d68]
 #   .sbss: [0x803fa420, 0x803fa448]
 #   .sdata2: [0x803fecc0, 0x803fedb8]
+
+#Generator.cpp:
+#   .text: [0x800f2dd8, 0x800f3408]
+#   .ctors: [0x8023c930, 0x8023c934]
+#   .data: [0x80258b68, 0x80258d10]
+#   .bss: [0x802a88c8, 0x802a89e8]
+#   .sdata: [0x803f6d68, 0x803f6dc0]
+#   .sbss: [0x803fa448, 0x803fa450]
+#   .sdata2: [0x803fedb8, 0x803fedd0]
+
+#Geyser.cpp:
+#   .text: [0x800f3408, 0x800f43d4]
+#   .ctors: [0x8023c934, 0x8023c938]
+#   .data: [0x80258d10, 0x80258f88]
+#   .bss: [0x802a89e8, 0x802a8b38]
+#   .sdata: [0x803f6dc0, 0x803f6e08]
+#   .sbss: [0x803fa450, 0x803fa460]
+#   .sdata2: [0x803fedd0, 0x803fee40]
+
+#IceCoolant.cpp:
+#   .text: [0x800f43d4, 0x800f5770]
+#   .ctors: [0x8023c938, 0x8023c93c]
+#   .data: [0x80258f88, 0x80259360]
+#   .bss: [0x802a8b38, 0x802a8e98]
+#   .sdata: [0x803f6e08, 0x803f6e88]
+#   .sbss: [0x803fa460, 0x803fa480]
+#   .sdata2: [0x803fee40, 0x803feeb0]
+
+#IceRamp.cpp:
+#   .text: [0x800f5770, 0x800f5d30]
+#   .ctors: [0x8023c93c, 0x8023c940]
+#   .data: [0x80259360, 0x80259440]
+#   .bss: [0x802a8e98, 0x802a8f78]
+#   .sdata: [0x803f6e88, 0x803f6ed0]
+#   .sbss: [0x803fa480, 0x803fa488]
+#   .sdata2: [0x803feeb0, 0x803feec8]
+
+#JuliusMachine.cpp:
+#   .text: [0x800f5d30, 0x800f6194]
+#   .ctors: [0x8023c940, 0x8023c944]
+#   .data: [0x80259440, 0x802595e8]
+#   .bss: [0x802a8f78, 0x802a9098]
+#   .sdata: [0x803f6ed0, 0x803f6f20]
+#   .sbss: [0x803fa488, 0x803fa490]
+
+#KoalaKid.cpp:
+#   .text: [0x800f6194, 0x800f8508]
+#   .ctors: [0x8023c944, 0x8023c948]
+#   .rodata: [0x8023dd50, 0x8023dd60]
+#   .data: [0x802595e8, 0x80259c68]
+#   .bss: [0x802a9098, 0x802a9fe0]
+#   .sdata: [0x803f6f20, 0x803f6fd8]
+#   .sbss: [0x803fa490, 0x803fa4a8]
+#   .sdata2: [0x803feec8, 0x803fef30]
+
+#Lava.cpp:
+#   .text: [0x800f8508, 0x800f8e70]
+#   .ctors: [0x8023c948, 0x8023c94c]
+#   .data: [0x80259c68, 0x80259e68]
+#   .bss: [0x802a9fe0, 0x802aa160]
+#   .sdata: [0x803f6fd8, 0x803f7060]
+#   .sbss: [0x803fa4a8, 0x803fa4b8]
+#   .sdata2: [0x803fef30, 0x803fefa0]
+
+#LavaBurner.cpp:
+#   .text: [0x800f8e70, 0x800f9f70]
+#   .ctors: [0x8023c94c, 0x8023c950]
+#   .rodata: [0x8023dd60, 0x8023dd80]
+#   .data: [0x80259e68, 0x80259f78]
+#   .bss: [0x802aa160, 0x802aa240]
+#   .sdata: [0x803f7060, 0x803f70b0]
+#   .sbss: [0x803fa4b8, 0x803fa4c0]
+#   .sdata2: [0x803fefa0, 0x803feff0]
+
+#LilyPad.cpp:
+#   .text: [0x800f9f70, 0x800fa2e0]
+#   .ctors: [0x8023c950, 0x8023c954]
+#   .data: [0x80259f78, 0x8025a048]
+#   .bss: [0x802aa240, 0x802aa320]
+#   .sdata: [0x803f70b0, 0x803f70f0]
+#   .sbss: [0x803fa4c0, 0x803fa4c8]
+#   .sdata2: [0x803feff0, 0x803ff008]
+
+#Log.cpp:
+#   .text: [0x800fa2e0, 0x800fb424]
+#   .ctors: [0x8023c954, 0x8023c958]
+#   .rodata: [0x8023dd80, 0x8023dda0]
+#   .data: [0x8025a048, 0x8025a260]
+#   .bss: [0x802aa320, 0x802aa400]
+#   .sdata: [0x803f70f0, 0x803f7160]
+#   .sbss: [0x803fa4c8, 0x803fa4d8]
+#   .sdata2: [0x803ff008, 0x803ff050]
+
+#MobilePlatform.cpp:
+#   .text: [0x800fb424, 0x800fc5e0]
+#   .ctors: [0x8023c958, 0x8023c95c]
+#   .data: [0x8025a260, 0x8025a4a0]
+#   .bss: [0x802aa400, 0x802aa518]
+#   .sdata: [0x803f7160, 0x803f71e0]
+#   .sbss: [0x803fa4d8, 0x803fa4e0]
+#   .sdata2: [0x803ff050, 0x803ff098]
+
+#MorayEel.cpp:
+#   .text: [0x800fc5e0, 0x800fd45c]
+#   .ctors: [0x8023c95c, 0x8023c960]
+#   .data: [0x8025a4a0, 0x8025a638]
+#   .bss: [0x802aa518, 0x802aa6a8]
+#   .sdata: [0x803f71e0, 0x803f7280]
+#   .sbss: [0x803fa4e0, 0x803fa4e8]
+#   .sdata2: [0x803ff098, 0x803ff0c8]
+
+#MusicalIcicle.cpp:
+#   .text: [0x800fd45c, 0x800ff25c]
+#   .ctors: [0x8023c960, 0x8023c964]
+#   .rodata: [0x8023dda0, 0x8023ddd0]
+#   .data: [0x8025a638, 0x8025aaf8]
+#   .bss: [0x802aa6a8, 0x802aa860]
+#   .sdata: [0x803f7280, 0x803f72f0]
+#   .sbss: [0x803fa4e8, 0x803fa500]
+#   .sdata2: [0x803ff0c8, 0x803ff160]
+
+#OpalCollector.cpp:
+#   .text: [0x800ff25c, 0x80100480]
+#   .ctors: [0x8023c964, 0x8023c968]
+#   .data: [0x8025aaf8, 0x8025ada0]
+#   .bss: [0x802aa860, 0x802aaa10]
+#   .sdata: [0x803f72f0, 0x803f7348]
+#   .sbss: [0x803fa500, 0x803fa510]
+#   .sdata2: [0x803ff160, 0x803ff1d8]
+
+#PickupCounter.cpp:
+#   .text: [0x80100480, 0x80101000]
+#   .ctors: [0x8023c968, 0x8023c96c]
+#   .rodata: [0x8023ddd0, 0x8023ddf8]
+#   .data: [0x8025ada0, 0x8025aff0]
+#   .bss: [0x802aaa10, 0x802aab20]
+#   .sdata: [0x803f7348, 0x803f73e0]
+#   .sbss: [0x803fa510, 0x803fa518]
+#   .sdata2: [0x803ff1d8, 0x803ff1e8]
+
+#PicnicBasket.cpp:
+#   .text: [0x80101000, 0x80102714]
+#   .ctors: [0x8023c96c, 0x8023c970]
+#   .rodata: [0x8023ddf8, 0x8023de28]
+#   .data: [0x8025aff0, 0x8025b120]
+#   .bss: [0x802aab20, 0x802aabd8]
+#   .sdata: [0x803f73e0, 0x803f7428]
+#   .sbss: [0x803fa518, 0x803fa528]
+#   .sdata2: [0x803ff1e8, 0x803ff270]
+
+#Picture.cpp:
+#   .text: [0x80102714, 0x80103220]
+#   .ctors: [0x8023c970, 0x8023c974]
+#   .data: [0x8025b120, 0x8025b210]
+#   .bss: [0x802aabd8, 0x802aacb8]
+#   .sdata: [0x803f7428, 0x803f7468]
+#   .sbss: [0x803fa528, 0x803fa530]
+#   .sdata2: [0x803ff270, 0x803ff2b0]
+
+#PipePart.cpp:
+#   .text: [0x80103220, 0x80103b28]
+#   .ctors: [0x8023c974, 0x8023c978]
+#   .data: [0x8025b210, 0x8025b328]
+#   .bss: [0x802aacb8, 0x802aad98]
+#   .sdata: [0x803f7468, 0x803f74a0]
+#   .sbss: [0x803fa530, 0x803fa538]
+#   .sdata2: [0x803ff2b0, 0x803ff2c0]
+
+#Platform.cpp:
+#   .text: [0x80103b28, 0x801051b4]
+#   .ctors: [0x8023c978, 0x8023c97c]
+#   .rodata: [0x8023de28, 0x8023de58]
+#   .data: [0x8025b328, 0x8025b4b8]
+#   .sdata: [0x803f74a0, 0x803f7510]
+#   .sbss: [0x803fa538, 0x803fa548]
+#   .sdata2: [0x803ff2c0, 0x803ff2f0]
+
+#PontoonRope.cpp:
+#   .text: [0x801051b4, 0x801056e4]
+#   .ctors: [0x8023c97c, 0x8023c980]
+#   .data: [0x8025b4b8, 0x8025b5b0]
+#   .bss: [0x802aad98, 0x802aae20]
+#   .sdata: [0x803f7510, 0x803f7550]
+#   .sbss: [0x803fa548, 0x803fa550]
+#   .sdata2: [0x803ff2f0, 0x803ff2f8]
+
+#Projectile.cpp:
+#   .text: [0x801056e4, 0x8010655c]
+#   .ctors: [0x8023c980, 0x8023c984]
+#   .data: [0x8025b5b0, 0x8025b670]
+#   .sdata: [0x803f7550, 0x803f7580]
+#   .sbss: [0x803fa550, 0x803fa558]
+#   .sdata2: [0x803ff2f8, 0x803ff338]
+
+#Props.cpp:
+#   .text: [0x8010655c, 0x80106768]
+
+#RangStone.cpp:
+#   .text: [0x80106768, 0x80106b70]
+#   .ctors: [0x8023c984, 0x8023c988]
+#   .data: [0x8025b670, 0x8025b760]
+#   .bss: [0x802aae20, 0x802aaf00]
+#   .sdata: [0x803f7580, 0x803f75c8]
+#   .sbss: [0x803fa558, 0x803fa560]
+
+#Rex.cpp:
+#   .text: [0x80106b70, 0x801083a0]
+#   .ctors: [0x8023c988, 0x8023c98c]
+#   .rodata: [0x8023de58, 0x8023de68]
+#   .data: [0x8025b760, 0x8025ba70]
+#   .bss: [0x802aaf00, 0x802ab070]
+#   .sdata: [0x803f75c8, 0x803f7618]
+#   .sbss: [0x803fa560, 0x803fa568]
+#   .sdata2: [0x803ff338, 0x803ff3d0]
+
+#Sentinel.cpp:
+#   .text: [0x801083a0, 0x80109300]
+#   .ctors: [0x8023c98c, 0x8023c990]
+#   .rodata: [0x8023de68, 0x8023de78]
+#   .data: [0x8025ba70, 0x8025bcf8]
+#   .bss: [0x802ab070, 0x802ab190]
+#   .sdata: [0x803f7618, 0x803f7690]
+#   .sbss: [0x803fa568, 0x803fa570]
+#   .sdata2: [0x803ff3d0, 0x803ff410]
+
+#ShadowBatProps.cpp:
+#   .text: [0x80109300, 0x8010ae68]
+#   .ctors: [0x8023c990, 0x8023c994]
+#   .rodata: [0x8023de78, 0x8023deb8]
+#   .data: [0x8025bcf8, 0x8025c0f0]
+#   .bss: [0x802ab190, 0x802ab5d8]
+#   .sdata: [0x803f7690, 0x803f7738]
+#   .sbss: [0x803fa570, 0x803fa598]
+#   .sdata2: [0x803ff410, 0x803ff480]
+
+#SharkCage.cpp:
+#   .text: [0x8010ae68, 0x8010b518]
+#   .ctors: [0x8023c994, 0x8023c998]
+#   .data: [0x8025c0f0, 0x8025c1d0]
+#   .bss: [0x802ab5d8, 0x802ab6e8]
+#   .sdata: [0x803f7738, 0x803f7770]
+#   .sbss: [0x803fa598, 0x803fa5a8]
+#   .sdata2: [0x803ff480, 0x803ff4b0]
+
+#Shatterable.cpp:
+#   .text: [0x8010b518, 0x8010cc90]
+#   .ctors: [0x8023c998, 0x8023c99c]
+#   .rodata: [0x8023deb8, 0x8023dec8]
+#   .data: [0x8025c1d0, 0x8025c5c8]
+#   .bss: [0x802ab6e8, 0x802ab850]
+#   .sdata: [0x803f7770, 0x803f7848]
+#   .sbss: [0x803fa5a8, 0x803fa5c0]
+#   .sdata2: [0x803ff4b0, 0x803ff4f0]
+
+#SnowPile.cpp:
+#   .text: [0x8010cc90, 0x8010d5dc]
+#   .ctors: [0x8023c99c, 0x8023c9a0]
+#   .data: [0x8025c5c8, 0x8025c758]
+#   .bss: [0x802ab850, 0x802ab930]
+#   .sdata: [0x803f7848, 0x803f78a8]
+#   .sbss: [0x803fa5c0, 0x803fa5c8]
+#   .sdata2: [0x803ff4f0, 0x803ff530]
 
 ty/source/props/SoundProp.cpp:
    .text: [0x8010d5dc, 0x8010ddf8]
@@ -36,6 +1669,44 @@ ty/source/props/SoundProp.cpp:
    .sbss: [0x803fa5c8, 0x803fa5d0]
    .sdata2: [0x803ff530, 0x803ff540]
 
+#SpawnPoint.cpp:
+#   .text: [0x8010ddf8, 0x8010e1ac]
+#   .ctors: [0x8023c9a4, 0x8023c9a8]
+#   .data: [0x8025c830, 0x8025c8f0]
+#   .bss: [0x802ab9b8, 0x802aba40]
+#   .sdata: [0x803f78f0, 0x803f7930]
+#   .sbss: [0x803fa5d0, 0x803fa5d8]
+#   .sdata2: [0x803ff540, 0x803ff548]
+
+#SpiderWeb.cpp:
+#   .text: [0x8010e1ac, 0x8010e874]
+#   .ctors: [0x8023c9a8, 0x8023c9ac]
+#   .data: [0x8025c8f0, 0x8025ca10]
+#   .bss: [0x802aba40, 0x802abb60]
+#   .sdata: [0x803f7930, 0x803f7970]
+#   .sbss: [0x803fa5d8, 0x803fa5e0]
+#   .sdata2: [0x803ff548, 0x803ff568]
+
+#SpinningLog.cpp:
+#   .text: [0x8010e874, 0x8010ef64]
+#   .ctors: [0x8023c9ac, 0x8023c9b0]
+#   .rodata: [0x8023dec8, 0x8023ded8]
+#   .data: [0x8025ca10, 0x8025caf8]
+#   .bss: [0x802abb60, 0x802abc40]
+#   .sdata: [0x803f7970, 0x803f79b0]
+#   .sbss: [0x803fa5e0, 0x803fa5f0]
+#   .sdata2: [0x803ff568, 0x803ff5a8]
+
+#Stalactite.cpp:
+#   .text: [0x8010ef64, 0x8010f924]
+#   .ctors: [0x8023c9b0, 0x8023c9b4]
+#   .rodata: [0x8023ded8, 0x8023dee8]
+#   .data: [0x8025caf8, 0x8025cbe0]
+#   .bss: [0x802abc40, 0x802abd20]
+#   .sdata: [0x803f79b0, 0x803f79e8]
+#   .sbss: [0x803fa5f0, 0x803fa5f8]
+#   .sdata2: [0x803ff5a8, 0x803ff5f8]
+
 ty/source/props/StaticProp.cpp:
    .text: [0x8010f924, 0x80111560]
    .ctors: [0x8023c9b4, 0x8023c9b8]
@@ -45,19 +1716,117 @@ ty/source/props/StaticProp.cpp:
    .sbss: [0x803fa5f8, 0x803fa610]
    .sdata2: [0x803ff5f8, 0x803ff638]
 
-Dolphin/__ppc_eabi_init.s:
-   .text: [0x801DC058, 0x801DC0AC]
+#Talisman.cpp:
+#   .text: [0x80111560, 0x80111c6c]
+#   .ctors: [0x8023c9b8, 0x8023c9bc]
+#   .rodata: [0x8023e008, 0x8023e018]
+#   .data: [0x8025ce28, 0x8025cff0]
+#   .bss: [0x802abd20, 0x802ac170]
+#   .sdata: [0x803f7a80, 0x803f7ab8]
+#   .sbss: [0x803fa610, 0x803fa618]
+#   .sdata2: [0x803ff638, 0x803ff668]
+
+#Teleporter.cpp:
+#   .text: [0x80111c6c, 0x80112618]
+#   .ctors: [0x8023c9bc, 0x8023c9c0]
+#   .data: [0x8025cff0, 0x8025d148]
+#   .bss: [0x802ac170, 0x802ac290]
+#   .sdata: [0x803f7ab8, 0x803f7b18]
+#   .sbss: [0x803fa618, 0x803fa620]
+#   .sdata2: [0x803ff668, 0x803ff6a8]
+
+#ThinIceProp.cpp:
+#   .text: [0x80112618, 0x8011351c]
+#   .ctors: [0x8023c9c0, 0x8023c9c4]
+#   .data: [0x8025d148, 0x8025d2e8]
+#   .bss: [0x802ac290, 0x802ac370]
+#   .sdata: [0x803f7b18, 0x803f7b58]
+#   .sbss: [0x803fa620, 0x803fa628]
+#   .sdata2: [0x803ff6a8, 0x803ff6e8]
+
+#ThunderEggCollector.cpp:
+#   .text: [0x8011351c, 0x801137f8]
+#   .ctors: [0x8023c9c4, 0x8023c9c8]
+#   .data: [0x8025d2e8, 0x8025d438]
+#   .bss: [0x802ac370, 0x802ac490]
+#   .sdata: [0x803f7b58, 0x803f7ba8]
+#   .sbss: [0x803fa628, 0x803fa630]
+
+#TreasureChest.cpp:
+#   .text: [0x801137f8, 0x801140f0]
+#   .ctors: [0x8023c9c8, 0x8023c9cc]
+#   .data: [0x8025d438, 0x8025d650]
+#   .bss: [0x802ac490, 0x802ac5b0]
+#   .sdata: [0x803f7ba8, 0x803f7c00]
+#   .sbss: [0x803fa630, 0x803fa638]
+#   .sdata2: [0x803ff6e8, 0x803ff6f8]
+
+#TriggerProp.cpp:
+#   .text: [0x801140f0, 0x80116adc]
+#   .ctors: [0x8023c9cc, 0x8023c9d0]
+#   .rodata: [0x8023e018, 0x8023e028]
+#   .data: [0x8025d650, 0x8025da48]
+#   .bss: [0x802ac5b0, 0x802ad680]
+#   .sdata: [0x803f7c00, 0x803f7cd0]
+#   .sbss: [0x803fa638, 0x803fa678]
+#   .sdata2: [0x803ff6f8, 0x803ff738]
+#   .sbss2: [0x80402760, 0x80402768]
+
+#TumbleWeed.cpp:
+#   .text: [0x80116adc, 0x80117500]
+#   .ctors: [0x8023c9d0, 0x8023c9d4]
+#   .data: [0x8025da48, 0x8025db30]
+#   .bss: [0x802ad680, 0x802ad760]
+#   .sdata: [0x803f7cd0, 0x803f7d08]
+#   .sbss: [0x803fa678, 0x803fa688]
+#   .sdata2: [0x803ff738, 0x803ff778]
+
+#TurningPlatform.cpp:
+#   .text: [0x80117500, 0x80117b98]
+#   .ctors: [0x8023c9d4, 0x8023c9d8]
+#   .data: [0x8025db30, 0x8025dc58]
+#   .bss: [0x802ad760, 0x802ad868]
+#   .sdata: [0x803f7d08, 0x803f7d50]
+#   .sbss: [0x803fa688, 0x803fa690]
+#   .sdata2: [0x803ff778, 0x803ff7a0]
+
+#WarpFlower.cpp:
+#   .text: [0x80117b98, 0x801183fc]
+#   .ctors: [0x8023c9d8, 0x8023c9dc]
+#   .rodata: [0x8023e028, 0x8023e038]
+#   .data: [0x8025dc58, 0x8025de80]
+#   .bss: [0x802ad868, 0x802ad988]
+#   .sdata: [0x803f7d50, 0x803f7dc0]
+#   .sbss: [0x803fa690, 0x803fa698]
+#   .sdata2: [0x803ff7a0, 0x803ff7b8]
+
+#WaterPipe.cpp:
+#   .text: [0x801183fc, 0x801191f8]
+#   .ctors: [0x8023c9dc, 0x8023c9e0]
+#   .data: [0x8025de80, 0x8025e1b8]
+#   .bss: [0x802ad988, 0x802ade58]
+#   .sdata: [0x803f7dc0, 0x803f7e28]
+#   .sbss: [0x803fa698, 0x803fa6a8]
+#   .sdata2: [0x803ff7b8, 0x803ff7e8]
 
 ty/source/props/WaterVolume.cpp:
    .text: [0x801191f8, 0x80119788]
-   .ctors: [0x8023C9E0, 0x8023C9E4]
+   .ctors: [0x8023c9e0, 0x8023c9e4]
    .data: [0x8025e1b8, 0x8025e2b0]
    .bss: [0x802ade58, 0x802adee0]
    .sdata: [0x803f7e28, 0x803f7e58]
    .sbss: [0x803fa6a8, 0x803fa6b0]
    .sdata2: [0x803ff7e8, 0x803ff7f8]
 
-#WaterWheel is the slice between WaterVolume and WeatherProp
+#WaterWheel.cpp:
+#   .text: [0x80119788, 0x80119c0c]
+#   .ctors: [0x8023c9e4, 0x8023c9e8]
+#   .rodata: [0x8023e038, 0x8023e060]
+#   .data: [0x8025e2b0, 0x8025e408]
+#   .bss: [0x802adee0, 0x802adff0]
+#   .sdata: [0x803f7e58, 0x803f7eb0]
+#   .sbss: [0x803fa6b0, 0x803fa6b8]
+#   .sdata2: [0x803ff7f8, 0x803ff800]
 
 ty/source/props/WeatherProp.cpp:
    .text: [0x80119c0c, 0x8011a2e4]
@@ -67,211 +1836,1890 @@ ty/source/props/WeatherProp.cpp:
    .sdata: [0x803f7eb0, 0x803f7ef8]
    .sbss: [0x803fa6b8, 0x803fa6c8]
 
-ty/source/controlval.cpp:
-    .text: [0x801511E4, 0x801513FC]
-    .bss: [0x802b06e8, 0x802b0768]
+#WhirlyWind.cpp:
+#   .text: [0x8011a2e4, 0x8011b1b0]
+#   .ctors: [0x8023c9ec, 0x8023c9f0]
+#   .data: [0x8025e538, 0x8025e658]
+#   .bss: [0x802ae078, 0x802ae198]
+#   .sdata: [0x803f7ef8, 0x803f7f50]
+#   .sbss: [0x803fa6c8, 0x803fa6d0]
+#   .sdata2: [0x803ff800, 0x803ff868]
+
+#YabbyStalactite.cpp:
+#   .text: [0x8011b1b0, 0x8011c150]
+#   .ctors: [0x8023c9f0, 0x8023c9f4]
+#   .rodata: [0x8023e060, 0x8023e070]
+#   .data: [0x8025e658, 0x8025e838]
+#   .bss: [0x802ae198, 0x802ae310]
+#   .sdata: [0x803f7f50, 0x803f7fb0]
+#   .sbss: [0x803fa6d0, 0x803fa6e8]
+#   .sdata2: [0x803ff868, 0x803ff8d0]
+
+#Z1_RainbowScales.cpp:
+#   .text: [0x8011c150, 0x8011c53c]
+#   .ctors: [0x8023c9f4, 0x8023c9f8]
+#   .data: [0x8025e838, 0x8025e938]
+#   .bss: [0x802ae310, 0x802ae398]
+#   .sdata: [0x803f7fb0, 0x803f7ff0]
+#   .sbss: [0x803fa6e8, 0x803fa6f0]
+
+#ZoneBlockerProp.cpp:
+#   .text: [0x8011c53c, 0x8011cda4]
+#   .ctors: [0x8023c9f8, 0x8023c9fc]
+#   .data: [0x8025e938, 0x8025ebc8]
+#   .bss: [0x802ae398, 0x802ae6a0]
+#   .sdata: [0x803f7ff0, 0x803f8058]
+#   .sbss: [0x803fa6f0, 0x803fa708]
+#   .sdata2: [0x803ff8d0, 0x803ff8e8]
+
+#anthill.cpp:
+#   .text: [0x8011cda4, 0x8011d4e4]
+#   .ctors: [0x8023c9fc, 0x8023ca00]
+#   .data: [0x8025ebc8, 0x8025ecb0]
+#   .bss: [0x802ae6a0, 0x802ae780]
+#   .sdata: [0x803f8058, 0x803f8098]
+#   .sbss: [0x803fa708, 0x803fa710]
+#   .sdata2: [0x803ff8e8, 0x803ff8f8]
+
+#AS_AirStates.cpp:
+#   .text: [0x8011d4e4, 0x8012170c]
+#   .ctors: [0x8023ca00, 0x8023ca04]
+#   .rodata: [0x8023e070, 0x8023e0c0]
+#   .data: [0x8025ecb0, 0x8025ee78]
+#   .sdata: [0x803f8098, 0x803f80a0]
+#   .sbss: [0x803fa710, 0x803fa718]
+#   .sdata2: [0x803ff8f8, 0x803ff9a0]
+
+#AS_BiteStates.cpp:
+#   .text: [0x8012170c, 0x80125b74]
+#   .ctors: [0x8023ca04, 0x8023ca08]
+#   .rodata: [0x8023e0c0, 0x8023e1f0]
+#   .data: [0x8025ee78, 0x8025f1d0]
+#   .sdata: [0x803f80a0, 0x803f80a8]
+#   .sdata2: [0x803ff9a0, 0x803ffa90]
+
+#AS_LandActionStates.cpp:
+#   .text: [0x80125b74, 0x801282ec]
+#   .rodata: [0x8023e1f0, 0x8023e200]
+#   .sbss: [0x803fa718, 0x803fa730]
+#   .sdata2: [0x803ffa90, 0x803ffb58]
+
+#AS_LandStates.cpp:
+#   .text: [0x801282ec, 0x8012d184]
+#   .ctors: [0x8023ca08, 0x8023ca0c]
+#   .rodata: [0x8023e200, 0x8023e2f8]
+#   .data: [0x8025f1d0, 0x8025f410]
+#   .sdata: [0x803f80a8, 0x803f80c0]
+#   .sbss: [0x803fa730, 0x803fa748]
+#   .sdata2: [0x803ffb58, 0x803ffc38]
+
+#AS_MiscStates.cpp:
+#   .text: [0x8012d184, 0x8012dbc8]
+#   .ctors: [0x8023ca0c, 0x8023ca10]
+#   .rodata: [0x8023e2f8, 0x8023e308]
+#   .data: [0x8025f410, 0x8025f600]
+#   .sbss: [0x803fa748, 0x803fa750]
+#   .sdata2: [0x803ffc38, 0x803ffc60]
+
+#AS_SlideStates.cpp:
+#   .text: [0x8012dbc8, 0x80131400]
+#   .ctors: [0x8023ca10, 0x8023ca14]
+#   .rodata: [0x8023e308, 0x8023e428]
+#   .data: [0x8025f600, 0x8025f8f8]
+#   .bss: [0x802ae780, 0x802ae7f8]
+#   .sdata: [0x803f80c0, 0x803f80c8]
+#   .sbss: [0x803fa750, 0x803fa758]
+#   .sdata2: [0x803ffc60, 0x803ffd18]
+
+#AS_UnderWaterStates.cpp:
+#   .text: [0x80131400, 0x80132f3c]
+#   .sdata: [0x803f80c8, 0x803f80d0]
+#   .sbss: [0x803fa758, 0x803fa778]
+#   .sdata2: [0x803ffd18, 0x803ffdd8]
+
+#AS_WaterStates.cpp:
+#   .text: [0x80132f3c, 0x80135498]
+#   .rodata: [0x8023e428, 0x8023e468]
+#   .sdata2: [0x803ffdd8, 0x803ffe80]
+
+#barbedWire.cpp:
+#   .text: [0x80135498, 0x80135a04]
+#   .data: [0x8025f8f8, 0x8025f920]
+#   .bss: [0x802ae7f8, 0x802ae870]
+#   .sbss: [0x803fa778, 0x803fa788]
+#   .sdata2: [0x803ffe80, 0x803ffe88]
+
+#BezierPathFollower.cpp:
+#   .text: [0x80135a04, 0x8013654c]
+#   .sdata2: [0x803ffe88, 0x803ffeb0]
+
+#bilby.cpp:
+#   .text: [0x8013654c, 0x80137fc8]
+#   .rodata: [0x8023e468, 0x8023e4c8]
+#   .data: [0x8025f920, 0x8025f998]
+#   .bss: [0x802ae870, 0x802ae938]
+#   .sdata: [0x803f80d0, 0x803f80e8]
+#   .sbss: [0x803fa788, 0x803fa798]
+#   .sdata2: [0x803ffeb0, 0x803fff28]
+
+#boomerang.cpp:
+#   .text: [0x80137fc8, 0x80140484]
+#   .ctors: [0x8023ca14, 0x8023ca18]
+#   .rodata: [0x8023e4c8, 0x8023e528]
+#   .data: [0x8025f998, 0x80260508]
+#   .bss: [0x802ae938, 0x802af7d0]
+#   .sdata: [0x803f80e8, 0x803f81e8]
+#   .sbss: [0x803fa798, 0x803fa800]
+#   .sdata2: [0x803fff28, 0x80400068]
+
+#BoomerangHud.cpp:
+#   .text: [0x80140484, 0x80140b2c]
+#   .rodata: [0x8023e528, 0x8023e548]
+#   .sdata2: [0x80400068, 0x804000a0]
+
+#boomerangManager.cpp:
+#   .text: [0x80140b2c, 0x80143eb8]
+#   .ctors: [0x8023ca18, 0x8023ca1c]
+#   .data: [0x80260508, 0x80260610]
+#   .sdata2: [0x804000a0, 0x804000b0]
+
+#BouncingBoulder.cpp:
+#   .text: [0x80143eb8, 0x80147018]
+#   .ctors: [0x8023ca1c, 0x8023ca20]
+#   .rodata: [0x8023e548, 0x8023e628]
+#   .data: [0x80260610, 0x80260af0]
+#   .bss: [0x802af7d0, 0x802afd88]
+#   .sdata: [0x803f81e8, 0x803f8280]
+#   .sbss: [0x803fa800, 0x803fa820]
+#   .sdata2: [0x804000b0, 0x80400170]
 
 ty/source/BoundingRegion.cpp:
-    .text: [0x80147018, 0x80147464]
-    .rodata: [0x8023e628, 0x8023e638]
-    .sdata2: [0x80400170, 0x80400178]
+   .text: [0x80147018, 0x80147464]
+   .rodata: [0x8023e628, 0x8023e638]
+   .sdata2: [0x80400170, 0x80400178]
 
-ty/source/GameData.cpp:
-    .text: [0x8015e2fc, 0x8015faf0]
-    .ctors: [0x8023ca40, 0x8023ca44]
-    .sbss: [0x803fa8d8, 0x803fa8e8]
-    .sdata2: [0x804006f0, 0x80400710]
+#bunyip.cpp:
+#   .text: [0x80147464, 0x801485c8]
+#   .ctors: [0x8023ca20, 0x8023ca24]
+#   .rodata: [0x8023e638, 0x8023e648]
+#   .data: [0x80260af0, 0x80260ce0]
+#   .bss: [0x802afd88, 0x802afea8]
+#   .sdata: [0x803f8280, 0x803f8338]
+#   .sbss: [0x803fa820, 0x803fa830]
+#   .sdata2: [0x80400178, 0x804001b8]
 
-ty/source/GameObject.cpp:
-    .text: [0x8015faf0, 0x8016051c]
-    .rodata: [0x8023e908, 0x8023e918]
-    .data: [0x80262be0, 0x80262c98]
-    .sdata: [0x803f86c8, 0x803f8700]
-    .sbss: [0x803fa8e8, 0x803fa8f0]
-    .sdata2: [0x80400710, 0x80400728]
-    .sbss2: [0x80402768, 0x80402770]
+#BushPig.cpp:
+#   .text: [0x801485c8, 0x8014f010]
+#   .ctors: [0x8023ca24, 0x8023ca28]
+#   .rodata: [0x8023e648, 0x8023e760]
+#   .data: [0x80260ce0, 0x802615a0]
+#   .bss: [0x802afea8, 0x802b05c8]
+#   .sdata: [0x803f8338, 0x803f8410]
+#   .sbss: [0x803fa830, 0x803fa848]
+#   .sdata2: [0x804001b8, 0x80400328]
 
-ty/source/GameObjectManager.cpp:
-    .text: [0x8016051c, 0x8016110c]
-    .data: [0x80262c98, 0x80262cb8]
-    .bss: [0x802b1ad8, 0x802b1ae8]
-    .sdata: [0x803f8700, 0x803f8710]
-    .sdata2: [0x80400728, 0x80400730]
-    .sbss2: [0x80402770, 0x80402778]
+#checkpoint.cpp:
+#   .text: [0x8014f010, 0x801500b4]
+#   .ctors: [0x8023ca28, 0x8023ca2c]
+#   .rodata: [0x8023e760, 0x8023e790]
+#   .data: [0x802615a0, 0x802616a0]
+#   .bss: [0x802b05c8, 0x802b06e8]
+#   .sdata: [0x803f8410, 0x803f8468]
+#   .sbss: [0x803fa848, 0x803fa858]
+#   .sdata2: [0x80400328, 0x80400350]
 
-ty/source/heatflare.cpp:
-    .text: [0x80164938, 0x80164b18]
-    .sdata: [0x803f8958, 0x803f8960]
-    .sbss: [0x803fa928, 0x803fa938]
+#CollisionObject.cpp:
+#   .text: [0x801500b4, 0x801511e4]
+#   .rodata: [0x8023e790, 0x8023e7b0]
+#   .data: [0x802616a0, 0x802616b0]
+#   .sdata2: [0x80400350, 0x80400390]
 
-ty/source/Kinematics.cpp:
-    .text: [0x8016e404, 0x8016e964]
-    .sdata2: [0x80400a98, 0x80400ac0]
+ty/source/controlval.cpp:
+   .text: [0x801511e4, 0x801513fc]
+   .bss: [0x802b06e8, 0x802b0768]
 
-ty/source/LensFlare.cpp:
-    .text: [0x80171dbc, 0x80171EF8]
-    .bss: [0x802b3670, 0x802b36a0]
-    .sdata: [0x803f8a30, 0x803f8a48]
-    .sbss: [0x803fa970, 0x803fa980]
-    .sdata2: [0x80400b98, 0x80400ba0]
-
-ty/source/MessageMap.cpp:
-    .text: [0x80179c14, 0x80179ca0]
-
-ty/source/Messages.cpp:
-    .text: [0x80179ca0, 0x80179e44]
-    .data: [0x80265750, 0x80265a20]
-    .sdata: [0x803f8b80, 0x803f8bf8]
-    .sbss: [0x803fa9b8, 0x803fa9c0]
-
-ty/source/Mist.cpp:
-    .text: [0x8017a618, 0x8017a7b0]
-    .data: [0x80265b78, 0x80265b88]
-    .sdata: [0x803f8c58, 0x803f8c60]
-    .sbss: [0x803fa9c8, 0x803fa9d0]
-    .sdata2: [0x80400c78, 0x80400c88]
-
-ty/source/quadratic.cpp:
-    .text: [0x80189454, 0x8018975C]
-    .sdata2: [0x80401038, 0x80401058]
-
-ty/source/RangeCheck.cpp:
-    .text: [0x8018975c, 0x8018a99c]
-    .data: [0x80266848, 0x80266950]
-    .bss: [0x802b49d8, 0x802b49f8]
-    .sdata: [0x803f8e88, 0x803f8ee8]
-    .sbss: [0x803faa40, 0x803faa48]
-    .sdata2: [0x80401058, 0x80401078]
+#crate.cpp:
+#   .text: [0x801513fc, 0x80156434]
+#   .ctors: [0x8023ca2c, 0x8023ca30]
+#   .rodata: [0x8023e7b0, 0x8023e800]
+#   .data: [0x802616b0, 0x80261bd8]
+#   .bss: [0x802b0768, 0x802b0d40]
+#   .sdata: [0x803f8468, 0x803f8518]
+#   .sbss: [0x803fa858, 0x803fa888]
+#   .sdata2: [0x80400390, 0x80400498]
 
 ty/source/DataVal.cpp:
-    .text: [0x80156434, 0x80157c48]
-    .data: [0x80261bd8, 0x802621d0]
-    .sdata2: [0x80400498, 0x80400548]
+   .text: [0x80156434, 0x80157c48]
+   .data: [0x80261bd8, 0x802621d0]
+   .sdata2: [0x80400498, 0x80400548]
 
 ty/source/DDA.cpp:
-    .text: [0x80157c48, 0x8015860c]
-    .data: [0x802621d0, 0x80262208]
-    .bss: [0x802b0d40, 0x802b0db8]
-    .sdata: [0x803f8518, 0x803f8520]
-    .sbss: [0x803fa888, 0x803fa8a0]
+   .text: [0x80157c48, 0x8015860c]
+   .data: [0x802621d0, 0x80262208]
+   .bss: [0x802b0d40, 0x802b0db8]
+   .sdata: [0x803f8518, 0x803f8520]
+   .sbss: [0x803fa888, 0x803fa8a0]
+
+#draw.cpp:
+#   .text: [0x8015860c, 0x801591f0]
+#   .rodata: [0x8023e800, 0x8023e8b8]
+#   .data: [0x80262208, 0x80262250]
+#   .bss: [0x802b0db8, 0x802b16b8]
+#   .sdata: [0x803f8520, 0x803f8540]
+#   .sbss: [0x803fa8a0, 0x803fa8a8]
+#   .sdata2: [0x80400548, 0x80400560]
+
+#Drum.cpp:
+#   .text: [0x801591f0, 0x80159f50]
+#   .ctors: [0x8023ca30, 0x8023ca34]
+#   .rodata: [0x8023e8b8, 0x8023e8d8]
+#   .data: [0x80262250, 0x80262300]
+#   .bss: [0x802b16b8, 0x802b1770]
+#   .sdata: [0x803f8540, 0x803f8580]
+#   .sbss: [0x803fa8a8, 0x803fa8b0]
+#   .sdata2: [0x80400560, 0x804005b0]
+
+#DustTrail.cpp:
+#   .text: [0x80159f50, 0x8015a26c]
+#   .rodata: [0x8023e8d8, 0x8023e8e8]
+#   .sdata2: [0x804005b0, 0x804005d0]
+
+#elle.cpp:
+#   .text: [0x8015a26c, 0x8015ac40]
+#   .ctors: [0x8023ca34, 0x8023ca38]
+#   .data: [0x80262300, 0x802624f8]
+#   .bss: [0x802b1770, 0x802b1870]
+#   .sdata: [0x803f8580, 0x803f85f8]
+#   .sbss: [0x803fa8b0, 0x803fa8b8]
+#   .sdata2: [0x804005d0, 0x804005d8]
+
+#emu.cpp:
+#   .text: [0x8015ac40, 0x8015d78c]
+#   .ctors: [0x8023ca38, 0x8023ca3c]
+#   .rodata: [0x8023e8e8, 0x8023e8f8]
+#   .data: [0x802624f8, 0x80262ae0]
+#   .bss: [0x802b1870, 0x802b1a08]
+#   .sdata: [0x803f85f8, 0x803f8688]
+#   .sbss: [0x803fa8b8, 0x803fa8d0]
+#   .sdata2: [0x804005d8, 0x804006b8]
+
+#ExtendedAnalogControl.cpp:
+#   .text: [0x8015d78c, 0x8015d998]
+#   .sdata2: [0x804006b8, 0x804006e0]
+
+#finishline.cpp:
+#   .text: [0x8015d998, 0x8015e2fc]
+#   .ctors: [0x8023ca3c, 0x8023ca40]
+#   .rodata: [0x8023e8f8, 0x8023e908]
+#   .data: [0x80262ae0, 0x80262be0]
+#   .bss: [0x802b1a08, 0x802b1ad8]
+#   .sdata: [0x803f8688, 0x803f86c8]
+#   .sbss: [0x803fa8d0, 0x803fa8d8]
+#   .sdata2: [0x804006e0, 0x804006f0]
+
+ty/source/GameData.cpp:
+   .text: [0x8015e2fc, 0x8015faf0]
+   .ctors: [0x8023ca40, 0x8023ca44]
+   .sbss: [0x803fa8d8, 0x803fa8e8]
+   .sdata2: [0x804006f0, 0x80400710]
+
+ty/source/GameObject.cpp:
+   .text: [0x8015faf0, 0x8016051c]
+   .rodata: [0x8023e908, 0x8023e918]
+   .data: [0x80262be0, 0x80262c98]
+   .sdata: [0x803f86c8, 0x803f8700]
+   .sbss: [0x803fa8e8, 0x803fa8f0]
+   .sdata2: [0x80400710, 0x80400728]
+   .sbss2: [0x80402768, 0x80402770]
+
+ty/source/GameObjectManager.cpp:
+   .text: [0x8016051c, 0x8016110c]
+   .data: [0x80262c98, 0x80262cb8]
+   .bss: [0x802b1ad8, 0x802b1ae8]
+   .sdata: [0x803f8700, 0x803f8710]
+   .sdata2: [0x80400728, 0x80400730]
+   .sbss2: [0x80402770, 0x80402778]
+
+#Gate.cpp:
+#   .text: [0x8016110c, 0x80162d0c]
+#   .ctors: [0x8023ca44, 0x8023ca48]
+#   .data: [0x80262cb8, 0x80263078]
+#   .sdata: [0x803f8710, 0x803f87a8]
+#   .sbss: [0x803fa8f0, 0x803fa8f8]
+#   .sdata2: [0x80400730, 0x80400760]
+
+#global.cpp:
+#   .text: [0x80162d0c, 0x80163a64]
+#   .ctors: [0x8023ca48, 0x8023ca4c]
+#   .data: [0x80263078, 0x80263e08]
+#   .bss: [0x802b1ae8, 0x802b2980]
+#   .sdata: [0x803f87a8, 0x803f88c8]
+#   .sbss: [0x803fa8f8, 0x803fa908]
+#   .sdata2: [0x80400760, 0x804007a0]
+
+#guidebarrel.cpp:
+#   .text: [0x80163a64, 0x80163eb4]
+#   .ctors: [0x8023ca4c, 0x8023ca50]
+#   .data: [0x80263e08, 0x80263ef0]
+#   .bss: [0x802b2980, 0x802b2a60]
+#   .sdata: [0x803f88c8, 0x803f8900]
+#   .sbss: [0x803fa908, 0x803fa910]
+
+#GuideParticle.cpp:
+#   .text: [0x80163eb4, 0x80164938]
+#   .ctors: [0x8023ca50, 0x8023ca54]
+#   .data: [0x80263ef0, 0x80264060]
+#   .bss: [0x802b2a60, 0x802b2b58]
+#   .sdata: [0x803f8900, 0x803f8958]
+#   .sbss: [0x803fa910, 0x803fa928]
+#   .sdata2: [0x804007a0, 0x80400808]
+
+ty/source/heatflare.cpp:
+   .text: [0x80164938, 0x80164b18]
+   .sdata: [0x803f8958, 0x803f8960]
+   .sbss: [0x803fa928, 0x803fa938]
+
+#Hud.cpp:
+#   .text: [0x80164b18, 0x80167d84]
+#   .rodata: [0x8023e918, 0x8023e998]
+#   .data: [0x80264060, 0x802640b8]
+#   .bss: [0x802b2b58, 0x802b32d0]
+#   .sdata: [0x803f8960, 0x803f89a0]
+#   .sbss: [0x803fa938, 0x803fa948]
+#   .sdata2: [0x80400808, 0x80400930]
+
+#iceblock.cpp:
+#   .text: [0x80167d84, 0x8016afdc]
+#   .rodata: [0x8023e998, 0x8023e9a8]
+#   .data: [0x802640b8, 0x80264130]
+#   .sdata: [0x803f89a0, 0x803f89a8]
+#   .sbss: [0x803fa948, 0x803fa960]
+#   .sdata2: [0x80400930, 0x804009e8]
+
+#jeep.cpp:
+#   .text: [0x8016afdc, 0x8016e404]
+#   .ctors: [0x8023ca54, 0x8023ca58]
+#   .data: [0x80264130, 0x80264538]
+#   .bss: [0x802b32d0, 0x802b3470]
+#   .sdata: [0x803f89a8, 0x803f8a18]
+#   .sbss: [0x803fa960, 0x803fa970]
+#   .sdata2: [0x804009e8, 0x80400a98]
+
+ty/source/Kinematics.cpp:
+   .text: [0x8016e404, 0x8016e964]
+   .sdata2: [0x80400a98, 0x80400ac0]
+
+#lasso.cpp:
+#   .text: [0x8016e964, 0x80171dbc]
+#   .ctors: [0x8023ca58, 0x8023ca5c]
+#   .rodata: [0x8023e9a8, 0x8023ea48]
+#   .data: [0x80264538, 0x80264818]
+#   .bss: [0x802b3470, 0x802b3670]
+#   .sdata: [0x803f8a18, 0x803f8a30]
+#   .sdata2: [0x80400ac0, 0x80400b98]
+
+ty/source/LensFlare.cpp:
+   .text: [0x80171dbc, 0x80171ef8]
+   .bss: [0x802b3670, 0x802b36a0]
+   .sdata: [0x803f8a30, 0x803f8a48]
+   .sbss: [0x803fa970, 0x803fa980]
+   .sdata2: [0x80400b98, 0x80400ba0]
+
+#LevelObjective.cpp:
+#   .text: [0x80171ef8, 0x80172594]
+#   .data: [0x80264818, 0x80264908]
+#   .sdata: [0x803f8a48, 0x803f8a80]
+#   .sbss: [0x803fa980, 0x803fa988]
+
+#LineOfSight.cpp:
+#   .text: [0x80172594, 0x80172b48]
+#   .sdata2: [0x80400ba0, 0x80400bb8]
+
+#LoadLevel.cpp:
+#   .text: [0x80172b48, 0x80176bf4]
+#   .data: [0x80264908, 0x80265128]
+#   .sdata: [0x803f8a80, 0x803f8b48]
+#   .sbss: [0x803fa988, 0x803fa998]
+#   .sdata2: [0x80400bb8, 0x80400c00]
+
+#main.cpp:
+#   .text: [0x80176bf4, 0x80179c14]
+#   .data: [0x80265128, 0x80265750]
+#   .bss: [0x802b36a0, 0x802b37a0]
+#   .sdata: [0x803f8b48, 0x803f8b80]
+#   .sbss: [0x803fa998, 0x803fa9b8]
+#   .sdata2: [0x80400c00, 0x80400c68]
+
+ty/source/MessageMap.cpp:
+   .text: [0x80179c14, 0x80179ca0]
+
+ty/source/Messages.cpp:
+   .text: [0x80179ca0, 0x80179e44]
+   .data: [0x80265750, 0x80265a20]
+   .sdata: [0x803f8b80, 0x803f8bf8]
+   .sbss: [0x803fa9b8, 0x803fa9c0]
+
+#MetalSpikes.cpp:
+#   .text: [0x80179e44, 0x8017a618]
+#   .ctors: [0x8023ca5c, 0x8023ca60]
+#   .data: [0x80265a20, 0x80265b78]
+#   .bss: [0x802b37a0, 0x802b38c0]
+#   .sdata: [0x803f8bf8, 0x803f8c58]
+#   .sbss: [0x803fa9c0, 0x803fa9c8]
+#   .sdata2: [0x80400c68, 0x80400c78]
+
+ty/source/mist.cpp:
+   .text: [0x8017a618, 0x8017a7b0]
+   .data: [0x80265b78, 0x80265b88]
+   .sdata: [0x803f8c58, 0x803f8c60]
+   .sbss: [0x803fa9c8, 0x803fa9d0]
+   .sdata2: [0x80400c78, 0x80400c88]
+
+#NodeOverride.cpp:
+#   .text: [0x8017a7b0, 0x8017af58]
+#   .rodata: [0x8023ea48, 0x8023ea58]
+#   .sdata2: [0x80400c88, 0x80400ca8]
+
+#particleEffects.cpp:
+#   .text: [0x8017af58, 0x8017df00]
+#   .rodata: [0x8023ea58, 0x8023ea68]
+#   .data: [0x80265b88, 0x802661d8]
+#   .bss: [0x802b38c0, 0x802b4118]
+#   .sdata: [0x803f8c60, 0x803f8cb8]
+#   .sbss: [0x803fa9d0, 0x803faa00]
+#   .sdata2: [0x80400ca8, 0x80400db8]
+
+#ParticleEmitter.cpp:
+#   .text: [0x8017df00, 0x8017e24c]
+#   .sbss: [0x803faa00, 0x803faa08]
+#   .sdata2: [0x80400db8, 0x80400de0]
+
+#particleengine.cpp:
+#   .text: [0x8017e24c, 0x80185320]
+#   .rodata: [0x8023ea68, 0x8023eaa8]
+#   .data: [0x802661d8, 0x80266350]
+#   .bss: [0x802b4118, 0x802b4440]
+#   .sdata: [0x803f8cb8, 0x803f8da8]
+#   .sbss: [0x803faa08, 0x803faa10]
+#   .sdata2: [0x80400de0, 0x80400f50]
+
+#Path.cpp:
+#   .text: [0x80185320, 0x801867d4]
+#   .sbss: [0x803faa10, 0x803faa20]
+#   .sdata2: [0x80400f50, 0x80400f70]
+
+#Pontoon.cpp:
+#   .text: [0x801867d4, 0x8018822c]
+#   .ctors: [0x8023ca60, 0x8023ca64]
+#   .rodata: [0x8023eaa8, 0x8023eb18]
+#   .data: [0x80266350, 0x80266728]
+#   .bss: [0x802b4440, 0x802b48b8]
+#   .sdata: [0x803f8da8, 0x803f8e40]
+#   .sbss: [0x803faa20, 0x803faa38]
+#   .sdata2: [0x80400f70, 0x80401008]
+
+#portal.cpp:
+#   .text: [0x8018822c, 0x80189454]
+#   .ctors: [0x8023ca64, 0x8023ca68]
+#   .data: [0x80266728, 0x80266848]
+#   .bss: [0x802b48b8, 0x802b49d8]
+#   .sdata: [0x803f8e40, 0x803f8e88]
+#   .sbss: [0x803faa38, 0x803faa40]
+#   .sdata2: [0x80401008, 0x80401038]
+
+ty/source/quadratic.cpp:
+   .text: [0x80189454, 0x8018975c]
+   .sdata2: [0x80401038, 0x80401058]
+
+ty/source/RangeCheck.cpp:
+   .text: [0x8018975c, 0x8018a99c]
+   .data: [0x80266848, 0x80266950]
+   .bss: [0x802b49d8, 0x802b49f8]
+   .sdata: [0x803f8e88, 0x803f8ee8]
+   .sbss: [0x803faa40, 0x803faa48]
+   .sdata2: [0x80401058, 0x80401078]
+
+#reeds.cpp:
+#   .text: [0x8018a99c, 0x8018b10c]
+#   .rodata: [0x8023eb18, 0x8023eb28]
+#   .bss: [0x802b49f8, 0x802b4a58]
+#   .sdata: [0x803f8ee8, 0x803f8f10]
+#   .sbss: [0x803faa48, 0x803faa58]
+#   .sdata2: [0x80401078, 0x804010b8]
+
+#Reflection.cpp:
+#   .text: [0x8018b10c, 0x8018b6bc]
+#   .data: [0x80266950, 0x80266960]
+#   .bss: [0x802b4a58, 0x802b4a70]
+#   .sbss: [0x803faa58, 0x803faa70]
+#   .sdata2: [0x804010b8, 0x804010f0]
+
+#renderTexture.cpp:
+#   .text: [0x8018b6bc, 0x8018bfcc]
+#   .ctors: [0x8023ca68, 0x8023ca6c]
+#   .data: [0x80266960, 0x80266a40]
+#   .bss: [0x802b4a70, 0x802b56a0]
+#   .sdata: [0x803f8f10, 0x803f8f38]
+#   .sbss: [0x803faa70, 0x803faa88]
+#   .sdata2: [0x804010f0, 0x80401118]
+
+#Script.cpp:
+#   .text: [0x8018bfcc, 0x8018cf64]
+#   .ctors: [0x8023ca6c, 0x8023ca70]
+#   .data: [0x80266a40, 0x80266c38]
+#   .bss: [0x802b56a0, 0x802b57a8]
+#   .sdata: [0x803f8f38, 0x803f8f88]
+#   .sbss: [0x803faa88, 0x803faa98]
+#   .sdata2: [0x80401118, 0x80401120]
+
+#SeaMine.cpp:
+#   .text: [0x8018cf64, 0x8018eaa4]
+#   .ctors: [0x8023ca70, 0x8023ca74]
+#   .data: [0x80266c38, 0x80266f00]
+#   .bss: [0x802b57a8, 0x802b58b0]
+#   .sdata: [0x803f8f88, 0x803f8fd0]
+#   .sbss: [0x803faa98, 0x803faab0]
+#   .sdata2: [0x80401120, 0x804011a0]
+
+#setup.cpp:
+#   .text: [0x8018eaa4, 0x8018fc38]
+#   .ctors: [0x8023ca74, 0x8023ca78]
+#   .rodata: [0x8023eb28, 0x8023eb48]
+#   .data: [0x80266f00, 0x802672f0]
+#   .bss: [0x802b58b0, 0x802b5a80]
+#   .sdata: [0x803f8fd0, 0x803f90e0]
+#   .sbss: [0x803faab0, 0x803faac0]
+#   .sdata2: [0x804011a0, 0x80401208]
+
+#Shadow.cpp:
+#   .text: [0x8018fc38, 0x80190c08]
+#   .bss: [0x802b5a80, 0x802b5a90]
+#   .sbss: [0x803faac0, 0x803faac8]
+#   .sdata2: [0x80401208, 0x80401228]
+
+#Shatter.cpp:
+#   .text: [0x80190c08, 0x80192c3c]
+#   .rodata: [0x8023eb48, 0x8023eb88]
+#   .bss: [0x802b5a90, 0x802b5aa0]
+#   .sdata: [0x803f90e0, 0x803f90e8]
+#   .sbss: [0x803faac8, 0x803faad0]
+#   .sdata2: [0x80401228, 0x80401270]
+
+#shears.cpp:
+#   .text: [0x80192c3c, 0x801935c8]
+#   .data: [0x802672f0, 0x80267330]
+#   .bss: [0x802b5aa0, 0x802b5ac0]
+#   .sdata: [0x803f90e8, 0x803f9100]
+#   .sbss: [0x803faad0, 0x803faae0]
+#   .sdata2: [0x80401270, 0x80401288]
+
+#SignPost.cpp:
+#   .text: [0x801935c8, 0x80194a04]
+#   .ctors: [0x8023ca78, 0x8023ca7c]
+#   .rodata: [0x8023eb88, 0x8023eb98]
+#   .data: [0x80267330, 0x80267680]
+#   .bss: [0x802b5ac0, 0x802b6208]
+#   .sdata: [0x803f9100, 0x803f9178]
+#   .sbss: [0x803faae0, 0x803faaf8]
+#   .sdata2: [0x80401288, 0x804012b0]
+
+#soundbank.cpp:
+#   .text: [0x80194a04, 0x80198b68]
+#   .data: [0x80267680, 0x80268330]
+#   .bss: [0x802b6208, 0x802b6280]
+#   .sdata: [0x803f9178, 0x803f9228]
+#   .sbss: [0x803faaf8, 0x803fab00]
+#   .sdata2: [0x804012b0, 0x804012c8]
+
+#SpecialPickup.cpp:
+#   .text: [0x80198b68, 0x8019a9dc]
+#   .ctors: [0x8023ca7c, 0x8023ca80]
+#   .data: [0x80268330, 0x80268590]
+#   .bss: [0x802b6280, 0x802b6388]
+#   .sdata: [0x803f9228, 0x803f9270]
+#   .sbss: [0x803fab00, 0x803fab18]
+#   .sdata2: [0x804012c8, 0x80401350]
+
+#SpikeyIce.cpp:
+#   .text: [0x8019a9dc, 0x8019b040]
+#   .rodata: [0x8023eb98, 0x8023ec18]
+#   .data: [0x80268590, 0x802685a8]
+#   .sdata: [0x803f9270, 0x803f9278]
+#   .sbss: [0x803fab18, 0x803fab28]
+#   .sdata2: [0x80401350, 0x80401390]
+
+#Spline.cpp:
+#   .text: [0x8019b040, 0x8019d70c]
+#   .rodata: [0x8023ec18, 0x8023ec38]
+#   .data: [0x802685a8, 0x80268628]
+#   .sdata2: [0x80401390, 0x804013d8]
+
+#staticSpikes.cpp:
+#   .text: [0x8019d70c, 0x8019db4c]
+#   .data: [0x80268628, 0x80268640]
+#   .sbss: [0x803fab28, 0x803fab38]
+#   .sdata2: [0x804013d8, 0x804013e8]
+
+#stopwatch.cpp:
+#   .text: [0x8019db4c, 0x801a0008]
+#   .ctors: [0x8023ca80, 0x8023ca84]
+#   .rodata: [0x8023ec38, 0x8023ec48]
+#   .data: [0x80268640, 0x80268850]
+#   .bss: [0x802b6388, 0x802b6500]
+#   .sdata: [0x803f9278, 0x803f9300]
+#   .sbss: [0x803fab38, 0x803fab70]
+#   .sdata2: [0x804013e8, 0x80401448]
+
+#target.cpp:
+#   .text: [0x801a0008, 0x801a1124]
+#   .ctors: [0x8023ca84, 0x8023ca88]
+#   .data: [0x80268850, 0x80268a38]
+#   .bss: [0x802b6500, 0x802b6588]
+#   .sdata: [0x803f9300, 0x803f9390]
+#   .sbss: [0x803fab70, 0x803fab80]
+#   .sdata2: [0x80401448, 0x80401478]
+
+#tools.cpp:
+#   .text: [0x801a1124, 0x801a5d28]
+#   .rodata: [0x8023ec48, 0x8023eca8]
+#   .data: [0x80268a38, 0x80268bc8]
+#   .bss: [0x802b6588, 0x802b6598]
+#   .sdata: [0x803f9390, 0x803f93a0]
+#   .sbss: [0x803fab80, 0x803fab88]
+#   .sdata2: [0x80401478, 0x804014f0]
+
+#Torch.cpp:
+#   .text: [0x801a5d28, 0x801a6c44]
+#   .ctors: [0x8023ca88, 0x8023ca8c]
+#   .rodata: [0x8023eca8, 0x8023ecc8]
+#   .data: [0x80268bc8, 0x80268ca8]
+#   .bss: [0x802b6598, 0x802b6678]
+#   .sdata: [0x803f93a0, 0x803f9400]
+#   .sbss: [0x803fab88, 0x803fab98]
+#   .sdata2: [0x804014f0, 0x80401550]
+
+#Ty.cpp:
+#   .text: [0x801a6c44, 0x801b5694]
+#   .ctors: [0x8023ca8c, 0x8023ca90]
+#   .rodata: [0x8023ecc8, 0x8023ef90]
+#   .data: [0x80268ca8, 0x8026af60]
+#   .bss: [0x802b6678, 0x802b87b0]
+#   .sdata: [0x803f9400, 0x803f9580]
+#   .sbss: [0x803fab98, 0x803fabc0]
+#   .sdata2: [0x80401550, 0x804016b0]
+
+#TyAnimTables.cpp:
+#   .text: [0x801b5694, 0x801b5a68]
+#   .data: [0x8026af60, 0x8026b180]
+#   .bss: [0x802b87b0, 0x802b8890]
+#   .sbss: [0x803fabc0, 0x803fabc8]
+#   .sdata2: [0x804016b0, 0x804016b8]
+
+#TyAttributes.cpp:
+#   .text: [0x801b5a68, 0x801b6238]
+#   .ctors: [0x8023ca90, 0x8023ca94]
+#   .data: [0x8026b180, 0x8026b2b0]
+#   .bss: [0x802b8890, 0x802b8918]
+#   .sdata: [0x803f9580, 0x803f95b0]
+#   .sbss: [0x803fabc8, 0x803fabd0]
+#   .sdata2: [0x804016b8, 0x804016c0]
+
+#TyCollisions.cpp:
+#   .text: [0x801b6238, 0x801b8038]
+#   .rodata: [0x8023ef90, 0x8023efe0]
+#   .data: [0x8026b2b0, 0x8026b2c0]
+#   .bss: [0x802b8918, 0x802b8d70]
+#   .sdata: [0x803f95b0, 0x803f95c0]
+#   .sbss: [0x803fabd0, 0x803fabd8]
+#   .sdata2: [0x804016c0, 0x804016f8]
+
+#TyHealth.cpp:
+#   .text: [0x801b8038, 0x801b91c0]
+#   .rodata: [0x8023efe0, 0x8023f000]
+#   .data: [0x8026b2c0, 0x8026b338]
+#   .bss: [0x802b8d70, 0x802b90d0]
+#   .sdata: [0x803f95c0, 0x803f95d0]
+#   .sdata2: [0x804016f8, 0x80401758]
+
+#TyMemCard.cpp:
+#   .text: [0x801b91c0, 0x801bb7b8]
+#   .rodata: [0x8023f000, 0x8023f010]
+#   .data: [0x8026b338, 0x8026b410]
+#   .bss: [0x802b90d0, 0x802b9a80]
+#   .sdata: [0x803f95d0, 0x803f95e8]
+#   .sbss: [0x803fabd8, 0x803fac08]
+#   .sdata2: [0x80401758, 0x804017a0]
+
+#TyMemCardQuery.cpp:
+#   .text: [0x801bb7b8, 0x801bdbe4]
+#   .rodata: [0x8023f010, 0x8023f020]
+#   .data: [0x8026b410, 0x8026b6c0]
+#   .bss: [0x802b9a80, 0x802ba190]
+#   .sdata: [0x803f95e8, 0x803f9608]
+#   .sbss: [0x803fac08, 0x803fac10]
+#   .sdata2: [0x804017a0, 0x80401858]
+
+#underWaterEffects.cpp:
+#   .text: [0x801bdbe4, 0x801be9a4]
+#   .data: [0x8026b6c0, 0x8026b6e0]
+#   .bss: [0x802ba190, 0x802ba210]
+#   .sdata: [0x803f9608, 0x803f9610]
+#   .sbss: [0x803fac10, 0x803fac28]
+#   .sdata2: [0x80401858, 0x804018c8]
+
+#UserInterface.cpp:
+#   .text: [0x801be9a4, 0x801bf220]
+#   .sdata2: [0x804018c8, 0x804018e8]
+
+#wake.cpp:
+#   .text: [0x801bf220, 0x801bf9b0]
+#   .bss: [0x802ba210, 0x802bac18]
+#   .sdata: [0x803f9610, 0x803f9618]
+#   .sbss: [0x803fac28, 0x803fac38]
+#   .sdata2: [0x804018e8, 0x80401908]
+
+#Waterfall.cpp:
+#   .text: [0x801bf9b0, 0x801c06c8]
+#   .rodata: [0x8023f020, 0x8023f050]
+#   .data: [0x8026b6e0, 0x8026b7a0]
+#   .bss: [0x802bac18, 0x802baf08]
+#   .sbss: [0x803fac38, 0x803fac68]
+#   .sdata2: [0x80401908, 0x80401928]
+
+#WaterfallBase.cpp:
+#   .text: [0x801c06c8, 0x801c112c]
+#   .data: [0x8026b7a0, 0x8026b7d8]
+#   .bss: [0x802baf08, 0x802baf80]
+#   .sdata: [0x803f9618, 0x803f9628]
+#   .sdata2: [0x80401928, 0x80401990]
+
+#WaterfallPoint.cpp:
+#   .text: [0x801c112c, 0x801c1578]
+#   .rodata: [0x8023f050, 0x8023f060]
+#   .data: [0x8026b7d8, 0x8026b858]
+#   .bss: [0x802baf80, 0x802baff8]
+#   .sdata: [0x803f9628, 0x803f9630]
+#   .sdata2: [0x80401990, 0x804019f0]
+
+#WaterfallSpray.cpp:
+#   .text: [0x801c1578, 0x801c1f9c]
+#   .data: [0x8026b858, 0x8026b958]
+#   .bss: [0x802baff8, 0x802bb0e0]
+#   .sdata: [0x803f9630, 0x803f9640]
+#   .sdata2: [0x804019f0, 0x80401a78]
+
+#WaterfallStream.cpp:
+#   .text: [0x801c1f9c, 0x801c31f0]
+#   .data: [0x8026b958, 0x8026b9d0]
+#   .sdata2: [0x80401a78, 0x80401ae0]
+
+#WaterSlide.cpp:
+#   .text: [0x801c31f0, 0x801c3aa4]
+#   .data: [0x8026b9d0, 0x8026bab0]
+#   .bss: [0x802bb0e0, 0x802bb1d8]
+#   .sdata: [0x803f9640, 0x803f9650]
+#   .sbss: [0x803fac68, 0x803fac78]
+#   .sdata2: [0x80401ae0, 0x80401b38]
+
+#watertank.cpp:
+#   .text: [0x801c3aa4, 0x801c4ba4]
+#   .ctors: [0x8023ca94, 0x8023ca98]
+#   .data: [0x8026bab0, 0x8026bce8]
+#   .bss: [0x802bb1d8, 0x802bb330]
+#   .sdata: [0x803f9650, 0x803f96a8]
+#   .sbss: [0x803fac78, 0x803fac88]
+#   .sdata2: [0x80401b38, 0x80401b90]
+
+#WeatherTypes.cpp:
+#   .data: [0x8026bce8, 0x8026c428]
+#   .sdata: [0x803f96a8, 0x803f96e8]
+
+#windmill.cpp:
+#   .text: [0x801c4ba4, 0x801c5200]
+#   .data: [0x8026c428, 0x8026c448]
+#   .sdata: [0x803f96e8, 0x803f96f8]
+#   .sbss: [0x803fac88, 0x803fac98]
+#   .sdata2: [0x80401b90, 0x80401ba8]
+
+#WobbleTexture.cpp:
+#   .text: [0x801c5200, 0x801c60b8]
+#   .rodata: [0x8023f060, 0x8023f0e0]
+#   .sdata2: [0x80401ba8, 0x80401be8]
+
+#EXIBios.c:
+#   .text: [0x801c60b8, 0x801c7984]
+#   .bss: [0x802bb330, 0x802bb3f0]
+
+#EXIUart.c:
+#   .text: [0x801c7984, 0x801c7bf4]
+#   .sbss: [0x803fac98, 0x803faca8]
+
+#SIBios.c:
+#   .text: [0x801c7bf4, 0x801c92d4]
+#   .data: [0x8026c448, 0x8026c518]
+#   .bss: [0x802bb3f0, 0x802bb5f0]
+#   .sbss: [0x803faca8, 0x803facb8]
+
+#SISamplingRate.c:
+#   .text: [0x801c92d4, 0x801c93dc]
+#   .data: [0x8026c518, 0x8026c5b0]
+#   .sbss: [0x803facb8, 0x803facc0]
+
+#AmcExi2Stubs.c:
+#   .text: [0x801c93dc, 0x801c940c]
+
+#odenotstub.c:
+#   .text: [0x801c940c, 0x801c9414]
+
+#GXInit.c:
+#   .text: [0x801c9414, 0x801ca504]
+#   .bss: [0x802bb5f0, 0x802bbb68]
+#   .sdata: [0x803f96f8, 0x803f9700]
+#   .sbss: [0x803facc0, 0x803facd0]
+#   .sdata2: [0x80401be8, 0x80401c08]
+
+#GXFifo.c:
+#   .text: [0x801ca504, 0x801cab24]
+#   .sbss: [0x803facd0, 0x803facf0]
+
+#GXAttr.c:
+#   .text: [0x801cab24, 0x801cb94c]
+#   .data: [0x8026c5b0, 0x8026c6d0]
+#   .sdata: [0x803f9700, 0x803f9710]
+
+#GXMisc.c:
+#   .text: [0x801cb94c, 0x801cbdf8]
+#   .sbss: [0x803facf0, 0x803fad08]
+
+#GXGeometry.c:
+#   .text: [0x801cbdf8, 0x801cc1d8]
+
+#GXFrameBuf.c:
+#   .text: [0x801cc1d8, 0x801ccfc4]
+#   .data: [0x8026c6d0, 0x8026c7c0]
+#   .sdata2: [0x80401c08, 0x80401c18]
+
+#GXLight.c:
+#   .text: [0x801ccfc4, 0x801cd644]
+
+#GXTexture.c:
+#   .text: [0x801cd644, 0x801ce560]
+#   .data: [0x8026c7c0, 0x8026c8f0]
+#   .sdata: [0x803f9710, 0x803f9750]
+#   .sdata2: [0x80401c18, 0x80401c40]
+
+#GXBump.c:
+#   .text: [0x801ce560, 0x801cec30]
+#   .sdata2: [0x80401c40, 0x80401c48]
+
+#GXTev.c:
+#   .text: [0x801cec30, 0x801cf668]
+#   .data: [0x8026c8f0, 0x8026c918]
+
+#GXPixel.c:
+#   .text: [0x801cf668, 0x801cfdb0]
+#   .data: [0x8026c918, 0x8026c938]
+#   .sdata2: [0x80401c48, 0x80401c78]
+
+#GXStubs.c:
+#   .text: [0x801cfdb0, 0x801cfdb4]
+
+#GXDisplayList.c:
+#   .text: [0x801cfdb4, 0x801cfe24]
+
+#GXTransform.c:
+#   .text: [0x801cfe24, 0x801d0590]
+#   .sdata2: [0x80401c78, 0x80401c90]
+
+#GXPerf.c:
+#   .text: [0x801d0590, 0x801d0e38]
+#   .data: [0x8026c938, 0x8026ca28]
+
+#texPalette.c:
+#   .text: [0x801d0e38, 0x801d1128]
+#   .data: [0x8026ca28, 0x8026ca68]
+
+#fileCache.c:
+#   .text: [0x801d1128, 0x801d1420]
+#   .bss: [0x802bbb68, 0x802bbb78]
+#   .sbss: [0x803fad08, 0x803fad10]
+
+#List.c:
+#   .text: [0x801d1420, 0x801d151c]
+
+#string.c:
+#   .text: [0x801d151c, 0x801d15bc]
+
+#mtx.c:
+#   .text: [0x801d15bc, 0x801d15f8]
+#   .sdata2: [0x80401c90, 0x80401c98]
+
+#mtx44.c:
+#   .text: [0x801d15f8, 0x801d1690]
+#   .sdata2: [0x80401c98, 0x80401ca8]
+
+#vi.c:
+#   .text: [0x801d1690, 0x801d3090]
+#   .data: [0x8026ca68, 0x8026cd30]
+#   .bss: [0x802bbb78, 0x802bbcc0]
+#   .sbss: [0x803fad10, 0x803fad60]
+
+#AX.c:
+#   .text: [0x801d3090, 0x801d30f8]
+
+#AXAlloc.c:
+#   .text: [0x801d30f8, 0x801d35c0]
+#   .bss: [0x802bbcc0, 0x802bbdc0]
+#   .sbss: [0x803fad60, 0x803fad68]
+
+#AXAux.c:
+#   .text: [0x801d35c0, 0x801d3a48]
+#   .bss: [0x802bbdc0, 0x802beac0]
+#   .sbss: [0x803fad68, 0x803fada0]
+
+#AXCL.c:
+#   .text: [0x801d3a48, 0x801d4180]
+#   .bss: [0x802beac0, 0x802bf0c0]
+#   .sbss: [0x803fada0, 0x803fadb8]
+
+#AXOut.c:
+#   .text: [0x801d4180, 0x801d4840]
+#   .bss: [0x802bf0c0, 0x802c38e0]
+#   .sbss: [0x803fadb8, 0x803fadd8]
+
+#AXSPB.c:
+#   .text: [0x801d4840, 0x801d4d08]
+#   .bss: [0x802c38e0, 0x802c3920]
+#   .sbss: [0x803fadd8, 0x803fae00]
+
+#AXVPB.c:
+#   .text: [0x801d4d08, 0x801d5d54]
+#   .data: [0x8026cd30, 0x8026ce20]
+#   .bss: [0x802c3920, 0x802d4d20]
+#   .sbss: [0x803fae00, 0x803fae10]
+#   .sdata2: [0x80401ca8, 0x80401cb0]
+
+#AXProf.c:
+#   .text: [0x801d5d54, 0x801d5d9c]
+#   .sbss: [0x803fae10, 0x803fae20]
+
+#AXComp.c:
+#   .data: [0x8026ce20, 0x8026e860]
+
+#DSPCode.c:
+#   .data: [0x8026e860, 0x80270780]
+#   .sdata: [0x803f9750, 0x803f9758]
+
+#OS.c:
+#   .text: [0x801d5d9c, 0x801d66f8]
+#   .data: [0x80270780, 0x80270940]
+#   .bss: [0x802d4d20, 0x802d4d70]
+#   .sbss: [0x803fae20, 0x803fae50]
+
+#OSAlarm.c:
+#   .text: [0x801d66f8, 0x801d6da4]
+#   .sbss: [0x803fae50, 0x803fae58]
+
+#OSAlloc.c:
+#   .text: [0x801d6da4, 0x801d7414]
+#   .data: [0x80270940, 0x80270cd8]
+#   .sdata: [0x803f9758, 0x803f9760]
+#   .sbss: [0x803fae58, 0x803fae68]
+
+#OSArena.c:
+#   .text: [0x801d7414, 0x801d7434]
+#   .sdata: [0x803f9760, 0x803f9768]
+#   .sbss: [0x803fae68, 0x803fae70]
+
+#OSAudioSystem.c:
+#   .text: [0x801d7434, 0x801d76c8]
+#   .data: [0x80270cd8, 0x80270d58]
+
+#OSCache.c:
+#   .text: [0x801d76c8, 0x801d7d30]
+#   .data: [0x80270d58, 0x80270f88]
+
+#OSContext.c:
+#   .text: [0x801d7d30, 0x801d8598]
+#   .data: [0x80270f88, 0x80271160]
+
+#OSError.c:
+#   .text: [0x801d8598, 0x801d8960]
+#   .data: [0x80271160, 0x80271480]
+#   .bss: [0x802d4d70, 0x802d4dc0]
+#   .sdata: [0x803f9768, 0x803f9770]
+
+#OSFont.c:
+#   .text: [0x801d8960, 0x801d89b8]
+#   .sdata: [0x803f9770, 0x803f9778]
+
+#OSInterrupt.c:
+#   .text: [0x801d89b8, 0x801d9224]
+#   .data: [0x80271480, 0x802714b0]
+#   .sbss: [0x803fae70, 0x803fae88]
+
+#OSLink.c:
+#   .text: [0x801d9224, 0x801d923c]
+
+#OSMessage.c:
+#   .text: [0x801d923c, 0x801d9440]
+
+#OSMemory.c:
+#   .text: [0x801d9440, 0x801d9738]
+#   .data: [0x802714b0, 0x802714c0]
+
+#OSMutex.c:
+#   .text: [0x801d9738, 0x801d97a8]
+
+#OSReboot.c:
+#   .text: [0x801d97a8, 0x801d99b4]
+#   .bss: [0x802d4dc0, 0x802d4de0]
+#   .sbss: [0x803fae88, 0x803fae98]
+
+#OSReset.c:
+#   .text: [0x801d99b4, 0x801d9d98]
+#   .sbss: [0x803fae98, 0x803faea0]
+
+#OSResetSW.c:
+#   .text: [0x801d9d98, 0x801da124]
+#   .sbss: [0x803faea0, 0x803faec0]
+
+#OSRtc.c:
+#   .text: [0x801da124, 0x801daaa8]
+#   .bss: [0x802d4de0, 0x802d4e38]
+
+#OSSync.c:
+#   .text: [0x801daaa8, 0x801dab2c]
+
+#OSThread.c:
+#   .text: [0x801dab2c, 0x801dbc14]
+#   .bss: [0x802d4e38, 0x802d5820]
+#   .sbss: [0x803faec0, 0x803faed0]
+
+#OSTime.c:
+#   .text: [0x801dbc14, 0x801dc038]
+#   .data: [0x802714c0, 0x80271520]
+
+#__start.c:
+#   .init: [0x80003100, 0x80003354]
+
+#__ppc_eabi_init.cpp:
+#   .text: [0x801dc038, 0x801dc0cc]
+#   .init: [0x80003354, 0x800033a8]
+
+# this slice is needed until the rest of the file is decompiled
+Dolphin/__ppc_eabi_init.s:
+   .text: [0x801DC058, 0x801DC0AC]
+
+#db.c:
+#   .text: [0x801dc0cc, 0x801dc1b8]
+#   .data: [0x80271520, 0x80271538]
+#   .sbss: [0x803faed0, 0x803faed8]
+
+#PPCArch.c:
+#   .text: [0x801dc1b8, 0x801dc254]
+
+#Pad.c:
+#   .text: [0x801dc254, 0x801ddd1c]
+#   .data: [0x80271538, 0x80271548]
+#   .bss: [0x802d5820, 0x802d5870]
+#   .sdata: [0x803f9778, 0x803f9798]
+#   .sbss: [0x803faed8, 0x803faf00]
+
+#dvdlow.c:
+#   .text: [0x801ddd1c, 0x801deb70]
+#   .bss: [0x802d5870, 0x802d5940]
+#   .sdata: [0x803f9798, 0x803f97a0]
+#   .sbss: [0x803faf00, 0x803faf48]
+
+#dvdfs.c:
+#   .text: [0x801deb70, 0x801df4f4]
+#   .data: [0x80271548, 0x80271938]
+#   .sdata: [0x803f97a0, 0x803f97a8]
+#   .sbss: [0x803faf48, 0x803faf68]
+
+#dvd.c:
+#   .text: [0x801df4f4, 0x801e1d2c]
+#   .data: [0x80271938, 0x80271a50]
+#   .bss: [0x802d5940, 0x802d5a18]
+#   .sdata: [0x803f97a8, 0x803f97b0]
+#   .sbss: [0x803faf68, 0x803fafb0]
+
+#dvdqueue.c:
+#   .text: [0x801e1d2c, 0x801e1f24]
+#   .bss: [0x802d5a18, 0x802d5a38]
+
+#dvderror.c:
+#   .text: [0x801e1f24, 0x801e20bc]
+#   .data: [0x80271a50, 0x80271a98]
+
+#fstload.c:
+#   .text: [0x801e20bc, 0x801e22fc]
+#   .data: [0x80271a98, 0x80271b08]
+#   .bss: [0x802d5a38, 0x802d5aa8]
+#   .sdata: [0x803f97b0, 0x803f97c0]
+#   .sbss: [0x803fafb0, 0x803fafc0]
+
+#ai.c:
+#   .text: [0x801e22fc, 0x801e2c4c]
+#   .sbss: [0x803fafc0, 0x803fb000]
+
+#ar.c:
+#   .text: [0x801e2c4c, 0x801e2dc4]
+#   .sbss: [0x803fb000, 0x803fb008]
+
+#dsp.c:
+#   .text: [0x801e2dc4, 0x801e30a0]
+#   .data: [0x80271b08, 0x80271b40]
+#   .sbss: [0x803fb008, 0x803fb010]
+
+#dsp_debug.c:
+#   .text: [0x801e30a0, 0x801e30f0]
+
+#dsp_task.c:
+#   .text: [0x801e30f0, 0x801e3974]
+#   .data: [0x80271b40, 0x80271c80]
+#   .sbss: [0x803fb010, 0x803fb028]
+
+#CARDBios.c:
+#   .text: [0x801e3974, 0x801e4b74]
+#   .data: [0x80271c80, 0x80271ca0]
+#   .bss: [0x802d5aa8, 0x802d5ce8]
+
+#CARDUnlock.c:
+#   .text: [0x801e4b74, 0x801e5dd4]
+#   .data: [0x80271ca0, 0x80271e00]
+#   .sdata: [0x803f97c0, 0x803f97c8]
+
+#CARDRdwr.c:
+#   .text: [0x801e5dd4, 0x801e6054]
+
+#CARDBlock.c:
+#   .text: [0x801e6054, 0x801e6458]
+
+#CARDDir.c:
+#   .text: [0x801e6458, 0x801e66bc]
+
+#CARDCheck.c:
+#   .text: [0x801e66bc, 0x801e75f8]
+
+#CARDMount.c:
+#   .text: [0x801e75f8, 0x801e8040]
+#   .data: [0x80271e00, 0x80271e40]
+
+#CARDFormat.c:
+#   .text: [0x801e8040, 0x801e8824]
+
+#CARDOpen.c:
+#   .text: [0x801e8824, 0x801e8c78]
+
+#CARDCreate.c:
+#   .text: [0x801e8c78, 0x801e8fc8]
+
+#CARDRead.c:
+#   .text: [0x801e8fc8, 0x801e93f8]
+
+#CARDWrite.c:
+#   .text: [0x801e93f8, 0x801e972c]
+
+#CARDDelete.c:
+#   .text: [0x801e972c, 0x801e98e0]
+
+#CARDStat.c:
+#   .text: [0x801e98e0, 0x801e9d78]
+
+#CARDNet.c:
+#   .text: [0x801e9d78, 0x801e9d78]
+#   .sdata: [0x803f97c8, 0x803f97d0]
+
+#abort_exit.c:
+#   .text: [0x801e9d78, 0x801e9d78]
+#   .bss: [0x802d5ce8, 0x802d5de8]
+#   .sbss: [0x803fb028, 0x803fb038]
+
+#alloc.c:
+#   .text: [0x801e9e44, 0x801eac2c]
+#   .rodata: [0x8023f0e0, 0x8023f0f8]
+#   .bss: [0x802d5de8, 0x802d5e20]
+#   .sbss: [0x803fb038, 0x803fb040]
+
+#ansi_files.c:
+#   .text: [0x801eac2c, 0x801ead34]
+#   .data: [0x80271e40, 0x80271f80]
+#   .bss: [0x802d5e20, 0x802d6120]
+
+#ansi_fp.c:
+#   .text: [0x801ead34, 0x801ec9a0]
+#   .rodata: [0x8023f0f8, 0x8023f1d8]
+#   .data: [0x80271f80, 0x802720e8]
+#   .sdata2: [0x80401cb0, 0x80401ce0]
+
+#arith.c:
+#   .text: [0x801ec9a0, 0x801ec9b0]
+
+#buffer_io.c:
+#   .text: [0x801ec9b0, 0x801ecaa8]
+
+#ctype.c:
+#   .text: [0x801ecaa8, 0x801ecacc]
+#   .data: [0x802720e8, 0x802723e8]
+
+#direct_io.c:
+#   .text: [0x801ecacc, 0x801ecdf8]
+
+#errno.c:
+#   .sbss: [0x803fb040, 0x803fb048]
+
+#file_io.c:
+#   .text: [0x801ecdf8, 0x801ecff0]
+
+#FILE_POS.C:
+#   .text: [0x801ecff0, 0x801ed2bc]
+
+#locale.c:
+#   .rodata: [0x8023f1d8, 0x8023f1e0]
+#   .data: [0x802723e8, 0x80272420]
+
+#mbstring.c:
+#   .text: [0x801ed2bc, 0x801ed62c]
+#   .sdata2: [0x80401ce0, 0x80401ce8]
+
+#mem.c:
+#   .text: [0x801ed62c, 0x801ed79c]
+
+#mem_funcs.c:
+#   .text: [0x801ed79c, 0x801eda7c]
+
+#misc_io.c:
+#   .text: [0x801eda7c, 0x801eda8c]
+
+#printf.c:
+#   .text: [0x801eda8c, 0x801efab4]
+#   .rodata: [0x8023f1e0, 0x8023f208]
+#   .data: [0x80272420, 0x80272650]
+#   .sdata: [0x803f97d0, 0x803f97d8]
+#   .sdata2: [0x80401ce8, 0x80401cf0]
+
+#qsort.c:
+#   .text: [0x801efab4, 0x801efc24]
+
+#rand.c:
+#   .text: [0x801efc24, 0x801efc44]
+#   .sdata: [0x803f97d8, 0x803f97e0]
+
+#scanf.c:
+#   .text: [0x801efc44, 0x801f0c8c]
+#   .rodata: [0x8023f208, 0x8023f230]
+#   .data: [0x80272650, 0x80272720]
+
+#string.c:
+#   .text: [0x801f0c8c, 0x801f11a0]
+#   .rodata: [0x8023f230, 0x8023f5c0]
+#   .sdata: [0x803f97e0, 0x803f97e8]
+
+#strtold.c:
+#   .text: [0x801f11a0, 0x801f2238]
+#   .rodata: [0x8023f5c0, 0x8023f5f8]
+#   .sdata2: [0x80401cf0, 0x80401d08]
+
+#strtoul.c:
+#   .text: [0x801f2238, 0x801f2a7c]
+#   .data: [0x80272720, 0x802727a8]
+
+#uart_console_io.c:
+#   .text: [0x801f2a7c, 0x801f2b48]
+#   .sbss: [0x803fb048, 0x803fb050]
+
+#float.c:
+#   .sdata: [0x803f97e8, 0x803f9818]
+
+#wchar_io.c:
+#   .text: [0x801f2b48, 0x801f2bd0]
+
+#e_acos.c:
+#   .text: [0x801f2bd0, 0x801f2ee0]
+#   .sdata2: [0x80401d08, 0x80401d98]
+
+#e_asin.c:
+#   .text: [0x801f2ee0, 0x801f3144]
+#   .sdata2: [0x80401d98, 0x80401e30]
+
+#e_atan2.c:
+#   .text: [0x801f3144, 0x801f33d4]
+#   .sdata2: [0x80401e30, 0x80401e88]
+
+#e_fmod.c:
+#   .text: [0x801f33d4, 0x801f3710]
+#   .rodata: [0x8023f5f8, 0x8023f608]
+
+#e_log.c:
+#   .text: [0x801f3710, 0x801f398c]
+#   .sbss: [0x803fb050, 0x803fb058]
+#   .sdata2: [0x80401e88, 0x80401f08]
+
+#e_log10.c:
+#   .text: [0x801f398c, 0x801f3a9c]
+#   .sbss: [0x803fb058, 0x803fb060]
+#   .sdata2: [0x80401f08, 0x80401f38]
+
+#e_pow.c:
+#   .text: [0x801f3a9c, 0x801f4328]
+#   .rodata: [0x8023f608, 0x8023f638]
+#   .sdata2: [0x80401f38, 0x80402048]
+
+#e_rem_pio2.c:
+#   .text: [0x801f4328, 0x801f46c8]
+#   .rodata: [0x8023f638, 0x8023f7c0]
+#   .sdata2: [0x80402048, 0x804020a0]
+
+#k_rem_pio2.c:
+#   .text: [0x801f46c8, 0x801f551c]
+#   .rodata: [0x8023f7c0, 0x8023f810]
+#   .sdata2: [0x804020a0, 0x804020e0]
+
+#k_tan.c:
+#   .text: [0x801f551c, 0x801f5730]
+#   .rodata: [0x8023f810, 0x8023f878]
+#   .sdata2: [0x804020e0, 0x80402118]
+
+#s_atan.c:
+#   .text: [0x801f5730, 0x801f5930]
+#   .rodata: [0x8023f878, 0x8023f910]
+#   .sdata2: [0x80402118, 0x80402140]
+
+#s_copysign.c:
+#   .text: [0x801f5930, 0x801f5958]
+
+#s_floor.c:
+#   .text: [0x801f5958, 0x801f5aa0]
+#   .sdata2: [0x80402140, 0x80402150]
+
+#s_frexp.c:
+#   .text: [0x801f5aa0, 0x801f5b2c]
+#   .sdata2: [0x80402150, 0x80402158]
+
+#s_ldexp.c:
+#   .text: [0x801f5b2c, 0x801f5cf0]
+#   .sdata2: [0x80402158, 0x80402180]
+
+#s_modf.c:
+#   .text: [0x801f5cf0, 0x801f5dec]
+
+#s_nextafter.c:
+#   .text: [0x801f5dec, 0x801f5f70]
+
+#s_tan.c:
+#   .text: [0x801f5f70, 0x801f5fe8]
+#   .sdata2: [0x80402180, 0x80402188]
+
+#w_acos.c:
+#   .text: [0x801f5fe8, 0x801f6008]
+
+#w_asin.c:
+#   .text: [0x801f6008, 0x801f6028]
+
+#w_atan2.c:
+#   .text: [0x801f6028, 0x801f6048]
+
+#w_fmod.c:
+#   .text: [0x801f6048, 0x801f6068]
+
+#w_log.c:
+#   .text: [0x801f6068, 0x801f6088]
+
+#w_log10.c:
+#   .text: [0x801f6088, 0x801f60a8]
+
+#w_pow.c:
+#   .text: [0x801f60a8, 0x801f60c8]
+
+#DebuggerDriver.c:
+#   .text: [0x801f60c8, 0x801f6b48]
+#   .sdata: [0x803f9818, 0x803f9820]
+#   .sbss: [0x803fb060, 0x803fb078]
+
+#__mem.c:
+#   .init: [0x800033a8, 0x800034e0]
+
+#__va_arg.c:
+#   .text: [0x801f6b48, 0x801f6c10]
+
+#global_destructor_chain.c:
+#   .text: [0x801f6c10, 0x801f6c58]
+#   .dtors: [0x8023caa8, 0x8023CAAC]
+#   .sbss: [0x803fb078, 0x803fb080]
+
+#NMWException.cp:
+#   .text: [0x801f6c58, 0x801f6e08]
+
+#ptmf.c:
+#   .text: [0x801f6e08, 0x801f6e9c]
+#   .rodata: [0x8023f910, 0x8023f920]
+
+#runtime.c:
+#   .text: [0x801f6e9c, 0x801f762c]
+#   .rodata: [0x8023f920, 0x8023f938]
+
+#__init_cpp_exceptions.cpp:
+#   .text: [0x801f762c, 0x801f76a8]
+#   .ctors: [0x8023c780, 0x8023c784]
+#   .dtors: [0x8023caa0, 0x8023caa8]
+#   .sdata: [0x803f9820, 0x803f9828]
+
+#Gecko_ExceptionPPC.cp:
+#   .text: [0x801f76a8, 0x801f7710]
+#   .bss: [0x802d6120, 0x802d6130]
+
+#GCN_mem_alloc.c:
+#   .text: [0x801f7710, 0x801f7880]
+#   .rodata: [0x8023f938, 0x8023f9b0]
+
+#mainloop.c:
+#   .text: [0x801f7880, 0x801f7978]
+
+#nubevent.c:
+#   .text: [0x801f7978, 0x801f7ba0]
+#   .bss: [0x802d6130, 0x802d6158]
+
+#nubinit.c:
+#   .text: [0x801f7ba0, 0x801f7d20]
+#   .rodata: [0x8023f9b0, 0x8023f9d0]
+#   .bss: [0x802d6158, 0x802d6160]
+
+#msg.c:
+#   .text: [0x801f7d20, 0x801f7efc]
+
+#msgbuf.c:
+#   .text: [0x801f7efc, 0x801f8928]
+#   .rodata: [0x8023f9d0, 0x8023f9f0]
+#   .bss: [0x802d6160, 0x802d7b10]
+
+#serpoll.c:
+#   .text: [0x801f8928, 0x801f8cf4]
+#   .bss: [0x802d7b10, 0x802d7b28]
+
+#usr_put.c:
+#   .text: [0x801f8cf4, 0x801f8d80]
+
+#dispatch.c:
+#   .text: [0x801f8d80, 0x801f8e1c]
+#   .data: [0x802727a8, 0x80272830]
+#   .bss: [0x802d7b28, 0x802d7b30]
+
+#msghndlr.c:
+#   .text: [0x801f8e1c, 0x801fb67c]
+#   .data: [0x80272830, 0x80272868]
+#   .bss: [0x802d7b30, 0x802d7b38]
+
+#support.c:
+#   .text: [0x801fb67c, 0x801fbf3c]
+
+#mutex_TRK.c:
+#   .text: [0x801fbf3c, 0x801fbf54]
+
+#notify.c:
+#   .text: [0x801fbf54, 0x801fc02c]
+
+#flush_cache.c:
+#   .text: [0x801fc02c, 0x801fc064]
+
+#mem_TRK.c:
+#   .text: [0x801fc064, 0x801fc120]
+#   .init: [0x800034e0, 0x80003534]
+
+#__exception.s:
+#   .init: [0x80003534, 0x80005468]
+
+#targimpl.c:
+#   .text: [0x801fc120, 0x801fd9b0]
+#   .rodata: [0x8023f9f0, 0x8023fa78]
+#   .data: [0x80272868, 0x80272898]
+#   .bss: [0x802d7b38, 0x802d80b8]
+
+#targsupp.s:
+#   .text: [0x801fd9b0, 0x801fd9d0]
+
+#dolphin_trk.c:
+#   .text: [0x801fd9d0, 0x801fdb10]
+#   .init: [0x80005468, 0x80005620]
+#   .data: [0x80272898, 0x802728d8]
+#   .bss: [0x802d80b8, 0x802d80c0]
+
+#mpc_7xx_603e.c:
+#   .text: [0x801fdb10, 0x801fde88]
+
+#main_TRK.c:
+#   .text: [0x801fde88, 0x801fdecc]
+#   .bss: [0x802d80c0, 0x802d80c8]
+
+#dolphin_trk_glue.c:
+#   .text: [0x801fdecc, 0x801fe378]
+#   .rodata: [0x8023fa78, 0x8023fac0]
+#   .data: [0x802728d8, 0x802728f8]
+#   .bss: [0x802d80c8, 0x802da2f0]
+
+#targcont.c:
+#   .text: [0x801fe378, 0x801fe3ac]
+
+#target_options.c:
+#   .text: [0x801fe3ac, 0x801fe3c8]
+#   .bss: [0x802da2f0, 0x802da2f8]
+
+#mslsupp.c:
+#   .text: [0x801fe3c8, 0x801fe540]
+
+#dtk.c:
+#   .text: [0x801fe540, 0x801fedd0]
+#   .bss: [0x802da2f8, 0x802da418]
+#   .sbss: [0x803fb080, 0x803fb0b0]
+
+#axart.c:
+#   .text: [0x801fedd0, 0x801ff054]
+#   .sbss: [0x803fb0b0, 0x803fb0b8]
+#   .sdata2: [0x80402188, 0x804021a0]
+
+#axartsound.c:
+#   .text: [0x801ff054, 0x801ff33c]
+#   .data: [0x802728f8, 0x80272940]
+#   .sdata2: [0x804021a0, 0x804021b0]
+
+#axartcents.c:
+#   .text: [0x801ff33c, 0x801ff438]
+#   .data: [0x80272940, 0x80272d30]
+#   .sdata2: [0x804021b0, 0x804021b8]
+
+#axartenv.c:
+#   .text: [0x801ff438, 0x801ff4f0]
+
+#axartlfo.c:
+#   .text: [0x801ff4f0, 0x801ff5a4]
+#   .sdata2: [0x804021b8, 0x804021c0]
+
+#axart3d.c:
+#   .text: [0x801ff5a4, 0x801ff738]
+#   .data: [0x80272d30, 0x802735a8]
+#   .sbss: [0x803fb0b8, 0x803fb0c0]
+#   .sdata2: [0x804021c0, 0x804021d0]
+
+#mix.c:
+#   .text: [0x801ff738, 0x80201964]
+#   .data: [0x802735a8, 0x80274168]
+#   .bss: [0x802da418, 0x802dbc20]
+#   .sbss: [0x803fb0c0, 0x803fb0e0]
+
+#THPDec.c:
+#   .text: [0x80201964, 0x80208ea4]
+#   .rodata: [0x8023fac0, 0x8023fb50]
+#   .bss: [0x802dbc20, 0x802dbd50]
+#   .sbss: [0x803fb0e0, 0x803fb1f8]
+#   .sdata2: [0x804021d0, 0x804021f0]
+
+#THPAudio.c:
+#   .text: [0x80208ea4, 0x802093d4]
+
+#Animation.cpp:
+#   .text: [0x802093d4, 0x8020b17c]
+#   .sdata: [0x803f9828, 0x803f9838]
+#   .sbss: [0x803fb1f8, 0x803fb200]
+#   .sdata2: [0x804021f0, 0x80402218]
+
+#Camera.cpp:
+#   .text: [0x8020b17c, 0x8020b2b4]
+#   .bss: [0x802dbd50, 0x802dbe00]
+#   .sdata2: [0x80402218, 0x80402228]
+
+#Collision.cpp:
+#   .text: [0x8020b2b4, 0x80211380]
+#   .rodata: [0x8023fb50, 0x8023fc50]
+#   .bss: [0x802dbe00, 0x802dee50]
+#   .sbss: [0x803fb200, 0x803fb248]
+#   .sdata2: [0x80402228, 0x80402278]
 
 common/Source/Crc.cpp:
-    .text: [0x80211380, 0x802115c0]
-    .bss: [0x802dee50, 0x802df250]
-    .sbss: [0x803fb248, 0x803fb250]
+   .text: [0x80211380, 0x802115c0]
+   .bss: [0x802dee50, 0x802df250]
+   .sbss: [0x803fb248, 0x803fb250]
 
 common/Source/DirectLight.cpp:
-    .text: [0x802115c0, 0x802118dc]
-    .data: [0x80274168, 0x802741d8]
-    .sbss: [0x803fb250, 0x803fb258]
-    .sdata2: [0x80402278, 0x80402280]
+   .text: [0x802115c0, 0x802118dc]
+   .data: [0x80274168, 0x802741d8]
+   .sbss: [0x803fb250, 0x803fb258]
+   .sdata2: [0x80402278, 0x80402280]
 
 common/Source/FileSys.cpp:
-    .text: [0x802118dc, 0x80212734]
-    .data: [0x802741d8, 0x80274288]
-    .bss: [0x802df250, 0x802df308]
-    .sdata: [0x803f9838, 0x803f9848]
-    .sbss: [0x803fb258, 0x803fb268]
+   .text: [0x802118dc, 0x80212734]
+   .data: [0x802741d8, 0x80274288]
+   .bss: [0x802df250, 0x802df308]
+   .sdata: [0x803f9838, 0x803f9848]
+   .sbss: [0x803fb258, 0x803fb268]
+
+#Font.cpp:
+#   .text: [0x80212734, 0x80214a10]
+#   .data: [0x80274288, 0x80274370]
+#   .sdata: [0x803f9848, 0x803f9850]
+#   .sbss: [0x803fb268, 0x803fb280]
+#   .sdata2: [0x80402280, 0x804022d0]
 
 common/Source/Heap.cpp:
-    .text: [0x80214a10, 0x80214bc8]
-    .data: [0x80274370, 0x802743c0]
-    .sbss: [0x803fb280, 0x803fb288]
+   .text: [0x80214a10, 0x80214bc8]
+   .data: [0x80274370, 0x802743c0]
+   .sbss: [0x803fb280, 0x803fb288]
 
 common/Source/KromeIni.cpp:
-    .text: [0x80214bc8, 0x802166f8]
-    .sdata: [0x803f9850, 0x803f9880]
-    .sdata2: [0x804022d0, 0x804022d8]
+   .text: [0x80214bc8, 0x802166f8]
+   .sdata: [0x803f9850, 0x803f9880]
+   .sdata2: [0x804022d0, 0x804022d8]
 
 common/Source/Matrix.cpp:
-    .text: [0x802166f8, 0x8021850c]
-    .sdata2: [0x804022d8, 0x804022f0]
+   .text: [0x802166f8, 0x8021850c]
+   .sdata2: [0x804022d8, 0x804022f0]
+
+#MKAnimScript.cpp:
+#   .text: [0x8021850c, 0x8021a4fc]
+#   .data: [0x802743c0, 0x802743d8]
+#   .sdata: [0x803f9880, 0x803f98f0]
+#   .sbss: [0x803fb288, 0x803fb290]
+#   .sdata2: [0x804022f0, 0x80402300]
+
+#MKPackage.cpp:
+#   .text: [0x8021a4fc, 0x8021b680]
+#   .data: [0x802743d8, 0x80274428]
+#   .bss: [0x802df308, 0x802e3348]
+#   .sdata: [0x803f98f0, 0x803f9910]
+#   .sbss: [0x803fb290, 0x803fb2e0]
+#   .sdata2: [0x80402300, 0x80402310]
+
+#MKParticleGen.cpp:
+#   .text: [0x8021b680, 0x8021ccdc]
+#   .data: [0x80274428, 0x80274718]
+#   .sdata: [0x803f9910, 0x803f9918]
+#   .sbss: [0x803fb2e0, 0x803fb2e8]
+#   .sdata2: [0x80402310, 0x80402338]
+
+#MKRumble.cpp:
+#   .text: [0x8021ccdc, 0x8021d3d8]
+#   .rodata: [0x8023fc50, 0x8023fc90]
+#   .data: [0x80274718, 0x80274758]
+#   .bss: [0x802e3348, 0x802e3428]
+#   .sbss: [0x803fb2e8, 0x803fb2f0]
+#   .sdata2: [0x80402338, 0x80402360]
 
 common/Source/MKSceneManager.cpp:
-    .text: [0x8021d3d8, 0x8021FCEC]
-    .ctors: [0x8023ca98, 0x8023CA9C]
-    .data: [0x80274758, 0x80274778]
-    .bss: [0x802e3428, 0x802e49a8]
-    .sdata: [0x803f9918, 0x803f9928]
-    .sbss: [0x803fb2f0, 0x803fb2f8]
-    .sdata2: [0x80402360, 0x80402380]
+   .text: [0x8021d3d8, 0x8021fcec]
+   .ctors: [0x8023ca98, 0x8023CA9C]
+   .data: [0x80274758, 0x80274778]
+   .bss: [0x802e3428, 0x802e49a8]
+   .sdata: [0x803f9918, 0x803f9928]
+   .sbss: [0x803fb2f0, 0x803fb2f8]
+   .sdata2: [0x80402360, 0x80402380]
 
 common/Source/Model.cpp:
-    .text: [0x8021fcec, 0x80220d94]
-    .sdata: [0x803f9928, 0x803f9940]
-    .sbss: [0x803fb2f8, 0x803fb320]
-    .sdata2: [0x80402380, 0x80402388]
+   .text: [0x8021fcec, 0x80220d94]
+   .sdata: [0x803f9928, 0x803f9940]
+   .sbss: [0x803fb2f8, 0x803fb320]
+   .sdata2: [0x80402380, 0x80402388]
 
-common/Source/Utils.cpp:
-    .text: [0x802247A8, 0x802249C0]
-    .sdata: [0x803F99D0, 0x803f99e0]
+#ParticleSystem.cpp:
+#   .text: [0x80220d94, 0x80222f38]
+#   .rodata: [0x8023fc90, 0x8023fca0]
+#   .data: [0x80274778, 0x802747f0]
+#   .sdata: [0x803f9940, 0x803f9948]
+#   .sbss: [0x803fb320, 0x803fb330]
+#   .sdata2: [0x80402388, 0x804023c0]
 
-common/Source/Vector.cpp:
-    .text: [0x802249c0, 0x802250dc]
-    .data: [0x802759c8, 0x802759f8]
-    .sdata2: [0x80402410, 0x80402440]
+#ParticleSystemManager.cpp:
+#   .text: [0x80222f38, 0x80223894]
+#   .bss: [0x802e49a8, 0x802e4a00]
+#   .sbss: [0x803fb330, 0x803fb338]
+#   .sdata2: [0x804023c0, 0x804023d0]
 
-#common/Source/QuatRotation.cpp:
-#    .text: [0x80223894, 0x80223b88]
-#    .sdata2: [0x804023d0, 0x804023e8]
+#QuatRotation.cpp:
+#   .text: [0x80223894, 0x80223b88]
+#   .sdata2: [0x804023d0, 0x804023e8]
 
 common/Source/StdMath.cpp:
-    .text: [0x80223b88, 0x80223D80]
-    .data: [0x802747f0, 0x802757f8]
-    .sdata2: [0x804023e8, 0x80402410]
+   .text: [0x80223b88, 0x80223d80]
+   .data: [0x802747f0, 0x802757f8]
+   .sdata2: [0x804023e8, 0x80402410]
 
 common/Source/Str.cpp:
-    .text: [0x80223D80, 0x80223EFC]
-    .bss: [0x802e4a00, 0x802E8A00]
-    .sdata: [0x803f9948, 0x803F9950]
-    .sbss: [0x803fb338, 0x803fb340]
+   .text: [0x80223d80, 0x80223efc]
+   .bss: [0x802e4a00, 0x802e8a00]
+   .sdata: [0x803f9948, 0x803f9950]
+   .sbss: [0x803fb338, 0x803fb340]
 
 common/Source/Timer.cpp:
-    .text: [0x80223efc, 0x802240EC]
+   .text: [0x80223efc, 0x802240ec]
 
-#common/Source/Translation.cpp:
-#    .text: [0x802240ec, 0x802247a8]
-#    .data: [0x802757f8, 0x802759c8]
-#    .bss: [0x802e8a00, 0x802eaa60]
-#    .sdata: [0x803f9950, 0x803f99d0]
-#    .sbss: [0x803fb340, 0x803fb350]
+#Translation.cpp:
+#   .text: [0x802240ec, 0x802247a8]
+#   .data: [0x802757f8, 0x802759c8]
+#   .bss: [0x802e8a00, 0x802eaa60]
+#   .sdata: [0x803f9950, 0x803f99d0]
+#   .sbss: [0x803fb340, 0x803fb350]
+
+common/Source/Utils.cpp:
+   .text: [0x802247a8, 0x802249c0]
+   .sdata: [0x803f99d0, 0x803f99e0]
+
+common/Source/Vector.cpp:
+   .text: [0x802249c0, 0x802250dc]
+   .data: [0x802759c8, 0x802759f8]
+   .sdata2: [0x80402410, 0x80402440]
+
+#start of common/gc/?
+#demoinit.cpp:
+#   .text: [0x802250dc, 0x80225728]
+#   .data: [0x802759f8, 0x80275a68]
+#   .bss: [0x802eaa60, 0x8036eaa0]
+#   .sbss: [0x803fb350, 0x803fb370]
+#   .sdata2: [0x80402440, 0x80402458]
+
+#DiscErrors.cpp:
+#   .text: [0x80225728, 0x80225994]
+#   .data: [0x80275a68, 0x802764d8]
+#   .sdata: [0x803f99e0, 0x803f99e8]
 
 common/File.cpp:
-    .text: [0x80225994, 0x80226398]
-    .rodata: [0x8023fca0, 0x8023fea0]
-    .data: [0x802764d8, 0x802764e8]
-    .bss: [0x8036eaa0, 0x8036ed60]
+   .text: [0x80225994, 0x80226398]
+   .rodata: [0x8023fca0, 0x8023fea0]
+   .data: [0x802764d8, 0x802764e8]
+   .bss: [0x8036eaa0, 0x8036ed60]
+
+#Grass_GC.cpp:
+#   .text: [0x80226398, 0x80227254]
+#   .data: [0x802764e8, 0x80276990]
+#   .bss: [0x8036ed60, 0x8036f720]
+#   .sdata: [0x803f99e8, 0x803f9a00]
+#   .sbss: [0x803fb370, 0x803fb3a8]
+#   .sdata2: [0x80402458, 0x80402480]
+
+#Input_GC.cpp:
+#   .text: [0x80227254, 0x8022825c]
+#   .rodata: [0x8023fea0, 0x8023fec8]
+#   .data: [0x80276990, 0x80276a80]
+#   .bss: [0x8036f720, 0x8036f760]
+#   .sdata: [0x803f9a00, 0x803f9a08]
+#   .sbss: [0x803fb3a8, 0x803fb3b0]
+#   .sdata2: [0x80402480, 0x804024c0]
 
 common/Source/Material_GC.cpp:
-    .text: [0x8022825c, 0x8022bb50]
-    .rodata: [0x8023fec8, 0x8023ffb0]
-    .data: [0x80276a80, 0x80296d58]
-    .bss: [0x8036f760, 0x8037f7e0]
-    .sdata: [0x803f9a08, 0x803f9af0]
-    .sbss: [0x803fb3b0, 0x803fb3e8]
-    .sdata2: [0x804024c0, 0x80402538]
-    
+   .text: [0x8022825c, 0x8022bb50]
+   .rodata: [0x8023fec8, 0x8023ffb0]
+   .data: [0x80276a80, 0x80296d58]
+   .bss: [0x8036f760, 0x8037f7e0]
+   .sdata: [0x803f9a08, 0x803f9af0]
+   .sbss: [0x803fb3b0, 0x803fb3e8]
+   .sdata2: [0x804024c0, 0x80402538]
+
+#MKMemoryCard.cpp:
+#   .text: [0x8022bb50, 0x8022f1bc]
+#   .rodata: [0x8023ffb0, 0x8023ffd0]
+#   .data: [0x80296d58, 0x80296db0]
+#   .bss: [0x8037f7e0, 0x80389dd0]
+#   .sdata: [0x803f9af0, 0x803f9b08]
+#   .sbss: [0x803fb3e8, 0x803fb420]
+
+#MKShadow_GC.cpp:
+#   .text: [0x8022f1bc, 0x80230890]
+#   .rodata: [0x8023ffd0, 0x80240000] # ?
+#   .data: [0x80296db0, 0x802976a8]
+#   .bss: [0x80389dd0, 0x8038dde0]
+#   .sdata: [0x803f9b08, 0x803f9b10]
+#   .sbss: [0x803fb420, 0x803fb430]
+#   .sdata2: [0x80402538, 0x80402568]
+
 common/gc/ModelGC.cpp:
-    .text: [0x80230890, 0x80232398]
-    .bss: [0x8038dde0, 0x803df1e0]
-    .sbss: [0x803fb430, 0x803fb448]
-    .sdata2: [0x80402568, 0x804025b0]
+   .text: [0x80230890, 0x80232398]
+   .bss: [0x8038dde0, 0x803df1e0]
+   .sbss: [0x803fb430, 0x803fb448]
+   .sdata2: [0x80402568, 0x804025b0]
+
+#Sound.cpp:
+#   .text: [0x80232398, 0x802348cc]
+#   .data: [0x802976a8, 0x802978b8]
+#   .bss: [0x803df1e0, 0x803e7080]
+#   .sdata: [0x803f9b10, 0x803f9b20]
+#   .sbss: [0x803fb448, 0x803fb498]
+#   .sdata2: [0x804025b0, 0x80402608]
+
+#system_extras.cpp:
+#   .text: [0x802348cc, 0x80234b10]
+
+#System_GC.cpp:
+#   .text: [0x80234b10, 0x80236008]
+#   .data: [0x802978b8, 0x80297bf8]
+#   .bss: [0x803e7080, 0x803ef140]
+#   .sdata: [0x803f9b20, 0x803f9b50]
+#   .sbss: [0x803fb498, 0x803fb500]
+#   .sdata2: [0x80402608, 0x80402648]
+#   .sbss2: [0x80402778, 0x8040277C]
 
 common/Source/Texture.cpp:
-    .text: [0x80236008, 0x802368f8]
-    .bss: [0x803ef140, 0x803ef150]
-    .sdata: [0x803f9b50, 0x803f9b60]
-    .sbss: [0x803fb500, 0x803fb510]
-    .sdata2: [0x80402648, 0x80402660]
+   .text: [0x80236008, 0x802368f8]
+   .bss: [0x803ef140, 0x803ef150]
+   .sdata: [0x803f9b50, 0x803f9b60]
+   .sbss: [0x803fb500, 0x803fb510]
+   .sdata2: [0x80402648, 0x80402660]
+
+#THPAudioDecode.c:
+#   .text: [0x802368f8, 0x80236cb8]
+#   .bss: [0x803ef150, 0x803f04c0]
+#   .sbss: [0x803fb510, 0x803fb518]
+
+#THPPlayer.c:
+#   .text: [0x80236cb8, 0x8023857c]
+#   .data: [0x80297bf8, 0x80297f98]
+#   .bss: [0x803f04c0, 0x803f0c20]
+#   .sdata: [0x803f9b60, 0x803f9b68]
+#   .sbss: [0x803fb518, 0x803fb538]
+#   .sdata2: [0x80402660, 0x80402670]
+
+#THPRead.c:
+#   .text: [0x8023857c, 0x8023889c]
+#   .bss: [0x803f0c20, 0x803f2008]
+#   .sbss: [0x803fb538, 0x803fb540]
+
+#THPVideoDecode.c:
+#   .text: [0x8023889c, 0x80238de0]
+#   .bss: [0x803f2008, 0x803f3380]
+#   .sbss: [0x803fb540, 0x803fb548]
+
+#Video.cpp:
+#   .text: [0x80238de0, 0x80239364]
+#   .data: [0x80297f98, 0x80297fa8]
+#   .bss: [0x803f3380, 0x803f33c0]
+#   .sdata: [0x803f9b68, 0x803f9b70]
+#   .sbss: [0x803fb548, 0x803fb550]
+#   .sdata2: [0x80402670, 0x80402688]
 
 common/gc/View_GC.cpp:
-    .text: [0x80239364, 0x8023aaa4]
-    .bss: [0x803f33c0, 0x803f3440]
-    .sbss: [0x803fb550, 0x803fb558]
-    .sdata2: [0x80402688, 0x804026e0]
+   .text: [0x80239364, 0x8023aaa4]
+   .bss: [0x803f33c0, 0x803f3440]
+   .sbss: [0x803fb550, 0x803fb558]
+   .sdata2: [0x80402688, 0x804026e0]
 
-#common/gc/Blitter.cpp:
-#    .text: [0x8023b1ac, 0x8023c760]
-#    .data: [0x80298b38, 0x
-#    .sbss: [0x803fb578, 0x803fb580]
-#    .sdata2: [0x80402720, 
+#Water_GC.cpp:
+#   .text: [0x8023aaa4, 0x8023ae8c]
+#   .bss: [0x803f3440, 0x803F3860] # ?
+#   .sdata: [0x803f9b70, 0x803F9B80]
+#   .sbss: [0x803fb558, 0x803fb568]
+#   .sdata2: [0x804026e0, 0x80402720]
+
+#xFont.cpp:
+#   .text: [0x8023ae8c, 0x8023b1ac]
+#   .data: [0x80297fa8, 0x80298020]
+#   .sbss: [0x803fb568, 0x803fb578]
+
+#xfontdata.cpp:
+#   .data: [0x80298020, 0x80298b38]
+
+#Blitter.cpp:
+#   .text: [0x8023b1ac, 0x8023c760]
+#   .data: [0x80298b38, 0x80298B60]
+#   .sbss: [0x803fb578, 0x803fb580]
+#   .sdata2: [0x80402720, 0x80402760]
+
+#Debug.cpp:
+#   .text: [0x8023c760, 0x8023C780]
+#   .sbss: [0x803fb580, 0x803FB5A0] # ?
