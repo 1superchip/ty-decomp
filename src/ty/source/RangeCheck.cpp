@@ -135,14 +135,14 @@ void LODDescriptor::ResolveSubObjects(Model* pModel) {
 }
 
 void LODDescriptor::Init(KromeIni* pIni, char* arg1) {
-    char filepath[0x20];
+    char section[0x20];
     memset((void*)this, 0, sizeof(LODDescriptor));
     invisibleZone = -1;
     maxScissorDist = 1000.0f;
     flags |= 1;
     if (pIni != NULL && arg1 != NULL) {
-        Tools_StripExtension(filepath, (char const*)arg1);
-        KromeIniLine* pLine = pIni->GotoLine(filepath, NULL);
+        Tools_StripExtension(section, (char const*)arg1);
+        KromeIniLine* pLine = pIni->GotoLine(section, NULL);
         ParseIni(pIni, pLine);
     }
 }

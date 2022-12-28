@@ -3474,12 +3474,12 @@ common/Source/Matrix.cpp:
    .text: [0x802166f8, 0x8021850c]
    .sdata2: [0x804022d8, 0x804022f0]
 
-#MKAnimScript.cpp:
-#   .text: [0x8021850c, 0x8021a4fc]
-#   .data: [0x802743c0, 0x802743d8]
-#   .sdata: [0x803f9880, 0x803f98f0]
-#   .sbss: [0x803fb288, 0x803fb290]
-#   .sdata2: [0x804022f0, 0x80402300]
+common/Source/MKAnimScript.cpp:
+   .text: [0x8021850c, 0x8021a4fc]
+   .data: [0x802743c0, 0x802743d8]
+   .sdata: [0x803f9880, 0x803f98f0]
+   .sbss: [0x803fb288, 0x803fb290]
+   .sdata2: [0x804022f0, 0x80402300]
 
 #MKPackage.cpp:
 #   .text: [0x8021a4fc, 0x8021b680]
