@@ -6,7 +6,10 @@ enum DDADamageCause {
 };
 
 enum DDAPickupType {
-	
+	Pickup_Gem = 1,
+	Pickup_Cog = 2,
+	Pickup_ThunderEgg = 3,
+	Pickup_Bibly = 4
 };
 
 enum DDAEnemyDamageCause {
@@ -36,7 +39,7 @@ struct DDAUnk14 {
 struct DDAUnk18 {
     int unk0;
     int unk4;
-    u8 unk8;
+    u8 checkpointNumber;
     u8 unk9;
     u8 checkpointStartHours;
     u8 checkpointStartMinutes;
@@ -45,10 +48,10 @@ struct DDAUnk18 {
     u8 checkpointEndMinutes;
     u8 checkpointEndSeconds;
     u16 unk10;
-    u16 unk12;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
+    u16 opals;
+    u8 cogs;
+    u8 thunderEggs;
+    u8 bilbies;
     u8 unk17;
     u16 unk18;
     u16 unk1A;

@@ -1,6 +1,7 @@
 #include "types.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
+#include "common/StdMath.h"
 
 Vector gXAxis = {1.0f, 0.0f, 0.0f, 0.0f};
 Vector gYAxis = {0.0f, 1.0f, 0.0f, 0.0f};
@@ -81,18 +82,14 @@ void Vector::Cross(Vector* pVector, Vector* pVector1) {
     z = cz;
 }
 
-void Vector::Projection(Vector* pVector, Vector* pVector1) {
-    float sqMag = pVector1->MagSquared();
+void Vector::Projection(Vector* pVector1, Vector* pVector2) {
+    float sqMag = pVector2->MagSquared();
     if (sqMag > 0.000001f) {
-        float dot = pVector->Dot(pVector1) / sqMag;
-        x = dot * pVector1->x;
-        y = dot * pVector1->y;
-        z = dot * pVector1->z;
+        float dot = pVector1->Dot(pVector2);
+		Scale(pVector2, dot / sqMag);
         return;
     }
-    z = 0.0f;
-    y = 0.0f;
-    x = 0.0f;
+	SetZero();
 }
 
 // https://decomp.me/scratch/Z0Prr
@@ -182,40 +179,11 @@ void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {
     z = pVector->z + pMatrix->data[3][2];
 }
 
-void Vector::CClamp(Vector* pColour, float arg1, float arg2) {
-    float clamp = pColour->x;
-    if (clamp < arg1) {
-        clamp = arg1;
-    } else if (clamp > arg2) {
-        clamp = arg2;
-    }
-    x = clamp;
-    
-    clamp = pColour->y;
-    if (clamp < arg1) {
-        clamp = arg1;
-    } else if (clamp > arg2) {
-        clamp = arg2;
-    }
-    y = clamp;
-    
-    clamp = pColour->z;
-    if (clamp < arg1) {
-        clamp = arg1;
-    } else if (clamp > arg2) {
-        clamp = arg2;
-    }
-    z = clamp;
-    
-    clamp = pColour->w;
-    if (clamp < arg1) {
-        clamp = arg1;
-    } else if (clamp > arg2) {
-        clamp = arg2;
-    } else {
-        clamp = clamp;
-    }
-    w = clamp;
+void Vector::CClamp(Vector* pColour, float min, float max) {
+    x = Clamp<float>(pColour->x, min, max);
+    y = Clamp<float>(pColour->y, min, max);
+    z = Clamp<float>(pColour->z, min, max);
+    w = Clamp<float>(pColour->w, min, max);
 }
 
 extern "C" double fmod(float, double);

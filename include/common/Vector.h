@@ -60,6 +60,11 @@ struct Vector {
 		y *= scalar;
 		z *= scalar;
 	}
+    void Scale(Vector* pVector, float scalar) {
+		x = scalar * pVector->x;
+		y = scalar * pVector->y;
+		z = scalar * pVector->z;
+	}
     void SetZero(void) {
         x = y = z = 0.0f;
     }

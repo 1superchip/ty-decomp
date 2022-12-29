@@ -16,6 +16,13 @@ inline T Sqr(T x) {
     return x * x;
 }
 
+// may not have been a template
+// this can always be changed later
+template <typename T>
+inline T Clamp(T x, T min, T max) {
+    return (x < min) ? min : (x > max) ? max : x;
+}
+
 union sindata {
     float xf;
     int xi;

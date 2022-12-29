@@ -50,16 +50,8 @@ void Model_DeinitModule(void) {
     while (*ppTemplates != NULL) {
         ppTemplates++;
     }
-    while (*--modelInstances.pPointers != NULL) {}
-    if (modelInstances.pPointers != (Model**)&gEmptyPtrList) {
-        Heap_MemFree(modelInstances.pPointers);
-    }
-    modelInstances.pPointers = NULL;
-    while (*--modelTemplates.pPointers != NULL) {}
-    if (modelTemplates.pPointers != (ModelTemplate**)&gEmptyPtrList) {
-        Heap_MemFree(modelTemplates.pPointers);
-    }
-    modelTemplates.pPointers = NULL;
+	modelInstances.Deinit();
+	modelTemplates.Deinit();
     moduleInitialised = false;
 }
 

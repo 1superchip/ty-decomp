@@ -8,6 +8,7 @@ struct PtrList {
     T **pPointers;
     void Init(int);
 	void Destroy(T*);
+    void Deinit(void);
     T* AddEntry(T* p) {
         return *--pPointers = p;
     }
@@ -30,4 +31,13 @@ inline void PtrList<T>::Init(int count) {
         pPointers++;
         *pPointers = NULL;
     }
+}
+
+template <typename T>
+inline void PtrList<T>::Deinit(void) {
+    while (*--pPointers != NULL) {}
+    if (pPointers != (T**)&gEmptyPtrList) {
+        Heap_MemFree(pPointers);
+    }
+    pPointers = NULL;
 }

@@ -25,7 +25,7 @@ struct AnimEvent {
 struct AnimRange {
     s16 startFrame;
     s16 endFrame;
-    s16 unk4;
+    s16 unk4; // speed
     s16 nmbrOfEvents;
     AnimEvent* pEvents;
     int unkC;

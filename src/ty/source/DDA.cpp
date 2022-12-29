@@ -82,9 +82,8 @@ void DDASession::StartSession(void) {
     }
 }
 
-//https://decomp.me/scratch/K3LS5
 void DDASession::EndSession(void) {
-    TimerInfo endTime;
+    TimerInfo endTime; // checkpoint end time
     if (currentCheckpoint != false) {
         EndCheckpoint();
     }
@@ -99,9 +98,9 @@ void DDASession::EndSession(void) {
 extern "C" void memset(void*, int, int);
 
 void DDASession::NewCheckpoint(int arg1) {
-    TimerInfo checkpointTime;
+    TimerInfo startTime; // checkpoint start time
     if (currentCheckpoint != NULL) {
-        if (currentCheckpoint->unk8 == arg1) {
+        if (currentCheckpoint->checkpointNumber == arg1) {
             return; // return if this is the same checkpoint
         }
         EndCheckpoint();
@@ -112,17 +111,17 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint = unk10.GetNextEntry();
     currentCheckpoint->unk0 = unk10.GetSize();
     currentCheckpoint->unk4 = 0;
-    currentCheckpoint->unk8 = arg1;
+    currentCheckpoint->checkpointNumber = arg1;
     currentCheckpoint->unk9 = ty[0x1178 / 4];
-    Timer_GetSystemTime(&checkpointTime);
-    currentCheckpoint->checkpointStartHours = checkpointTime.hours;
-    currentCheckpoint->checkpointStartMinutes = checkpointTime.minutes;
-    currentCheckpoint->checkpointStartSeconds = checkpointTime.seconds;
+    Timer_GetSystemTime(&startTime);
+    currentCheckpoint->checkpointStartHours = startTime.hours;
+    currentCheckpoint->checkpointStartMinutes = startTime.minutes;
+    currentCheckpoint->checkpointStartSeconds = startTime.seconds;
     currentCheckpoint->unk10 = 0;
-    currentCheckpoint->unk12 = 0;
-    currentCheckpoint->unk14 = 0;
-    currentCheckpoint->unk15 = 0;
-    currentCheckpoint->unk16 = 0;
+    currentCheckpoint->opals = 0;
+    currentCheckpoint->cogs = 0;
+    currentCheckpoint->thunderEggs = 0;
+    currentCheckpoint->bilbies = 0;
     currentCheckpoint->unk18 = 0;
     currentCheckpoint->unk1A = 0;
     currentCheckpoint->unk1C = 0;
@@ -204,17 +203,17 @@ void DDASession::StorePickupInfo(DDAPickupType pickupType) {
         return;
     }
     switch (pickupType) {
-        case 1:
-            currentCheckpoint->unk12++;
+        case Pickup_Gem:
+            currentCheckpoint->opals++;
             break;
-        case 2:
-            currentCheckpoint->unk14++;
+        case Pickup_Cog:
+            currentCheckpoint->cogs++;
             break;
-        case 3:
-            currentCheckpoint->unk15++;
+        case Pickup_ThunderEgg:
+            currentCheckpoint->thunderEggs++;
             break;
-        case 4:
-            currentCheckpoint->unk16++;
+        case Pickup_Bibly:
+            currentCheckpoint->bilbies++;
     }
 }
 

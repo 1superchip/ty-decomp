@@ -142,7 +142,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                     } else {
                         int startFrame;
                         int endFrame;
-                        int unk2_local;
+                        int unk2_local; // speed
                         if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
 							// sscanf returns the number of variables filled
                             switch (sscanf(pLine->pFieldName, "%d-%d,%d", &startFrame, &endFrame, &unk2_local)) {
@@ -158,7 +158,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                             }
                             pRanges->startFrame = startFrame;
                             pRanges->endFrame = endFrame;
-                            pRanges->unk4 = unk2_local;
+                            pRanges->unk4 = unk2_local; // speed
                             pRanges->nmbrOfEvents = 0;
                             pRanges->pEvents = pNextEvent;
                             pRanges->unkC = 0;

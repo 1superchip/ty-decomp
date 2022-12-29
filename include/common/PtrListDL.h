@@ -20,6 +20,9 @@ struct PtrListDL {
 	void Deinit(void);
 	void Destroy(T** p);
 	void Destroy(T* p);
+    T** GetMem(void) {
+        return (T**)pMem;
+    }
 	void* GetEnd(void) {
         void* ptr = pMem;
         while ((int*)(*(int*)ptr) != 0) {
