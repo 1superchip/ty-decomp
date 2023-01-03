@@ -15,6 +15,9 @@ struct PtrList {
     T* GetUnkEntry(void) {
         return *pPointers++;
     }
+	T** GetPointers(void) {
+		return pPointers;
+	}
 };
 
 template <typename T>
@@ -40,4 +43,16 @@ inline void PtrList<T>::Deinit(void) {
         Heap_MemFree(pPointers);
     }
     pPointers = NULL;
+}
+
+template <typename T>
+void PtrList<T>::Destroy(T* pTemplate) {
+    T** ptrs = pPointers;
+    while (*ptrs != NULL) {
+        if (*ptrs == pTemplate) {
+            *ptrs = *pPointers++;
+            return;
+        }
+        ptrs++;
+    }
 }

@@ -374,15 +374,3 @@ void Model::SetRenderTypeOverride(int renderTypeOverride) {
 Material* Model::GetSubObjectMaterial(int subObjectIndex, int materialIndex) {
 	return pTemplate->pModelData->pSubObjects[subObjectIndex].pMaterials[materialIndex].pMaterial;
 }
-
-template <typename ModelTemplate>
-void PtrList<ModelTemplate>::Destroy(ModelTemplate* pTemplate) {
-    ModelTemplate** ptrs = pPointers;
-    while (*ptrs != NULL) {
-        if (*ptrs == pTemplate) {
-            *ptrs = *pPointers++;
-            return;
-        }
-        ptrs++;
-    }
-}

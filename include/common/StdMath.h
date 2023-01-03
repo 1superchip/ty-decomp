@@ -37,4 +37,31 @@ float NormaliseAngle(float);
 #define PI2 1.5707964f
 #define _table_cosf(angle) _table_sinf(angle + PI2)
 
+inline float sqrtf(float x)
+{
+	static const double _half=.5;
+	static const double _three=3.0;
+	volatile float y;
+	if(x > 0.0f)
+	{
+		double guess = __frsqrte((double)x);   // returns an approximation to
+		guess = _half*guess*(_three - guess*guess*x);  // now have 12 sig bits
+		guess = _half*guess*(_three - guess*guess*x);  // now have 24 sig bits
+		guess = _half*guess*(_three - guess*guess*x);  // now have 32 sig bits
+		y=(float)(x*guess);
+		return y;
+	}
+	return x;
+}
+
+inline float kin_sqrtf(float x) {
+    static const double _half=.5;
+	static const double _three=3.0;
+    double guess = __frsqrte(x);
+    guess = _half * guess * (_three - ( x * (guess * guess)));
+    guess = _half * guess * (_three - ( x * (guess * guess)));
+    volatile float y = ( x * (_half * guess * (_three - ( x * (guess * guess)))));
+    return y;
+}
+
 #endif // COMMON_STDMATH

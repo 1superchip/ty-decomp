@@ -1,20 +1,11 @@
 #include "types.h"
 #include "ty/DataVal.h"
 #include "common/Str.h"
+#include "common/StdMath.h"
 
 extern "C" int stricmp(char*, char*);
 
 extern bool gAssertBool; // from Str.cpp
-
-inline float kin_sqrtf(float x) {
-    static const double _half=.5;
-	static const double _three=3.0;
-    double guess = __frsqrte(x);
-    guess = _half * guess * (_three - ( x * (guess * guess)));
-    guess = _half * guess * (_three - ( x * (guess * guess)));
-    volatile float y = ( x * (_half * guess * (_three - ( x * (guess * guess)))));
-    return y;
-}
 
 // should these functions be moved to KromeIniLine?
 bool Load_Float(KromeIniLine* pIniLine, float* pFloat, char* name) {
@@ -45,8 +36,6 @@ void DataVal::Load(void) {
     KromeIni dataIni;
     bool bFieldFound;
 	
-	// inline here?
-	// void DataVal::Init(void)?
     nearPlane = 100.0f;
     enemyChaseSpeed = 5.0f;
     enemyPatrolSpeed = 2.0f;
