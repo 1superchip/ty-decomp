@@ -1,4 +1,7 @@
 
+struct DirectoryEntry {
+	char name[0x100];
+};
 
 struct RkvFileEntry {
 	char name[0x20];
@@ -25,13 +28,15 @@ struct RkvTOC {
     int unk3C;
     int rkvFd;
     int nmbrOfEntries;
-    int unk48; // directory entry count
+    int nmbrOfDirectories; // directory entry count
     RkvFileEntry* pFileEntries;
-    int unk50; // directory entry pointer
+    DirectoryEntry* pDirectoryEntries; // directory entry pointer
     int unk54;
     bool unk58;
 	
 	void Init(char*);
+	RkvFileEntry* GetEntry(char*);
+	int GetAsyncHandle(void);
 };
 
 void FileSys_InitModule(void);

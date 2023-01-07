@@ -25,18 +25,6 @@ static s16 fileOrderId;
 template <typename T> 
 void ByteReverse(T& data);
 
-// Star Wars GetEntry__6RkvTOCFPCc
-RkvFileEntry* RkvTOC_GetFileEntry(RkvTOC* pRkv, char* pFileName) {
-    RkvFileEntry* pEntry = NULL;
-    if (pRkv->rkvFd >= 0) {
-        pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFileName, (void *)pRkv->pFileEntries, pRkv->nmbrOfEntries, 0x40, EntryCompare);
-        if (pEntry != NULL && pEntry->offset < 0) {
-            pEntry = NULL;
-        }
-    }
-    return pEntry;
-}
-
 void FileSys_InitModule(void) {
     data.Init(File_FileServerFilename("Data_GC.rkv"));
     patch.Init(File_FileServerFilename("Patch_GC.rkv"));
@@ -76,15 +64,15 @@ void RkvTOC::Init(char *pName) {
         File_Seek(rkvFd, -0x20, 2);
         File_Read(rkvFd, pBuf, 0x20, 0x20);
         nmbrOfEntries = *(int *)((int)pBuf + 0x18);
-        unk48 = *(int *)((int)pBuf + 0x1C);
+        nmbrOfDirectories = *(int *)((int)pBuf + 0x1C);
         ByteReverse<int>(nmbrOfEntries);
-        ByteReverse<int>(unk48);
+        ByteReverse<int>(nmbrOfDirectories);
         Heap_MemFree(pBuf);
-		int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + unk48 * 0x100;
+		int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + nmbrOfDirectories * sizeof(DirectoryEntry);
         File_Seek(rkvFd, fileLength - (fileSize + 8), 0);
         pFileEntries = (RkvFileEntry *)Heap_MemAlloc(fileSize);
 
-        unk50 = (int)pFileEntries + nmbrOfEntries * sizeof(RkvFileEntry);
+        pDirectoryEntries = (DirectoryEntry*)((int)pFileEntries + nmbrOfEntries * sizeof(RkvFileEntry));
         File_Read(rkvFd, (void *)pFileEntries, fileSize, fileSize);
 
         for (int entryIndex = 0; entryIndex < nmbrOfEntries; entryIndex++) {
@@ -98,14 +86,32 @@ void RkvTOC::Init(char *pName) {
             pFileEntries[entryIndex].unk3C = 0;
             pFileEntries[entryIndex].unk3E = 0;
         }
-	
     } else {
         rkvFd = -1;
         nmbrOfEntries = 0;
-        unk48 = 0;
+        nmbrOfDirectories = 0;
         pFileEntries = NULL;
-        unk50 = 0;
+        pDirectoryEntries = NULL;
     }
+}
+
+RkvFileEntry* RkvTOC::GetEntry(char* pFileName) {
+    RkvFileEntry* pEntry = NULL;
+    if (rkvFd >= 0) {
+        pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFileName, (void *)pFileEntries, nmbrOfEntries, sizeof(RkvFileEntry), EntryCompare);
+        if (pEntry != NULL && pEntry->offset < 0) {
+            pEntry = NULL;
+        }
+    }
+    return pEntry;
+}
+
+int RkvTOC::GetAsyncHandle(void) {
+	if (unk58 == false) {
+		unk54 = File_Open(name, 1);
+	}
+	unk58 = false;
+	return unk54;
 }
 
 void* FileSys_SetLoadInterceptHandler(void* loadInterceptFunc(char*, int*, void*, int*)) {
@@ -120,9 +126,9 @@ bool FileSys_Exists(char *pFilename, int *pOutLen) {
             return true;
         }
     }
-    RkvFileEntry* pEntry = RkvTOC_GetFileEntry(&patch, pFilename);
+    RkvFileEntry* pEntry = patch.GetEntry(pFilename);
     if (pEntry == NULL) {
-        pEntry = RkvTOC_GetFileEntry(&data, pFilename);
+        pEntry = data.GetEntry(pFilename);
     }
     if (pEntry != NULL && pOutLen != NULL) {
         *pOutLen = pEntry->length;
@@ -163,8 +169,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
             default:
                 break;
             }
-            RkvFileEntry *pFoundEntry = RkvTOC_GetFileEntry(toc, entryLanguage);
-
+            RkvFileEntry *pFoundEntry = toc->GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
                 pFoundEntry->unk3C = fileOrderId++;
@@ -197,8 +202,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
             default:
                 break;
             }
-            RkvFileEntry *pFoundEntry = RkvTOC_GetFileEntry(toc, entryLanguage);
-
+            RkvFileEntry *pFoundEntry = toc->GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
                 pFoundEntry->unk3C = fileOrderId++;
@@ -211,11 +215,11 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
 
 void *FileSys_Load(char *pFilename, int *pOutLen, void *pMemoryAllocated, int spaceAllocated) {
     int foundFd = -1;
-    RkvFileEntry *pFoundEntry = RkvTOC_GetFileEntry(&patch, pFilename);
+    RkvFileEntry *pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry) {
         foundFd = patch.rkvFd;
     } else {
-        pFoundEntry = RkvTOC_GetFileEntry(&data, pFilename);
+        pFoundEntry = data.GetEntry(pFilename);
         if (pFoundEntry) {
             foundFd = data.rkvFd;
         }
@@ -343,27 +347,19 @@ void FileSys_OutputFileOrder(void) {
 
 int FileSys_Open(char *pFilename, int *pOutLen, bool arg2) {
     int foundFd = -1;
-    RkvFileEntry* pFoundEntry = RkvTOC_GetFileEntry(&patch, pFilename);
+    RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry != NULL) {
-        if (arg2 & 0xff) {
-            if (patch.unk58 == false) {
-                patch.unk54 = File_Open(patch.name, 1);
-            }
-            patch.unk58 = false;
-            foundFd = patch.unk54;
+        if (arg2) {
+			foundFd = patch.GetAsyncHandle();
         } else {
             foundFd = File_Open(patch.name, 0);
         }
     } else {
-        pFoundEntry = RkvTOC_GetFileEntry(&data, pFilename);
+        pFoundEntry = data.GetEntry(pFilename);
         if (pFoundEntry != NULL) {
             FileSys_SetOrder(pFoundEntry);
-            if (arg2 & 0xff) {
-                if (data.unk58 == false) {
-                    data.unk54 = File_Open(data.name, 1);
-                }
-                data.unk58 = false;
-                foundFd = data.unk54;
+            if (arg2) {
+				foundFd = data.GetAsyncHandle();
             } else {
                 foundFd = File_Open(data.name, 0);
             }
@@ -395,11 +391,11 @@ void FileSys_Close(int fd) {
 
 int FileSys_GetOffset(char* pFilename) {
     int offset;
-    RkvFileEntry* pFoundEntry = RkvTOC_GetFileEntry(&patch, pFilename);
+    RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry != NULL) {
         pFoundEntry = NULL;
     } else {
-        pFoundEntry = RkvTOC_GetFileEntry(&data, pFilename);
+        pFoundEntry = data.GetEntry(pFilename);
     }
     if (pFoundEntry != NULL) {
         return pFoundEntry->offset;
