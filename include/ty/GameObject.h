@@ -180,7 +180,8 @@ bool LoadLevel_LoadString(KromeIniLine*, char*, char*, int, int);
 enum CommonGameObjFlags {
     GameObjFlags_Active = 1,
     GameObjFlags_Enabled = 2,
-    GameObjFlags_Visible = 4
+    GameObjFlags_Visible = 4,
+	GameObjFlags_All = 7
 };
 
 struct CommonGameObjFlagsComponent {

@@ -33,12 +33,12 @@ char* Str_CopyString(char* string, int len) {
     char* bufString = &buffer[bufferIndex];
     int idx = 0;
     
-    while(idx < len && string[idx] != 0) {
+    while(idx < len && string[idx] != '\0') {
         bufString[idx] = string[idx];
         idx++;
     }
 
-    bufString[idx] = 0;
+    bufString[idx] = '\0';
     bufferIndex += (idx + 0x10) & 0xFFFFFFF0;
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
@@ -48,11 +48,11 @@ char* Str_CopyString(char* string, int len) {
 }
 
 char* Str_FindChar(char* str, int val) {
-    while(*str != 0) {
+    while(*str != '\0') {
         if (*str == val) {
             return str;
         }
         str++;
     }
-    return 0;
+    return NULL;
 }

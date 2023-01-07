@@ -73,8 +73,8 @@ int File_Close(int fd) {
     return -1;
 }
 
-int File_Read(int fd, void* arg1, int arg2, int arg3) {
-    int alignedSize = (arg2 + 0x1f) & ~0x1f;
+int File_Read(int fd, void* arg1, int size, int arg3) {
+    int alignedSize = (size + 0x1f) & ~0x1f; // align size
     FileEntry* entry = &gcFiles[fd];
     entry->unk44 = arg1;
     if ((alignedSize + 0x40 > arg3) || ((int)arg1 & 0x1f) || (arg3 & 0x1f)) {
@@ -141,22 +141,43 @@ int File_Length(char* filename) {
 
     if (fd >= 0) {
         length = gcFiles[fd].unk34;
-        if (gcFiles[fd].unk48 != -1) {
-            DVDClose((void*)&gcFiles[fd]);
-            gcFiles[fd].unk48 = -1;
-            gcFiles[fd].unk50 = 0;
-            gcFiles[fd].callback = 0;
-        }
+		File_Close(fd);
     }
     
     return length;
 }
 
-
 char* File_FileServerFilename(char* pFilename) {
 	return pFilename;
 }
 
+int File_IsBusy(int fd) {
+    FileEntry* entry = &gcFiles[fd];
+    if ((entry->unk48 == -1) || (entry->callback == NULL) || (entry->unk50 < 3)) {
+        return false;
+    } else if ((entry->unk50 == 3) || (DVDGetCommandBlockStatus((DVDFileInfo*)entry) != 0)) {
+        return true;
+    } else {
+        Heap_Check("File.cpp", 321);
+        if (entry->unk40 != NULL) {
+            memmove(entry->unk40, entry->unk44, entry->unk4C);
+            DCStoreRange((uint*)entry->unk40, entry->unk4C);
+        } else {
+            DCStoreRange((uint*)entry->unk44, entry->unk4C);
+        }
+        Heap_Check("File.cpp", 331);
+        if (entry->unk54 > 0) {
+            Heap_MemFree(entry->unk44);
+            entry->unk44 = NULL;
+            entry->unk54 = NULL;
+        }
+        entry->unk50 = 2;
+        Heap_Check("File.cpp", 339);
+    }
+    return false;
+}
+
+// might return a bool?
 int File_Sync(int fd, int arg1) {
     if (gcFiles[fd].unk48 == -1 || gcFiles[fd].callback == NULL) {
         return 0;
@@ -165,29 +186,7 @@ int File_Sync(int fd, int arg1) {
     while (DVDGetCommandBlockStatus((DVDFileInfo*)&gcFiles[fd])) {
         FileEntry* entry = &gcFiles[fd];
         if (((OSGetTick() - startTick) / ((BUS_SPEED >> 2) / 1000)) > arg1) {
-            if ((entry->unk48 == -1 || entry->callback == 0) || (3 > entry->unk50)) {
-                return 0;
-            } else {
-                if (entry->unk50 == 3 || DVDGetCommandBlockStatus((DVDFileInfo*)entry) != 0) {
-                    return 1;
-                }
-                Heap_Check("File.cpp", 321);
-                if (entry->unk40 != 0) {
-                    memmove(entry->unk40, entry->unk44, entry->unk4C);
-                    DCStoreRange((uint*)entry->unk40, entry->unk4C);
-                } else {
-                    DCStoreRange((uint*)entry->unk44, entry->unk4C);
-                }
-                Heap_Check("File.cpp", 331);
-                if (0 < entry->unk54) {
-                    Heap_MemFree(entry->unk44);
-                    entry->unk44 = 0;
-                    entry->unk54 = 0;
-                }
-                entry->unk50 = 2;
-                Heap_Check("File.cpp", 339);
-                return 0;
-            }
+            return File_IsBusy(fd);
         }
         OSYieldThread();
     }
@@ -195,39 +194,10 @@ int File_Sync(int fd, int arg1) {
 }
 
 bool File_IsAnyBusy(void) {
-    int var_r0;
-    int fd = 0;
-
-    while (fd < MAX_FILES) {
-        FileEntry* entry = &gcFiles[fd];
-        if (entry->unk48 != -1) {
-            if ((entry->unk48 == -1) || (entry->callback == 0) || (entry->unk50 < 3)) {
-                var_r0 = 0;
-            } else if ((entry->unk50 == 3) || (DVDGetCommandBlockStatus((DVDFileInfo*)entry) != 0)) {
-                var_r0 = 1;
-            } else {
-                Heap_Check("File.cpp", 321);
-                if (entry->unk40 != NULL) {
-                    memmove(entry->unk40, entry->unk44, entry->unk4C);
-                    DCStoreRange((uint*)entry->unk40, entry->unk4C);
-                } else {
-                    DCStoreRange((uint*)entry->unk44, entry->unk4C);
-                }
-                Heap_Check("File.cpp", 331);
-                if (entry->unk54 > 0) {
-                    Heap_MemFree(entry->unk44);
-                    entry->unk44 = NULL;
-                    entry->unk54 = NULL;
-                }
-                entry->unk50 = 2;
-                Heap_Check("File.cpp", 339);
-                var_r0 = 0;
-            }
-            if (var_r0 != 0) {
-                return true;
-            }
+    for (int fd = 0; fd < MAX_FILES; fd++) {
+        if (gcFiles[fd].unk48 != -1 && File_IsBusy(fd)) {
+            return true;
         }
-        fd++;
     }
     return false;
 }
