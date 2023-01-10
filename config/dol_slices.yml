@@ -3423,10 +3423,10 @@ Dolphin/__ppc_eabi_init.s:
 #   .sbss: [0x803fb1f8, 0x803fb200]
 #   .sdata2: [0x804021f0, 0x80402218]
 
-#Camera.cpp:
-#   .text: [0x8020b17c, 0x8020b2b4]
-#   .bss: [0x802dbd50, 0x802dbe00]
-#   .sdata2: [0x80402218, 0x80402228]
+common/Source/Camera.cpp:
+   .text: [0x8020b17c, 0x8020b2b4]
+   .bss: [0x802dbd50, 0x802dbe00]
+   .sdata2: [0x80402218, 0x80402228]
 
 #Collision.cpp:
 #   .text: [0x8020b2b4, 0x80211380]
