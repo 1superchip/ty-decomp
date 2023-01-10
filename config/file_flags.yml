@@ -9,9 +9,6 @@ ty/source/DataVal.cpp:
 ty/source/GameObject.cpp:
     .flags: "-pool off"
 
-#common/Source/Translation.cpp:
-#    .flags: "-pool off"
-
 ty/source/RangeCheck.cpp:
     .flags: "-pool off"
 

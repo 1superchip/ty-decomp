@@ -90,6 +90,12 @@ inline void* operator new(size_t size, void* mem) {
     return (void*)mem;
 }
 
+// flags for ModuleInfoBaseObject to define module function overrides
+// Figure out better names for these
+#define Module_UpdateOverride   1
+#define Module_DrawOverride     2
+#define Module_AllocateOverride 8
+
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
 	
@@ -107,13 +113,13 @@ struct ModuleInfo : ModuleInfoBase {
         pData->pDeallocate = GameObject::Deallocate;
         pData->instanceSize = sizeof(T);
         if (pData->pUpdateModule != GameObject::UpdateModule) {
-            pData->flags |= 1;
+            pData->flags |= Module_UpdateOverride;
         }
         if (pData->pDrawModule != GameObject::DrawModule) {
-            pData->flags |= 2;
+            pData->flags |= Module_DrawOverride;
         }
         if (pData->pAllocate != GameObject::Allocate) {
-            pData->flags |= 8;
+            pData->flags |= Module_AllocateOverride;
         }
         AddToModuleList(this);
     }
@@ -137,7 +143,6 @@ template <typename T>
 T descr_cast(MKPropDescriptor* pDesc) {
     return static_cast<T>(pDesc);
 }
-
 
 template <typename T>
 void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {

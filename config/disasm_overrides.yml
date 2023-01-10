@@ -3,3 +3,6 @@ forced_types:
   0x801fc460: FUNCTION # TRKInterruptHandlerEnableInterrupts
 
 trim_ctors: true
+
+symbol_aligns:
+  0x802eaa60: 32 # align pBuffer in demoinit.cpp to 32 bytes

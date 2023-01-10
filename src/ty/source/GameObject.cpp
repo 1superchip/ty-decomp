@@ -1,6 +1,7 @@
 #include "types.h"
 #include "ty/GameObject.h"
 #include "ty/MessageMap.h"
+#include "ty/props/WaterVolume.h"
 
 extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
@@ -72,8 +73,6 @@ void GameObject::Draw(void) {
 void GameObject::Reset(void) {
 	return;
 }
-
-bool WaterVolume_IsWithin(Vector*, float*);
 
 void GameObject::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
@@ -166,7 +165,8 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
     flags = _flags;
     searchMask = param_4;
     pModule = pMod;
-    if (pMod->pData->flags & 8) {
+    if (pMod->pData->flags & Module_AllocateOverride) {
+		// if the module has a custom Allocation function, set the flags in the object descriptor
         flags |= 0x100000;
     }
     flags |= 0xC;
@@ -218,6 +218,7 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
 
 GameObject* GameObjDesc::CreateObject(void) {
     if (flags & 0x100000) {
+		// if the descriptor's module has a custom allocation function use it
         return (GameObject*)ConstructObject(pModule->pData->pAllocate());
     }
     void* mem = unk7C;

@@ -1,5 +1,6 @@
-#include "ty/Kinematics.h"
 #include "types.h"
+#include "ty/Kinematics.h"
+#include "common/StdMath.h"
 
 // check inlines
 
@@ -77,7 +78,7 @@ float Kin_GetDiscreteInitialVelocity(float* arg0, float* arg1, float* arg2, floa
     if (arg2 == NULL) {
         temp_f6 = *arg3;
         temp_f2 = *arg1;
-        var_f4 = (temp_f6 * temp_f6) + (4.0f * (((temp_f2 * temp_f6) + (temp_f2 * temp_f2)) - (2.0f * *arg0 * temp_f6)));
+        var_f4 = Sqr<float>(temp_f6) + (4.0f * (((temp_f2 * temp_f6) + Sqr<float>(temp_f2)) - (2.0f * *arg0 * temp_f6)));
         if (var_f4 > 0.0f) {
 			var_f4 = kin_sqrtf(var_f4);
         }

@@ -3417,7 +3417,7 @@ Dolphin/__ppc_eabi_init.s:
 #THPAudio.c:
 #   .text: [0x80208ea4, 0x802093d4]
 
-#Animation.cpp:
+#common/Source/Animation.cpp:
 #   .text: [0x802093d4, 0x8020b17c]
 #   .sdata: [0x803f9828, 0x803f9838]
 #   .sbss: [0x803fb1f8, 0x803fb200]
@@ -3551,12 +3551,12 @@ common/Source/Str.cpp:
 common/Source/Timer.cpp:
    .text: [0x80223efc, 0x802240ec]
 
-#Translation.cpp:
-#   .text: [0x802240ec, 0x802247a8]
-#   .data: [0x802757f8, 0x802759c8]
-#   .bss: [0x802e8a00, 0x802eaa60]
-#   .sdata: [0x803f9950, 0x803f99d0]
-#   .sbss: [0x803fb340, 0x803fb350]
+common/Source/Translation.cpp:
+   .text: [0x802240ec, 0x802247a8]
+   .data: [0x802757f8, 0x802759c8]
+   .bss: [0x802e8a00, 0x802eaa60]
+   .sdata: [0x803f9950, 0x803f99d0]
+   .sbss: [0x803fb340, 0x803fb350]
 
 common/Source/Utils.cpp:
    .text: [0x802247a8, 0x802249c0]
