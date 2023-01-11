@@ -625,7 +625,7 @@ Material* Material::Find(char* pName) {
 #pragma pool_data off
 void Material::InitModule(void) {
     if (gMKDefaults.materialCount == 0) {
-        materials.pMem = (Material*)&gEmptyPtrListDL[1];
+        materials.pMem = (Material**)&gEmptyPtrListDL[1];
     } else {
         materials.Init(gMKDefaults.materialCount, sizeof(Material));
     }
@@ -689,7 +689,7 @@ void Material::SetTextureAlias(Texture* pTexAlias) {
 }
 
 Material* Material::GetMaterialList(void) {
-	return materials.pMem;
+	return (Material*)materials.pMem;
 }
 
 Material* Material::CreateMpegTarget(char* pName, void* pData, int arg3, int arg4) {

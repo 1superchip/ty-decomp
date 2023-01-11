@@ -6,6 +6,10 @@
 
 extern int gEmptyPtrListDL[2]; // Utils.cpp
 
+
+// I have no idea if this is closer than before
+// This does seem closer because the code doesn't need as many casts
+
 template <typename T>
 inline void Swap(T& p, T& p1) {
     T tmp = p;
@@ -15,67 +19,66 @@ inline void Swap(T& p, T& p1) {
 
 template <typename T>
 struct PtrListDL {
-	T *pMem;
+    T **pMem;
 	void Init(int, int);
 	void Deinit(void);
 	void Destroy(T** p);
 	void Destroy(T* p);
     T** GetMem(void) {
-        return (T**)pMem;
+        return pMem;
     }
 	void* GetEnd(void) {
-        void* ptr = pMem;
-        while ((int*)(*(int*)ptr) != 0) {
-			((int*)ptr)++;
+        T** ptr = pMem;
+        while (*ptr != 0) {
+			ptr++;
         }
-        return ptr;
+        return (void*)ptr;
     }
 	inline int GetSize(void) {
         return ((int)GetEnd() - (int)pMem) / 4;
     }
 	inline bool IsFull(void) {
-        return (int*)*((int*)pMem - 1) == 0;
+		return pMem[-1] == NULL;
     }
 	inline T* GetNextEntry(void) {
-        return *--(T**)pMem;
+        return *--pMem;
     }
 };
 
+// defining this in the struct with "-inline auto" does inline this function but defining it here doesn't auto inline
+// need the inline def here
 template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
     // count * size = structure array size
     // count * 4 = pointer array size
-    pMem = (T*)Heap_MemAlloc(count * size + (count + 2) * 4);
-    T* memory = pMem;
-    int* arrayEnd = (int*)((int)memory + count * size); // go to array memory end
-    *(int*)(pMem = (T*)arrayEnd) = 0; // set mem pointer to end of array
-    int i = 0;
-    while(i < count) {
-        int* pNext = (int*)pMem + 1;
-        pMem = (T*)pNext;
-        *pNext = (int)memory;
+    pMem = (T**)Heap_MemAlloc(count * size + (count + 2) * sizeof(T*));
+    T* memory = (T*)pMem;
+	/*pMem = (T**)((int)pMem + count * size);
+	*pMem = NULL;*/
+    *(pMem = (T**)((int)pMem + count * size)) = 0; // set mem pointer to end of array
+    for (int i = 0; i < count; i++) {
+        *++pMem = memory;
         memory = ((T*)memory + 1);
-        i++;
     }
-    *(++(int*)pMem) = NULL;
+	*++pMem = NULL;
 }
 
 template <typename T>
 inline void PtrListDL<T>::Deinit(void) {
-    T** ptrs = (T**)pMem;
-    T* memory = pMem;
+    T** ptrs = pMem;
+    T* memory = (T*)pMem;
     T* temp = memory;
-    while ((int*)*--(int*)temp != NULL) {
+    while (*--(int**)temp != NULL) {
         if (*(T**)temp < memory) {
             memory = *(T**)temp;
         }
     }
     if (temp != (T*)&gEmptyPtrListDL[0]) {
-        while(*(T**)ptrs != NULL) {
-            if (*(T**)ptrs < (T*)memory) {
-                memory = *(T**)ptrs;
+        while(*ptrs != NULL) {
+            if (*ptrs < memory) {
+                memory = *ptrs;
             }
-            ((T**)ptrs)++;
+            ptrs++;
         }
         Heap_MemFree(memory);
     }
@@ -84,12 +87,12 @@ inline void PtrListDL<T>::Deinit(void) {
 
 template <typename T>
 inline void PtrListDL<T>::Destroy(T** p) {
-    Swap<T*>(*((T**)pMem)++, *p);
+    Swap<T*>(*pMem++, *p);
 }
 
 template <typename T>
 inline void PtrListDL<T>::Destroy(T* p) {
-    T** memPtr = (T**)pMem;
+    T** memPtr = pMem;
     while (*memPtr != NULL) {
         if (*memPtr == p) {
             Destroy(memPtr);

@@ -33,8 +33,7 @@ void Vector::ClampMagnitude(Vector* pVector, float maxMag) {
     float vecMagSq = pVector->MagSquared();
     if (vecMagSq > maxMag * maxMag) {
         float clampMag = vecMagSq;
-        clampMag = (clampMag > 0.0f) ? kin_sqrtf(clampMag) : clampMag;
-        maxMag /= clampMag;
+        maxMag /= (clampMag > 0.0f) ? kin_sqrtf(clampMag) : clampMag;
         x = maxMag * pVector->x;
         y = maxMag * pVector->y;
         z = maxMag * pVector->z;
