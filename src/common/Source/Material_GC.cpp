@@ -624,11 +624,7 @@ Material* Material::Find(char* pName) {
 // Initialises material list and initiates texobjs from this file
 #pragma pool_data off
 void Material::InitModule(void) {
-    if (gMKDefaults.materialCount == 0) {
-        materials.pMem = (Material**)&gEmptyPtrListDL[1];
-    } else {
-        materials.Init(gMKDefaults.materialCount, sizeof(Material));
-    }
+	materials.Init(gMKDefaults.materialCount, sizeof(Material));
     if (FileSys_Exists("global.mad", NULL) != false) {
         materialIni.Init("global.mad");
     } else {

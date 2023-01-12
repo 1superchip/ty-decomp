@@ -49,13 +49,17 @@ struct PtrListDL {
 // need the inline def here
 template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
+	if (count == 0) {
+        pMem = (T**)&gEmptyPtrListDL[1];
+        return;
+    }
     // count * size = structure array size
     // count * 4 = pointer array size
     pMem = (T**)Heap_MemAlloc(count * size + (count + 2) * sizeof(T*));
     T* memory = (T*)pMem;
 	/*pMem = (T**)((int)pMem + count * size);
 	*pMem = NULL;*/
-    *(pMem = (T**)((int)pMem + count * size)) = 0; // set mem pointer to end of array
+    *(pMem = (T**)((int)pMem + count * size)) = NULL; // set mem pointer to end of array
     for (int i = 0; i < count; i++) {
         *++pMem = memory;
         memory = ((T*)memory + 1);
