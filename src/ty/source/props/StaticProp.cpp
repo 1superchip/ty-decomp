@@ -119,8 +119,8 @@ void StaticProp_LoadResources(KromeIni* pIni) {
     LoadDescriptors<StaticFXPropDesc>(pIni, "StaticFXProps", &defaultFXDesc);
 }
 
-void StaticPropDescriptor::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int arg4, int arg5) {
-    GameObjDesc::Init(pMod, pMdlName, pDescrName, arg4, arg5);
+void StaticPropDescriptor::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
+    GameObjDesc::Init(pMod, pMdlName, pDescrName, _searchMask, _flags);
     strcpy(subObjectName, "C_Collide");
     bDynamic = false; // does not have dynamic collision by default
     bUseGroundColor = true;

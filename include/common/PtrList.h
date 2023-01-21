@@ -31,8 +31,7 @@ inline void PtrList<T>::Init(int count) {
         for (i; i < count; i++) {
             *(++pPointers) = (T*)0xdeadbeef;
         }
-        pPointers++;
-        *pPointers = NULL;
+        *++pPointers = NULL;
     }
 }
 

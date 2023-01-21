@@ -9,13 +9,16 @@
 #define GOMSG_Last 0x10
 #define In_WaterVolume 0x40000000
 
+// Search Mask Flags
+#define GOID_Platform 0x40
+
 struct ModuleInfoBaseObject;
 
 struct ModuleInfoBase {
     ModuleInfoBase() {
 		pData = NULL;
     }
-    virtual void Init(ModuleInfoBase*) = 0;
+    virtual void Init(void) = 0;
     virtual void* ConstructObject(void*) = 0;
 	void Reset(void);
 	static void AddToModuleList(ModuleInfoBase*);
@@ -99,7 +102,7 @@ inline void* operator new(size_t size, void* mem) {
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
 	
-	virtual void Init(ModuleInfoBase*) {
+	virtual void Init(void) {
         if (pData == NULL) {
             pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
         }

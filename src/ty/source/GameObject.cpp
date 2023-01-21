@@ -159,11 +159,11 @@ int GameObject::GetMessageIdFromString(char* string) {
 
 void Tools_StripExtension(char*, char const*);
 
-void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int param_4, int _flags) {
-    pMod->Init(pMod);
+void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
+    pMod->Init();
     unk80 = NULL;
     flags = _flags;
-    searchMask = param_4;
+    searchMask = _searchMask;
     pModule = pMod;
     if (pMod->pData->flags & Module_AllocateOverride) {
 		// if the module has a custom Allocation function, set the flags in the object descriptor
