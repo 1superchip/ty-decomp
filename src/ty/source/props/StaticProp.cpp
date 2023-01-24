@@ -170,14 +170,10 @@ void StaticProp::Deinit(void) {
 }
 
 bool StaticProp::LoadLine(KromeIniLine* pLine) {
-    bool ret = false;
-    if (GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
+    return GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
         LoadLevel_LoadVector(pLine, "rot", &loadInfo[0]) || 
         LoadLevel_LoadVector(pLine, "scale", &loadInfo[1]) || 
-        LoadLevel_LoadBool(pLine, "collide", &collide)) {
-        ret = true;
-        }
-    return ret;
+        LoadLevel_LoadBool(pLine, "collide", &collide);
 }
 
 void StaticProp::LoadDone(void) {

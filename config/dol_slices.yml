@@ -1268,13 +1268,13 @@
 #   .sbss: [0x803fa388, 0x803fa390]
 #   .sdata2: [0x803fe980, 0x803fe9b0]
 
-#ty/source/props/Collapsible.cpp:
-#   .text: [0x800e6430, 0x800e6e6c]
-#   .ctors: [0x8023c8f8, 0x8023c8fc]
-#   .data: [0x80257718, 0x802577f8]
-#   .sdata: [0x803f6880, 0x803f68c0]
-#   .sbss: [0x803fa390, 0x803fa398]
-#   .sdata2: [0x803fe9b0, 0x803fea00]
+ty/source/props/Collapsible.cpp:
+   .text: [0x800e6430, 0x800e6e6c]
+   .ctors: [0x8023c8f8, 0x8023c8fc]
+   .data: [0x80257718, 0x802577f8]
+   .sdata: [0x803f6880, 0x803f68c0]
+   .sbss: [0x803fa390, 0x803fa398]
+   .sdata2: [0x803fe9b0, 0x803fea00]
 
 #ty/source/props/CrikeyProps.cpp:
 #   .text: [0x800e6e6c, 0x800e8604]
