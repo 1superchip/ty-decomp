@@ -1,4 +1,7 @@
 //#include "common/MKSceneManager.h"
+#ifndef GAMEOBJECTMANAGER_H
+#define GAMEOBJECTMANAGER_H
+
 #include "ty/GameObject.h"
 
 struct GameObjectManager {
@@ -27,3 +30,5 @@ struct GameObjectManager {
 	BeginStruct Begin(void);
 	int CountEntities(KromeIni*, KromeIniLine*);
 };
+
+#endif // GAMEOBJECTMANAGER_H

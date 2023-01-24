@@ -1,3 +1,6 @@
+#ifndef STATICPROP_H
+#define STATICPROP_H
+
 #include "ty/GameObject.h"
 #include "ty/RangeCheck.h"
 #include "common/Vector.h"
@@ -168,3 +171,6 @@ void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {
         objectManager.AddDescriptor(p);
     }
 }*/
+
+
+#endif // STATICPROP_H

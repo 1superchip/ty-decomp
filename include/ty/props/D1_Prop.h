@@ -1,3 +1,6 @@
+#ifndef D1PROP_H
+#define D1PROP_H
+
 #include "ty/GameObject.h"
 #include "common/KromeIni.h"
 #include "ty/Messages.h"
@@ -20,3 +23,5 @@ struct D1Prop : GameObject {
 
 void D1_Prop_LoadResource(KromeIni*);
 void D1PropEndOfCredits(void);
+
+#endif // D1PROP_H

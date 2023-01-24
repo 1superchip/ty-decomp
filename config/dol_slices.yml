@@ -1057,7 +1057,7 @@
 #   .sdata: [0x803f6190, 0x803f61b0]
 #   .sdata2: [0x803fe3d0, 0x803fe420]
 
-#MiniGame_A2.cpp:
+#ty/source/minigames/MiniGame_A2.cpp:
 #   .text: [0x800d23b8, 0x800d3a68]
 #   .rodata: [0x8023da90, 0x8023dab0]
 #   .data: [0x802551c0, 0x80255380]
@@ -1066,7 +1066,7 @@
 #   .sbss: [0x803fa280, 0x803fa288]
 #   .sdata2: [0x803fe420, 0x803fe488]
 
-#MiniGame_B1.cpp:
+#ty/source/minigames/MiniGame_B1.cpp:
 #   .text: [0x800d3a68, 0x800d4b0c]
 #   .ctors: [0x8023c8a4, 0x8023c8a8]
 #   .data: [0x80255380, 0x80255458]
@@ -1075,7 +1075,7 @@
 #   .sbss: [0x803fa288, 0x803fa298]
 #   .sdata2: [0x803fe488, 0x803fe4e0]
 
-#MiniGame_B3.cpp:
+#ty/source/minigames/MiniGame_B3.cpp:
 #   .text: [0x800d4b0c, 0x800d6030]
 #   .ctors: [0x8023c8a8, 0x8023c8ac]
 #   .rodata: [0x8023dab0, 0x8023db40]
@@ -1085,7 +1085,7 @@
 #   .sbss: [0x803fa298, 0x803fa2b0]
 #   .sdata2: [0x803fe4e0, 0x803fe548]
 
-#MiniGame_C2.cpp:
+#ty/source/minigames/MiniGame_C2.cpp:
 #   .text: [0x800d6030, 0x800d76b4]
 #   .ctors: [0x8023c8ac, 0x8023c8b0]
 #   .data: [0x802555f0, 0x80255798]
@@ -1094,7 +1094,7 @@
 #   .sbss: [0x803fa2b0, 0x803fa2c0]
 #   .sdata2: [0x803fe548, 0x803fe5b8]
 
-#MiniGame_C3.cpp:
+#ty/source/minigames/MiniGame_C3.cpp:
 #   .text: [0x800d76b4, 0x800d8154]
 #   .rodata: [0x8023db40, 0x8023dbc0]
 #   .data: [0x80255798, 0x802557b0]
@@ -1102,10 +1102,10 @@
 #   .sdata: [0x803f62b8, 0x803f62c8]
 #   .sdata2: [0x803fe5b8, 0x803fe5f8]
 
-#MiniGame_E4.cpp:
+#ty/source/minigames/MiniGame_E4.cpp:
 #   .text: [0x800d8154, 0x800d81cc]
 
-#MiniGameObjective.cpp:
+#ty/source/minigames/MiniGameObjective.cpp:
 #   .text: [0x800d81cc, 0x800d8810]
 #   .ctors: [0x8023c8b0, 0x8023c8b4]
 #   .data: [0x802557b0, 0x80255938]
@@ -1113,7 +1113,7 @@
 #   .sdata: [0x803f62c8, 0x803f6308]
 #   .sbss: [0x803fa2c0, 0x803fa2d0]
 
-#A1_FrillObjective.cpp:
+#ty/source/props/A1_FrillObjective.cpp:
 #   .text: [0x800d8810, 0x800d8fc8]
 #   .ctors: [0x8023c8b4, 0x8023c8b8]
 #   .data: [0x80255938, 0x80255a60]
@@ -1122,7 +1122,7 @@
 #   .sbss: [0x803fa2d0, 0x803fa2d8]
 #   .sdata2: [0x803fe5f8, 0x803fe608]
 
-#AnimatingProp.cpp:
+#ty/source/props/AnimatingProp.cpp:
 #   .text: [0x800d8fc8, 0x800d9ed8]
 #   .ctors: [0x8023c8b8, 0x8023c8bc]
 #   .data: [0x80255a60, 0x80255c30]
@@ -1130,7 +1130,7 @@
 #   .sbss: [0x803fa2d8, 0x803fa2e0]
 #   .sdata2: [0x803fe608, 0x803fe610]
 
-#Aquarang.cpp:
+#ty/source/props/Aquarang.cpp:
 #   .text: [0x800d9ed8, 0x800da3e8]
 #   .ctors: [0x8023c8bc, 0x8023c8c0]
 #   .data: [0x80255c30, 0x80255d30]
@@ -1139,7 +1139,7 @@
 #   .sbss: [0x803fa2e0, 0x803fa2f0]
 #   .sdata2: [0x803fe610, 0x803fe630]
 
-#BeachHut.cpp:
+#ty/source/props/BeachHut.cpp:
 #   .text: [0x800da3e8, 0x800dab6c]
 #   .ctors: [0x8023c8c0, 0x8023c8c4]
 #   .data: [0x80255d30, 0x80255e10]
@@ -1148,7 +1148,7 @@
 #   .sbss: [0x803fa2f0, 0x803fa2f8]
 #   .sdata2: [0x803fe630, 0x803fe678]
 
-#BonusPickup.cpp:
+#ty/source/props/BonusPickup.cpp:
 #   .text: [0x800dab6c, 0x800dd85c]
 #   .ctors: [0x8023c8c4, 0x8023c8c8]
 #   .rodata: [0x8023dbc0, 0x8023dbd0]
@@ -1158,7 +1158,7 @@
 #   .sbss: [0x803fa2f8, 0x803fa310]
 #   .sdata2: [0x803fe678, 0x803fe750]
 
-#Bouncer.cpp:
+#ty/source/props/Bouncer.cpp:
 #   .text: [0x800dd85c, 0x800ddc58]
 #   .ctors: [0x8023c8c8, 0x8023c8cc]
 #   .data: [0x802562c8, 0x802563d8]
@@ -1167,7 +1167,7 @@
 #   .sbss: [0x803fa310, 0x803fa318]
 #   .sdata2: [0x803fe750, 0x803fe760]
 
-#BubbleSpawner.cpp:
+#ty/source/props/BubbleSpawner.cpp:
 #   .text: [0x800ddc58, 0x800de1f0]
 #   .ctors: [0x8023c8cc, 0x8023c8d0]
 #   .data: [0x802563d8, 0x802564c8]
@@ -1185,7 +1185,7 @@
 #   .sbss: [0x803fa320, 0x803fa328]
 #   .sdata2: [0x803fe790, 0x803fe7f0]
 
-#Burnable.cpp:
+#ty/source/props/Burnable.cpp:
 #   .text: [0x800dec40, 0x800dfd80]
 #   .ctors: [0x8023c8d4, 0x8023c8d8]
 #   .data: [0x802565c8, 0x802567d8]
@@ -1194,7 +1194,7 @@
 #   .sbss: [0x803fa328, 0x803fa338]
 #   .sdata2: [0x803fe7f0, 0x803fe830]
 
-#Burner.cpp:
+#ty/source/props/Burner.cpp:
 #   .text: [0x800dfd80, 0x800e06cc]
 #   .ctors: [0x8023c8d8, 0x8023c8dc]
 #   .data: [0x802567d8, 0x80256990]
@@ -1203,7 +1203,7 @@
 #   .sbss: [0x803fa338, 0x803fa348]
 #   .sdata2: [0x803fe830, 0x803fe840]
 
-#BurningTree.cpp:
+#ty/source/props/BurningTree.cpp:
 #   .text: [0x800e06cc, 0x800e11bc]
 #   .ctors: [0x8023c8dc, 0x8023c8e0]
 #   .data: [0x80256990, 0x80256b30]
@@ -1212,7 +1212,7 @@
 #   .sbss: [0x803fa348, 0x803fa350]
 #   .sdata2: [0x803fe840, 0x803fe868]
 
-#BuzzSaw2.cpp:
+#ty/source/props/BuzzSaw2.cpp:
 #   .text: [0x800e11bc, 0x800e21cc]
 #   .ctors: [0x8023c8e0, 0x8023c8e4]
 #   .rodata: [0x8023dbd0, 0x8023dc10]
@@ -1222,7 +1222,7 @@
 #   .sbss: [0x803fa350, 0x803fa360]
 #   .sdata2: [0x803fe868, 0x803fe8a8]
 
-#C1Water.cpp:
+#ty/source/props/C1Water.cpp:
 #   .text: [0x800e21cc, 0x800e24ec]
 #   .ctors: [0x8023c8e4, 0x8023c8e8]
 #   .data: [0x80256c20, 0x80256cf0]
@@ -1230,7 +1230,7 @@
 #   .sdata: [0x803f66e8, 0x803f6728]
 #   .sbss: [0x803fa360, 0x803fa368]
 
-#C3_Chest.cpp:
+#ty/source/props/C3_Chest.cpp:
 #   .text: [0x800e24ec, 0x800e2a88]
 #   .ctors: [0x8023c8e8, 0x8023c8ec]
 #   .data: [0x80256cf0, 0x80256dc0]
@@ -1239,7 +1239,7 @@
 #   .sbss: [0x803fa368, 0x803fa370]
 #   .sdata2: [0x803fe8a8, 0x803fe8b8]
 
-#C3_Ringo.cpp:
+#ty/source/props/C3_Ringo.cpp:
 #   .text: [0x800e2a88, 0x800e51f8]
 #   .ctors: [0x8023c8ec, 0x8023c8f0]
 #   .rodata: [0x8023dc10, 0x8023dc20]
@@ -1249,7 +1249,7 @@
 #   .sbss: [0x803fa370, 0x803fa380]
 #   .sdata2: [0x803fe8b8, 0x803fe940]
 
-#CableCar.cpp:
+#ty/source/props/CableCar.cpp:
 #   .text: [0x800e51f8, 0x800e5b04]
 #   .ctors: [0x8023c8f0, 0x8023c8f4]
 #   .data: [0x80257508, 0x80257618]
@@ -1258,7 +1258,7 @@
 #   .sbss: [0x803fa380, 0x803fa388]
 #   .sdata2: [0x803fe940, 0x803fe980]
 
-#Coconut.cpp:
+#ty/source/props/Coconut.cpp:
 #   .text: [0x800e5b04, 0x800e6430]
 #   .ctors: [0x8023c8f4, 0x8023c8f8]
 #   .rodata: [0x8023dc20, 0x8023dc30]
@@ -1268,7 +1268,7 @@
 #   .sbss: [0x803fa388, 0x803fa390]
 #   .sdata2: [0x803fe980, 0x803fe9b0]
 
-#Collapsible.cpp:
+#ty/source/props/Collapsible.cpp:
 #   .text: [0x800e6430, 0x800e6e6c]
 #   .ctors: [0x8023c8f8, 0x8023c8fc]
 #   .data: [0x80257718, 0x802577f8]
@@ -1276,7 +1276,7 @@
 #   .sbss: [0x803fa390, 0x803fa398]
 #   .sdata2: [0x803fe9b0, 0x803fea00]
 
-#CrikeyProps.cpp:
+#ty/source/props/CrikeyProps.cpp:
 #   .text: [0x800e6e6c, 0x800e8604]
 #   .ctors: [0x8023c8fc, 0x8023c900]
 #   .rodata: [0x8023dc30, 0x8023dc50]
@@ -1295,7 +1295,7 @@ ty/source/props/D1_Prop.cpp:
    .sbss: [0x803fa3a8, 0x803fa3b8]
    .sdata2: [0x803fea98, 0x803feaa0]
 
-#Damageable.cpp:
+#ty/source/props/Damageable.cpp:
 #   .text: [0x800e8ad4, 0x800e9090]
 #   .ctors: [0x8023c904, 0x8023c908]
 #   .data: [0x80257a58, 0x80257b90]
@@ -1312,7 +1312,7 @@ ty/source/props/DDACheckpoint.cpp:
    .sdata: [0x803f69b8, 0x803f69f0]
    .sbss: [0x803fa3c0, 0x803fa3c8]
 
-#E4_Door.cpp:
+#ty/source/props/E4_Door.cpp:
 #   .text: [0x800e936c, 0x800e9b28]
 #   .ctors: [0x8023c90c, 0x8023c910]
 #   .rodata: [0x8023dc50, 0x8023dc70]
@@ -1322,7 +1322,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa3c8, 0x803fa3d0]
 #   .sdata2: [0x803feaa8, 0x803feac8]
 
-#E4_FlameThrower.cpp:
+#ty/source/props/E4_FlameThrower.cpp:
 #   .text: [0x800e9b28, 0x800eb394]
 #   .ctors: [0x8023c910, 0x8023c914]
 #   .rodata: [0x8023dc70, 0x8023dca0]
@@ -1332,7 +1332,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa3d0, 0x803fa3e0]
 #   .sdata2: [0x803feac8, 0x803feb38]
 
-#Elevator.cpp:
+#ty/source/props/Elevator.cpp:
 #   .text: [0x800eb394, 0x800ec920]
 #   .ctors: [0x8023c914, 0x8023c918]
 #   .rodata: [0x8023dca0, 0x8023dd00]
@@ -1342,7 +1342,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa3e0, 0x803fa3f0]
 #   .sdata2: [0x803feb38, 0x803feb80]
 
-#FallGuideProp.cpp:
+#ty/source/props/FallGuideProp.cpp:
 #   .text: [0x800ec920, 0x800ecf70]
 #   .ctors: [0x8023c918, 0x8023c91c]
 #   .data: [0x802580a0, 0x80258178]
@@ -1351,7 +1351,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa3f0, 0x803fa3f8]
 #   .sdata2: [0x803feb80, 0x803feb98]
 
-#FireDrum.cpp:
+#ty/source/props/FireDrum.cpp:
 #   .text: [0x800ecf70, 0x800edde4]
 #   .ctors: [0x8023c91c, 0x8023c920]
 #   .data: [0x80258178, 0x802582a8]
@@ -1369,7 +1369,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa408, 0x803fa410]
 #   .sdata2: [0x803fec00, 0x803fec20]
 
-#Furnace.cpp:
+#ty/source/props/Furnace.cpp:
 #   .text: [0x800ee380, 0x800ef5dc]
 #   .ctors: [0x8023c924, 0x8023c928]
 #   .data: [0x802583c8, 0x80258650]
@@ -1378,7 +1378,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa410, 0x803fa418]
 #   .sdata2: [0x803fec20, 0x803fec78]
 
-#GasJet.cpp:
+#ty/source/props/GasJet.cpp:
 #   .text: [0x800ef5dc, 0x800eff94]
 #   .ctors: [0x8023c928, 0x8023c92c]
 #   .rodata: [0x8023dd00, 0x8023dd10]
@@ -1388,7 +1388,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa418, 0x803fa420]
 #   .sdata2: [0x803fec78, 0x803fecc0]
 
-#gem.cpp:
+#ty/source/props/gem.cpp:
 #   .text: [0x800eff94, 0x800f2dd8]
 #   .ctors: [0x8023c92c, 0x8023c930]
 #   .rodata: [0x8023dd10, 0x8023dd50]
@@ -1398,7 +1398,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa420, 0x803fa448]
 #   .sdata2: [0x803fecc0, 0x803fedb8]
 
-#Generator.cpp:
+#ty/source/props/Generator.cpp:
 #   .text: [0x800f2dd8, 0x800f3408]
 #   .ctors: [0x8023c930, 0x8023c934]
 #   .data: [0x80258b68, 0x80258d10]
@@ -1407,7 +1407,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa448, 0x803fa450]
 #   .sdata2: [0x803fedb8, 0x803fedd0]
 
-#Geyser.cpp:
+#ty/source/props/Geyser.cpp:
 #   .text: [0x800f3408, 0x800f43d4]
 #   .ctors: [0x8023c934, 0x8023c938]
 #   .data: [0x80258d10, 0x80258f88]
@@ -1416,7 +1416,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa450, 0x803fa460]
 #   .sdata2: [0x803fedd0, 0x803fee40]
 
-#IceCoolant.cpp:
+#ty/source/props/IceCoolant.cpp:
 #   .text: [0x800f43d4, 0x800f5770]
 #   .ctors: [0x8023c938, 0x8023c93c]
 #   .data: [0x80258f88, 0x80259360]
@@ -1425,7 +1425,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa460, 0x803fa480]
 #   .sdata2: [0x803fee40, 0x803feeb0]
 
-#IceRamp.cpp:
+#ty/source/props/IceRamp.cpp:
 #   .text: [0x800f5770, 0x800f5d30]
 #   .ctors: [0x8023c93c, 0x8023c940]
 #   .data: [0x80259360, 0x80259440]
@@ -1442,7 +1442,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sdata: [0x803f6ed0, 0x803f6f20]
 #   .sbss: [0x803fa488, 0x803fa490]
 
-#KoalaKid.cpp:
+#ty/source/props/KoalaKid.cpp:
 #   .text: [0x800f6194, 0x800f8508]
 #   .ctors: [0x8023c944, 0x8023c948]
 #   .rodata: [0x8023dd50, 0x8023dd60]
@@ -1452,7 +1452,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa490, 0x803fa4a8]
 #   .sdata2: [0x803feec8, 0x803fef30]
 
-#Lava.cpp:
+#ty/source/props/Lava.cpp:
 #   .text: [0x800f8508, 0x800f8e70]
 #   .ctors: [0x8023c948, 0x8023c94c]
 #   .data: [0x80259c68, 0x80259e68]
@@ -1461,7 +1461,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4a8, 0x803fa4b8]
 #   .sdata2: [0x803fef30, 0x803fefa0]
 
-#LavaBurner.cpp:
+#ty/source/props/LavaBurner.cpp:
 #   .text: [0x800f8e70, 0x800f9f70]
 #   .ctors: [0x8023c94c, 0x8023c950]
 #   .rodata: [0x8023dd60, 0x8023dd80]
@@ -1471,7 +1471,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4b8, 0x803fa4c0]
 #   .sdata2: [0x803fefa0, 0x803feff0]
 
-#LilyPad.cpp:
+#ty/source/props/LilyPad.cpp:
 #   .text: [0x800f9f70, 0x800fa2e0]
 #   .ctors: [0x8023c950, 0x8023c954]
 #   .data: [0x80259f78, 0x8025a048]
@@ -1480,7 +1480,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4c0, 0x803fa4c8]
 #   .sdata2: [0x803feff0, 0x803ff008]
 
-#Log.cpp:
+#ty/source/props/Log.cpp:
 #   .text: [0x800fa2e0, 0x800fb424]
 #   .ctors: [0x8023c954, 0x8023c958]
 #   .rodata: [0x8023dd80, 0x8023dda0]
@@ -1490,7 +1490,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4c8, 0x803fa4d8]
 #   .sdata2: [0x803ff008, 0x803ff050]
 
-#MobilePlatform.cpp:
+#ty/source/props/MobilePlatform.cpp:
 #   .text: [0x800fb424, 0x800fc5e0]
 #   .ctors: [0x8023c958, 0x8023c95c]
 #   .data: [0x8025a260, 0x8025a4a0]
@@ -1499,7 +1499,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4d8, 0x803fa4e0]
 #   .sdata2: [0x803ff050, 0x803ff098]
 
-#MorayEel.cpp:
+#ty/source/props/MorayEel.cpp:
 #   .text: [0x800fc5e0, 0x800fd45c]
 #   .ctors: [0x8023c95c, 0x8023c960]
 #   .data: [0x8025a4a0, 0x8025a638]
@@ -1508,7 +1508,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4e0, 0x803fa4e8]
 #   .sdata2: [0x803ff098, 0x803ff0c8]
 
-#MusicalIcicle.cpp:
+#ty/source/props/MusicalIcicle.cpp:
 #   .text: [0x800fd45c, 0x800ff25c]
 #   .ctors: [0x8023c960, 0x8023c964]
 #   .rodata: [0x8023dda0, 0x8023ddd0]
@@ -1518,7 +1518,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa4e8, 0x803fa500]
 #   .sdata2: [0x803ff0c8, 0x803ff160]
 
-#OpalCollector.cpp:
+#ty/source/props/OpalCollector.cpp:
 #   .text: [0x800ff25c, 0x80100480]
 #   .ctors: [0x8023c964, 0x8023c968]
 #   .data: [0x8025aaf8, 0x8025ada0]
@@ -1527,7 +1527,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa500, 0x803fa510]
 #   .sdata2: [0x803ff160, 0x803ff1d8]
 
-#PickupCounter.cpp:
+#ty/source/props/PickupCounter.cpp:
 #   .text: [0x80100480, 0x80101000]
 #   .ctors: [0x8023c968, 0x8023c96c]
 #   .rodata: [0x8023ddd0, 0x8023ddf8]
@@ -1537,7 +1537,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa510, 0x803fa518]
 #   .sdata2: [0x803ff1d8, 0x803ff1e8]
 
-#PicnicBasket.cpp:
+#ty/source/props/PicnicBasket.cpp:
 #   .text: [0x80101000, 0x80102714]
 #   .ctors: [0x8023c96c, 0x8023c970]
 #   .rodata: [0x8023ddf8, 0x8023de28]
@@ -1556,7 +1556,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa528, 0x803fa530]
 #   .sdata2: [0x803ff270, 0x803ff2b0]
 
-#PipePart.cpp:
+#ty/source/props/PipePart.cpp:
 #   .text: [0x80103220, 0x80103b28]
 #   .ctors: [0x8023c974, 0x8023c978]
 #   .data: [0x8025b210, 0x8025b328]
@@ -1565,7 +1565,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa530, 0x803fa538]
 #   .sdata2: [0x803ff2b0, 0x803ff2c0]
 
-#Platform.cpp:
+#ty/source/props/Platform.cpp:
 #   .text: [0x80103b28, 0x801051b4]
 #   .ctors: [0x8023c978, 0x8023c97c]
 #   .rodata: [0x8023de28, 0x8023de58]
@@ -1574,7 +1574,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa538, 0x803fa548]
 #   .sdata2: [0x803ff2c0, 0x803ff2f0]
 
-#PontoonRope.cpp:
+#ty/source/props/PontoonRope.cpp:
 #   .text: [0x801051b4, 0x801056e4]
 #   .ctors: [0x8023c97c, 0x8023c980]
 #   .data: [0x8025b4b8, 0x8025b5b0]
@@ -1583,7 +1583,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa548, 0x803fa550]
 #   .sdata2: [0x803ff2f0, 0x803ff2f8]
 
-#Projectile.cpp:
+#ty/source/props/Projectile.cpp:
 #   .text: [0x801056e4, 0x8010655c]
 #   .ctors: [0x8023c980, 0x8023c984]
 #   .data: [0x8025b5b0, 0x8025b670]
@@ -1591,7 +1591,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa550, 0x803fa558]
 #   .sdata2: [0x803ff2f8, 0x803ff338]
 
-#Props.cpp:
+#ty/source/props/Props.cpp:
 #   .text: [0x8010655c, 0x80106768]
 
 #RangStone.cpp:
@@ -1602,7 +1602,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sdata: [0x803f7580, 0x803f75c8]
 #   .sbss: [0x803fa558, 0x803fa560]
 
-#Rex.cpp:
+#ty/source/props/Rex.cpp:
 #   .text: [0x80106b70, 0x801083a0]
 #   .ctors: [0x8023c988, 0x8023c98c]
 #   .rodata: [0x8023de58, 0x8023de68]
@@ -1612,7 +1612,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa560, 0x803fa568]
 #   .sdata2: [0x803ff338, 0x803ff3d0]
 
-#Sentinel.cpp:
+#ty/source/props/Sentinel.cpp:
 #   .text: [0x801083a0, 0x80109300]
 #   .ctors: [0x8023c98c, 0x8023c990]
 #   .rodata: [0x8023de68, 0x8023de78]
@@ -1622,7 +1622,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa568, 0x803fa570]
 #   .sdata2: [0x803ff3d0, 0x803ff410]
 
-#ShadowBatProps.cpp:
+#ty/source/props/ShadowBatProps.cpp:
 #   .text: [0x80109300, 0x8010ae68]
 #   .ctors: [0x8023c990, 0x8023c994]
 #   .rodata: [0x8023de78, 0x8023deb8]
@@ -1632,7 +1632,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa570, 0x803fa598]
 #   .sdata2: [0x803ff410, 0x803ff480]
 
-#SharkCage.cpp:
+#ty/source/props/SharkCage.cpp:
 #   .text: [0x8010ae68, 0x8010b518]
 #   .ctors: [0x8023c994, 0x8023c998]
 #   .data: [0x8025c0f0, 0x8025c1d0]
@@ -1641,7 +1641,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa598, 0x803fa5a8]
 #   .sdata2: [0x803ff480, 0x803ff4b0]
 
-#Shatterable.cpp:
+#ty/source/props/Shatterable.cpp:
 #   .text: [0x8010b518, 0x8010cc90]
 #   .ctors: [0x8023c998, 0x8023c99c]
 #   .rodata: [0x8023deb8, 0x8023dec8]
@@ -1651,7 +1651,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa5a8, 0x803fa5c0]
 #   .sdata2: [0x803ff4b0, 0x803ff4f0]
 
-#SnowPile.cpp:
+#ty/source/props/SnowPile.cpp:
 #   .text: [0x8010cc90, 0x8010d5dc]
 #   .ctors: [0x8023c99c, 0x8023c9a0]
 #   .data: [0x8025c5c8, 0x8025c758]
@@ -1678,7 +1678,7 @@ ty/source/props/SoundProp.cpp:
 #   .sbss: [0x803fa5d0, 0x803fa5d8]
 #   .sdata2: [0x803ff540, 0x803ff548]
 
-#SpiderWeb.cpp:
+#ty/source/props/SpiderWeb.cpp:
 #   .text: [0x8010e1ac, 0x8010e874]
 #   .ctors: [0x8023c9a8, 0x8023c9ac]
 #   .data: [0x8025c8f0, 0x8025ca10]
@@ -1687,7 +1687,7 @@ ty/source/props/SoundProp.cpp:
 #   .sbss: [0x803fa5d8, 0x803fa5e0]
 #   .sdata2: [0x803ff548, 0x803ff568]
 
-#SpinningLog.cpp:
+#ty/source/props/SpinningLog.cpp:
 #   .text: [0x8010e874, 0x8010ef64]
 #   .ctors: [0x8023c9ac, 0x8023c9b0]
 #   .rodata: [0x8023dec8, 0x8023ded8]
@@ -1697,7 +1697,7 @@ ty/source/props/SoundProp.cpp:
 #   .sbss: [0x803fa5e0, 0x803fa5f0]
 #   .sdata2: [0x803ff568, 0x803ff5a8]
 
-#Stalactite.cpp:
+#ty/source/props/Stalactite.cpp:
 #   .text: [0x8010ef64, 0x8010f924]
 #   .ctors: [0x8023c9b0, 0x8023c9b4]
 #   .rodata: [0x8023ded8, 0x8023dee8]
@@ -1716,7 +1716,7 @@ ty/source/props/StaticProp.cpp:
    .sbss: [0x803fa5f8, 0x803fa610]
    .sdata2: [0x803ff5f8, 0x803ff638]
 
-#Talisman.cpp:
+#ty/source/props/Talisman.cpp:
 #   .text: [0x80111560, 0x80111c6c]
 #   .ctors: [0x8023c9b8, 0x8023c9bc]
 #   .rodata: [0x8023e008, 0x8023e018]
@@ -1726,7 +1726,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa610, 0x803fa618]
 #   .sdata2: [0x803ff638, 0x803ff668]
 
-#Teleporter.cpp:
+#ty/source/props/Teleporter.cpp:
 #   .text: [0x80111c6c, 0x80112618]
 #   .ctors: [0x8023c9bc, 0x8023c9c0]
 #   .data: [0x8025cff0, 0x8025d148]
@@ -1735,7 +1735,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa618, 0x803fa620]
 #   .sdata2: [0x803ff668, 0x803ff6a8]
 
-#ThinIceProp.cpp:
+#ty/source/props/ThinIceProp.cpp:
 #   .text: [0x80112618, 0x8011351c]
 #   .ctors: [0x8023c9c0, 0x8023c9c4]
 #   .data: [0x8025d148, 0x8025d2e8]
@@ -1752,7 +1752,7 @@ ty/source/props/StaticProp.cpp:
 #   .sdata: [0x803f7b58, 0x803f7ba8]
 #   .sbss: [0x803fa628, 0x803fa630]
 
-#TreasureChest.cpp:
+#ty/source/props/TreasureChest.cpp:
 #   .text: [0x801137f8, 0x801140f0]
 #   .ctors: [0x8023c9c8, 0x8023c9cc]
 #   .data: [0x8025d438, 0x8025d650]
@@ -1761,7 +1761,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa630, 0x803fa638]
 #   .sdata2: [0x803ff6e8, 0x803ff6f8]
 
-#TriggerProp.cpp:
+#ty/source/props/TriggerProp.cpp:
 #   .text: [0x801140f0, 0x80116adc]
 #   .ctors: [0x8023c9cc, 0x8023c9d0]
 #   .rodata: [0x8023e018, 0x8023e028]
@@ -1772,7 +1772,7 @@ ty/source/props/StaticProp.cpp:
 #   .sdata2: [0x803ff6f8, 0x803ff738]
 #   .sbss2: [0x80402760, 0x80402768]
 
-#TumbleWeed.cpp:
+#ty/source/props/TumbleWeed.cpp:
 #   .text: [0x80116adc, 0x80117500]
 #   .ctors: [0x8023c9d0, 0x8023c9d4]
 #   .data: [0x8025da48, 0x8025db30]
@@ -1781,7 +1781,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa678, 0x803fa688]
 #   .sdata2: [0x803ff738, 0x803ff778]
 
-#TurningPlatform.cpp:
+#ty/source/props/TurningPlatform.cpp:
 #   .text: [0x80117500, 0x80117b98]
 #   .ctors: [0x8023c9d4, 0x8023c9d8]
 #   .data: [0x8025db30, 0x8025dc58]
@@ -1790,7 +1790,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa688, 0x803fa690]
 #   .sdata2: [0x803ff778, 0x803ff7a0]
 
-#WarpFlower.cpp:
+#ty/source/props/WarpFlower.cpp:
 #   .text: [0x80117b98, 0x801183fc]
 #   .ctors: [0x8023c9d8, 0x8023c9dc]
 #   .rodata: [0x8023e028, 0x8023e038]
@@ -1800,7 +1800,7 @@ ty/source/props/StaticProp.cpp:
 #   .sbss: [0x803fa690, 0x803fa698]
 #   .sdata2: [0x803ff7a0, 0x803ff7b8]
 
-#WaterPipe.cpp:
+#ty/source/props/WaterPipe.cpp:
 #   .text: [0x801183fc, 0x801191f8]
 #   .ctors: [0x8023c9dc, 0x8023c9e0]
 #   .data: [0x8025de80, 0x8025e1b8]
@@ -1818,7 +1818,7 @@ ty/source/props/WaterVolume.cpp:
    .sbss: [0x803fa6a8, 0x803fa6b0]
    .sdata2: [0x803ff7e8, 0x803ff7f8]
 
-#WaterWheel.cpp:
+#ty/source/props/WaterWheel.cpp:
 #   .text: [0x80119788, 0x80119c0c]
 #   .ctors: [0x8023c9e4, 0x8023c9e8]
 #   .rodata: [0x8023e038, 0x8023e060]
@@ -1836,7 +1836,7 @@ ty/source/props/WeatherProp.cpp:
    .sdata: [0x803f7eb0, 0x803f7ef8]
    .sbss: [0x803fa6b8, 0x803fa6c8]
 
-#WhirlyWind.cpp:
+#ty/source/props/WhirlyWind.cpp:
 #   .text: [0x8011a2e4, 0x8011b1b0]
 #   .ctors: [0x8023c9ec, 0x8023c9f0]
 #   .data: [0x8025e538, 0x8025e658]
@@ -1845,7 +1845,7 @@ ty/source/props/WeatherProp.cpp:
 #   .sbss: [0x803fa6c8, 0x803fa6d0]
 #   .sdata2: [0x803ff800, 0x803ff868]
 
-#YabbyStalactite.cpp:
+#ty/source/props/YabbyStalactite.cpp:
 #   .text: [0x8011b1b0, 0x8011c150]
 #   .ctors: [0x8023c9f0, 0x8023c9f4]
 #   .rodata: [0x8023e060, 0x8023e070]
@@ -1855,7 +1855,7 @@ ty/source/props/WeatherProp.cpp:
 #   .sbss: [0x803fa6d0, 0x803fa6e8]
 #   .sdata2: [0x803ff868, 0x803ff8d0]
 
-#Z1_RainbowScales.cpp:
+#ty/source/props/Z1_RainbowScales.cpp:
 #   .text: [0x8011c150, 0x8011c53c]
 #   .ctors: [0x8023c9f4, 0x8023c9f8]
 #   .data: [0x8025e838, 0x8025e938]
@@ -1863,7 +1863,7 @@ ty/source/props/WeatherProp.cpp:
 #   .sdata: [0x803f7fb0, 0x803f7ff0]
 #   .sbss: [0x803fa6e8, 0x803fa6f0]
 
-#ZoneBlockerProp.cpp:
+#ty/source/props/ZoneBlockerProp.cpp:
 #   .text: [0x8011c53c, 0x8011cda4]
 #   .ctors: [0x8023c9f8, 0x8023c9fc]
 #   .data: [0x8025e938, 0x8025ebc8]
@@ -3427,6 +3427,13 @@ common/Source/Camera.cpp:
    .text: [0x8020b17c, 0x8020b2b4]
    .bss: [0x802dbd50, 0x802dbe00]
    .sdata2: [0x80402218, 0x80402228]
+
+#common/Source/Collision.cpp:
+#   .text: [0x8020b2b4, 0x80211380]
+#   .rodata: [0x8023fb50, 0x8023fc50]
+#   .bss: [0x802dbe00, 0x802dee50]
+#   .sbss: [0x803fb200, 0x803fb248]
+#   .sdata2: [0x80402228, 0x80402278]
 
 #Collision.cpp:
 #   .text: [0x8020b2b4, 0x80211380]
