@@ -19,11 +19,7 @@ void DDACheckpoint::Init(GameObjDesc* pDesc) {
 }
 
 bool DDACheckpoint::LoadLine(KromeIniLine* pLine) {
-	bool ret = false;
-	if (LoadLevel_LoadInt(pLine, "Number", &Number) || GameObject::LoadLine(pLine)) {
-		ret = true;
-	}
-	return ret;
+	return LoadLevel_LoadInt(pLine, "Number", &Number) || GameObject::LoadLine(pLine);
 }
 
 void DDACheckpoint::Message(MKMessage* pMsg) {

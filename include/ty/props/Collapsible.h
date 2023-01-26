@@ -1,3 +1,6 @@
+#ifndef COLLAPSIBLE_H
+#define COLLAPSIBLE_H
+
 #include "ty/props/StaticProp.h"
 #include "common/KromeIni.h"
 
@@ -49,3 +52,5 @@ struct Collapsible : StaticProp {
 };
 
 void Collapsible_LoadResources(KromeIni*);
+
+#endif // COLLAPSIBLE_H

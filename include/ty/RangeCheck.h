@@ -1,3 +1,6 @@
+#ifndef RANGECHECK_H
+#define RANGECHECK_H
+
 #include "common/Model.h"
 #include "common/KromeIni.h"
 
@@ -56,3 +59,5 @@ struct LODManager {
 		return testFlag & ((subobjectEnableFlags >= 0) ? (1 << subobjectEnableFlags) : 0x40000000);
 	}
 };
+
+#endif // RANGECHECK_H

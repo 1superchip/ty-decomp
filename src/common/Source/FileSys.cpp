@@ -46,7 +46,7 @@ static int EntryCompare(void* arg0, void* arg1) {
 }
 
 void RkvTOC::Init(char *pName) {
-    strcpy(name, pName);
+	strcpy(name, pName);
     int fileLength = File_Length(pName);
     int fd;
     if (fileLength != 0) {

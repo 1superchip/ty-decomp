@@ -42,12 +42,8 @@ void D1Prop::Init(GameObjDesc* pDesc) {
 }
 
 bool D1Prop::LoadLine(KromeIniLine* pLine) {
-    bool found = false;
-    if (GameObject::LoadLine(pLine) || OnCompletion.LoadLine(pLine, "OnCompletion") || 
-        OnCompletion100.LoadLine(pLine, "OnCompletion100")) {
-        found = true;
-    }
-    return found;
+    return GameObject::LoadLine(pLine) || OnCompletion.LoadLine(pLine, "OnCompletion") ||
+		OnCompletion100.LoadLine(pLine, "OnCompletion100");
 }
 
 void D1Prop::LoadDone(void) {

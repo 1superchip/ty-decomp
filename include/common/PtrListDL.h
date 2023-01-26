@@ -106,4 +106,4 @@ inline void PtrListDL<T>::Destroy(T* p) {
     }
 }
 
-#endif COMMON_PTRLISTDL
+#endif // COMMON_PTRLISTDL

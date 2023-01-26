@@ -1,3 +1,6 @@
+#ifndef COMMON_PTRLIST
+#define COMMON_PTRLIST
+
 #include "types.h"
 #include "common/Heap.h"
 
@@ -55,3 +58,5 @@ void PtrList<T>::Destroy(T* pTemplate) {
         ptrs++;
     }
 }
+
+#endif // COMMON_PTRLIST

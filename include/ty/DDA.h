@@ -1,3 +1,6 @@
+#ifndef DDA_H
+#define DDA_H
+
 #include "types.h"
 #include "common/PtrListDL.h"
 
@@ -128,3 +131,5 @@ struct DDASession {
 };
 
 // structs of "DDACheckpointInfoList" / "DDADeathInfoList"
+
+#endif // DDA_H
