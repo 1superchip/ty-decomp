@@ -28,6 +28,9 @@ struct Vector {
     inline float Dot(Vector* pVector) {
         return x * pVector->x + y * pVector->y + z * pVector->z;
     }
+    inline float QuatDot(Vector* pVector) {
+        return x * pVector->x + y * pVector->y + z * pVector->z + w * pVector->w;
+    }
     inline float DistSq(Vector* pVector) {
         float dx = x - pVector->x;
         float dy = y - pVector->y;
@@ -55,6 +58,16 @@ struct Vector {
 		y = pSrc->y + pImm->y;
 		z = pSrc->z + pImm->z;
 	}
+    void Add(Vector* pOther) {
+		x += pOther->x;
+		y += pOther->y;
+		z += pOther->z;
+	}
+    void Sub(Vector* pSrc, Vector* pImm) {
+		x = pSrc->x - pImm->x;
+		y = pSrc->y - pImm->y;
+		z = pSrc->z - pImm->z;
+	}
     void Scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
@@ -65,9 +78,43 @@ struct Vector {
 		y = scalar * pVector->y;
 		z = scalar * pVector->z;
 	}
+    void Scale(Vector* pVector, Vector* pVector1) {
+		x = pVector->x * pVector1->x;
+		y = pVector->y * pVector1->y;
+		z = pVector->z * pVector1->z;
+	}
     void SetZero(void) {
         x = y = z = 0.0f;
     }
+	void CMultiply(Vector* pOther, float scale) {
+		x = pOther->x * scale;
+		y = pOther->y * scale;
+		z = pOther->z * scale;
+	}
+	void ApplyMatrix(Matrix* pMatrix) {
+		ApplyMatrix(this, pMatrix);
+	}
+    inline bool Equals(Vector* pOther) {
+        return x == pOther->x && y == pOther->y && z == pOther->z;
+    }
+	// possible place this in another file?
+	// doesn't really need to be in the vector class
+	// Collision.h or StdMath.h?
+    bool CheckSphereRadius(Vector* pCentre, float radius) {
+        return (x - pCentre->x) * (x - pCentre->x) + 
+            (y - pCentre->y) * (y - pCentre->y) + 
+            (z - pCentre->z) * (z - pCentre->z) < radius * radius;
+    }
+    float Normalise(void) {
+        return Normalise(this);
+    }
 };
 
-#endif COMMON_VECTOR
+
+inline bool CompareVectors(Vector* pVec, Vector* pVec1) {
+	if (pVec->x == pVec1->x && pVec->y == pVec1->y && pVec->z == pVec1->z)
+		return true;
+	return false;
+}
+
+#endif // COMMON_VECTOR
