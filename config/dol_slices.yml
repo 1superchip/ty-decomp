@@ -1565,14 +1565,14 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa530, 0x803fa538]
 #   .sdata2: [0x803ff2b0, 0x803ff2c0]
 
-#ty/source/props/Platform.cpp:
-#   .text: [0x80103b28, 0x801051b4]
-#   .ctors: [0x8023c978, 0x8023c97c]
-#   .rodata: [0x8023de28, 0x8023de58]
-#   .data: [0x8025b328, 0x8025b4b8]
-#   .sdata: [0x803f74a0, 0x803f7510]
-#   .sbss: [0x803fa538, 0x803fa548]
-#   .sdata2: [0x803ff2c0, 0x803ff2f0]
+ty/source/props/Platform.cpp:
+   .text: [0x80103b28, 0x801051b4]
+   .ctors: [0x8023c978, 0x8023c97c]
+   .rodata: [0x8023de28, 0x8023de58]
+   .data: [0x8025b328, 0x8025b4b8]
+   .sdata: [0x803f74a0, 0x803f7510]
+   .sbss: [0x803fa538, 0x803fa548]
+   .sdata2: [0x803ff2c0, 0x803ff2f0]
 
 #ty/source/props/PontoonRope.cpp:
 #   .text: [0x801051b4, 0x801056e4]

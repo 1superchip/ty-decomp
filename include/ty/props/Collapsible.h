@@ -33,7 +33,8 @@ struct Collapsible : StaticProp {
 	}
 	virtual void Update(void);
 	virtual void Draw(void) {
-		if (!Unk_StateCheck()) {
+		if (!Hidden()) {
+			// if the Collapsible isn't hidden, draw it
 			StaticProp::Draw();
 		}
 	}
@@ -45,9 +46,8 @@ struct Collapsible : StaticProp {
 		Reset();
 	}
 	
-	bool Unk_StateCheck(void) {
-		bool unk = state == 3 || state == 2;
-		return unk;
+	bool Hidden(void) {
+		return state == 3 || state == 2;
 	}
 };
 

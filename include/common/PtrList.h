@@ -32,7 +32,7 @@ inline void PtrList<T>::Init(int count) {
         *pPointers = NULL;
         int i = 0;
         for (i; i < count; i++) {
-            *(++pPointers) = (T*)0xdeadbeef;
+            *++pPointers = (T*)0xdeadbeef;
         }
         *++pPointers = NULL;
     }

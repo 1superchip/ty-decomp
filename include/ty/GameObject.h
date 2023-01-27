@@ -12,6 +12,25 @@
 // Search Mask Flags
 #define GOID_Platform 0x40
 
+
+struct GameObject;
+
+// GameObject MKMessage overrides
+#define MKMSG_UpdateAttachment 3
+#define MKMSG_AttachObject 4
+#define MKMSG_DetachObject 5
+
+struct MKMessage_GOBJ : MKMessage {
+	GameObject* pObj;
+};
+
+struct PlatformMoveMsg : MKMessage {
+    Vector* trans;
+    Vector* rot;
+    Vector* vec;
+    Matrix* mat;
+};
+
 struct ModuleInfoBaseObject;
 
 struct ModuleInfoBase {
@@ -27,7 +46,6 @@ struct ModuleInfoBase {
     static ModuleInfoBase* pList;
 };
 
-struct GameObject;
 struct BeginStruct;
 
 struct GameObjDesc : MKPropDescriptor {
