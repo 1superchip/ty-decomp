@@ -44,7 +44,7 @@ struct Attributes {
 };
 
 struct SaveLevelEntry {
-	char nmbrOfTimesEntered;
+	u8 nmbrOfTimesEntered;
 	u8 gemArray[0x26];
 	u8 unk27;
 	bool thunderEggs[Total_ThunderEggs];
@@ -160,10 +160,40 @@ struct GameData {
         pSaveData->bHasTalismans[zone] = bHas;
         SetDataDirty(true);
     }
+    bool CheckLearntToSwim(void) {
+        return pSaveData->tyAttributes.bLearntToSwim;
+    }
+    bool HasBothRangs(void) {
+        return pSaveData->tyAttributes.bBothRangs;
+    }
+	bool IsThunderEggCollected(int eggIdx, int level) {
+		return pSaveData->levels[level].thunderEggs[eggIdx];
+	}
+	bool CheckCurrentLevelThunderEgg(int eggIdx) {
+		return IsThunderEggCollected(eggIdx, pSaveData->levelAB0);
+	}
+    bool CheckZone_Unk1(int zoneIdx) {
+        return pSaveData->zoneInfo[zoneIdx].unk1;
+    }
+    int GetCurrentLevel(void) {
+        return pSaveData->levelAB0;
+    }
+    bool HasLevelBeenEntered(int level) {
+        return pSaveData->levels[level].nmbrOfTimesEntered <= 1;
+    }
+    bool HasBoomerang(int index) {
+        return pSaveData->tyAttributes.bHasRangs[index];
+    }
+    bool GetLevelEnterCount(int level) {
+        return pSaveData->levels[level].nmbrOfTimesEntered;
+    }
+    bool CheckZone_Unk0(int zoneIdx) {
+        return pSaveData->zoneInfo[zoneIdx].bUnlocked;
+    }
 };
 void GameData_Init(void);
 void GameData_New(void);
 
-int CheckArrayByBitIndex(u8* pArray, int bitIndex) {
+inline int CheckArrayByBitIndex(u8* pArray, int bitIndex) {
 	return pArray[bitIndex >> 3] & (1 << (bitIndex & 7));
 }

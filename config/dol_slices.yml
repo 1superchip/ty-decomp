@@ -2363,14 +2363,14 @@ ty/source/RangeCheck.cpp:
 #   .sbss: [0x803faa70, 0x803faa88]
 #   .sdata2: [0x804010f0, 0x80401118]
 
-#Script.cpp:
-#   .text: [0x8018bfcc, 0x8018cf64]
-#   .ctors: [0x8023ca6c, 0x8023ca70]
-#   .data: [0x80266a40, 0x80266c38]
-#   .bss: [0x802b56a0, 0x802b57a8]
-#   .sdata: [0x803f8f38, 0x803f8f88]
-#   .sbss: [0x803faa88, 0x803faa98]
-#   .sdata2: [0x80401118, 0x80401120]
+ty/source/Script.cpp:
+   .text: [0x8018bfcc, 0x8018cf64]
+   .ctors: [0x8023ca6c, 0x8023ca70]
+   .data: [0x80266a40, 0x80266c38]
+   .bss: [0x802b56a0, 0x802b57a8]
+   .sdata: [0x803f8f38, 0x803f8f88]
+   .sbss: [0x803faa88, 0x803faa98]
+   .sdata2: [0x80401118, 0x80401120]
 
 #SeaMine.cpp:
 #   .text: [0x8018cf64, 0x8018eaa4]
@@ -3721,7 +3721,7 @@ common/gc/View_GC.cpp:
 #xfontdata.cpp:
 #   .data: [0x80298020, 0x80298b38]
 
-#Blitter.cpp:
+#common/gc/Blitter.cpp:
 #   .text: [0x8023b1ac, 0x8023c760]
 #   .data: [0x80298b38, 0x80298B60]
 #   .sbss: [0x803fb578, 0x803fb580]
