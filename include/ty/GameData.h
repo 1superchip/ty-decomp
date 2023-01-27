@@ -57,7 +57,7 @@ struct SaveLevelEntry {
 
 struct ZoneStruct {
     bool bUnlocked;
-    u8 unk1;
+    u8 bZoneCompleted;
     u8 unk2;
 };
 
@@ -172,8 +172,8 @@ struct GameData {
 	bool CheckCurrentLevelThunderEgg(int eggIdx) {
 		return IsThunderEggCollected(eggIdx, pSaveData->levelAB0);
 	}
-    bool CheckZone_Unk1(int zoneIdx) {
-        return pSaveData->zoneInfo[zoneIdx].unk1;
+    bool IsZoneCompleted(int zoneIdx) {
+        return pSaveData->zoneInfo[zoneIdx].bZoneCompleted;
     }
     int GetCurrentLevel(void) {
         return pSaveData->levelAB0;

@@ -174,27 +174,28 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case 3:
-            if (gb.gameData.CheckZone_Unk1(1)) {
+			// Check if the zones have been completed by defeating the zone boss (Conditions 3 - 7)
+            if (gb.gameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
             break;
         case 4:
-            if (gb.gameData.CheckZone_Unk1(2)) {
+            if (gb.gameData.IsZoneCompleted(2)) {
                 bConditionMet = true;
             }
             break;
         case 5:
-            if (gb.gameData.CheckZone_Unk1(3)) {
+            if (gb.gameData.IsZoneCompleted(3)) {
                 bConditionMet = true;
             }
             break;
         case 6:
-            if (gb.gameData.CheckZone_Unk1(4)) {
+            if (gb.gameData.IsZoneCompleted(4)) {
                 bConditionMet = true;
             }
             break;
         case 7:
-            if (gb.gameData.CheckZone_Unk1(5)) {
+            if (gb.gameData.IsZoneCompleted(5)) {
                 bConditionMet = true;
             }
             break;
@@ -204,6 +205,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case Conditon_GameComplete:
+			// Check if the game has been 100% complete (Condition 9)
             if (gb.gameData.GetGameCompletePercent() == 100) {
                 bConditionMet = true;
             }
@@ -214,22 +216,23 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case 11:
-            if (gb.gameData.GetLevelEnterCount(7) && !gb.gameData.CheckZone_Unk1(1)) {
+			// check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
+            if (gb.gameData.GetLevelEnterCount(7) && !gb.gameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
             break;
         case 12:
-            if (gb.gameData.GetLevelEnterCount(0x13) && !gb.gameData.CheckZone_Unk1(2)) {
+            if (gb.gameData.GetLevelEnterCount(0x13) && !gb.gameData.IsZoneCompleted(2)) {
                 bConditionMet = true;
             }
             break;
         case 13:
-            if (gb.gameData.GetLevelEnterCount(15) && !gb.gameData.CheckZone_Unk1(3)) {
+            if (gb.gameData.GetLevelEnterCount(15) && !gb.gameData.IsZoneCompleted(3)) {
                 bConditionMet = true;
             }
             break;
         case 14:
-            if (gb.gameData.GetLevelEnterCount(0x17) && !gb.gameData.CheckZone_Unk1(5)) {
+            if (gb.gameData.GetLevelEnterCount(0x17) && !gb.gameData.IsZoneCompleted(5)) {
                 bConditionMet = true;
             }
             break;

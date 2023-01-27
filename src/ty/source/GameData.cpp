@@ -230,7 +230,7 @@ void GameData::SetHasRang(BoomerangType type, bool hasRang) {
 }
 
 void GameData::SetBossDefeated(ZoneNumber zone, bool bossDefeated) {
-    pSaveData->zoneInfo[zone].unk1 = bossDefeated;
+    pSaveData->zoneInfo[zone].bZoneCompleted = bossDefeated;
     SetDataDirty(true);
     TalismanType index = gb.levelData.GetTalismanType((LevelNumber)pSaveData->levelAB0);
     SetHasTalisman(index, true);
