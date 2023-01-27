@@ -102,230 +102,80 @@ void DataVal::Load(void) {
 
     while(pLine != NULL) {
         if (pLine->pFieldName != NULL) {
-            bFieldFound = Load_Float(pLine, &nearPlane, "near plane");
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &enemyChaseSpeed, "enemyChaseSpeed");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &enemyPatrolSpeed, "enemyPatrolSpeed");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &enemyHeroRange, "enemyHeroRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &enemyRoamRange, "enemyRoamRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &resetPosX, "resetPosX");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &resetPosY, "resetPosY");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &resetPosZ, "resetPosZ");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &biteMagnitude, "biteMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &surfaceSwimMagnitude, "surfaceSwimMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &dogPaddleMagnitude, "dogPaddleMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimMagnitude, "swimMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &bounceHeight, "bounceHeight");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &warpSpeed, "warpSpeed");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &iceAcceleration, "iceAcceleration");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &walkMagnitude, "walkMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &runMagnitude, "runMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jogMagnitude, "jogMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &sneakMagnitude, "sneakMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jumpMagnitude, "jumpMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &waterJumpMagnitude, "waterJumpMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideMagnitude, "glideMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jumpYStep, "jumpYStep");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jumpGravity, "jumpGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jumpMaxGravity, "jumpMaxGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &jumpHeight, "jumpHeight");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &ledgeGrabTolerance, "ledgeGrabTolerance");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &waterJumpYStep, "waterJumpYStep");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &waterJumpGravity, "waterJumpGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &waterJumpMaxGravity, "waterJumpMaxGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &waterJumpHeight, "waterJumpHeight");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideJumpYStep, "glideJumpYStep");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideJumpGravity, "glideJumpGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideJumpMaxGravity, "glideJumpMaxGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideJumpHeight, "glideJumpHeight");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideYStep, "glideYStep");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideGravity, "glideGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideMaxGravity, "glideMaxGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &fallTurnFactor, "fallTurnFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Int(pLine, &fallJumpAllowance, "fallJumpAllowance");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideTurnFactor, "glideTurnFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimTurnFactor, "swimTurnFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &walkJumpTurnFactor, "walkJumpTurnFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &runJumpTurnFactor, "runJumpTurnFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Int(pLine, &actionIdleCounter, "actionIdleCounter");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Int(pLine, &waitForRndIdleCounter, "waitForRndIdleCounter");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &startGlideReachAnimHeight, "startGlideReachAnimHeight");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &startLongFallDelta, "startLongFallDelta");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &fallMaxGravity, "fallMaxGravity");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &doomActiveSeconds, "doomActiveSeconds");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &doomMoveMagnitude, "doomMoveMagnitude");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimSpeedSlow, "swimSpeedSlow");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimSpeedFast, "swimSpeedFast");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimSpeedAttack, "swimSpeedAttack");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimRollRange, "swimRollRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimRollSmooth, "swimRollSmooth");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimRollFactor, "swimRollFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimPitchMax, "swimPitchMax");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimPitchMin, "swimPitchMin");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimPitchFactor, "swimPitchFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideRollRange, "glideRollRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideRollSmooth, "glideRollSmooth");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &glideRollFactor, "glideRollFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &rollEpsilon, "rollEpsilon");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimDeceleration, "swimDeceleration");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &swimMinSpeed, "swimMinSpeed");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &slideSpeedMax, "slideSpeedMax");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Int(pLine, &bunyipLifeSpan, "bunyipLifeSpan");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &bunyipHitRange, "bunyipHitRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &bunyipStunRange, "bunyipStunRange");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &quickSandWiggleFactor, "quickSandWiggleFactor");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &underwaterDustThreshold, "underwaterDustThreshold");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &underwaterDustSizeMin, "underwaterDustSizeMin");
-            }
-            if (!bFieldFound) {
-                bFieldFound = Load_Float(pLine, &underwaterDustSizeMax, "underwaterDustSizeMax");
-            }
-            if (!bFieldFound) {
-                bFieldFound = WS.Load(pLine);
-            }
-            gAssertBool = bFieldFound;
+            gAssertBool = Load_Float(pLine, &nearPlane, "near plane") || 
+                Load_Float(pLine, &enemyChaseSpeed, "enemyChaseSpeed") ||
+                Load_Float(pLine, &enemyPatrolSpeed, "enemyPatrolSpeed") ||
+                Load_Float(pLine, &enemyHeroRange, "enemyHeroRange") ||
+                Load_Float(pLine, &enemyRoamRange, "enemyRoamRange") ||
+                Load_Float(pLine, &resetPosX, "resetPosX") ||
+                Load_Float(pLine, &resetPosY, "resetPosY") ||
+                Load_Float(pLine, &resetPosZ, "resetPosZ") ||
+                Load_Float(pLine, &biteMagnitude, "biteMagnitude") ||
+                Load_Float(pLine, &surfaceSwimMagnitude, "surfaceSwimMagnitude") ||
+                Load_Float(pLine, &dogPaddleMagnitude, "dogPaddleMagnitude") ||
+                Load_Float(pLine, &swimMagnitude, "swimMagnitude") ||
+                Load_Float(pLine, &bounceHeight, "bounceHeight") ||
+                Load_Float(pLine, &warpSpeed, "warpSpeed") ||
+                Load_Float(pLine, &iceAcceleration, "iceAcceleration") ||
+                Load_Float(pLine, &walkMagnitude, "walkMagnitude") ||
+                Load_Float(pLine, &runMagnitude, "runMagnitude") ||
+                Load_Float(pLine, &jogMagnitude, "jogMagnitude") ||
+                Load_Float(pLine, &sneakMagnitude, "sneakMagnitude") ||
+                Load_Float(pLine, &jumpMagnitude, "jumpMagnitude") ||
+                Load_Float(pLine, &waterJumpMagnitude, "waterJumpMagnitude") ||
+                Load_Float(pLine, &glideMagnitude, "glideMagnitude") ||
+                Load_Float(pLine, &jumpYStep, "jumpYStep") ||
+                Load_Float(pLine, &jumpGravity, "jumpGravity") ||
+                Load_Float(pLine, &jumpMaxGravity, "jumpMaxGravity") ||
+                Load_Float(pLine, &jumpHeight, "jumpHeight") ||
+                Load_Float(pLine, &ledgeGrabTolerance, "ledgeGrabTolerance") ||
+                Load_Float(pLine, &waterJumpYStep, "waterJumpYStep") ||
+                Load_Float(pLine, &waterJumpGravity, "waterJumpGravity") ||
+                Load_Float(pLine, &waterJumpMaxGravity, "waterJumpMaxGravity") ||
+                Load_Float(pLine, &waterJumpHeight, "waterJumpHeight") ||
+                Load_Float(pLine, &glideJumpYStep, "glideJumpYStep") ||
+                Load_Float(pLine, &glideJumpGravity, "glideJumpGravity") ||
+                Load_Float(pLine, &glideJumpMaxGravity, "glideJumpMaxGravity") ||
+                Load_Float(pLine, &glideJumpHeight, "glideJumpHeight") ||
+                Load_Float(pLine, &glideYStep, "glideYStep") ||
+                Load_Float(pLine, &glideGravity, "glideGravity") ||
+                Load_Float(pLine, &glideMaxGravity, "glideMaxGravity") ||
+                Load_Float(pLine, &fallTurnFactor, "fallTurnFactor") ||
+                Load_Int(pLine, &fallJumpAllowance, "fallJumpAllowance") ||
+                Load_Float(pLine, &glideTurnFactor, "glideTurnFactor") ||
+                Load_Float(pLine, &swimTurnFactor, "swimTurnFactor") ||
+                Load_Float(pLine, &walkJumpTurnFactor, "walkJumpTurnFactor") ||
+                Load_Float(pLine, &runJumpTurnFactor, "runJumpTurnFactor") ||
+                Load_Int(pLine, &actionIdleCounter, "actionIdleCounter") ||
+                Load_Int(pLine, &waitForRndIdleCounter, "waitForRndIdleCounter") ||
+                Load_Float(pLine, &startGlideReachAnimHeight, "startGlideReachAnimHeight") ||
+                Load_Float(pLine, &startLongFallDelta, "startLongFallDelta") ||
+                Load_Float(pLine, &fallMaxGravity, "fallMaxGravity") ||
+                Load_Float(pLine, &doomActiveSeconds, "doomActiveSeconds") ||
+                Load_Float(pLine, &doomMoveMagnitude, "doomMoveMagnitude") ||
+                Load_Float(pLine, &swimSpeedSlow, "swimSpeedSlow") ||
+                Load_Float(pLine, &swimSpeedFast, "swimSpeedFast") ||
+                Load_Float(pLine, &swimSpeedAttack, "swimSpeedAttack") ||
+                Load_Float(pLine, &swimRollRange, "swimRollRange") ||
+                Load_Float(pLine, &swimRollSmooth, "swimRollSmooth") ||
+                Load_Float(pLine, &swimRollFactor, "swimRollFactor") ||
+                Load_Float(pLine, &swimPitchMax, "swimPitchMax") ||
+                Load_Float(pLine, &swimPitchMin, "swimPitchMin") ||
+                Load_Float(pLine, &swimPitchFactor, "swimPitchFactor") ||
+                Load_Float(pLine, &glideRollRange, "glideRollRange") ||
+                Load_Float(pLine, &glideRollSmooth, "glideRollSmooth") ||
+                Load_Float(pLine, &glideRollFactor, "glideRollFactor") ||
+                Load_Float(pLine, &rollEpsilon, "rollEpsilon") ||
+                Load_Float(pLine, &swimDeceleration, "swimDeceleration") ||
+                Load_Float(pLine, &swimMinSpeed, "swimMinSpeed") ||
+                Load_Float(pLine, &slideSpeedMax, "slideSpeedMax") ||
+                Load_Int(pLine, &bunyipLifeSpan, "bunyipLifeSpan") ||
+                Load_Float(pLine, &bunyipHitRange, "bunyipHitRange") ||
+                Load_Float(pLine, &bunyipStunRange, "bunyipStunRange") ||
+                Load_Float(pLine, &quickSandWiggleFactor, "quickSandWiggleFactor") ||
+                Load_Float(pLine, &underwaterDustThreshold, "underwaterDustThreshold") ||
+                Load_Float(pLine, &underwaterDustSizeMin, "underwaterDustSizeMin") ||
+                Load_Float(pLine, &underwaterDustSizeMax, "underwaterDustSizeMax") || WS.Load(pLine);
         }
         pLine = dataIni.GetNextLine();
     }
@@ -356,48 +206,19 @@ void DataVal::WS::Init(void) {
 }
 
 bool DataVal::WS::Load(KromeIniLine* pLine) {
-    bool bFieldFound = Load_Float(pLine, &WSIDFastFast, "WSIDFastFast");
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDFastSlow, "WSIDFastSlow");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDFastNormal, "WSIDFastNormal");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDSlowFast, "WSIDSlowFast");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDSlowSlow, "WSIDSlowSlow");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDSlowNormal, "WSIDSlowNormal");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDNormalFast, "WSIDNormalFast");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDNormalSlow, "WSIDNormalSlow");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSIDNormalNormal, "WSIDNormalNormal");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSSmoothFrames, "WSSmoothFrames");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSDuckHeight, "WSDuckHeight");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSJumpHeight, "WSJumpHeight");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSWayPtScale, "WSWayPtScale");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSSlopeScale, "WSSlopeScale");
-    }
-    if (!bFieldFound) {
-        bFieldFound = Load_Float(pLine, &WSTurnSmoothing, "WSTurnSmoothing");
-    }
-    return bFieldFound;
+    return Load_Float(pLine, &WSIDFastFast, "WSIDFastFast") ||
+        Load_Float(pLine, &WSIDFastSlow, "WSIDFastSlow") ||
+        Load_Float(pLine, &WSIDFastNormal, "WSIDFastNormal") ||
+        Load_Float(pLine, &WSIDSlowFast, "WSIDSlowFast") ||
+        Load_Float(pLine, &WSIDSlowSlow, "WSIDSlowSlow") ||
+        Load_Float(pLine, &WSIDSlowNormal, "WSIDSlowNormal") ||
+        Load_Float(pLine, &WSIDNormalFast, "WSIDNormalFast") ||
+        Load_Float(pLine, &WSIDNormalSlow, "WSIDNormalSlow") ||
+        Load_Float(pLine, &WSIDNormalNormal, "WSIDNormalNormal") ||
+        Load_Float(pLine, &WSSmoothFrames, "WSSmoothFrames") ||
+        Load_Float(pLine, &WSDuckHeight, "WSDuckHeight") ||
+        Load_Float(pLine, &WSJumpHeight, "WSJumpHeight") ||
+        Load_Float(pLine, &WSWayPtScale, "WSWayPtScale") ||
+        Load_Float(pLine, &WSSlopeScale, "WSSlopeScale") ||
+        Load_Float(pLine, &WSTurnSmoothing, "WSTurnSmoothing");
 }
