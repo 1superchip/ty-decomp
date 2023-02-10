@@ -9,8 +9,6 @@
 #include "common/View.h"
 #include "common/StdMath.h"
 
-#define PI    3.14159265358979323846f
-
 // EXTERNS
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);

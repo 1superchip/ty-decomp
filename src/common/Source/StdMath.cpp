@@ -1,5 +1,7 @@
 #include "common/StdMath.h"
 
+#define STEP_SIZE PI / 1024.0f
+
 // move 0.0f to the beginning of .sdata2
 bool Orderfloats(float x) {
 	return x < 0.0f;
@@ -217,30 +219,24 @@ inline float GetFloat(int x) {
     return *(float*)&x;
 }
 
-inline int GetInt(float x) {
-    return *(int*)&x;
-}
-
 // check param names
 int RandomIR(int* pSeed, int min, int max) {
-    int temp_r7;
     int curr;
-
-    temp_r7 = max - min;
-    if (temp_r7 <= 0) {
+    int range = max - min;
+	
+    if (range <= 0) {
         return min;
     }
-	// fix?
     curr = *pSeed = (*pSeed * 0x343FD) + 0x269EC3;
     curr = (curr >> 8) & 0xFFFFFF;
-    return min + (curr % temp_r7);
+    return min + (curr % range);
 }
 
 int RandomI(int *pSeed) {
     int curr;
 	// fix?
     curr = *pSeed = *pSeed * 0x343fd + 0x269ec3;
-    return (curr >> 8) & 0xFFFFFF;
+    return (curr >> 8) & 0xFFFFFF; // curr = uint, divide by 256
 }
 
 // uses a common union as _table_sinf?
@@ -255,37 +251,33 @@ float RandomFR(int* pSeed, float min, float max) {
     return min + num * (max - min);
 }
 
-float _table_sinf(float arg0) {
-    float sp8;
+float _table_sinf(float theta) {
     float temp_f6;
     int temp_r5;
     int temp_r6;
-    sindata data;
+	union {
+		int isin;
+		float fsin;
+	};
 	
 	// 1/2PI
-    temp_r6 = 0.15915494f * (2048.0f * arg0);
-    temp_r5 = temp_r6 & 0x3FF;
+    temp_r6 = 0.15915494f * (2048.0f * theta);
+    temp_r5 = temp_r6 & 1023;
     temp_f6 = _sinTable[temp_r5];
-    sp8 = temp_f6 + (325.94931f * (arg0 - (0.0030679617f * (f32)temp_r6)) * (_sinTable[temp_r5 + 1] - temp_f6));
-    data.xf = sp8;
-    data.xi |= ((temp_r6 << 0x15) & 0x80000000);
-    return data.xf;
+    fsin = temp_f6 + (325.94931f * (theta - (STEP_SIZE * (f32)temp_r6)) * (_sinTable[temp_r5 + 1] - temp_f6));
+    isin |= ((temp_r6 << 0x15) & 0x80000000);
+    return fsin;
 }
 
 float NormaliseAngle(float angle) {
-    float temp_f5;
-    float var_f1;
-
-    var_f1 = angle;
-    temp_f5 = 6.2831855f; // define trig constants for entire file
-    if (var_f1 >= temp_f5) {
-        return var_f1 - (temp_f5 * (int)(0.15915494f * var_f1));
+    if (angle >= 6.2831855f) {
+        return angle - (6.2831855f * (int)(0.15915494f * angle));
     }
-    if (var_f1 < 0.0f) {
-        var_f1 -= temp_f5 * (int)((0.15915494f * var_f1) - 1.0f);
-        if (var_f1 == 6.2831855f) {
-            var_f1 = 0.0f;
+    if (angle < 0.0f) {
+        angle -= 6.2831855f * (int)((0.15915494f * angle) - 1.0f);
+        if (angle == 6.2831855f) {
+            angle = 0.0f;
         }
     }
-    return var_f1;
+    return angle;
 }
