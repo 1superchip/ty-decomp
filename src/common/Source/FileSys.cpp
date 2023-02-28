@@ -255,15 +255,12 @@ void *FileSys_Load(char *pFilename, int *pOutLen, void *pMemoryAllocated, int sp
 }
 
 int FileSys_Save(char* name, bool arg1, void* pData, int dataLen) {
-    arg1 = (arg1 & 0xff);
-    arg1 = static_cast<bool>(arg1);
-    int fd = arg1 + 2;
-    fd = File_Open(File_FileServerOutputFilename(name), fd);
+    int fd = File_Open(File_FileServerOutputFilename(name), arg1 ? 3 : 2);
     if (fd >= 0) {
         File_Write(fd, pData, dataLen);
         File_Close(fd);
     }
-    return (fd < 0) ? -1 : 0;
+    return fd < 0 ? -1 : 0;
 }
 
 static int FileOrderSortCompare(const void* arg0, const void* arg1) {

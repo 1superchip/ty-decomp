@@ -188,7 +188,7 @@ void Platform::EndUpdate(void) {
 		UpdateShadow();
 	}
 	if (unk58 != NULL) {
-		pCurrMem = (Vector*)unk58;
+		pCurrMem = unk58;
 	}
 	unk58 = NULL;
 }

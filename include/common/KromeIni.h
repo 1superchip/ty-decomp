@@ -1,6 +1,8 @@
 #ifndef COMMON_KROMEINI
 #define COMMON_KROMEINI
 
+#include "types.h"
+
 struct KromeIniLine {
     char* comment;
     char* section;

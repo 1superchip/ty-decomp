@@ -239,9 +239,7 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
 }
 
 BeginStruct GameObjectManager::Begin(void) {
-    BeginStruct beginRet = {0, 0};
-    beginRet.unk0 = (u8*)unk8;
-    beginRet.unk4 = (u8*)objectManager.unk8 + (int)objectManager.unkC;
+    BeginStruct beginRet = {(u8*)unk8, (u8*)objectManager.unk8 + (int)objectManager.unkC};
     return beginRet;
 }
 

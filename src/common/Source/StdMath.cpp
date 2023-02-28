@@ -248,7 +248,7 @@ float RandomFR(int* pSeed, float min, float max) {
     *pSeed = curr;
     sp8 = ((curr >> 8U) & 0x7FFFFF) | 0x3F800000;
     float num = GetFloat(sp8) - 1.0f;
-    return min + num * (max - min);
+    return num * (max - min) + min;
 }
 
 float _table_sinf(float theta) {
