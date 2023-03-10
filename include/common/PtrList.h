@@ -52,7 +52,7 @@ void PtrList<T>::Destroy(T* pTemplate) {
     T** ptrs = pPointers;
     while (*ptrs != NULL) {
         if (*ptrs == pTemplate) {
-            *ptrs = *pPointers++;
+            *ptrs = GetUnkEntry();
             return;
         }
         ptrs++;

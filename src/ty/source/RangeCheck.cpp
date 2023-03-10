@@ -112,7 +112,7 @@ void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float 
 
 void Range_Update(void) {
     if (pHero->currentHero == 0) {
-        heroState = ty.state;
+        heroState = ty.state; // calls TyFSM::GetState()
     } else {
         heroState = 0;
     }
