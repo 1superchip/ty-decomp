@@ -29,6 +29,8 @@ typedef volatile f32 vf32;
 typedef volatile f64 vf64;
 
 typedef int BOOL;
+#define TRUE  1
+#define FALSE 0
 
 struct MTX34
 {

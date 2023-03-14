@@ -74,11 +74,11 @@ void DDASession::StartSession(void) {
     startHour = startTime.hours;
     startMinutes = startTime.minutes;
     startSeconds = startTime.seconds;
-    while ((int*)*(int*)unk10.pMem != NULL) {
-        ((int*)unk10.pMem)++;
+    while (*unk10.pMem != NULL) {
+        unk10.pMem++;
     }
-    while ((int*)*(int*)unk14.pMem != NULL) {
-        ((int*)unk14.pMem)++;
+    while (*unk14.pMem != NULL) {
+        unk14.pMem++;
     }
 }
 
@@ -105,7 +105,7 @@ void DDASession::NewCheckpoint(int arg1) {
         }
         EndCheckpoint();
     }
-    if(unk10.IsFull() == true) {
+    if(unk10.IsFull()) {
         return;
     }
     currentCheckpoint = unk10.GetNextEntry();
@@ -146,8 +146,6 @@ void DDASession::EndCheckpoint(void) {
     currentCheckpoint = NULL;
 }
 
-// https://decomp.me/scratch/Qyupo
-// most likely PtrList inlines
 extern "C" float* pHero;
 
 void DDASession::StoreDeathInfo(void) {
@@ -156,11 +154,11 @@ void DDASession::StoreDeathInfo(void) {
     if (currentCheckpoint == NULL) {
         return;
     }
-    if (unk14.IsFull() != false) {
+    if (unk14.IsFull()) {
         return;
     }
     pInfo = unk14.GetNextEntry();
-    *(int*)pInfo = *(int*)currentCheckpoint;
+    pInfo->unk0 = *(int*)currentCheckpoint;
 
     pInfo->deathPosX = (int)pHero[0x40 / 4];
     pInfo->deathPosY = (int)pHero[0x44 / 4];

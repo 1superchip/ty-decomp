@@ -6,15 +6,15 @@ extern "C" OSTime OSGetTime(void);
 
 
 struct TimerInfo {
-	s32 hours;
-	s32 minutes;
-	s32 seconds;
-	s32 milliseconds;
-	s32 day;
-	s32 month;
-	s32 year;
+	int hours;
+	int minutes;
+	int seconds;
+	int milliseconds;
+	int day;
+	int month;
+	int year;
 };
 
 void Timer_GetSystemTime(TimerInfo*);
-s32 Timer_GetDHMSInSeconds(TimerInfo*);
+int Timer_GetDHMSInSeconds(TimerInfo*);
 void Timer_GetDifference(TimerInfo*, TimerInfo*, TimerInfo*);

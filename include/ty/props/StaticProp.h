@@ -57,6 +57,7 @@ struct StaticProp : GameObject {
     Vector* GetPos(void) {
         return pModel->matrices[0].Row3();
     }
+	// TyOn is an inline?
 
     static Vector loadInfo[2];
 };
@@ -109,6 +110,8 @@ struct StaticFXProp : StaticProp {
 	// this is added to the prop rotation (rot) on stack and rotates the default matrix in the prop's model
 	Vector autoRotation; // autoRotate is added to this vector
 	Vector waterCollisionPos; // position of water that was collided with
+	
+	// these flags may have been part of a union with s32
 	bool bCollidesWithWater : 1;
 	u8 b1 : 1;
 	bool bVisible : 1;
@@ -117,6 +120,7 @@ struct StaticFXProp : StaticProp {
 	u8 b5 : 1;
 	u8 b6 : 1;
 	u8 b7 : 1;
+	
 	int unk9C;
 	int rotateSubObjIndex;
 	
@@ -145,32 +149,6 @@ struct StaticFXProp : StaticProp {
 void StaticProp_LoadResources(KromeIni*);
 
 extern "C" void memset(void*, int, int);
-
-/*
-template <typename T>
-void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {
-    GameObjDesc* desc = NULL;
-    KromeIniLine* pLine = pIni->GotoLine(name, NULL);
-    GameObjDesc* p = desc;
-    while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
-        char* pString = NULL;
-        if (pLine->pFieldName != NULL && pLine->AsString(0, &pString) != false) {
-            p = (GameObjDesc*)Heap_MemAlloc(sizeof(T));
-            memset(p, 0, sizeof(T));
-            new ((void*)p) T;
-            static_cast<T*>(p)->Init(pDesc->pModule, pString, pLine->pFieldName, pDesc->searchMask, pDesc->flags);
-            static_cast<GameObjDesc*>(p)->unk80 = desc;
-            desc = (GameObjDesc*)p;
-        }
-        pLine = pIni->GetLineWithLine(pLine);
-    }
-    while (desc != NULL) {
-        GameObjDesc* p = desc;
-        desc = p->unk80;
-        p->Load(pIni);
-        objectManager.AddDescriptor(p);
-    }
-}*/
 
 
 #endif // STATICPROP_H

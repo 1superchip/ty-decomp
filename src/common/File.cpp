@@ -14,7 +14,7 @@ extern "C" int DVDGetCommandBlockStatus(DVDFileInfo*);
 extern "C" void OSYieldThread(void);
 extern "C" void DCStoreRange(uint*, int);
 volatile u32 BUS_SPEED : 0x800000f8;
-extern "C" int DVDReadPrio(DVDFileInfo*, void*, int, int, int);
+extern "C" int DVDReadPrio(DVDFileInfo*, void*, int, int, int prio);
 extern "C" BOOL DVDReadAsyncPrio(DVDFileInfo *, void *, int length, int offset, uint callback, int prio);
 extern "C" int DVDClose(void*);
 extern "C" int DVDOpen(char*, void*);
@@ -67,47 +67,47 @@ int File_Close(int fd) {
         int closeCode = DVDClose((void*)&gcFiles[fd]);
         gcFiles[fd].unk48 = -1;
         gcFiles[fd].unk50 = 0;
-        gcFiles[fd].callback = 0;
+        gcFiles[fd].callback = NULL;
         return (closeCode == 0) ? 0 : -1;
     }
     return -1;
 }
 
-int File_Read(int fd, void* arg1, int size, int arg3) {
+// buf is the buffer the data is read into
+int File_Read(int fd, void* buf, int size, int arg3) {
     int alignedSize = (size + 0x1f) & ~0x1f; // align size
     FileEntry* entry = &gcFiles[fd];
-    entry->unk44 = arg1;
-    if ((alignedSize + 0x40 > arg3) || ((int)arg1 & 0x1f) || (arg3 & 0x1f)) {
+    entry->unk44 = buf;
+    if ((alignedSize + 0x40 > arg3) || ((int)buf & 0x1f) || (arg3 & 0x1f)) {
         entry->unk54 = alignedSize + 0x40;
         entry->unk44 = Heap_MemAlloc(entry->unk54);
         entry->unk40 = entry->unk44;
-        }
-        if (gcFiles[fd].callback == 0) {
-            alignedSize = DVDReadPrio((DVDFileInfo*)&gcFiles[fd], entry->unk44, alignedSize, entry->unk48, 2);
-            entry->unk48 = entry->unk48 + alignedSize;
-
-            if (entry->unk54 > 0) {
-                memmove(arg1, entry->unk44, arg3);
-                Heap_MemFree(entry->unk44);
-                entry->unk44 = 0;
-                entry->unk54 = 0;
-            }
-            return alignedSize;
+	}
+	if (gcFiles[fd].callback == NULL) {
+		alignedSize = DVDReadPrio((DVDFileInfo*)&gcFiles[fd], entry->unk44, alignedSize, entry->unk48, 2);
+		entry->unk48 = entry->unk48 + alignedSize;
+		if (entry->unk54 > 0) {
+			memmove(buf, entry->unk44, arg3);
+			Heap_MemFree(entry->unk44);
+			entry->unk44 = 0;
+			entry->unk54 = 0;
+		}
+		return alignedSize;
+	} else {
+        entry->unk4C = arg3;
+        if (entry->unk54 == 0) {
+            entry->unk40 = 0;
         } else {
-            entry->unk4C = arg3;
-            if (entry->unk54 == 0) {
-                entry->unk40 = 0;
-            } else {
-                entry->unk40 = arg1;
-            }
-            gcFiles[fd].unk50 = 3;
-            Heap_Check("File.cpp", 206);
-            int readPrioCode = DVDReadAsyncPrio((DVDFileInfo*)entry, entry->unk44, alignedSize, entry->unk48, entry->callback, 2);
-            Heap_Check("File.cpp", 208);
-            if (readPrioCode != 0) {
-                return 0;
-            }
+            entry->unk40 = buf;
         }
+        gcFiles[fd].unk50 = 3;
+        Heap_Check("File.cpp", 206);
+        int readPrioCode = DVDReadAsyncPrio((DVDFileInfo*)entry, entry->unk44, alignedSize, entry->unk48, entry->callback, 2);
+        Heap_Check("File.cpp", 208);
+        if (readPrioCode != 0) {
+            return 0;
+        }
+    }
     return -1;
 }
 

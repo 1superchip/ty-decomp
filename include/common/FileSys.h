@@ -7,7 +7,8 @@ struct RkvFileEntry {
 	char name[0x20];
     int directoryIndex;
     int length;
-    int unk28;
+	// unk28 would have been some value for decompression in earlier games
+    int unk28; // unused in Ty
     int offset; // offset of file in RKV
     uint crc;
     uint timestamp;
@@ -28,9 +29,9 @@ struct RkvTOC {
     int unk3C;
     int rkvFd;
     int nmbrOfEntries;
-    int nmbrOfDirectories; // directory entry count
+    int nmbrOfDirectories;
     RkvFileEntry* pFileEntries;
-    DirectoryEntry* pDirectoryEntries; // directory entry pointer
+    DirectoryEntry* pDirectoryEntries;
     int unk54;
     bool unk58;
 	

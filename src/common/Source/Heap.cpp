@@ -35,7 +35,7 @@ void* Heap_MemAlloc(int size) {
     void* pMem;
 
     pMem = OSAllocFromHeap(__OSCurrHeap, size);
-    if (pMem == 0) {
+    if (pMem == NULL) {
         printf("Heap Alloc Failed: %d bytes attempted, %d used\n", size, OSGetConsoleSimulatedMemSize() - OSCheckHeap(0));
     }
     return pMem;
