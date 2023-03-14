@@ -230,21 +230,16 @@ void GameObjDesc::Load(KromeIni* pIni) {
     KromeIniLine* pLine = pIni->GotoLine(modelName, NULL);
     while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
         if (pLine->pFieldName != NULL) {
-            bool assert = false;
-            if (LoadLevel_LoadInt(pLine, "drawLayer", &drawLayer) || LoadLevel_LoadFloat(pLine, "maxDrawDist", &maxDrawDist) || 
-                LoadLevel_LoadFloat(pLine, "maxScissorDist", &maxScissorDist) || LoadLevel_LoadFloat(pLine, "maxUpdateDist", &maxUpdateDist)) {
-                assert = true;
-				}
-            gAssertBool = assert;
+            gAssertBool = LoadLevel_LoadInt(pLine, "drawLayer", &drawLayer) ||
+				LoadLevel_LoadFloat(pLine, "maxDrawDist", &maxDrawDist) ||
+				LoadLevel_LoadFloat(pLine, "maxScissorDist", &maxScissorDist) ||
+				LoadLevel_LoadFloat(pLine, "maxUpdateDist", &maxUpdateDist);
         }
         pLine = pIni->GetLineWithLine(pLine);
     }
 }
 
 BeginStruct GameObjDesc::Begin(void) {
-    BeginStruct beginRet = {0, 0};
-    beginRet.unk0 = (u8*)unk78;
-    beginRet.unk4 = (u8*)unk78 + (pModule->pData->instanceSize * unk74);
-    return beginRet;
+    BeginStruct stack = {(u8*)unk78, (u8*)unk78 + (pModule->pData->instanceSize * unk74)};
+    return stack;
 }
-
