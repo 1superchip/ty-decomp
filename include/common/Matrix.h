@@ -67,6 +67,15 @@ struct Matrix {
 	Vector* Row3(void) {
 		return (Vector*)&data[3][0];
 	}
+    void Multiply(Matrix* pOther) {
+        Multiply(this, pOther);
+    }
+    void Translate(Vector* pVector) {
+        Translate(this, pVector);
+    }
+	void InverseSimple(void) {
+		InverseSimple(this);
+	}
 };
 
 

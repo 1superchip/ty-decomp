@@ -1,7 +1,7 @@
-//#include "common/MKSceneManager.h"
 #ifndef GAMEOBJECTMANAGER_H
 #define GAMEOBJECTMANAGER_H
 
+#include "common/MKSceneManager.h"
 #include "ty/GameObject.h"
 
 struct GameObjectManager {

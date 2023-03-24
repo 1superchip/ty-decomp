@@ -106,7 +106,7 @@ void Parser::GrabFieldName(void) {
     }
 }
 
-// not correct
+// incorrect
 void Parser::GrabData(void) {
     currLine->data = pData;
     SkipData();
@@ -151,11 +151,7 @@ void Parser::GrabEndOfLine(void) {
 }
 
 bool Parser::IsEOL(void) {
-    bool retval = false;
-    if (*pData == '\r' || *pData == '\n') {
-        retval = true;
-    }
-    return retval;
+	return *pData == '\r' || *pData == '\n';
 }
 
 bool Parser::IsComment(void) {
