@@ -24,11 +24,7 @@ bool Load_Int(KromeIniLine* pIniLine, int* pInt, char* name) {
 
 void CalcYStep(float gravity, float height, float* pYStep) {
     if (height > 0.0f) {
-        float jump = (2.0f * gravity) * height;
-        if (jump > 0.0f) {
-            jump = kin_sqrtf(jump);
-        }
-        *pYStep = jump;
+        *pYStep = sqrtf((2.0f * gravity) * height);
     }
 }
 

@@ -40,8 +40,8 @@ float NormaliseAngle(float);
 
 inline float sqrtf(float x)
 {
-	const double _half=.5;
-	const double _three=3.0;
+	static const double _half=.5;
+	static const double _three=3.0;
 	volatile float y;
 	if(x > 0.0f)
 	{
@@ -53,16 +53,6 @@ inline float sqrtf(float x)
 		return y;
 	}
 	return x;
-}
-
-inline float kin_sqrtf(float x) {
-    const double _half=.5;
-	const double _three=3.0;
-    double guess = __frsqrte(x);
-    guess = _half * guess * (_three - ( x * (guess * guess)));
-    guess = _half * guess * (_three - ( x * (guess * guess)));
-    volatile float y = ( x * (_half * guess * (_three - ( x * (guess * guess)))));
-    return y;
 }
 
 // Smoothing function?
