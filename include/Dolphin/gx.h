@@ -192,6 +192,27 @@ extern volatile union {
     float f;
 } WGPIPE : 0xcc008000;
 
+static inline void GXPosition3f32(f32 x,f32 y,f32 z)
+{
+	WGPIPE.f = x;
+	WGPIPE.f = y;
+	WGPIPE.f = z;
+}
+
+static inline void GXColor4u8(u8 r,u8 g,u8 b,u8 a)
+{
+	WGPIPE.c = r;
+	WGPIPE.c = g;
+	WGPIPE.c = b;
+	WGPIPE.c = a;
+}
+
+static inline void GXTexCoord2f32(f32 s,f32 t)
+{
+	WGPIPE.f = s;
+	WGPIPE.f = t;
+}
+
 #ifdef __cplusplus
 };
 #endif // ifdef __cplusplus

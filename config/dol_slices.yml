@@ -2900,7 +2900,7 @@ ty/source/Script.cpp:
 #   .text: [0x801dbc14, 0x801dc038]
 #   .data: [0x802714c0, 0x80271520]
 
-#__start.c:
+#Dolphin/os/__start.c:
 #   .init: [0x80003100, 0x80003354]
 
 #__ppc_eabi_init.cpp:
@@ -3460,7 +3460,7 @@ common/Source/FileSys.cpp:
    .sdata: [0x803f9838, 0x803f9848]
    .sbss: [0x803fb258, 0x803fb268]
 
-#Font.cpp:
+#common/Source/Font.cpp:
 #   .text: [0x80212734, 0x80214a10]
 #   .data: [0x80274288, 0x80274370]
 #   .sdata: [0x803f9848, 0x803f9850]
@@ -3721,11 +3721,11 @@ common/gc/View_GC.cpp:
 #xfontdata.cpp:
 #   .data: [0x80298020, 0x80298b38]
 
-#common/gc/Blitter.cpp:
-#   .text: [0x8023b1ac, 0x8023c760]
-#   .data: [0x80298b38, 0x80298B60]
-#   .sbss: [0x803fb578, 0x803fb580]
-#   .sdata2: [0x80402720, 0x80402760]
+common/gc/Blitter.cpp:
+   .text: [0x8023b1ac, 0x8023c760]
+   .data: [0x80298b38, 0x80298B60]
+   .sbss: [0x803fb578, 0x803fb580]
+   .sdata2: [0x80402720, 0x80402760]
 
 #Debug.cpp:
 #   .text: [0x8023c760, 0x8023C780]

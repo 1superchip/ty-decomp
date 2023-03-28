@@ -589,8 +589,8 @@ class CSource(Source):
             fullKey = 'src/' + key
             if fullKey == path:
                 for name,flags in flagsYml[key].items():
-                    print(flags);
-                    self.cflags = self.cflags + ' ' + flags
+                    if name == ".flags":
+                        self.cflags = self.cflags + ' ' + flags
 
         # Find generated includes
         with open(path, encoding="utf-8") as f:
