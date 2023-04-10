@@ -1,4 +1,5 @@
 #include "types.h"
+#include "common/StdMath.h"
 #include "ty/props/WaterVolume.h"
 
 extern GameObjectManager objectManager;
@@ -31,6 +32,7 @@ void WaterVolume::Init(GameObjDesc* pDesc) {
     wvLoadInfo.Init(1.0f);
     unkC0 = 0.0f;
     unkBC = 0.0f;
+    //unkBC = unkC0 = 0.0f;
     matrix.SetIdentity();
     waterVolumeMatrix.SetIdentity();
 }
@@ -47,19 +49,15 @@ void WaterVolume::LoadDone(void) {
     GameObject::LoadDone();
     wvLoadInfo.LoadDone(&waterVolumeMatrix);
     matrix.Inverse(&waterVolumeMatrix);
-    Vector temp = waterBoundingVolume.v1;
+    Vector temp = waterBoundingVolume.v1; // minimum point?
     temp.ApplyMatrix(&temp, &waterVolumeMatrix);
-    Vector temp1;
+    Vector temp1; // maximum point?
     temp1.x = waterBoundingVolume.v1.x + waterBoundingVolume.v2.x;
     temp1.y = waterBoundingVolume.v1.y + waterBoundingVolume.v2.y;
     temp1.z = waterBoundingVolume.v1.z + waterBoundingVolume.v2.z;
     temp1.ApplyMatrix(&temp1, &waterVolumeMatrix);
-    float fVar = temp1.y;
-    float fVar1 = temp.y;
-    unkBC = (fVar1 < fVar) ? temp.y : temp1.y;
-    fVar1 = temp1.y;
-    fVar = temp.y;
-    unkC0 = (fVar > fVar1) ? fVar : fVar1;
+    unkBC = Min<float>(temp.y, temp1.y);
+    unkC0 = Max<float>(temp.y, temp1.y);
     objectManager.AddObject(this, NULL, NULL);
 }
 
@@ -78,16 +76,17 @@ inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
 bool WaterVolume_IsWithin(Vector *point, float *arg1) {
     Vector transformedPoint;
     bool isWithin = false;
-    float fVar1 = -1e+11f;
+    float closest = -1e+11f;
     BeginStruct descStruct = waterVolumeDesc.Begin();
     while (descStruct.GetPointers()) {
         WaterVolume *volume = (WaterVolume *)descStruct.GetPointers();
         if (point->y < volume->unkC0 && point->y > volume->unkBC) {
+			// applying waterVolumeMatrix to transformedPoint gets the original point
             transformedPoint.ApplyMatrix(point, &volume->matrix);
             if (BoundingVolume_CheckPoint(&waterBoundingVolume, &transformedPoint) != false) {
-                fVar1 = (fVar1 > volume->unkC0) ? fVar1 : volume->unkC0;
+                closest = Max<float>(closest, volume->unkC0);
                 if (arg1 != NULL) {
-                    *arg1 = fVar1;
+                    *arg1 = closest;
                     isWithin = true;
                 } else {
                     return true;
