@@ -9,18 +9,6 @@
 
 void Platform_LoadResources(KromeIni*);
 
-// move this to Collision.h
-struct CollisionResult {
-    Vector pos;
-    Vector normal;
-    Vector color;
-    Model* pModel;
-    int itemIdx;
-    int collisionFlags;
-    CollisionInfo* pInfo;
-    float unk40;
-};
-
 struct PlatformRider {
 	GameObject* pObject; // might be Platform*
 	int platformID;

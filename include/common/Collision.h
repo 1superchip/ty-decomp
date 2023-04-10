@@ -1,3 +1,6 @@
+#ifndef COMMON_COLLISION
+#define COMMON_COLLISION
+
 #include "types.h"
 #include "common/Vector.h"
 #include "common/Model.h"
@@ -162,3 +165,5 @@ bool Collision_RayCollideDynamicModel(Vector*, Vector*, CollisionResult*, Model*
 bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
 bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadius,
     CollisionResult* pCr, CollisionMode pMode, int arg3);
+
+#endif // COMMON_COLLISION

@@ -2,6 +2,7 @@
 #include "ty/GameObjectManager.h"
 #include "ty/props/StaticProp.h"
 #include "common/StdMath.h"
+#include "common/Str.h"
 
 struct TyParticleManager {
     char unk[0x44];
@@ -29,26 +30,6 @@ extern struct GlobalVar {
     int unk[483];
     float unk78C;
 } gb;
-
-struct CollisionResult {
-    Vector pos;
-    Vector normal;
-    Vector color;
-    Model* pModel;
-    int itemIdx;
-    int collisionFlags;
-    CollisionInfo* pInfo;
-    float unk40;
-};
-
-enum CollisionMode {
-
-};
-
-bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
-void Collision_AddStaticModel(Model*, CollisionInfo*, int);
-void Collision_AddDynamicModel(Model*, CollisionInfo*, int);
-void Collision_AddDynamicSubobject(Model*, int, CollisionInfo*);
 Vector Tools_GroundColor(CollisionResult*);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
@@ -101,7 +82,7 @@ inline bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     vec.w = 1.0f;
     vec.z = 1.0f / inv.z;
     mat.Scale(pModel->matrices, &vec);
-    mat.InverseSimple(&mat);
+    mat.InverseSimple();
     local.ApplyMatrix(pPoint, &mat);
     BoundingVolume* pModelVolume = pModel->GetBoundingVolume(-1);
     if (BoundingVolume_CheckPoint(pModelVolume, &local) != false) {
@@ -123,7 +104,7 @@ void StaticPropDescriptor::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDes
     GameObjDesc::Init(pMod, pMdlName, pDescrName, _searchMask, _flags);
     strcpy(subObjectName, "C_Collide");
     bDynamic = false; // does not have dynamic collision by default
-    bUseGroundColor = true;
+    bUseGroundColor = true; // uses ground color by default
     collisionInfoFlags = 0;
 }
 
@@ -161,7 +142,7 @@ void StaticProp::Init(GameObjDesc* pDesc) {
     collisionInfo.bEnabled = true;
     collisionInfo.flags = collisionFlags;
     collisionInfo.pProp = this;
-    lodManager.Init(pModel, 0, &descr_cast<StaticPropDescriptor*>(pDescriptor)->lodDesc);
+    lodManager.Init(pModel, 0, &GetDesc()->lodDesc);
     collide = true;
 }
 
@@ -230,14 +211,7 @@ void StaticFXProp::Init(GameObjDesc* pDesc) {
 }
 
 bool StaticFXProp::LoadLine(KromeIniLine* pLine) {
-    bool ret = false;
-    if (GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
-        LoadLevel_LoadVector(pLine, "rot", &loadInfo[0]) || 
-        LoadLevel_LoadVector(pLine, "scale", &loadInfo[1]) || 
-        LoadLevel_LoadBool(pLine, "collide", &collide) || LoadLevel_LoadBool(pLine, "bVisible", &bTempVisible)) {
-        ret = true;
-        }
-    return ret;
+	return StaticProp::LoadLine(pLine) || LoadLevel_LoadBool(pLine, "bVisible", &bTempVisible);
 }
 
 void StaticFXProp::LoadDone(void) {
@@ -290,7 +264,7 @@ void StaticFXProp::Update(void) {
 
 void StaticFXProp::Draw(void) {
     if (bVisible) {
-        lodManager.Draw(pModel, detailLevel, unk1C, distSquared, flags & 0x40000000);
+		StaticProp::Draw();
     }
 }
 

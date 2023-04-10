@@ -3,10 +3,6 @@
 #include "common/StdMath.h"
 #include "ty/GameObjectManager.h"
 
-enum CollisionMode {
-
-};
-
 extern struct Ty {
     char padding[0x40];
     Vector pos;
@@ -26,7 +22,6 @@ extern struct Ty {
 
 extern GameObjectManager objectManager;
 extern bool gAssertBool;
-bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
 Vector Tools_GroundColor(CollisionResult*);
 void Tools_DropShadow_Add(float, Vector*, Vector*, float);
 bool Tools_ClipSphereToDynamicModel(const Vector&, float, Vector*, Model*, int);

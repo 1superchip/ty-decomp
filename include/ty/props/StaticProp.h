@@ -4,6 +4,7 @@
 #include "ty/GameObject.h"
 #include "ty/RangeCheck.h"
 #include "common/Vector.h"
+#include "common/Collision.h"
 
 extern struct DisplayStruct {
     float unk[16];
@@ -23,12 +24,6 @@ bool LoadLevel_LoadString(KromeIniLine*, char*, char*, int, int);*/
 #define FX_SpawnLeaf 4
 #define FX_Dynamic 8
 #define FX_Rotate 16
-
-struct CollisionInfo {
-	bool bEnabled;
-	int flags;
-	MKProp* pProp;
-};
 
 struct StaticPropDescriptor : GameObjDesc {
 	char subObjectName[0x20]; // subobject used for collision
