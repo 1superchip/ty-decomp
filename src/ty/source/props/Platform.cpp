@@ -96,7 +96,7 @@ void Platform::Init(GameObjDesc* pDesc) {
 	unkB0.SetZero();
 	unkC0.SetZero();
 	unkA0.SetZero();
-	unkD0 = 0;
+	unkD0 = false;
 	if (GetDesc()->maxShadowHeight > 0.0f) {
 		UpdateShadow();
 	}

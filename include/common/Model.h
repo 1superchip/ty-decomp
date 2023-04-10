@@ -5,6 +5,7 @@
 #include "common/Vector.h"
 #include "common/Matrix.h"
 #include "common/Material.h"
+#include "common/Animation.h"
 
 void Model_InitModule(void);
 void Model_DeinitModule(void);
@@ -13,27 +14,6 @@ void Model_DeinitModule(void);
 struct BoundingVolume {
 	Vector v1;
 	Vector v2;
-};
-
-// Animation.h
-// correct this
-struct FrameInstance {
-    Vector* pVector;
-    char padding[0x7C];
-};
-
-struct Animation {
-	void* pTemplate;
-    Matrix* pMatrix;
-    char padding[0x78];
-	
-	void SetLocalToWorldDirty(void);
-	void Destroy(void);
-	void CalculateMatrices(void);
-	static Animation* Create(char*, Matrix*);
-	Matrix* GetNodeMatrix(int);
-	
-    FrameInstance frames[];
 };
 
 struct RefPoint {
@@ -119,7 +99,7 @@ struct Model {
 	ModelTemplate* pTemplate;
 	Animation* pAnimation;
 	Matrix* pMatrices;
-	float* unkC;
+	float* unkC; // inverse scale values
 	u8* subobjectData;
 	int renderType;
 	union
@@ -172,9 +152,9 @@ struct Model {
 	
 	int Draw(u16*);
     ModelExplorer_GC* Explore(int*, int*, int*);
-    int ExploreNextFace(ModelExplorer*);
-    int ExploreNextMaterial(ModelExplorer*);
-    int ExploreNextSubObject(ModelExplorer*);
+    bool ExploreNextFace(ModelExplorer*);
+    bool ExploreNextMaterial(ModelExplorer*);
+    bool ExploreNextSubObject(ModelExplorer*);
 	void ExploreClose(ModelExplorer*);
 };
 

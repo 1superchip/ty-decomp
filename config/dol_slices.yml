@@ -3428,19 +3428,12 @@ common/Source/Camera.cpp:
    .bss: [0x802dbd50, 0x802dbe00]
    .sdata2: [0x80402218, 0x80402228]
 
-#common/Source/Collision.cpp:
-#   .text: [0x8020b2b4, 0x80211380]
-#   .rodata: [0x8023fb50, 0x8023fc50]
-#   .bss: [0x802dbe00, 0x802dee50]
-#   .sbss: [0x803fb200, 0x803fb248]
-#   .sdata2: [0x80402228, 0x80402278]
-
-#Collision.cpp:
-#   .text: [0x8020b2b4, 0x80211380]
-#   .rodata: [0x8023fb50, 0x8023fc50]
-#   .bss: [0x802dbe00, 0x802dee50]
-#   .sbss: [0x803fb200, 0x803fb248]
-#   .sdata2: [0x80402228, 0x80402278]
+common/Source/Collision.cpp:
+   .text: [0x8020b2b4, 0x80211380]
+   .rodata: [0x8023fb50, 0x8023fc50]
+   .bss: [0x802dbe00, 0x802dee50]
+   .sbss: [0x803fb200, 0x803fb248]
+   .sdata2: [0x80402228, 0x80402278]
 
 common/Source/Crc.cpp:
    .text: [0x80211380, 0x802115c0]
@@ -3730,3 +3723,12 @@ common/gc/Blitter.cpp:
 #Debug.cpp:
 #   .text: [0x8023c760, 0x8023C780]
 #   .sbss: [0x803fb580, 0x803FB5A0] # ?
+
+#Dolphin/_init_registers.s:
+#   .init: [0x80003278, 0x80003294]
+
+#Dolphin/os/start_init_data.s:
+#    .init: [0x80003294, 0x80003354]
+
+#Dolphin/os/fake_info.s:
+#    .init: [0x8000556C, 0x80005608]

@@ -23,11 +23,6 @@ inline T Clamp(T x, T min, T max) {
     return (x < min) ? min : (x > max) ? max : x;
 }
 
-union sindata {
-    float xf;
-    int xi;
-};
-
 int RandomIR(int*, int, int);
 int RandomI(int*);
 float RandomFR(int*, float, float);
@@ -38,7 +33,7 @@ float NormaliseAngle(float);
 #define PI2 1.5707964f
 #define _table_cosf(angle) _table_sinf(angle + PI2)
 
-inline float sqrtf(float x)
+extern inline float sqrtf(float x)
 {
 	static const double _half=.5;
 	static const double _three=3.0;

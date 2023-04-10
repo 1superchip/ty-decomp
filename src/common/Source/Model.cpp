@@ -4,6 +4,7 @@
 #include "common/FileSys.h"
 #include "common/Str.h"
 #include "common/PtrList.h"
+#include "common/Animation.h"
 
 // from Str.cpp
 extern bool gAssertBool;
@@ -101,10 +102,10 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         modelTemplates.AddEntry(pModelTemplate);
     }
     int modelSize = (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) + sizeof(Model) + (pModelTemplate->pModelData->nmbrOfMatrices * 4);
-    Model* out = (Model*)Heap_MemAlloc(pModelTemplate->pModelData->nmbrOfSubObjects + modelSize);
-    pModel = modelInstances.AddEntry(out);
+    pModel = (Model*)Heap_MemAlloc(pModelTemplate->pModelData->nmbrOfSubObjects + modelSize);
+    pModel = modelInstances.AddEntry(pModel);
     pModel->pTemplate = pModelTemplate;
-    pModel->pMatrices = (Matrix*)&pModel->matrices;
+    pModel->pMatrices = pModel->matrices;
     pModel->unkC = (float*)(pModel->pMatrices + pModelTemplate->pModelData->nmbrOfMatrices);
     pModel->subobjectData = (u8*)(pModel->unkC + pModelTemplate->pModelData->nmbrOfMatrices);
     if (pAnimName != NULL) {
@@ -130,7 +131,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
 
 void Model::Destroy(void) {
     flags.bits.b0 = 3;
-    if (!((u8)flags.flagData >> 5 & 1)) {
+    if (!flags.bits.bHasAnimation) {
         return;
     }
     if (pAnimation != NULL) {
@@ -148,6 +149,7 @@ void Model::Purge(void) {
             if ((*ppModels)->pTemplate != NULL && --(*ppModels)->pTemplate->referenceCount == 0) {
                 for (int i = 0; i < (*ppModels)->pTemplate->pModelData->nmbrOfSubObjects; i++) {
                     for (int j = 0; j < (*ppModels)->pTemplate->pModelData->pSubObjects[i].nmbrOfMaterials; j++) {
+						// destroy all subobject materials
                         (*ppModels)->pTemplate->pModelData->pSubObjects[i].pMaterials[j].pMaterial->Destroy();
                     }
                 }
@@ -177,8 +179,6 @@ void Model::SetRotation(Vector* pRot) {
     }
 }
 
-// https://decomp.me/scratch/kkyBc
-// clean this up when Animation is decomped
 void Model::SetAnimation(Animation* pAnim) {
     pAnimation = pAnim;
     if (pTemplate->pModelData->nmbrOfAnimNodes == 0) {
@@ -191,7 +191,7 @@ void Model::SetAnimation(Animation* pAnim) {
         return;
     }
     for(int i = 0; i < pTemplate->pModelData->nmbrOfAnimNodes; i++) {
-        pAnim->frames[i].pVector = &pTemplate->pModelData->unk14[i];
+        pAnim->frames[i].pOrigin = &pTemplate->pModelData->unk14[i];
     }
 }
 
@@ -205,10 +205,8 @@ bool Model::IsSubObjectEnabled(int subObjectIndex) {
     return !(subobjectData[subObjectIndex] & 1);
 }
 
-void Model::EnableSubObject(int subObjectIndex, bool arg2) {
-    arg2 = !arg2;
-    int data = subobjectData[subObjectIndex] & ~1;
-    subobjectData[subObjectIndex] = data | arg2;
+void Model::EnableSubObject(int subObject, bool arg2) {
+    subobjectData[subObject] = (subobjectData[subObject] & ~1) | (arg2 ? 0 : 1); // lowest bit determines if it's active
 }
 
 void Model::EnableOnlySubObject(int subObjectIndex, bool arg2) {
@@ -232,11 +230,16 @@ void Model::SetInverseScaleValue(int idx, float arg2) {
 
 extern "C" int strcmpi(char*, char*);
 
-bool Model::RefPointExists(char* pRefPointName, int* arg2) {
+// optional parameter pRefPointIdx
+// pass NULL if the refpoint index is unneeded
+// the value at pRefPointIdx is set to the index of the found refpoint
+// returns true if the refpoint exists
+// else returns false
+bool Model::RefPointExists(char* pRefPointName, int* pRefPointIdx) {
     for(int i = 0; i < pTemplate->pModelData->nmbrOfRefPoints; i++) {
         if (strcmpi(pTemplate->pModelData->pRefPoints[i].pName, pRefPointName) == 0) {
-            if (arg2 != NULL) {
-                *arg2 = i;
+            if (pRefPointIdx != NULL) {
+                *pRefPointIdx = i;
             }
             return true;
         }
@@ -263,11 +266,16 @@ void Model::GetRefPointWorldPosition(int refPointIndex, Vector* pOut) {
     pOut->ApplyMatrix(pOut, pAnimation->GetNodeMatrix(pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 - 1));
 }
 
-bool Model::SubObjectExists(char* pSubObjectName, int* arg2) {
+// optional parameter pSubObjectIdx
+// pass NULL if the subobject index is unneeded
+// the value at pSubObjectIdx is set to the index of the found subobject
+// returns true if the subobject exists
+// else returns false
+bool Model::SubObjectExists(char* pSubObjectName, int* pSubObjectIdx) {
     for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
         if (strcmpi(pTemplate->pModelData->pSubObjects[i].pName, pSubObjectName) == 0) {
-            if (arg2 != NULL) {
-                *arg2 = i;
+            if (pSubObjectIdx != NULL) {
+                *pSubObjectIdx = i;
             }
             return true;
         }

@@ -58,7 +58,7 @@ extern "C" void memset(void*, int, int);
 
 
 static const int GAMEDATA_VERSION = 0x60000 | VersionNumber[0] | VersionNumber[1] << 1 | VersionNumber[2] << 2 | VersionNumber[3] << 3;
-static SaveData *gameData;
+static SaveData* gameData;
 GameDataSettings* pGameSettings;
 
 void GameData_Init(void) {

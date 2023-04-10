@@ -39,6 +39,10 @@ int Model::disableTrivialRejection;
 extern float Model_TrivialRejectTestMinW;
 extern float Model_TrivialRejectTestMaxW;
 
+// https://decomp.me/scratch/OReIW
+// https://decomp.me/scratch/hBQXJ
+
+
 int Model::Draw(u16* pSubObjs) {
     static float vertexBuffer[65536];
     static char normalBuffer[65536];
@@ -513,7 +517,7 @@ void ModelExplorer_GC::BuildVertex(int vtxIndex) {
     vertices[vtxIndex].pos.x = pVertices[*vertexIndices].pos[0];
     vertices[vtxIndex].pos.y = pVertices[*vertexIndices].pos[1];
     vertices[vtxIndex].pos.z = pVertices[*vertexIndices].pos[2];
-    vertices[vtxIndex].normal[0] = pVertices[*normalIndices].normal[2] / 64.0f;
+    vertices[vtxIndex].normal[0] = pVertices[*normalIndices].normal[2] / 64.0f; // bug? should use normal[0]?
     vertices[vtxIndex].normal[1] = pVertices[*normalIndices].normal[1] / 64.0f;
     vertices[vtxIndex].normal[2] = pVertices[*normalIndices].normal[2] / 64.0f;
     vertices[vtxIndex].color.x = pVertices[*colorIndices].color[0] / 255.0f;
@@ -541,7 +545,7 @@ void ModelExplorer_GC::BuildVertex(int vtxIndex) {
     currentVertex++;
 }
 
-int Model::ExploreNextFace(ModelExplorer* pExplorer) {
+bool Model::ExploreNextFace(ModelExplorer* pExplorer) {
     if (pExplorer->currentVertex < pExplorer->vertexCount) {
         ModelExplorer_GC* explorerGC = (ModelExplorer_GC*)pExplorer;
         explorerGC->BuildVertex(pExplorer->currentVertex % 3);
@@ -560,10 +564,10 @@ int Model::ExploreNextFace(ModelExplorer* pExplorer) {
             return ExploreNextMaterial(pExplorer);
         }
     }
-    return 1;
+    return true;
 }
 
-int Model::ExploreNextMaterial(ModelExplorer* pExplorer) {
+bool Model::ExploreNextMaterial(ModelExplorer* pExplorer) {
 	// no inheritance?
     ModelExplorer_GC* explorerGC = (ModelExplorer_GC*)pExplorer;
     int matCount = pTemplate->pModelData->pSubObjects[pExplorer->subObjectIdx].nmbrOfMaterials;
@@ -575,7 +579,7 @@ int Model::ExploreNextMaterial(ModelExplorer* pExplorer) {
     return 1;
 }
 
-int Model::ExploreNextSubObject(ModelExplorer* pExplorer) {
+bool Model::ExploreNextSubObject(ModelExplorer* pExplorer) {
     if (++pExplorer->subObjectIdx < pTemplate->pModelData->nmbrOfSubObjects) {
         ModelExplorer_GC* explorerGC = (ModelExplorer_GC*)pExplorer;
         pExplorer->materialIdx = 0;

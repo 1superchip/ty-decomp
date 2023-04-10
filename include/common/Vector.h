@@ -68,6 +68,11 @@ struct Vector {
 		y = pSrc->y - pImm->y;
 		z = pSrc->z - pImm->z;
 	}
+    void Subtract(Vector* pOther) {
+		x -= pOther->x;
+		y -= pOther->y;
+		z -= pOther->z;
+	}
     void Scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
