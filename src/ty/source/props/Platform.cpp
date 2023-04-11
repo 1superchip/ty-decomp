@@ -172,7 +172,7 @@ void Platform::BeginUpdate(void) {
 		iter++;
 	}
 	if (unk58 != NULL) {
-		unk58[5].CMultiply(&unk58[5], 1.0f / numAttached);
+		unk58[5].Scale(1.0f / numAttached);
 	}
 }
 
@@ -196,7 +196,7 @@ void Platform::UpdateTilt(void) {
 				Vector tmp = unk58[5];
 				tmp.y = 0.0f;
 				tmp.ClampMagnitude(&tmp, GetDesc()->maxMag);
-				tmp.CMultiply(&tmp, GetDesc()->maxTilt / GetDesc()->maxMag);
+				tmp.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
 				unk7C.x = AdjustFloat(unk7C.x, -tmp.z, 0.1f);
 				unk7C.z = AdjustFloat(unk7C.z, tmp.x, 0.1f);
 				return;

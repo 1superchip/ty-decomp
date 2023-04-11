@@ -15,6 +15,10 @@ template <typename T>
 inline T Sqr(T x) {
     return x * x;
 }
+template <typename T>
+inline T Abs(T x) {
+    return (x < 0) ? -x : x;
+}
 
 // may not have been a template
 // this can always be changed later

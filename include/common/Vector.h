@@ -91,11 +91,15 @@ struct Vector {
     void SetZero(void) {
         x = y = z = 0.0f;
     }
-	void CMultiply(Vector* pOther, float scale) {
-		x = pOther->x * scale;
-		y = pOther->y * scale;
-		z = pOther->z * scale;
-	}
+    void CMultiply(Vector* pOther, float scalar) {
+        x = pOther->x * scalar;
+        y = pOther->y * scalar;
+        z = pOther->z * scalar;
+        w = pOther->w * scalar;
+    }
+    void CMultiply(float scalar) {
+        CMultiply(this, scalar);
+    }
 	void ApplyMatrix(Matrix* pMatrix) {
 		ApplyMatrix(this, pMatrix);
 	}
