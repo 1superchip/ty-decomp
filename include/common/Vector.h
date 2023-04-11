@@ -91,6 +91,14 @@ struct Vector {
     void SetZero(void) {
         x = y = z = 0.0f;
     }
+	void Inverse(Vector* pOther) {
+		x = pOther->x * -1.0f;
+		y = pOther->y * -1.0f;
+		z = pOther->z * -1.0f;
+	}
+	void Inverse(void) {
+		Inverse(this);
+	}
     void CMultiply(Vector* pOther, float scalar) {
         x = pOther->x * scalar;
         y = pOther->y * scalar;

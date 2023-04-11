@@ -720,10 +720,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, C
                         Vector surfaceNormal = pItem->collisionThing->normal;
                         if (b0) {
                             SwapPtrs(&p2, &p3);
-                            // surfaceNormal.Scale(&surfaceNormal, -1.0f) might be fake
-                            // debug build calls a single function which then calls a function to multiply by -1.0f
-                            // a Scale inline which takes only a float might be fake?
-                            surfaceNormal.Scale(&surfaceNormal, -1.0f);
+                            surfaceNormal.Inverse();
                         }
                         if (CheckPoint(pVec1, pVec0, p2, p1) &&
                             CheckPoint(pVec1, pVec0, p3, p2) &&
@@ -795,7 +792,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                             Vector* p2 = (Vector*)&pItem->collisionThing->verts[2].pos;
                             Vector normal = pItem->collisionThing->normal;
                             Vector invNormal = pItem->collisionThing->normal;
-                            invNormal.Scale(&invNormal, -1.0f);
+                            invNormal.Inverse();
                             bool swept;
                             if (CheckTrianglePoint((float*)&pRay->pos, pItem)) {
                                 swept = SweepSphereToTri(pRay, p1, p3, p2, &normal, &invNormal, &lastCollision);

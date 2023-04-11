@@ -471,11 +471,10 @@ void MKSceneManager::CalcZoneVis(void) {
         (pOccludeVector + 8)->Cross(pVec, pVec4);
         float dot = vec3.Dot(pOccludeVector);
         if (dot > 0.0f) {
-            // operators?
-            Multiply((pOccludeVector + 5), -1.0f);
-            Multiply((pOccludeVector + 6), -1.0f); // Inverse
-            Multiply((pOccludeVector + 7), -1.0f);
-            Multiply((pOccludeVector + 8), -1.0f);
+            (pOccludeVector + 5)->Inverse();
+            (pOccludeVector + 6)->Inverse();
+            (pOccludeVector + 7)->Inverse();
+            (pOccludeVector + 8)->Inverse();
             (pOccludeVector + 9)->x = pOccludeVector->x;
             (pOccludeVector + 9)->y = pOccludeVector->y;
             (pOccludeVector + 9)->z = pOccludeVector->z;
