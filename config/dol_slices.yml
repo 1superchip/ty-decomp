@@ -204,7 +204,7 @@
 #   .bss: [0x8029b978, 0x8029b990]
 #   .sdata2: [0x803fbd20, 0x803fbd40]
 
-#DialogEffect.cpp:
+#ty/source/dialogplayer/DialogEffect.cpp:
 #   .text: [0x8002fec0, 0x80032224]
 #   .ctors: [0x8023c7c0, 0x8023c7c4]
 #   .data: [0x80242ef8, 0x802433e0]
@@ -213,7 +213,7 @@
 #   .sbss: [0x803f9d10, 0x803f9d20]
 #   .sdata2: [0x803fbd40, 0x803fbd70]
 
-#DialogPlayer.cpp:
+#ty/source/dialogplayer/DialogPlayer.cpp:
 #   .text: [0x80032224, 0x800372c0]
 #   .rodata: [0x8023cfd0, 0x8023cfe0]
 #   .data: [0x802433e0, 0x80243550]
@@ -1949,7 +1949,7 @@ ty/source/props/WeatherProp.cpp:
 #   .sbss: [0x803fa778, 0x803fa788]
 #   .sdata2: [0x803ffe80, 0x803ffe88]
 
-#BezierPathFollower.cpp:
+#ty/source/BezierPathFollower.cpp:
 #   .text: [0x80135a04, 0x8013654c]
 #   .sdata2: [0x803ffe88, 0x803ffeb0]
 
@@ -1972,12 +1972,12 @@ ty/source/props/WeatherProp.cpp:
 #   .sbss: [0x803fa798, 0x803fa800]
 #   .sdata2: [0x803fff28, 0x80400068]
 
-#BoomerangHud.cpp:
+#ty/source/BoomerangHud.cpp:
 #   .text: [0x80140484, 0x80140b2c]
 #   .rodata: [0x8023e528, 0x8023e548]
 #   .sdata2: [0x80400068, 0x804000a0]
 
-#boomerangManager.cpp:
+#ty/source/boomerangManager.cpp:
 #   .text: [0x80140b2c, 0x80143eb8]
 #   .ctors: [0x8023ca18, 0x8023ca1c]
 #   .data: [0x80260508, 0x80260610]
@@ -2008,7 +2008,7 @@ ty/source/BoundingRegion.cpp:
 #   .sbss: [0x803fa820, 0x803fa830]
 #   .sdata2: [0x80400178, 0x804001b8]
 
-#BushPig.cpp:
+#ty/source/BushPig.cpp:
 #   .text: [0x801485c8, 0x8014f010]
 #   .ctors: [0x8023ca24, 0x8023ca28]
 #   .rodata: [0x8023e648, 0x8023e760]
@@ -2018,7 +2018,7 @@ ty/source/BoundingRegion.cpp:
 #   .sbss: [0x803fa830, 0x803fa848]
 #   .sdata2: [0x804001b8, 0x80400328]
 
-#checkpoint.cpp:
+#ty/source/checkpoint.cpp:
 #   .text: [0x8014f010, 0x801500b4]
 #   .ctors: [0x8023ca28, 0x8023ca2c]
 #   .rodata: [0x8023e760, 0x8023e790]
@@ -2028,7 +2028,7 @@ ty/source/BoundingRegion.cpp:
 #   .sbss: [0x803fa848, 0x803fa858]
 #   .sdata2: [0x80400328, 0x80400350]
 
-#CollisionObject.cpp:
+#ty/source/CollisionObject.cpp:
 #   .text: [0x801500b4, 0x801511e4]
 #   .rodata: [0x8023e790, 0x8023e7b0]
 #   .data: [0x802616a0, 0x802616b0]
@@ -2069,7 +2069,7 @@ ty/source/DDA.cpp:
 #   .sbss: [0x803fa8a0, 0x803fa8a8]
 #   .sdata2: [0x80400548, 0x80400560]
 
-#Drum.cpp:
+#ty/source/Drum.cpp:
 #   .text: [0x801591f0, 0x80159f50]
 #   .ctors: [0x8023ca30, 0x8023ca34]
 #   .rodata: [0x8023e8b8, 0x8023e8d8]
@@ -2079,7 +2079,7 @@ ty/source/DDA.cpp:
 #   .sbss: [0x803fa8a8, 0x803fa8b0]
 #   .sdata2: [0x80400560, 0x804005b0]
 
-#DustTrail.cpp:
+#ty/source/DustTrail.cpp:
 #   .text: [0x80159f50, 0x8015a26c]
 #   .rodata: [0x8023e8d8, 0x8023e8e8]
 #   .sdata2: [0x804005b0, 0x804005d0]
@@ -2103,7 +2103,7 @@ ty/source/DDA.cpp:
 #   .sbss: [0x803fa8b8, 0x803fa8d0]
 #   .sdata2: [0x804005d8, 0x804006b8]
 
-#ExtendedAnalogControl.cpp:
+#ty/source/ExtendedAnalogControl.cpp:
 #   .text: [0x8015d78c, 0x8015d998]
 #   .sdata2: [0x804006b8, 0x804006e0]
 
@@ -2165,7 +2165,7 @@ ty/source/GameObjectManager.cpp:
 #   .sdata: [0x803f88c8, 0x803f8900]
 #   .sbss: [0x803fa908, 0x803fa910]
 
-#GuideParticle.cpp:
+#ty/source/GuideParticle.cpp:
 #   .text: [0x80163eb4, 0x80164938]
 #   .ctors: [0x8023ca50, 0x8023ca54]
 #   .data: [0x80263ef0, 0x80264060]
@@ -2231,9 +2231,9 @@ ty/source/LensFlare.cpp:
 #   .sdata: [0x803f8a48, 0x803f8a80]
 #   .sbss: [0x803fa980, 0x803fa988]
 
-#LineOfSight.cpp:
-#   .text: [0x80172594, 0x80172b48]
-#   .sdata2: [0x80400ba0, 0x80400bb8]
+ty/source/LineOfSight.cpp:
+  .text: [0x80172594, 0x80172b48]
+  .sdata2: [0x80400ba0, 0x80400bb8]
 
 #LoadLevel.cpp:
 #   .text: [0x80172b48, 0x80176bf4]
@@ -2289,7 +2289,7 @@ ty/source/mist.cpp:
 #   .sbss: [0x803fa9d0, 0x803faa00]
 #   .sdata2: [0x80400ca8, 0x80400db8]
 
-#ParticleEmitter.cpp:
+#ty/source/ParticleEmitter.cpp:
 #   .text: [0x8017df00, 0x8017e24c]
 #   .sbss: [0x803faa00, 0x803faa08]
 #   .sdata2: [0x80400db8, 0x80400de0]
@@ -2372,7 +2372,7 @@ ty/source/Script.cpp:
    .sbss: [0x803faa88, 0x803faa98]
    .sdata2: [0x80401118, 0x80401120]
 
-#SeaMine.cpp:
+#ty/source/SeaMine.cpp:
 #   .text: [0x8018cf64, 0x8018eaa4]
 #   .ctors: [0x8023ca70, 0x8023ca74]
 #   .data: [0x80266c38, 0x80266f00]
@@ -2515,7 +2515,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fabc0, 0x803fabc8]
 #   .sdata2: [0x804016b0, 0x804016b8]
 
-#TyAttributes.cpp:
+#ty/source/TyAttributes.cpp:
 #   .text: [0x801b5a68, 0x801b6238]
 #   .ctors: [0x8023ca90, 0x8023ca94]
 #   .data: [0x8026b180, 0x8026b2b0]
@@ -2533,7 +2533,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fabd0, 0x803fabd8]
 #   .sdata2: [0x804016c0, 0x804016f8]
 
-#TyHealth.cpp:
+#ty/source/TyHealth.cpp:
 #   .text: [0x801b8038, 0x801b91c0]
 #   .rodata: [0x8023efe0, 0x8023f000]
 #   .data: [0x8026b2c0, 0x8026b338]
@@ -2541,7 +2541,7 @@ ty/source/Script.cpp:
 #   .sdata: [0x803f95c0, 0x803f95d0]
 #   .sdata2: [0x804016f8, 0x80401758]
 
-#TyMemCard.cpp:
+#ty/source/TyMemCard.cpp:
 #   .text: [0x801b91c0, 0x801bb7b8]
 #   .rodata: [0x8023f000, 0x8023f010]
 #   .data: [0x8026b338, 0x8026b410]
@@ -2559,7 +2559,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fac08, 0x803fac10]
 #   .sdata2: [0x804017a0, 0x80401858]
 
-#underWaterEffects.cpp:
+#ty/source/underWaterEffects.cpp:
 #   .text: [0x801bdbe4, 0x801be9a4]
 #   .data: [0x8026b6c0, 0x8026b6e0]
 #   .bss: [0x802ba190, 0x802ba210]
@@ -2567,7 +2567,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fac10, 0x803fac28]
 #   .sdata2: [0x80401858, 0x804018c8]
 
-#UserInterface.cpp:
+#ty/source/UserInterface.cpp:
 #   .text: [0x801be9a4, 0x801bf220]
 #   .sdata2: [0x804018c8, 0x804018e8]
 
@@ -2613,7 +2613,7 @@ ty/source/Script.cpp:
 #   .data: [0x8026b958, 0x8026b9d0]
 #   .sdata2: [0x80401a78, 0x80401ae0]
 
-#WaterSlide.cpp:
+#ty/source/WaterSlide.cpp:
 #   .text: [0x801c31f0, 0x801c3aa4]
 #   .data: [0x8026b9d0, 0x8026bab0]
 #   .bss: [0x802bb0e0, 0x802bb1d8]
@@ -2641,7 +2641,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fac88, 0x803fac98]
 #   .sdata2: [0x80401b90, 0x80401ba8]
 
-#WobbleTexture.cpp:
+#ty/source/WobbleTexture.cpp:
 #   .text: [0x801c5200, 0x801c60b8]
 #   .rodata: [0x8023f060, 0x8023f0e0]
 #   .sdata2: [0x80401ba8, 0x80401be8]

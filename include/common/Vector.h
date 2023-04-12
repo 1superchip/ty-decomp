@@ -108,6 +108,9 @@ struct Vector {
     void CMultiply(float scalar) {
         CMultiply(this, scalar);
     }
+	void Cross(Vector* pOther) {
+		Cross(this, pOther);
+	}
 	void ApplyMatrix(Matrix* pMatrix) {
 		ApplyMatrix(this, pMatrix);
 	}
