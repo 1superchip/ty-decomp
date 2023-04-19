@@ -58,15 +58,17 @@ struct Vector {
 		y = pSrc->y + pImm->y;
 		z = pSrc->z + pImm->z;
 	}
+	// Adds pOther to this
     void Add(Vector* pOther) {
 		x += pOther->x;
 		y += pOther->y;
 		z += pOther->z;
 	}
-    void Sub(Vector* pSrc, Vector* pImm) {
-		x = pSrc->x - pImm->x;
-		y = pSrc->y - pImm->y;
-		z = pSrc->z - pImm->z;
+	// this = pSrc - pOther
+    void Sub(Vector* pSrc, Vector* pOther) {
+		x = pSrc->x - pOther->x;
+		y = pSrc->y - pOther->y;
+		z = pSrc->z - pOther->z;
 	}
     void Subtract(Vector* pOther) {
 		x -= pOther->x;

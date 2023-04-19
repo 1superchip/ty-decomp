@@ -35,7 +35,7 @@ void DDASession::Init(void) {
 	// 38 entries total
     unk10.Init(38, sizeof(DDAUnk18));
     unk14.Init(38, sizeof(DDAUnk14));
-    unk1C = 0;
+    dbgMsgTimer = 0;
     unk20 = 0;
     unk24[19] = 0;
     LoadStatsInfo();
@@ -51,8 +51,8 @@ void DDASession::Update(void) {
 }
 
 void DDASession::DrawDebugMessage(void) {
-	if (unk1C > 0) {
-        unk1C--;
+	if (dbgMsgTimer > 0) {
+        dbgMsgTimer--;
     }
 }
 
@@ -83,7 +83,7 @@ void DDASession::StartSession(void) {
 }
 
 void DDASession::EndSession(void) {
-    TimerInfo endTime; // checkpoint end time
+    TimerInfo endTime;
     if (currentCheckpoint != false) {
         EndCheckpoint();
     }

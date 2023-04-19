@@ -13,12 +13,15 @@ extern "C" int strlen(char*);
 
 // bufferIndex inline
 
-char* Str_Printf(char* str, ...) {
+// Returns a pointer to the formatted string
+// fmt is the format "%s"
+// this function takes variadic args
+char* Str_Printf(char* fmt, ...) {
     char* currStr = &buffer[bufferIndex];
     va_list args;
     
-    va_start(args, str);
-    vsprintf(currStr, str, args);
+    va_start(args, fmt);
+    vsprintf(currStr, fmt, args);
     
     int len = strlen(currStr);
     bufferIndex += (len + 0x10) & 0xFFFFFFF0;

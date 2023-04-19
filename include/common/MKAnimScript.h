@@ -1,6 +1,7 @@
 #ifndef COMMON_MKANIMSCRIPT
 #define COMMON_MKANIMSCRIPT
 
+#include "common/Animation.h"
 #include "types.h"
 
 #define CycleType_Stop 0
@@ -9,12 +10,6 @@
 
 void MKAnimScript_InitModule(void);
 void MKAnimScript_DeinitModule(void);
-
-struct Animation {
-	void* pTemplate;
-    void Tween(float, float);
-    void TweenNode(float, float, int);
-};
 
 struct AnimEvent {
     char* unk0_string;

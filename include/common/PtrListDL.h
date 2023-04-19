@@ -69,15 +69,15 @@ inline void PtrListDL<T>::Init(int count, int size) {
 
 template <typename T>
 inline void PtrListDL<T>::Deinit(void) {
-    T** ptrs = pMem;
     T* memory = (T*)pMem;
-    T* temp = memory;
-    while (*--(int**)temp != NULL) {
-        if (*(T**)temp < memory) {
-            memory = *(T**)temp;
+    T** temp = pMem;
+    while (*--temp != NULL) {
+        if (*temp < memory) {
+            memory = *temp;
         }
     }
-    if (temp != (T*)&gEmptyPtrListDL[0]) {
+    if (temp != (T**)&gEmptyPtrListDL[0]) {
+        T** ptrs = pMem;
         while(*ptrs != NULL) {
             if (*ptrs < memory) {
                 memory = *ptrs;

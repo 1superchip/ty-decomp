@@ -94,6 +94,7 @@ struct DynamicItem {
             unk10.pMem++;
         }
     }
+    // Gets the matrix of the dynamic item
 	Matrix* GetMatrix(void) {
 		if (idx >= 0) {
 			return &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(idx)];

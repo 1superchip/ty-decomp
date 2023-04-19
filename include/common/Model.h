@@ -151,7 +151,7 @@ struct Model {
 	Material* GetSubObjectMaterial(int, int);
 	
 	int Draw(u16*);
-    ModelExplorer_GC* Explore(int*, int*, int*);
+    ModelExplorer_GC* Explore(int* pVertexCount, int* pTriangleCount, int* pStripCount);
     bool ExploreNextFace(ModelExplorer*);
     bool ExploreNextMaterial(ModelExplorer*);
     bool ExploreNextSubObject(ModelExplorer*);

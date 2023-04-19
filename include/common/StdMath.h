@@ -35,7 +35,7 @@ float NormaliseAngle(float);
 
 #define PI 3.1415928f
 #define PI2 1.5707964f
-#define _table_cosf(angle) _table_sinf(angle + PI2)
+#define _table_cosf(angle) _table_sinf((angle) + PI2)
 
 extern inline float sqrtf(float x)
 {

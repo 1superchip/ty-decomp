@@ -749,7 +749,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, C
                                     *pCr = lastCollision;
                                 }
                                 bFound = true;
-                                pVec1 = &lastCollision.pos;
+                                pVec1 = &lastCollision.pos; // set the new end position to the position of the collision
                             }
                         }
                     }
@@ -807,6 +807,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                                 lastCollision.pModel = NULL;
                                 lastCollision.pInfo = pItem->pTriangle->pCollisionInfo;
                                 if (pCr) {
+                                    // if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
                                 }
                                 pRay->unk60 = lastCollision.unk40;
@@ -888,8 +889,9 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
 }
 
 // this function proves miny is a parameter to void Collision_Init(int, float, float, float, float, float, int, int);
+// May be placed elsewhere in the file
 /* Unused Function */
-void Collision_Init(int arg0, Model* pModel, int arg2, int arg3) {
+void Collision_Init(int heapSize, Model* pModel, int arg2, int arg3) {
     arg2 = Max<int>(0x40, arg2);
     arg3 = Max<int>(0x40, arg3);
     Vector sp0;
@@ -904,9 +906,10 @@ void Collision_Init(int arg0, Model* pModel, int arg2, int arg3) {
     float maxx = Max<float>(sp10.x, sp0.x);
     float maxy = Max<float>(sp10.y, sp0.y);
     float maxz = Max<float>(sp10.z, sp0.z);
-    Collision_Init(arg0, minx - 1.0f, miny - 1.0f, minz - 1.0f, (maxx - minx) + 2.0f, (maxz - minz) + 2.0f, arg2, arg3);
+    Collision_Init(heapSize, minx - 1.0f, miny - 1.0f, minz - 1.0f, (maxx - minx) + 2.0f, (maxz - minz) + 2.0f, arg2, arg3);
 }
 
+// Updates all DynamicItems in dynamicModels
 void Collision_Update(void) {
     DynamicItem** pDynamicItems = dynamicModels.GetMem();
     while (*pDynamicItems != NULL) {
@@ -1404,7 +1407,10 @@ void Collision_DeleteDynamicModel(Model* pModel) {
 void Collision_Draw(void) {}
 
 void DynamicItem::Update(void) {
+    // check if the object's position is different than its subobject position
     if (!pos.Equals(GetMatrix()->Row3())) {
+        // if the position is different than the subobject's position
+        // update the position and recompute AABB
         pos = *GetMatrix()->Row3();
         BoundingVolume* pVolume = pModel->GetBoundingVolume(idx);
         CalcAAB(pVolume, GetMatrix(), &unk14, &unk24);

@@ -101,7 +101,7 @@ struct DDASession {
     PtrListDL<DDAUnk18> unk10; // check this??
     PtrListDL<DDAUnk14> unk14; // death struct
     DDAUnk18* currentCheckpoint;
-    int unk1C;
+    int dbgMsgTimer;
     u8 unk20;
     int unk24[(0x74-0x24) / 4];
 	
