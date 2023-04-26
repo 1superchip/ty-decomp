@@ -425,18 +425,6 @@ void MKSceneManager::MakePropTree(void) {
     }
 }
 
-static inline void Subtract(Vector* diff, Vector* arg1, Vector* arg0) {
-    diff->x = arg1->x - arg0->x;
-    diff->y = arg1->y - arg0->y;
-    diff->z = arg1->z - arg0->z;
-}
-
-static inline void Multiply(Vector* vec, float t) {
-    vec->x = t * vec->x;
-    vec->y = t * vec->y;
-    vec->z = t * vec->z;
-}
-
 void MKSceneManager::CalcZoneVis(void) {
     Vector vec;
     Vector vec1;
@@ -453,24 +441,22 @@ void MKSceneManager::CalcZoneVis(void) {
     Vector* pVec6 = &vec6;
     Vector* pVec5 = &vec5;
     Vector* pVec4 = &vec4;
-    int objectIdx = 0;
 
-    while (objectIdx < occlusionObjects) {
+    for (int objectIdx = 0; objectIdx < occlusionObjects; objectIdx++) {
         Vector* pOccludeVector = &occludeArray[objectIdx * 10];
-        Subtract(&vec3, pOccludeVector + 1, pCurrView->unk48.Row3());
-        Subtract(&vec2, pOccludeVector + 2, pCurrView->unk48.Row3());
-        Subtract(&vec1, pOccludeVector + 3, pCurrView->unk48.Row3());
-        Subtract(pVec, pOccludeVector + 4, pCurrView->unk48.Row3());
-        Subtract(&vec7, pOccludeVector + 3, pOccludeVector + 1);
-        Subtract(&vec6, pOccludeVector + 1, pOccludeVector + 2);
-        Subtract(&vec5, pOccludeVector + 4, pOccludeVector + 3);
-        Subtract(&vec4, pOccludeVector + 2, pOccludeVector + 4);
+        vec3.Sub(pOccludeVector + 1, pCurrView->unk48.Row3());
+        vec2.Sub(pOccludeVector + 2, pCurrView->unk48.Row3());
+        vec1.Sub(pOccludeVector + 3, pCurrView->unk48.Row3());
+        vec.Sub(pOccludeVector + 4, pCurrView->unk48.Row3());
+        vec7.Sub(pOccludeVector + 3, pOccludeVector + 1);
+        vec6.Sub(pOccludeVector + 1, pOccludeVector + 2);
+        vec5.Sub(pOccludeVector + 4, pOccludeVector + 3);
+        vec4.Sub(pOccludeVector + 2, pOccludeVector + 4);
         (pOccludeVector + 5)->Cross(&vec3, &vec7);
         (pOccludeVector + 6)->Cross(pVec2, pVec6);
         (pOccludeVector + 7)->Cross(pVec1, pVec5);
         (pOccludeVector + 8)->Cross(pVec, pVec4);
-        float dot = vec3.Dot(pOccludeVector);
-        if (dot > 0.0f) {
+        if (vec3.Dot(pOccludeVector) > 0.0f) {
             (pOccludeVector + 5)->Inverse();
             (pOccludeVector + 6)->Inverse();
             (pOccludeVector + 7)->Inverse();
@@ -484,7 +470,6 @@ void MKSceneManager::CalcZoneVis(void) {
             (pOccludeVector + 9)->y = pOccludeVector->y * -1.0f;
             (pOccludeVector + 9)->z = pOccludeVector->z * -1.0f;
         }
-        objectIdx++;
     }
 }
 
