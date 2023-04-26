@@ -59,7 +59,7 @@ struct Blitter_Image {
     Vector unk10;
     float unk20;
     Vector color;
-	char unk[16];
+    Vector unk40;
 	
 	void Draw(int);
 };

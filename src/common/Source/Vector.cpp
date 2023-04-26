@@ -11,10 +11,15 @@ float Vector::Magnitude(void) {
     return sqrtf(MagSquared());
 }
 
-// order floats so 1.0f is before 0.000001f
-bool OrderFloats(float x) {
-	return x > 1.0f;
+/*
+Unused, stripped 
+bool Vector::IsNormalised();
+// the comparison uses the wrong float?
+*/
+bool Vector__IsNormalised(Vector* pThis) {
+    return Abs<float>(pThis->MagSquared() - 1.0f) < 0.0f;//_unkgp_0x4240;
 }
+
 float Vector::Normalise(Vector* pVector) {
     float len = pVector->MagSquared();
     if (len > 0.000001f) {
@@ -32,25 +37,23 @@ float Vector::Normalise(Vector* pVector) {
 void Vector::ClampMagnitude(Vector* pVector, float maxMag) {
     float vecMagSq = pVector->MagSquared();
     if (vecMagSq > maxMag * maxMag) {
-		maxMag /= sqrtf(vecMagSq);
-        x = maxMag * pVector->x;
-        y = maxMag * pVector->y;
-        z = maxMag * pVector->z;
+		float mag = maxMag / sqrtf(vecMagSq);
+        x = mag * pVector->x;
+        y = mag * pVector->y;
+        z = mag * pVector->z;
         return;
     }
-    x = pVector->x;
-    y = pVector->y;
-    z = pVector->z;
-    w = pVector->w;
+    *this = *pVector;
 }
 
 void Vector::Cross(Vector* pVector, Vector* pVector1) {
-    float cx = (pVector1->y * pVector->z) - (pVector1->z * pVector->y);
-    float cy = (pVector1->z * pVector->x) - (pVector1->x * pVector->z);
-    float cz = (pVector1->x * pVector->y) - (pVector1->y * pVector->x);
-    x = cx;
-    y = cy;
-    z = cz;
+    Vector tmp;
+    tmp.x = (pVector1->y * pVector->z) - (pVector1->z * pVector->y);
+    tmp.y = (pVector1->z * pVector->x) - (pVector1->x * pVector->z);
+    tmp.z = (pVector1->x * pVector->y) - (pVector1->y * pVector->x);
+    x = tmp.x;
+    y = tmp.y;
+    z = tmp.z;
 }
 
 void Vector::Projection(Vector* pVector1, Vector* pVector2) {
@@ -63,25 +66,10 @@ void Vector::Projection(Vector* pVector1, Vector* pVector2) {
 	SetZero();
 }
 
-// https://decomp.me/scratch/Z0Prr
-// operators?
-// still fake?
-inline void sub(Vector& a, Vector &b, Vector& c) {
-    c.x = a.x - b.x;
-    c.y = a.y - b.y;
-    c.z = a.z - b.z;
-}
-
 void Vector::InterpolateLinear(Vector* pFrom, Vector* pTo, float fraction) {
     Vector diff;
-	// sub inline isn't needed
-	// it might clean it up though
-    diff.x = pTo->x - pFrom->x;
-    diff.y = pTo->y - pFrom->y;
-    diff.z = pTo->z - pFrom->z;
-    diff.x *= fraction;
-    diff.y *= fraction;
-    diff.z *= fraction;
+    diff.Sub(pTo, pFrom);
+    diff.Scale(fraction);
     x = pFrom->x + diff.x;
     y = pFrom->y + diff.y;
     z = pFrom->z + diff.z;

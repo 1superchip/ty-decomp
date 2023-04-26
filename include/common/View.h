@@ -73,7 +73,7 @@ struct View {
 	void SetFogPlanes(float, float);
 	void SetFogIntensity(float, float);
 	void SetCameraMatrix(Matrix*);
-	void SetAspectRatio(float, float);
+	void SetAspectRatio(float xRatio, float yRatio);
 	void TransformPoint2Dto3D(float, float, float, Vector*);
 	void OrthoBegin(void);
 	void OrthoEnd(void);

@@ -2,6 +2,7 @@
 #define COMMON_VECTOR
 
 //#include "common/Matrix.h"
+#include "common/StdMath.h"
 
 struct Matrix;
 
@@ -127,6 +128,11 @@ struct Vector {
             (y - pCentre->y) * (y - pCentre->y) + 
             (z - pCentre->z) * (z - pCentre->z) < radius * radius;
     }
+    // bool CheckSphereRadius(Vector* pCentre, float radius) {
+	// 	// this might be closer?
+	// 	// need to check debug build
+    //     return DistSq(pCentre) < Sqr<float>(radius);
+    // }
     float Normalise(void) {
         return Normalise(this);
     }

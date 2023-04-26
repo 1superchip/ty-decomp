@@ -1,12 +1,18 @@
+#ifndef QUADRATIC_H
+#define QUADRATIC_H
 
+#include "common/Vector.h"
 
+// represents a 3D quadratic equation ax^2 + bx + c
 struct Quadratic {
 	Vector pos;
-	Vector coeffsX;
-	Vector coeffsY;
-	Vector coeffsZ;
+	Vector coeffsA; // A coefficients
+	Vector coeffsB; // B coefficients
+	Vector coeffsC; // C coefficients
 	
 	float GetClosestTime(Vector*);
 	void Init(void);
 	void SetPoints(Vector*, Vector*, Vector*);
 };
+
+#endif // QUADRATIC_H

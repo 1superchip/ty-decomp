@@ -26,6 +26,7 @@ static CollisionNode dynGrid[1024];
 
 void* CollisionHeap_Update(int size, int alignment) {
     if (alignment == 0) {
+        // 32 bit alignment by default
         alignment = 4;
     }
     collisionHeapIndex += (alignment - 1);
@@ -76,7 +77,7 @@ bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
     return v3.x * v4.x + v3.y * v4.y + v3.z * v4.z >= 0.0f;
 }
 
-static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix1, Vector* pVec, Vector* pVec2) {
+static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vector* pMax) {
     Vector vecs[8];
     Vector* pLocalVec = &vecs[1];
     
@@ -134,23 +135,23 @@ static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix1, Vector* pVec, Vec
     vecs[7].z = vecs[2].z + pVolume->v2.z;
     
     for(int i = 0; i < 8; i++) {
-        vecs[i].ApplyMatrix(&vecs[i], pMatrix1);
+        vecs[i].ApplyMatrix(&vecs[i], pMatrix);
     }
-    pVec->x = vecs[0].x;
-    pVec->y = vecs[0].y;
-    pVec->z = vecs[0].z;
-    pVec->w = vecs[0].w;
-    pVec2->x = vecs[0].x;
-    pVec2->y = vecs[0].y;
-    pVec2->z = vecs[0].z;
-    pVec2->w = vecs[0].w;
+    pMin->x = vecs[0].x;
+    pMin->y = vecs[0].y;
+    pMin->z = vecs[0].z;
+    pMin->w = vecs[0].w;
+    pMax->x = vecs[0].x;
+    pMax->y = vecs[0].y;
+    pMax->z = vecs[0].z;
+    pMax->w = vecs[0].w;
     for(int i = 1; i < 8; i++) {
-        pVec->x = Min<float>(pVec->x, vecs[i].x);
-        pVec2->x = Max<float>(pVec2->x, vecs[i].x);
-        pVec->y = Min<float>(pVec->y, vecs[i].y);
-        pVec2->y = Max<float>(pVec2->y, vecs[i].y);
-        pVec->z = Min<float>(pVec->z, vecs[i].z);
-        pVec2->z = Max<float>(pVec2->z, vecs[i].z);
+        pMin->x = Min<float>(pMin->x, vecs[i].x);
+        pMax->x = Max<float>(pMax->x, vecs[i].x);
+        pMin->y = Min<float>(pMin->y, vecs[i].y);
+        pMax->y = Max<float>(pMax->y, vecs[i].y);
+        pMin->z = Min<float>(pMin->z, vecs[i].z);
+        pMax->z = Max<float>(pMax->z, vecs[i].z);
     }
 }
 
