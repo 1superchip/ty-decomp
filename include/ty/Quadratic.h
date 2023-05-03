@@ -6,9 +6,9 @@
 // represents a 3D quadratic equation ax^2 + bx + c
 struct Quadratic {
 	Vector pos;
-	Vector coeffsA; // A coefficients
-	Vector coeffsB; // B coefficients
-	Vector coeffsC; // C coefficients
+	Vector coeffsX; // X coefficients
+	Vector coeffsY; // Y coefficients
+	Vector coeffsZ; // Z coefficients
 	
 	float GetClosestTime(Vector*);
 	void Init(void);

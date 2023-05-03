@@ -24,7 +24,7 @@ char* Str_Printf(char* fmt, ...) {
     vsprintf(currStr, fmt, args);
     
     int len = strlen(currStr);
-    bufferIndex += (len + 0x10) & 0xFFFFFFF0;
+    bufferIndex += (len + 0x10) & ~0xF;
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }
@@ -42,7 +42,7 @@ char* Str_CopyString(char* string, int len) {
     }
 
     bufString[idx] = '\0';
-    bufferIndex += (idx + 0x10) & 0xFFFFFFF0;
+    bufferIndex += (idx + 0x10) & ~0xF;
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }

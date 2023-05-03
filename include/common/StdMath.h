@@ -27,10 +27,10 @@ inline T Clamp(T x, T min, T max) {
     return (x < min) ? min : (x > max) ? max : x;
 }
 
-int RandomIR(int*, int, int);
-int RandomI(int*);
-float RandomFR(int*, float, float);
-float _table_sinf(float);
+int RandomIR(int* pSeed, int min, int max); // returns a ranged random number
+int RandomI(int* pSeed);
+float RandomFR(int* pSeed, float min, float max);
+float _table_sinf(float theta);
 float NormaliseAngle(float);
 
 #define PI 3.1415928f
