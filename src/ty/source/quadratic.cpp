@@ -13,9 +13,9 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
 
     while (t <= 1.0f) {
         float t2 = t * t;
-        pos.x = coeffsA.x * t2 + coeffsA.y * t + coeffsA.z;
-        pos.y = coeffsB.x * t2 + coeffsB.y * t + coeffsB.z;
-        pos.z = coeffsC.x * t2 + coeffsC.y * t + coeffsC.z;
+        pos.x = coeffsX.x * t2 + coeffsX.y * t + coeffsX.z;
+        pos.y = coeffsY.x * t2 + coeffsY.y * t + coeffsY.z;
+        pos.z = coeffsZ.x * t2 + coeffsZ.y * t + coeffsZ.z;
         distSq = pPoint->DistSq(&pos);
         if (distSq < closestDist) {
             closestDist = distSq;
@@ -32,9 +32,9 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
         while (t <= f2 + f1) {
             if (!(t < 0.0f) && !(t > 1.0f)) {
                 float f8 = t * t;
-                pos.x = coeffsA.x * f8 + coeffsA.y * t + coeffsA.z;
-                pos.y = coeffsB.x * f8 + coeffsB.y * t + coeffsB.z;
-                pos.z = coeffsC.x * f8 + coeffsC.y * t + coeffsC.z;
+                pos.x = coeffsX.x * f8 + coeffsX.y * t + coeffsX.z;
+                pos.y = coeffsY.x * f8 + coeffsY.y * t + coeffsY.z;
+                pos.z = coeffsZ.x * f8 + coeffsZ.y * t + coeffsZ.z;
                 distSq = pPoint->DistSq(&pos);
                 if (distSq < closestDist) {
                     closestDist = distSq;
@@ -51,29 +51,28 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
 void Quadratic::Init(void) {
 	pos.Set(0.0f, 0.0f, 0.0f);
 	pos.w = 1.0f;
-	coeffsC = pos;
-	coeffsB = coeffsC;
-	coeffsA = coeffsB;
+	coeffsZ = pos;
+	coeffsY = coeffsZ;
+	coeffsX = coeffsY;
 }
 
 // calculate equation coefficients from 3 points
-// something here inlined? (float order?)
 void Quadratic::SetPoints(Vector* arg0, Vector* arg1, Vector* arg2) {
     Vector diff;
     Vector diff1;
     diff1.Sub(arg1, arg0);
     diff.Sub(arg2, arg0);
     
-    coeffsA.y = 4.0f * diff1.x - diff.x;
-    coeffsA.x = diff.x - coeffsA.y;
-    coeffsA.z = arg0->x;
+    coeffsX.y = 4.0f * diff1.x - diff.x;
+    coeffsX.x = diff.x - coeffsX.y;
+    coeffsX.z = arg0->x;
     
-    coeffsB.y = 4.0f * diff1.y - diff.y;
-    coeffsB.x = diff.y - coeffsB.y;
-    coeffsB.z = arg0->y;
+    coeffsY.y = 4.0f * diff1.y - diff.y;
+    coeffsY.x = diff.y - coeffsY.y;
+    coeffsY.z = arg0->y;
     
-    coeffsC.y = 4.0f * diff1.z - diff.z;
-    coeffsC.x = diff.z - coeffsC.y;
-    coeffsC.z = arg0->z;
+    coeffsZ.y = 4.0f * diff1.z - diff.z;
+    coeffsZ.x = diff.z - coeffsZ.y;
+    coeffsZ.z = arg0->z;
     pos.SetZero();
 }

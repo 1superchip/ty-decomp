@@ -2479,7 +2479,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fab70, 0x803fab80]
 #   .sdata2: [0x80401448, 0x80401478]
 
-#tools.cpp:
+#ty/source/tools.cpp:
 #   .text: [0x801a1124, 0x801a5d28]
 #   .rodata: [0x8023ec48, 0x8023eca8]
 #   .data: [0x80268a38, 0x80268bc8]
@@ -3533,9 +3533,9 @@ common/Source/Model.cpp:
 #   .sbss: [0x803fb330, 0x803fb338]
 #   .sdata2: [0x804023c0, 0x804023d0]
 
-#QuatRotation.cpp:
-#   .text: [0x80223894, 0x80223b88]
-#   .sdata2: [0x804023d0, 0x804023e8]
+common/Source/QuatRotation.cpp:
+   .text: [0x80223894, 0x80223b88]
+   .sdata2: [0x804023d0, 0x804023e8]
 
 common/Source/StdMath.cpp:
    .text: [0x80223b88, 0x80223d80]

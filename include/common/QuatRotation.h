@@ -5,7 +5,7 @@
 
 struct AxisRotation {
     Vector rot;
-    float unkC;
+    float unk10;
 };
 
 struct QuatRotation {
@@ -13,8 +13,10 @@ struct QuatRotation {
 	void ConvertRotation(AxisRotation*);
 	void ConvertNormal(Vector*, float);
 	void ConvertVector(Vector*);
-	void Multiply(QuatRotation*, QuatRotation*); //https://decomp.me/scratch/cue99
-	// https://decomp.me/scratch/WoxtP
+	void Multiply(QuatRotation*, QuatRotation*);
+    void Multiply(QuatRotation* pOther) {
+        Multiply(this, pOther);
+    }
     float Dot(QuatRotation* pOther) {
         return quat.x * pOther->quat.x + quat.y * pOther->quat.y + 
             quat.z * pOther->quat.z + quat.w * pOther->quat.w;
