@@ -54,7 +54,13 @@ struct Matrix {
 		Row2()->Copy(&normalizedDiff);
 		data[2][3] = 0.0f;
 	}
-	
+
+    void RotateYaw(float yaw) {
+        RotateYaw(this, yaw);
+    }
+    void RotateRoll(float roll) {
+        RotateRoll(this, roll);
+    }
 	Vector* Row0(void) {
 		return (Vector*)&data[0][0];
 	}

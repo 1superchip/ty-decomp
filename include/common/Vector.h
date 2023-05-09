@@ -21,7 +21,7 @@ struct Vector {
 	void InterpolateLinear(Vector*, Vector*, float);
 	void ApplyMatrix(Vector*, Matrix*);
 	void ApplyMatrixW(Vector*, Matrix*);
-	void ApplyRotMatrix(Vector*, Matrix*);
+	void ApplyRotMatrix(Vector* pVector, Matrix* pMatrix);
 	void ApplyTransMatrix(Vector*, Matrix*);
 	void CClamp(Vector*, float, float);
 	void NormaliseRot(Vector*);

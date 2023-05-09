@@ -123,8 +123,7 @@ char *Material::InitFromMatDefs(char *pName) {
     unkA4 = 0.0f;
     unkA0 = 0.0f;
     frameCounter1 = frameCounter;
-    color.Set(1.0f, 1.0f, 1.0f);
-    color.w = 1.0f;
+    color.Set(1.0f, 1.0f, 1.0f, 1.0f);
     unk5C = 0.0f;
     unk50 = NULL;
     unk60.SetIdentity();
@@ -506,8 +505,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                                                 pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
                                                                 materialIni.Warning("Missing parameters");
                                                             } else {
-                                                                
-                                                        flags |= 0x82000;
+                                                                flags |= 0x82000;
                                                             }
                                                         }
                                                     } else if (stricmp(pLine->pFieldName, "matrix") == 0) {

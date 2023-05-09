@@ -76,46 +76,45 @@ void Vector::InterpolateLinear(Vector* pFrom, Vector* pTo, float fraction) {
 }
 
 void Vector::ApplyMatrix(Vector* pVector, Matrix* pMatrix) {
-    float temp_f10;
-    float temp_f11;
-    float temp_f13;
+    Vector tmp;
+    float src_x;
+    float src_y;
+    float src_z;
 
-    temp_f10 = pVector->x;
-    temp_f11 = pVector->y;
-    temp_f13 = pVector->z;
-    float mx = pMatrix->data[3][0] + ((temp_f13 * pMatrix->data[2][0]) + ((temp_f10 * pMatrix->data[0][0]) + (temp_f11 * pMatrix->data[1][0])));
-    float my = pMatrix->data[3][1] + ((temp_f13 * pMatrix->data[2][1]) + ((temp_f10 * pMatrix->data[0][1]) + (temp_f11 * pMatrix->data[1][1])));
-    float mz = pMatrix->data[3][2] + ((temp_f13 * pMatrix->data[2][2]) + ((temp_f10 * pMatrix->data[0][2]) + (temp_f11 * pMatrix->data[1][2])));
-    float mw = pMatrix->data[3][3] + ((temp_f13 * pMatrix->data[2][3]) + ((temp_f10 * pMatrix->data[0][3]) + (temp_f11 * pMatrix->data[1][3])));
+    src_x = pVector->x;
+    src_y = pVector->y;
+    src_z = pVector->z;
+    float mx = (src_x * pMatrix->data[0][0]) + (src_y * pMatrix->data[1][0]) + (src_z * pMatrix->data[2][0]) + pMatrix->data[3][0];
+    float my = (src_x * pMatrix->data[0][1]) + (src_y * pMatrix->data[1][1]) + (src_z * pMatrix->data[2][1]) + pMatrix->data[3][1];
+    float mz = (src_x * pMatrix->data[0][2]) + (src_y * pMatrix->data[1][2]) + (src_z * pMatrix->data[2][2]) + pMatrix->data[3][2];
+    float mw = (src_x * pMatrix->data[0][3]) + (src_y * pMatrix->data[1][3]) + (src_z * pMatrix->data[2][3]) + pMatrix->data[3][3];
 
-    x = mx;
-    y = my;
-    z = mz;
-    w = mw;
+    tmp.Set(mx, my, mz, mw);
+    *this = tmp;
 }
 
 void Vector::ApplyMatrixW(Vector* pVector, Matrix* pMatrix) {
-    float temp_f13;
-    float temp_f9;
-    float temp_f31;
-    float temp_f11;
+    Vector tmp;
+    float src_y;
+    float src_x;
+    float src_z;
+    float src_w;
 
-    temp_f11 = pVector->x;
-    temp_f9 = pVector->y;
-    temp_f13 = pVector->z;
-    temp_f31 = pVector->w;
-    float mx = (temp_f31 * pMatrix->data[3][0]) + ((temp_f13 * pMatrix->data[2][0]) + ((temp_f11 * pMatrix->data[0][0]) + (temp_f9 * pMatrix->data[1][0])));
-    float my = (temp_f31 * pMatrix->data[3][1]) + ((temp_f13 * pMatrix->data[2][1]) + ((temp_f11 * pMatrix->data[0][1]) + (temp_f9 * pMatrix->data[1][1])));
-    float mz = (temp_f31 * pMatrix->data[3][2]) + ((temp_f13 * pMatrix->data[2][2]) + ((temp_f11 * pMatrix->data[0][2]) + (temp_f9 * pMatrix->data[1][2])));
-    float mw = (temp_f31 * pMatrix->data[3][3]) + ((temp_f13 * pMatrix->data[2][3]) + ((temp_f11 * pMatrix->data[0][3]) + (temp_f9 * pMatrix->data[1][3])));
+    src_x = pVector->x;
+    src_y = pVector->y;
+    src_z = pVector->z;
+    src_w = pVector->w;
+    float mx = (src_x * pMatrix->data[0][0]) + (src_y * pMatrix->data[1][0]) + (src_z * pMatrix->data[2][0]) + (src_w * pMatrix->data[3][0]);
+    float my = (src_x * pMatrix->data[0][1]) + (src_y * pMatrix->data[1][1]) + (src_z * pMatrix->data[2][1]) + (src_w * pMatrix->data[3][1]);
+    float mz = (src_x * pMatrix->data[0][2]) + (src_y * pMatrix->data[1][2]) + (src_z * pMatrix->data[2][2]) + (src_w * pMatrix->data[3][2]);
+    float mw = (src_x * pMatrix->data[0][3]) + (src_y * pMatrix->data[1][3]) + (src_z * pMatrix->data[2][3]) + (src_w * pMatrix->data[3][3]);
 
-    x = mx;
-    y = my;
-    z = mz;
-    w = mw;
+    tmp.Set(mx, my, mz, mw);
+    *this = tmp;
 }
 
 void Vector::ApplyRotMatrix(Vector* pVector, Matrix* pMatrix) {
+    Vector tmp;
     float vx;
     float vy;
     float vz;
@@ -123,13 +122,12 @@ void Vector::ApplyRotMatrix(Vector* pVector, Matrix* pMatrix) {
     vx = pVector->x;
     vy = pVector->y;
     vz = pVector->z;
-    float mx = (vz * pMatrix->data[2][0]) + ((vx * pMatrix->data[0][0]) + (vy * pMatrix->data[1][0]));
-    float my = (vz * pMatrix->data[2][1]) + ((vx * pMatrix->data[0][1]) + (vy * pMatrix->data[1][1]));
-    float mz = (vz * pMatrix->data[2][2]) + ((vx * pMatrix->data[0][2]) + (vy * pMatrix->data[1][2]));
+    float mx = (vx * pMatrix->data[0][0]) + (vy * pMatrix->data[1][0]) + (vz * pMatrix->data[2][0]);
+    float my = (vx * pMatrix->data[0][1]) + (vy * pMatrix->data[1][1]) + (vz * pMatrix->data[2][1]);
+    float mz = (vx * pMatrix->data[0][2]) + (vy * pMatrix->data[1][2]) + (vz * pMatrix->data[2][2]);
 
-    x = mx;
-    y = my;
-    z = mz;
+    tmp.Set(mx, my, mz);
+    Copy(&tmp);
 }
 
 void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {

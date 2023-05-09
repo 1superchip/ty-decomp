@@ -309,30 +309,16 @@ void Matrix::RotatePYR(Matrix* pMatrix, Vector* pAngles) {
 void Matrix::GetRotationPYR(Vector* pAngles) {
     Matrix tempm;
     tempm = *this;
-    float angle1 = tempm.Row0()->x;
-    float angle = angle1;
-    angle = (angle < 0.0f) ? -angle : angle;
-    if (angle < 0.001f) {
-        angle = tempm.Row0()->y;
-        if (angle < 0.0f) {
-            angle = -angle;
-        }
-        if (angle < 0.001f) {
-            pAngles->z = 0.0f;
-            goto end;
-        }
+    if (Abs<float>(tempm.Row0()->x) < 0.001f && Abs<float>(tempm.Row0()->y) < 0.001f) {
+        pAngles->z = 0.0f;
+    } else if (tempm.Row0()->x > 0.0f) {
+        pAngles->z = atan2(-tempm.Row0()->y, tempm.Row0()->x);
+    } else if (tempm.Row0()->x < 0.0f) {
+        pAngles->z = atan2(tempm.Row0()->y, -tempm.Row0()->x);
     }
-    if (angle1 > 0.0f) {
-        pAngles->z = atan2(-tempm.Row0()->y, angle1);
-    } else if (angle1 < 0.0f) {
-        pAngles->z = atan2(tempm.Row0()->y, -angle1);
-    }
-    end:
-    angle = -pAngles->z;
-    tempm.RotateRoll(&tempm, angle);
+    tempm.RotateRoll(-pAngles->z);
     pAngles->y = atan2(tempm.Row0()->z, tempm.Row0()->x);
-    angle = -pAngles->y;
-    tempm.RotateYaw(&tempm, angle);
+    tempm.RotateYaw(-pAngles->y);
     pAngles->x = atan2(tempm.Row2()->y, tempm.Row2()->z);
 }
 
