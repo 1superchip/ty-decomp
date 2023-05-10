@@ -223,6 +223,24 @@ void MKSceneManager::Optimise(void) {
 	bHasBeenOptimised = true;
 }
 
+void SMTree::Init(int arg1) {
+    if (arg1 == 0) {
+        pNodes = NULL;
+        pLastNode = NULL;
+        propCount = 0;
+        unkC = 0;
+        nmbrOfSubObjects = 0;
+        return;
+    }
+    nmbrOfSubObjects = arg1;
+    unkC = arg1 - 1;
+    propCount = unkC + arg1;
+    pNodes = (SMNode*)Heap_MemAlloc(propCount * sizeof(SMNode));
+    pLastNode = &pNodes[propCount - 1];
+    memset(pNodes, 0, sizeof(SMNode) * propCount);
+    return;
+}
+
 void SMTree::Deinit(void) {
 	if (pNodes != NULL) {
 		Heap_MemFree(pNodes);
@@ -351,22 +369,7 @@ void MKSceneManager::MakeTerrainTree(void) {
     SubObject *pSubObject;
     for (int i = 0; i < 12; i++) {
         if (pTerrainModel[i] != NULL && pTerrainModel[i]->GetNmbrOfSubObjects() > 1) {
-            int numSubObjects = pTerrainModel[i]->pTemplate->pModelData->nmbrOfSubObjects;
-            if (numSubObjects == 0) {
-                trees[i].pNodes = NULL;
-                trees[i].pLastNode = NULL;
-                trees[i].propCount = 0;
-                trees[i].unkC = 0;
-                trees[i].nmbrOfSubObjects = 0;
-            } else {
-                ModelData *pData = pTerrainModel[i]->pTemplate->pModelData;
-                trees[i].nmbrOfSubObjects = numSubObjects;
-                trees[i].unkC = numSubObjects - 1;
-                trees[i].propCount = trees[i].unkC + numSubObjects;
-                trees[i].pNodes = (SMNode *)Heap_MemAlloc(trees[i].propCount * sizeof(SMNode));
-                trees[i].pLastNode = &trees[i].pNodes[trees[i].propCount - 1];
-                memset((void *)trees[i].pNodes, 0, trees[i].propCount * sizeof(SMNode));
-            }
+            trees[i].Init(pTerrainModel[i]->pTemplate->pModelData->nmbrOfSubObjects);
             pNode = &trees[i].pNodes[0];
             pData = pTerrainModel[i]->pTemplate->pModelData;
             for (index = 0; index < pData->nmbrOfSubObjects; index++) {
@@ -380,34 +383,14 @@ void MKSceneManager::MakeTerrainTree(void) {
             }
             trees[i].LinkUp();
         } else {
-            trees[i].pNodes = NULL;
-            trees[i].pLastNode = NULL;
-            trees[i].propCount = 0;
-            trees[i].unkC = 0;
-            trees[i].nmbrOfSubObjects = 0;
+            trees[i].Init(0);
         }
     }
 }
 
 void MKSceneManager::MakePropTree(void) {
     for (int i = 0; i < 4; i++) {
-        int count = staticPropArray[i].unk10;
-        if (count == 0) {
-            staticPropTree[i].pNodes = NULL;
-            staticPropTree[i].pLastNode = NULL;
-            staticPropTree[i].propCount = 0;
-            staticPropTree[i].unkC = 0;
-            staticPropTree[i].nmbrOfSubObjects = 0;
-        } else {
-            ModelData *pData = pTerrainModel[i]->pTemplate->pModelData;
-            staticPropTree[i].nmbrOfSubObjects = count;
-            staticPropTree[i].unkC = count - 1;
-            int c = staticPropTree[i].unkC;
-            staticPropTree[i].propCount = c + count;
-            staticPropTree[i].pNodes = (SMNode *)Heap_MemAlloc(staticPropTree[i].propCount * sizeof(SMNode));
-            staticPropTree[i].pLastNode = &staticPropTree[i].pNodes[staticPropTree[i].propCount - 1];
-            memset((void *)staticPropTree[i].pNodes, 0, staticPropTree[i].propCount * sizeof(SMNode));
-        }
+        staticPropTree[i].Init(staticPropArray[i].unk10);
         MKProp* next = staticPropArray[i].pNext;
         SMNode* pNode = staticPropTree[i].pNodes;
         if (next != NULL) {

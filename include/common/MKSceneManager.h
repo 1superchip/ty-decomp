@@ -78,6 +78,7 @@ struct SMTree {
 	int unkC;
 	int propCount;
 	
+	void Init(int);
 	void Deinit(void);
 	void PairUp(int, int);
 	void LinkUp(void);
