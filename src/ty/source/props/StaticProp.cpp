@@ -30,7 +30,7 @@ extern struct GlobalVar {
     int unk[483];
     float unk78C;
 } gb;
-Vector Tools_GroundColor(CollisionResult*);
+Vector Tools_GroundColor(CollisionResult* pCr);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
@@ -64,24 +64,17 @@ inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
 
 inline bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     Matrix mat;
-    Vector matrixScale = {1.0f, 0.0f, 1.0f, 0.0f};
-    matrixScale.y = arg3;
+    Vector matrixScale = {1.0f, arg3, 1.0f, 0.0f};
     mat.Scale(&pModel->matrices[0], &matrixScale);
-    float fVar1 = pModel->matrices[0].Row0()->Dot(pModel->matrices[0].Row0());
-    float fVar2 = pModel->matrices[0].data[1][0] * pModel->matrices[0].data[1][0] +
-    pModel->matrices[0].data[1][1] * pModel->matrices[0].data[1][1] + 
-    pModel->matrices[0].data[1][2] * pModel->matrices[0].data[1][2];
-    float fVar3 = pModel->matrices[0].data[2][0] * pModel->matrices[0].data[2][0] +
-    pModel->matrices[0].data[2][1] * pModel->matrices[0].data[2][1] + 
-    pModel->matrices[0].data[2][2] * pModel->matrices[0].data[2][2];
-    Vector inv = {fVar1, fVar2, fVar3, 0.0f};
-    Vector vec;
+    Vector inv = {
+        pModel->matrices[0].Row0()->MagSquared(),
+        pModel->matrices[0].Row1()->MagSquared(),
+        pModel->matrices[0].Row2()->MagSquared()
+    };
+    Vector s;
     Vector local;
-    vec.x = 1.0f / inv.x;
-    vec.y = 1.0f / inv.y;
-    vec.w = 1.0f;
-    vec.z = 1.0f / inv.z;
-    mat.Scale(pModel->matrices, &vec);
+    s.Set(1.0f / inv.x, 1.0f / inv.y, 1.0f / inv.z, 1.0f);
+    mat.Scale(pModel->matrices, &s);
     mat.InverseSimple();
     local.ApplyMatrix(pPoint, &mat);
     BoundingVolume* pModelVolume = pModel->GetBoundingVolume(-1);

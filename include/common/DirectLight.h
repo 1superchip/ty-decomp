@@ -17,3 +17,5 @@ struct DirectLight {
 	
 	static DirectLight* pDefaultLight;
 };
+
+extern DirectLight* DirectLight::pDefaultLight;

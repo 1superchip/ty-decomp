@@ -24,7 +24,7 @@ struct Collapsible : StaticProp {
 	virtual void Reset(void) {
 		pModel->matrices[0].SetTranslation(&defaultTrans);
 		pModel->matrices[0].SetRotationPYR(&defaultRot);
-		pModel->matrices[0].Scale(&pModel->matrices[0], &scale);
+		pModel->matrices[0].Scale(&scale);
 		state = 0;
 		unk5C = 0;
 		collisionInfo.bEnabled = true;

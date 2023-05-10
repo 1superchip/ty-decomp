@@ -3,10 +3,8 @@
 #include "Dolphin/gx.h"
 #include "common/Heap.h"
 #include "common/Material.h"
+#include "common/StdMath.h"
 
-#define PI2 1.5707964f
-
-extern DirectLight* DirectLight::pDefaultLight;
 extern "C" void memset(void*, int, int);
 extern struct Display {
     int region;
@@ -178,9 +176,7 @@ void View::SetProjection(float arg1, float arg2, float arg3) {
 void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
     Vector trans;
     Matrix matrix;
-    trans.z = 0.0f;
-    trans.y = 0.0f;
-    trans.x = 0.0f;
+    trans.SetZero();
     if (pMatrix != NULL) {
         unk88 = *pMatrix;
         unk148.Multiply4x4(&unk88, &unk1C8);
