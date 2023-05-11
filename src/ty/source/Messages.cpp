@@ -5,8 +5,6 @@
 
 extern "C" int stricmp(char*, char*);
 
-extern GameObjectManager objectManager;
-
 char* globalMessageStrings[43] = {"Activate", "Deactivate", "Enable", "Disable", "Show", "Hide", "Open", "Close", 
 "Toggle", "Spawn", "Shatter", "Fall", "ObjectiveIncrement", "LearntToSwim", "LearntToDive", "GotBothRangs", 
 "WeatherLightning", "WeatherStormy", "WeatherRain", "WeatherSnow", "WeatherPlankton", "WeatherFoggy", "Start", 
@@ -45,23 +43,18 @@ bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
     return false;
 }
 
-GameObject* EventMessage::Resolve(void) {
+void EventMessage::Resolve(void) {
     if (target != -1) {
-        GameObject* object = objectManager.GetObjectFromID(target);
-        pTargetObj = object;
-        return object;
+        pTargetObj = objectManager.GetObjectFromID(target);
+    } else {
+        pTargetObj = NULL;
     }
-    target = 0;
-    return (GameObject*)this; // ???
 }
 
 void EventMessage::Send(void) {
     MKMessage msg;
     msg.unk0 = message;
-    if (message == 0) {
-        return;
-    }
-    if (pTargetObj != NULL) {
+    if (message != 0 && pTargetObj != NULL) {
         pTargetObj->Message(&msg);
     }
 }

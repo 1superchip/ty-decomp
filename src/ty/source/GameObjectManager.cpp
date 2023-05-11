@@ -4,7 +4,6 @@
 #include "ty/GameObjectManager.h"
 
 // from different files
-extern MKSceneManager gSceneManager;
 int strnicmp(char const*, char const*, int);
 extern "C" void memset(void*, int, int);
 extern "C" void strcpy(char*, char*);
@@ -138,7 +137,7 @@ void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume
     pObj->pDescriptor->pVolume = pBV;
 	CheckVolume(pObj, pBV);
     if (pObj->pLocalToWorld == NULL) {
-        pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~0x3) | 2;
+        pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
     }
     gSceneManager.AddProp(pObj);
 }
@@ -151,7 +150,7 @@ void GameObjectManager::AddObject(GameObject* pObj, Model* pModel) {
     pObj->pDescriptor->pVolume = pModelVolume;
 	CheckVolume(pObj, pModelVolume);
     if (pObj->pLocalToWorld == NULL) {
-        pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~0x3) | 2;
+        pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
     }
     gSceneManager.AddProp(pObj);
 }

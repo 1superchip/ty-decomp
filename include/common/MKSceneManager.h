@@ -130,4 +130,6 @@ struct MKSceneManager {
 	int GetPropsInRange(MKProp**, int, Vector*, float, int, int, bool);
 };
 
+extern MKSceneManager gSceneManager;
+
 #endif // COMMON_MKSCENEMANAGER

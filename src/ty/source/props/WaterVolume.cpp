@@ -2,8 +2,6 @@
 #include "common/StdMath.h"
 #include "ty/props/WaterVolume.h"
 
-extern GameObjectManager objectManager;
-
 static ModuleInfo<WaterVolume> waterVolumeModule;
 static GameObjDesc waterVolumeDesc;
 

@@ -82,6 +82,9 @@ struct Matrix {
 	void InverseSimple(void) {
 		InverseSimple(this);
 	}
+	void Scale(Vector* pScale) {
+		Scale(this, pScale);
+	}
 };
 
 

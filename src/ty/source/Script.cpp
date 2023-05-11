@@ -3,7 +3,6 @@
 #include "common/Str.h"
 #include "ty/GameData.h"
 
-extern GameObjectManager objectManager;
 extern struct Display {
     int region;
     int unk4;

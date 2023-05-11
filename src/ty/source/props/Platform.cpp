@@ -20,7 +20,6 @@ extern struct Ty {
 	void SetAbsolutePosition(Vector*, int, float, bool);
 } ty;
 
-extern GameObjectManager objectManager;
 extern bool gAssertBool;
 Vector Tools_GroundColor(CollisionResult*);
 void Tools_DropShadow_Add(float, Vector*, Vector*, float);

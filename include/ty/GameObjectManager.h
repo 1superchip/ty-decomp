@@ -31,4 +31,6 @@ struct GameObjectManager {
 	int CountEntities(KromeIni*, KromeIniLine*);
 };
 
+extern GameObjectManager objectManager;
+
 #endif // GAMEOBJECTMANAGER_H

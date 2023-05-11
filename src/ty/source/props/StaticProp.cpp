@@ -35,8 +35,6 @@ extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
 
-extern GameObjectManager objectManager;
-
 ModuleInfo<StaticProp> staticPropModuleInfo;
 ModuleInfo<StaticFXProp> staticFXPropModuleInfo;
 
@@ -154,7 +152,7 @@ void StaticProp::LoadDone(void) {
     CollisionResult cr;
     pModel->matrices[0].SetTranslation(pModel->matrices[0].Row3());
     pModel->matrices[0].SetRotationPYR(&loadInfo[0]);
-    pModel->matrices[0].Scale(&pModel->matrices[0], &loadInfo[1]);
+    pModel->matrices[0].Scale(&loadInfo[1]);
     pModel->SetLocalToWorldDirty();
     if (pModel->pAnimation != NULL) {
         pModel->pAnimation->CalculateMatrices();

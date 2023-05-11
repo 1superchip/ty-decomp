@@ -4,7 +4,6 @@
 
 static ModuleInfo<Collapsible> moduleInfo;
 
-extern GameObjectManager objectManager;
 extern struct Ty {
     char padding[0x40];
     Vector pos;

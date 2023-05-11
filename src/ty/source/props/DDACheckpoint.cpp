@@ -2,7 +2,6 @@
 #include "ty/props/DDACheckpoint.h"
 #include "ty/DDA.h"
 
-extern GameObjectManager objectManager;
 extern DDASession dda;
 
 static GameObjDesc ddaCheckpointDesc;

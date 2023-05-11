@@ -1,7 +1,6 @@
 #include "ty/props/D1_Prop.h"
 #include "ty/GameObjectManager.h"
 
-extern GameObjectManager objectManager;
 extern void Credits_Init(void);
 extern void Credits_Deinit(void);
 extern void Credits_Reset(void);

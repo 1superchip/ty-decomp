@@ -1,7 +1,6 @@
 #include "types.h"
 #include "ty/props/WeatherProp.h"
 
-extern GameObjectManager objectManager;
 int Weather_GetType(void);
 void Weather_Enable(bool);
 void Weather_SetType(int);

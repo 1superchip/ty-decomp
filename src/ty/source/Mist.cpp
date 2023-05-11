@@ -42,7 +42,7 @@ void Mist_Update(void) {
         trans.y = 0.0f;
         envMist->matrices[0].SetTranslation(&trans);
         scale.Set(3.0f, 1.5f, 3.0f);
-        envMist->matrices[0].Scale(&envMist->matrices[0], &scale);
+        envMist->matrices[0].Scale(&scale);
     }
 }
 

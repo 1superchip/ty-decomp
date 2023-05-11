@@ -3,7 +3,6 @@
 #include "ty/props/SoundProp.h"
 #include "ty/GameObjectManager.h"
 
-extern GameObjectManager objectManager;
 extern struct DisplayStruct {
     float unk[16];
 } gDisplay;
