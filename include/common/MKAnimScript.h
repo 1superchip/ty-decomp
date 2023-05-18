@@ -65,7 +65,7 @@ struct MKAnimScript {
     float unk14;
     short unk18;
     short unk1A;
-    short animFlags;
+    short unk1C;
     u16 unk1E;
 	
 	static float advanceAmount;
@@ -93,6 +93,17 @@ struct MKAnimScript {
 	float GetNormalPosition(void);
 	float GetFrameOfNormalPosition(float, MKAnim*);
 	void SetAnimNormalised(MKAnim*, float);
+
+    // Initialises fields
+    void Init(void) {
+        nextAnim = NULL;
+        currAnim = NULL;
+        unk14 = unkC = unk10 = 0.0f;
+        unk18 = 0;
+        unk1A = 0;
+        unk1E = 0;
+        unk1C = 0;
+    }
 };
 
 #endif // COMMON_MKANIMSCRIPT

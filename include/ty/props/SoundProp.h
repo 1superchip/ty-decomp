@@ -1,6 +1,7 @@
 #include "types.h"
 #include "common/Vector.h"
 #include "ty/GameObject.h"
+#include "ty/CommonGameObjectFlags.h"
 
 struct SoundEventHelper {
 	int unk0;

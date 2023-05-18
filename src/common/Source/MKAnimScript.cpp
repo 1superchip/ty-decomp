@@ -270,7 +270,7 @@ void MKAnimScript::Init(char* pFilename) {
     unk18 = 0;
     unk1A = 0;
     unk1E = 0;
-    animFlags = 0;
+    unk1C = 0;
 }
 
 // currently this does not inline Init(char*)
@@ -320,7 +320,7 @@ void MKAnimScript::Init(MKAnimScript* pOther) {
     unk18 = 0;
     unk1A = 0;
     unk1E = 0;
-    animFlags = 0;
+    unk1C = 0;
 }
 
 void MKAnimScript::Deinit(void) {
@@ -373,7 +373,7 @@ void MKAnimScript::SetAnim(MKAnim* pMKAnim) {
     unk1E = 0;
     s16 tmp = currAnim->pAnimRanges->unk4;
     unk14 = (tmp != 0) ? 1.0f / (float)tmp : 1.0f;
-    animFlags = 0;
+    unk1C = 0;
     nextAnim = NULL;
     unk18 = 0;
 }
@@ -381,7 +381,7 @@ void MKAnimScript::SetAnim(MKAnim* pMKAnim) {
 void MKAnimScript::TweenAnim(MKAnim* pToAnim, short flags) {
     nextAnim = pToAnim;
     unk10 = (float)nextAnim->pAnimRanges->startFrame;
-    animFlags = flags;
+    unk1C = flags;
     unk18 = 0;
 }
 
@@ -449,9 +449,9 @@ void MKAnimScript::Animate(void) {
 }
 
 void MKAnimScript::Apply(Animation* pAnimation) {
-    if (animFlags != 0) {
-        pAnimation->Tween(unk10, 1.0f / (float)animFlags);
-        if (--animFlags == 0) {
+    if (unk1C != 0) {
+        pAnimation->Tween(unk10, 1.0f / (float)unk1C);
+        if (--unk1C == 0) {
             SetAnim(nextAnim);
         }
     } else {
@@ -460,9 +460,9 @@ void MKAnimScript::Apply(Animation* pAnimation) {
 }
 
 void MKAnimScript::ApplyNode(Animation* pAnimation, int nodeIndex) {
-    if (animFlags != 0) {
-        pAnimation->TweenNode(unk10, 1.0f / (float)animFlags, nodeIndex);
-        if (--animFlags == 0) {
+    if (unk1C != 0) {
+        pAnimation->TweenNode(unk10, 1.0f / (float)unk1C, nodeIndex);
+        if (--unk1C == 0) {
             SetAnim(nextAnim);
         }
     } else {
@@ -486,7 +486,7 @@ char* MKAnimScript::GetEventByName(char* pName) {
 char* MKAnimScript::GetEvent(int eventIdx) {
     int j = 0;
     s16 iUnkC = unkC;
-    if (currAnim != NULL && iUnkC != unk1A && animFlags == 0) {
+    if (currAnim != NULL && iUnkC != unk1A && unk1C == 0) {
         AnimRange* pRange = &currAnim->pAnimRanges[unk1E];
         for(int i = 0; i < pRange->nmbrOfEvents; i++) {
             if (iUnkC >= pRange->pEvents[i].startEventFrame && iUnkC <= pRange->pEvents[i].endEventFrame && j++ == eventIdx) {
