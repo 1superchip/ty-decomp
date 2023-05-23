@@ -3643,8 +3643,8 @@ common/gc/ModelGC.cpp:
 #   .sbss: [0x803fb448, 0x803fb498]
 #   .sdata2: [0x804025b0, 0x80402608]
 
-#system_extras.cpp:
-#   .text: [0x802348cc, 0x80234b10]
+common/gc/system_extras.cpp:
+   .text: [0x802348cc, 0x80234b10]
 
 #System_GC.cpp:
 #   .text: [0x80234b10, 0x80236008]

@@ -60,7 +60,7 @@ inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
     return isWithin;
 }
 
-inline bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
+static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     Matrix mat;
     Vector matrixScale = {1.0f, arg3, 1.0f, 0.0f};
     mat.Scale(&pModel->matrices[0], &matrixScale);
