@@ -15,7 +15,7 @@ struct Vector {
 	
 	float Magnitude();
 	float Normalise(Vector*);
-	void ClampMagnitude(Vector*, float);
+	void ClampMagnitude(Vector* pVector, float);
 	void Cross(Vector*, Vector*);
 	void Projection(Vector*, Vector*);
 	void InterpolateLinear(Vector*, Vector*, float);
@@ -128,10 +128,20 @@ struct Vector {
             (y - pCentre->y) * (y - pCentre->y) + 
             (z - pCentre->z) * (z - pCentre->z) < radius * radius;
     }
+	/* this might be the correct version since the July 1st build needs the inline "CheckSphereRadius" to be used in
+	// Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* pVec2) but the current doesn't match on GC
+	*/
     // bool CheckSphereRadius(Vector* pCentre, float radius) {
 	// 	// this might be closer?
 	// 	// need to check debug build
     //     return DistSq(pCentre) < Sqr<float>(radius);
+    // }
+	// this might be the correct inline?
+    // bool CheckSphereRadius(Vector* pCentre, float radius) {
+    //     float dx = (x - pCentre->x);
+    //     float dy = (y - pCentre->y);
+    //     float dz = (z - pCentre->z);
+    //     return dx * dx + dy * dy + dz * dz < radius * radius;
     // }
     float Normalise(void) {
         return Normalise(this);

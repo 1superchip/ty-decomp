@@ -41,7 +41,6 @@ extern "C" void Sound_SetSystemAudioMode(int);
 extern "C" int Sound_GetSystemAudioMode(void);
 void SoundBank_SetVolume(float, int);
 View* GameCamera_View(void);
-void Tools_EnableWideScreen(View*, bool);
 void System_SetScreenOffset(float, float);
 void Hud_ShowLives(void);
 void Hud_ShowBilbies(void);

@@ -6,7 +6,6 @@
 extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
 extern "C" int stricmp(char*, char*);
-void Tools_StripExtension(char*, char const*);
 
 extern bool gAssertBool; // from Str.cpp
 
@@ -156,8 +155,6 @@ int GameObject::GetMessageIdFromString(char* string) {
     }
     return result;
 }
-
-void Tools_StripExtension(char*, char const*);
 
 void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
     pMod->Init();

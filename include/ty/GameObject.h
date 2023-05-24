@@ -5,6 +5,7 @@
 #include "common/Heap.h"
 //#include "common/KromeIni.h"
 #include "common/MKSceneManager.h"
+#include "ty/tools.h"
 
 #define GOMSG_Last 0x10
 #define In_WaterVolume 0x40000000

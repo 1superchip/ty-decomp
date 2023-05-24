@@ -30,7 +30,6 @@ extern struct GlobalVar {
     int unk[483];
     float unk78C;
 } gb;
-Vector Tools_GroundColor(CollisionResult* pCr);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);

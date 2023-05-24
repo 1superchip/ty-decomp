@@ -21,9 +21,6 @@ extern struct Ty {
 } ty;
 
 extern bool gAssertBool;
-Vector Tools_GroundColor(CollisionResult*);
-void Tools_DropShadow_Add(float, Vector*, Vector*, float);
-bool Tools_ClipSphereToDynamicModel(const Vector&, float, Vector*, Model*, int);
 //extern void LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
 static ModuleInfo<Platform> platformModuleInfo;

@@ -2479,14 +2479,14 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fab70, 0x803fab80]
 #   .sdata2: [0x80401448, 0x80401478]
 
-#ty/source/tools.cpp:
-#   .text: [0x801a1124, 0x801a5d28]
-#   .rodata: [0x8023ec48, 0x8023eca8]
-#   .data: [0x80268a38, 0x80268bc8]
-#   .bss: [0x802b6588, 0x802b6598]
-#   .sdata: [0x803f9390, 0x803f93a0]
-#   .sbss: [0x803fab80, 0x803fab88]
-#   .sdata2: [0x80401478, 0x804014f0]
+ty/source/tools.cpp:
+  .text: [0x801a1124, 0x801a5d28]
+  .rodata: [0x8023ec48, 0x8023eca8]
+  .data: [0x80268a38, 0x80268bc8]
+  .bss: [0x802b6588, 0x802b6598]
+  .sdata: [0x803f9390, 0x803f93a0]
+  .sbss: [0x803fab80, 0x803fab88]
+  .sdata2: [0x80401478, 0x804014f0]
 
 #Torch.cpp:
 #   .text: [0x801a5d28, 0x801a6c44]
