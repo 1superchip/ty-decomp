@@ -1,13 +1,12 @@
 #include "types.h"
 #include "ty/RangeCheck.h"
+#include "ty/tools.h"
 #include "common/Str.h"
 #include "common/Heap.h"
 
 Vector* GameCamera_GetPos(void);
 Vector* GameCamera_GetDir(void);
 void GameCamera_GetVectors(Vector*, Vector*, Vector*);
-bool RayToSphere(Vector*, Vector*, Vector*, float, float, bool);
-void Tools_StripExtension(char*, char const*);
 extern "C" void memset(void*, int, int);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
@@ -48,6 +47,7 @@ void LOD_Deinit(void) {
 }
 
 int Range_WhichZone(Vector* point, float* arg1) {
+    // no vector here
     Vector diff;
     diff.x = point->x - cameraPos.x;
     diff.y = point->y - cameraPos.y;
@@ -73,18 +73,15 @@ int Range_WhichZone(Vector* point, float* arg1) {
 }
 
 bool Range_IsVisible(Vector* point) {
-    Vector diff;
-    diff.x = point->x - cameraPos.x;
-    diff.y = point->y - cameraPos.y;
-    diff.z = point->z - cameraPos.z;
-    diff.Normalise(&diff);
-    return diff.Dot(&cameraVector) >= 0.5f;
+    Vector camToObj;
+    camToObj.Sub(point, &cameraPos);
+    camToObj.Normalise();
+    return camToObj.Dot(&cameraVector) >= 0.5f;
 }
 
 void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float arg4, float arg5, int arg6) {
     if (arg1 == arg6 - 1) {
-        float alpha = 2.0f * (1.0f - arg2);
-        pModel->colour.w = (alpha < 1.0f) ? 2.0f * (1.0f - arg2) : 1.0f;
+        pModel->colour.w = Min<float>(2.0f * (1.0f - arg2), 1.0f);
         return;
     }
     if (arg1 == 0) {
@@ -94,19 +91,13 @@ void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float 
         vec.y += arg3 / 2.0f;
         GameCamera_GetVectors(&vec2, &vec1, NULL);
         if (RayToSphere(&vec2, &vec1, &vec, 10.0f + arg4, -1.0f, true) && ty.state != 0x2d) {
-            float alpha = pModel->colour.w - 0.05625f;
-            if (arg5 > alpha) {
-                alpha = arg5;
-            }
-            pModel->colour.w = alpha;
+            pModel->colour.w = Max<float>(arg5, pModel->colour.w - 0.05625f);
             return;
         }
-        float alpha = pModel->colour.w + 0.05625f;
-        pModel->colour.w = (1.0f < alpha) ? 1.0f : alpha;
+        pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
         return;
     }
-    float alpha = pModel->colour.w + 0.05625f;
-    pModel->colour.w = (1.0f < alpha) ? 1.0f : alpha;
+    pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
     return;
 }
 
@@ -259,7 +250,7 @@ void LODDescriptor::ParseIni(KromeIni* pIni, KromeIniLine* pLine) {
     invisibleZone = 8;
 }
 
-LODEntry *LODDescriptor::GetEntryFromString(char *pEntryName) {
+LODEntry* LODDescriptor::GetEntryFromString(char *name) {
     LODEntry *pFoundEntry = NULL;
     if (pEntries == NULL) {
         if (lodEntryPool == NULL) {
@@ -270,10 +261,10 @@ LODEntry *LODDescriptor::GetEntryFromString(char *pEntryName) {
         pEntries = &lodEntryPool[nextAvailableLODEntryIndex++];
         nmbrOfEntries = 1;
         pFoundEntry = pEntries;
-        strncpy(pFoundEntry->name, pEntryName, 0x20);
+        strncpy(pFoundEntry->name, name, 0x20);
     } else {
         for (int i = 0; i < nmbrOfEntries; i++) {
-            if (stricmp(pEntries[i].name, pEntryName) == 0) {
+            if (stricmp(pEntries[i].name, name) == 0) {
                 pFoundEntry = &pEntries[i];
                 break;
             }
@@ -286,7 +277,7 @@ LODEntry *LODDescriptor::GetEntryFromString(char *pEntryName) {
             memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
             LODEntry* temp = &lodEntryPool[nextAvailableLODEntryIndex++];
             pFoundEntry = temp;
-            strncpy(temp->name, pEntryName, 0x20);
+            strncpy(temp->name, name, 0x20);
             nmbrOfEntries++;
         }
     }
@@ -355,7 +346,7 @@ bool LODManager::Draw(Model* pModel, int arg1, float arg2, float arg3, bool arg4
     bool ret;
     InternalUpdate(pModel, arg1, arg2);
     if ((pDescriptor->flags & LODFlags_Scissor) && pDescriptor->maxScissorDist > 0.0f) {
-        pModel->flags.bits.b3 = arg3 < pDescriptor->maxScissorDist * pDescriptor->maxScissorDist;
+        pModel->flags.bits.b3 = arg3 < Sqr<float>(pDescriptor->maxScissorDist);
     }
     if (pModel->colour.w < 1.0f || pDescriptor->flags & LODFlags_AlphaProp) {
         if (subobjectEnableFlags <= 0 || (subobjectEnableFlags >= 7 || pDescriptor->flags & LODFlags_AlphaProp)) {

@@ -10,7 +10,7 @@
 #define LODFlags_AlphaProp 8
 
 void LOD_Deinit(void);
-int Range_WhichZone(Vector*, float*);
+int Range_WhichZone(Vector* point, float*);
 bool Range_IsVisible(Vector*);
 void Range_ModelSetAlpha(Model*, int, float, float, float, float, int);
 void Range_Update(void);
@@ -41,7 +41,7 @@ struct LODDescriptor {
 	
 	void Init(KromeIni*, char*);
 	void ParseIni(KromeIni*, KromeIniLine*);
-	LODEntry* GetEntryFromString(char*);
+	LODEntry* GetEntryFromString(char* name);
 	void ResolveSubObjects(Model*);
 	void ReplicateLODData(int, int);
 };
