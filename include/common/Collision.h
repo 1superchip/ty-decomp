@@ -51,6 +51,12 @@ struct CollisionInfo {
 	bool bEnabled;
 	int flags;
 	MKProp* pProp; // should this be MKProp* ?
+
+    void Init(bool bEnable, int _collisionFlags, MKProp* _pProp) {
+        bEnabled = bEnable;
+        flags = _collisionFlags;
+        pProp = _pProp;
+    }
 };
 
 struct CollisionTriangle {

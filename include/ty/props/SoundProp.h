@@ -18,7 +18,6 @@ struct SoundProp : GameObject {
 	int minDelay;
 	int maxDelay;
 	CommonGameObjFlagsComponent gameObjFlags;
-	u16 defaultFlags; // both flags may be contained in CommonGameObjFlagsComponent
 	
 	virtual bool LoadLine(KromeIniLine*);
 	virtual void LoadDone(void);

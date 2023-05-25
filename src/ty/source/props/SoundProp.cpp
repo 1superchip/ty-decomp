@@ -34,7 +34,6 @@ void SoundProp::Init(GameObjDesc* pDesc) {
 	minDelay = 0;
     unk88 = 0;
 	localToWorld.SetIdentity();
-	defaultFlags = 7;
 	gameObjFlags.Init(GameObjFlags_All);
 }
 
@@ -75,7 +74,7 @@ void SoundProp::Reset(void) {
 	SoundBank_Stop(&unk7C.unk0);
 	unk88 = 0;
 	unk80 = 1;
-	gameObjFlags.flags = defaultFlags;
+	gameObjFlags.flags = gameObjFlags.defaultFlags;
 }
 
 void SoundProp::Update(void) {

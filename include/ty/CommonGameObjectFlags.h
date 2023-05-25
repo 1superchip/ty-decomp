@@ -21,7 +21,19 @@ enum CommonGameObjFlags {
 
 struct CommonGameObjFlagsComponent {
     u16 flags;
+    u16 defaultFlags;
 
+    // sets defaultFlags to flags
+    // this should be called after loading the component
+    void SetDefaultFlags(void) {
+        defaultFlags = flags;
+    }
+    void Reset(void) {
+        flags = defaultFlags;
+    }
+    bool CheckFlags(CommonGameObjFlags objFlags) {
+        return flags & objFlags;
+    }
     void Clear(CommonGameObjFlags objFlags) {
         flags &= ~objFlags;
     }
@@ -29,6 +41,7 @@ struct CommonGameObjFlagsComponent {
         flags |= objFlags;
     }
     void Init(CommonGameObjFlags objFlags) {
+        defaultFlags = objFlags;
         flags = objFlags;
     }
     bool LoadFlag(KromeIniLine* pLine, char* str, CommonGameObjFlags objFlags) {
