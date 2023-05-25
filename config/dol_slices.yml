@@ -1669,14 +1669,14 @@ ty/source/props/SoundProp.cpp:
    .sbss: [0x803fa5c8, 0x803fa5d0]
    .sdata2: [0x803ff530, 0x803ff540]
 
-#SpawnPoint.cpp:
-#   .text: [0x8010ddf8, 0x8010e1ac]
-#   .ctors: [0x8023c9a4, 0x8023c9a8]
-#   .data: [0x8025c830, 0x8025c8f0]
-#   .bss: [0x802ab9b8, 0x802aba40]
-#   .sdata: [0x803f78f0, 0x803f7930]
-#   .sbss: [0x803fa5d0, 0x803fa5d8]
-#   .sdata2: [0x803ff540, 0x803ff548]
+ty/source/props/SpawnPoint.cpp:
+  .text: [0x8010ddf8, 0x8010e1ac]
+  .ctors: [0x8023c9a4, 0x8023c9a8]
+  .data: [0x8025c830, 0x8025c8f0]
+  .bss: [0x802ab9b8, 0x802aba40]
+  .sdata: [0x803f78f0, 0x803f7930]
+  .sbss: [0x803fa5d0, 0x803fa5d8]
+  .sdata2: [0x803ff540, 0x803ff548]
 
 #ty/source/props/SpiderWeb.cpp:
 #   .text: [0x8010e1ac, 0x8010e874]

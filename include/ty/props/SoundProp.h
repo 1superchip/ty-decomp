@@ -1,3 +1,6 @@
+#ifndef SOUNDPROP_H
+#define SOUNDPROP_H
+
 #include "types.h"
 #include "common/Vector.h"
 #include "ty/GameObject.h"
@@ -31,3 +34,5 @@ struct SoundProp : GameObject {
 };
 
 void SoundProp_LoadResources(KromeIni*);
+
+#endif // SOUNDPROP_H
