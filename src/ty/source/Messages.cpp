@@ -18,7 +18,7 @@ MessageMap mkMessageMap = {-2, 2, mkMessageStrings};
 MessageMap globalMessageMap = {10, 43, globalMessageStrings};
 
 void EventMessage::Init(void) {
-	target = -1;
+	targetId = -1;
 	message = 0;
 }
 
@@ -31,7 +31,7 @@ bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
             message = GameObject::GetMessageIdFromString(pString);
             return true;
         }
-        if (LoadLevel_LoadInt(pLine, "TargetID", &target) != false) {
+        if (LoadLevel_LoadInt(pLine, "TargetID", &targetId) != false) {
             return true;
         }
         pCurrentEM = NULL;
@@ -44,8 +44,8 @@ bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
 }
 
 void EventMessage::Resolve(void) {
-    if (target != -1) {
-        pTargetObj = objectManager.GetObjectFromID(target);
+    if (targetId != -1) {
+        pTargetObj = objectManager.GetObjectFromID(targetId);
     } else {
         pTargetObj = NULL;
     }
