@@ -2225,11 +2225,11 @@ ty/source/LensFlare.cpp:
    .sbss: [0x803fa970, 0x803fa980]
    .sdata2: [0x80400b98, 0x80400ba0]
 
-#LevelObjective.cpp:
-#   .text: [0x80171ef8, 0x80172594]
-#   .data: [0x80264818, 0x80264908]
-#   .sdata: [0x803f8a48, 0x803f8a80]
-#   .sbss: [0x803fa980, 0x803fa988]
+ty/source/LevelObjective.cpp:
+  .text: [0x80171ef8, 0x80172594]
+  .data: [0x80264818, 0x80264908]
+  .sdata: [0x803f8a48, 0x803f8a80]
+  .sbss: [0x803fa980, 0x803fa988]
 
 ty/source/LineOfSight.cpp:
   .text: [0x80172594, 0x80172b48]

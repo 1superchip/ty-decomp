@@ -73,7 +73,7 @@ void D1Prop::Draw(void) {
 
 void D1Prop::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 1:
+        case MKMSG_Resolve:
             OnCompletion.Resolve();
             OnCompletion100.Resolve();
             break;

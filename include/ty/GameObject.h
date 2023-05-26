@@ -16,6 +16,9 @@
 
 struct GameObject;
 
+// MKMessage IDs
+#define MKMSG_Resolve 1
+
 // GameObject MKMessage overrides
 #define MKMSG_UpdateAttachment 3
 #define MKMSG_AttachObject 4

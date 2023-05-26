@@ -104,6 +104,14 @@ struct MKAnimScript {
         unk1E = 0;
         unk1C = 0;
     }
+    void Reset(void) {
+        nextAnim = NULL;
+        currAnim = NULL;
+        unkC = unk10 = unk14 = 0.0f;
+        unk18 = 0;
+        unk1C = 0;
+        unk1A = 0;
+    }
 };
 
 #endif // COMMON_MKANIMSCRIPT

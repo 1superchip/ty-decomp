@@ -108,7 +108,7 @@ void ScriptProp::Message(MKMessage* pMsg) {
 		case 13:
 			bEnabled = false;
 			break;
-		case 1:
+		case MKMSG_Resolve:
 			for (int i = 0; i < MessageCount; i++) {
 				messages[i].Resolve();
 			}
