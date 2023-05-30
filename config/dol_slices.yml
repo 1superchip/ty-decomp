@@ -1122,13 +1122,13 @@
 #   .sbss: [0x803fa2d0, 0x803fa2d8]
 #   .sdata2: [0x803fe5f8, 0x803fe608]
 
-#ty/source/props/AnimatingProp.cpp:
-#   .text: [0x800d8fc8, 0x800d9ed8]
-#   .ctors: [0x8023c8b8, 0x8023c8bc]
-#   .data: [0x80255a60, 0x80255c30]
-#   .sdata: [0x803f6340, 0x803f63b0]
-#   .sbss: [0x803fa2d8, 0x803fa2e0]
-#   .sdata2: [0x803fe608, 0x803fe610]
+ty/source/props/AnimatingProp.cpp:
+  .text: [0x800d8fc8, 0x800d9ed8]
+  .ctors: [0x8023c8b8, 0x8023c8bc]
+  .data: [0x80255a60, 0x80255c30]
+  .sdata: [0x803f6340, 0x803f63b0]
+  .sbss: [0x803fa2d8, 0x803fa2e0]
+  .sdata2: [0x803fe608, 0x803fe610]
 
 #ty/source/props/Aquarang.cpp:
 #   .text: [0x800d9ed8, 0x800da3e8]

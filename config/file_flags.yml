@@ -15,6 +15,9 @@ ty/source/LevelObjective.cpp:
 ty/source/RangeCheck.cpp:
     .flags: "-pool off"
 
+ty/source/props/AnimatingProp.cpp:
+    .flags: "-pool off"
+
 ty/source/props/SoundProp.cpp:
     .flags: "-pool off"
 
