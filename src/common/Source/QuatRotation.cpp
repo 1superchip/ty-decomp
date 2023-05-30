@@ -42,9 +42,9 @@ void QuatRotation::Multiply(QuatRotation *pQuaternion1, QuatRotation *pQuaternio
     p0->w = (pQuaternion2->quat.w * pQuaternion1->quat.w) - pQuaternion2->quat.Dot(&pQuaternion1->quat);
     ((Vector*)p0)->Scale(&pQuaternion1->quat, pQuaternion2->quat.w); // this cast is needed...
     sp10.Scale(&pQuaternion2->quat, pQuaternion1->quat.w);
-    p0->Add(&sp10);
+    sp0.Add(&sp10);
     sp10.Cross(&pQuaternion2->quat, &pQuaternion1->quat);
-    p0->Add(&sp10);
+    sp0.Add(&sp0, &sp10);
     quat = sp0;
     quat.w = p0->w; // fake?
 }

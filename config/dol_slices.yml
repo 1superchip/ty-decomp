@@ -1855,13 +1855,13 @@ ty/source/props/WeatherProp.cpp:
 #   .sbss: [0x803fa6d0, 0x803fa6e8]
 #   .sdata2: [0x803ff868, 0x803ff8d0]
 
-#ty/source/props/Z1_RainbowScales.cpp:
-#   .text: [0x8011c150, 0x8011c53c]
-#   .ctors: [0x8023c9f4, 0x8023c9f8]
-#   .data: [0x8025e838, 0x8025e938]
-#   .bss: [0x802ae310, 0x802ae398]
-#   .sdata: [0x803f7fb0, 0x803f7ff0]
-#   .sbss: [0x803fa6e8, 0x803fa6f0]
+ty/source/props/Z1_RainbowScales.cpp:
+  .text: [0x8011c150, 0x8011c53c]
+  .ctors: [0x8023c9f4, 0x8023c9f8]
+  .data: [0x8025e838, 0x8025e938]
+  .bss: [0x802ae310, 0x802ae398]
+  .sdata: [0x803f7fb0, 0x803f7ff0]
+  .sbss: [0x803fa6e8, 0x803fa6f0]
 
 #ty/source/props/ZoneBlockerProp.cpp:
 #   .text: [0x8011c53c, 0x8011cda4]

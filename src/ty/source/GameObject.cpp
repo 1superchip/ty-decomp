@@ -237,6 +237,6 @@ void GameObjDesc::Load(KromeIni* pIni) {
 }
 
 BeginStruct GameObjDesc::Begin(void) {
-    BeginStruct stack = {(u8*)unk78, (u8*)unk78 + (pModule->pData->instanceSize * unk74)};
-    return stack;
+    BeginStruct it = {(u8*)unk78, (u8*)unk78 + (pModule->pData->instanceSize * unk74)};
+    return it;
 }

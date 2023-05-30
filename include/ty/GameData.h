@@ -190,6 +190,9 @@ struct GameData {
     bool CheckZone_Unk0(int zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bUnlocked;
     }
+    int GetLevelCollectedGemCount(void) {
+        return GetCollectedGemCount((LevelNumber)pSaveData->levelAB0);
+    }
 };
 void GameData_Init(void);
 void GameData_New(void);
