@@ -10,10 +10,10 @@ struct AxisRotation {
 
 struct QuatRotation {
     Vector quat;
-	void ConvertRotation(AxisRotation*);
-	void ConvertNormal(Vector*, float);
-	void ConvertVector(Vector*);
-	void Multiply(QuatRotation*, QuatRotation*);
+	void ConvertRotation(AxisRotation* pRotation);
+	void ConvertNormal(Vector* pNormal, float);
+	void ConvertVector(Vector* pVector);
+	void Multiply(QuatRotation* pQuaternion1, QuatRotation* pQuaternion2);
     void Multiply(QuatRotation* pOther) {
         Multiply(this, pOther);
     }
