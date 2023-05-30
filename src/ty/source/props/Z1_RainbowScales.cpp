@@ -49,7 +49,7 @@ void RainbowScaleObjective::Message(MKMessage* pMessage) {
     switch (pMessage->unk0) {
         case 2:
             GameObjDesc* pOpalDesc = objectManager.FindDescriptor("Opal");
-            BeginStruct itr = pOpalDesc->Begin();
+            DescriptorIterator itr = pOpalDesc->Begin();
             while (itr.GetPointers()) {
                 unk66++;
                 itr.UpdatePointers();

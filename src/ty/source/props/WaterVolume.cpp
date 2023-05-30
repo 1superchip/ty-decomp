@@ -75,7 +75,7 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
     Vector transformedPoint;
     bool isWithin = false;
     float closest = -1e+11f;
-    BeginStruct itr = waterVolumeDesc.Begin();
+    DescriptorIterator itr = waterVolumeDesc.Begin();
     while (itr.GetPointers()) {
         WaterVolume *volume = (WaterVolume *)itr.GetPointers();
         if (point->y < volume->unkC0 && point->y > volume->unkBC) {

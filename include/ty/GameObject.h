@@ -50,7 +50,7 @@ struct ModuleInfoBase {
     static ModuleInfoBase* pList;
 };
 
-struct BeginStruct;
+struct DescriptorIterator;
 
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
@@ -62,7 +62,7 @@ struct GameObjDesc : MKPropDescriptor {
 	void LoadObjects(KromeIni*, KromeIniLine*);
     GameObject* CreateObject(void);
 	
-	BeginStruct Begin(void);
+	DescriptorIterator Begin(void);
 	
 	char descrName[0x20];
 	char modelName[0x20];
@@ -157,7 +157,7 @@ struct ModuleInfo : ModuleInfoBase {
     }
 };
 
-struct BeginStruct {
+struct DescriptorIterator {
     u8* unk0;
     u8* unk4;
     GameObject* GetPointers(void) {

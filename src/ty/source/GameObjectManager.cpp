@@ -42,10 +42,10 @@ void GameObjectManager::DeinitLevel(void) {
     if (bLevelInitialised == false) {
         return;
     }
-    BeginStruct begin = Begin();
-    while (begin.GetPointers()) {
-        begin.GetPointers()->Deinit();
-        begin.UpdatePointers();
+    DescriptorIterator it = Begin();
+    while (it.GetPointers()) {
+        it.GetPointers()->Deinit();
+        it.UpdatePointers();
     }
 
     gSceneManager.Deinit();
@@ -190,12 +190,12 @@ void GameObjectManager::SendMessageToAll(MKMessage* pMsg, int mask) {
 }
 
 GameObject* GameObjectManager::GetObjectFromID(uint id) {
-    BeginStruct begin = Begin();
-    while (begin.GetPointers()) {
-        if (begin.GetPointers()->unk10 == id) {
-            return begin.GetPointers();
+    DescriptorIterator it = Begin();
+    while (it.GetPointers()) {
+        if (it.GetPointers()->unk10 == id) {
+            return it.GetPointers();
         }
-        begin.UpdatePointers();
+        it.UpdatePointers();
     }
     return NULL;
 }
@@ -237,9 +237,9 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
     return pClosestObj;
 }
 
-BeginStruct GameObjectManager::Begin(void) {
-    BeginStruct beginRet = {(u8*)unk8, (u8*)objectManager.unk8 + (int)objectManager.unkC};
-    return beginRet;
+DescriptorIterator GameObjectManager::Begin(void) {
+    DescriptorIterator git = {(u8*)unk8, (u8*)objectManager.unk8 + (int)objectManager.unkC};
+    return git;
 }
 
 int GameObjectManager::CountEntities(KromeIni* pIni, KromeIniLine* pIniLine) {
