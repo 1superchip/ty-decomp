@@ -47,18 +47,6 @@ static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
 
 bool StaticFXProp::bTempVisible;
 
-inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
-    bool isWithin = false;
-    if ((point->x >= volume->v1.x) && point->x < volume->v1.x + volume->v2.x) {
-        if ((point->y >= volume->v1.y) && point->y < volume->v1.y + volume->v2.y) {
-            if ((point->z >= volume->v1.z) && point->z < volume->v1.z + volume->v2.z) {
-                isWithin = true;
-            }
-        }
-    }
-    return isWithin;
-}
-
 static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     Matrix mat;
     Vector matrixScale = {1.0f, arg3, 1.0f, 0.0f};
@@ -69,16 +57,15 @@ static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
         pModel->matrices[0].Row2()->MagSquared()
     };
     Vector s;
-    Vector local;
+    Vector localPt;
     s.Set(1.0f / inv.x, 1.0f / inv.y, 1.0f / inv.z, 1.0f);
     mat.Scale(pModel->matrices, &s);
     mat.InverseSimple();
-    local.ApplyMatrix(pPoint, &mat);
+    localPt.ApplyMatrix(pPoint, &mat);
     BoundingVolume* pModelVolume = pModel->GetBoundingVolume(-1);
-    if (BoundingVolume_CheckPoint(pModelVolume, &local) != false) {
-        return true;
-    }
-    return false;
+    return ((localPt.x >= pModelVolume->v1.x) && localPt.x < pModelVolume->v1.x + pModelVolume->v2.x) &&
+        ((localPt.y >= pModelVolume->v1.y) && localPt.y < pModelVolume->v1.y + pModelVolume->v2.y) &&
+        ((localPt.z >= pModelVolume->v1.z) && localPt.z < pModelVolume->v1.z + pModelVolume->v2.z);
 }
 
 void StaticProp_LoadResources(KromeIni* pIni) {
