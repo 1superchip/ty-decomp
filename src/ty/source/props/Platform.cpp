@@ -104,9 +104,9 @@ bool Platform::LoadLine(KromeIniLine* pLine) {
 }
 
 void Platform::LoadDone(void) {
-	unk6C = StaticProp::loadInfo[1];
-	unk5C = StaticProp::loadInfo[0];
-	unk7C = unk5C;
+	scale = StaticProp::loadInfo[1];
+	defaultRot = StaticProp::loadInfo[0];
+	unk7C = defaultRot;
 	StaticProp::LoadDone();
 }
 
@@ -117,7 +117,7 @@ void Platform::Update(void) {
 }
 
 void Platform::Reset(void) {
-	unk7C = unk5C;
+	unk7C = defaultRot;
 	pModel->matrices[0].SetRotationPYR(&unk7C);
 	unk58 = NULL;
 }
@@ -208,7 +208,7 @@ void Platform::UpdateRotationMatrix(void) {
 	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
 	tmpMat.SetRotationYaw(unk7C.y);
 	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
-	pModel->matrices[0].Scale(&pModel->matrices[0], &unk6C);
+	pModel->matrices[0].Scale(&pModel->matrices[0], &scale);
 }
 
 void Platform::UpdateAttached(void) {

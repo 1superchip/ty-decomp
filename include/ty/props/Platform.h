@@ -39,8 +39,8 @@ struct PlatformDesc : StaticPropDescriptor {
 
 struct Platform : StaticProp {
 	Vector* unk58;
-	Vector unk5C;
-	Vector unk6C;
+	Vector defaultRot;
+	Vector scale;
 	Vector unk7C;
 	// list of all objects attached to this platform
 	PtrList<GameObject> attachments;
