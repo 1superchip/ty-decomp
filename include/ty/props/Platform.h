@@ -71,10 +71,6 @@ struct Platform : StaticProp {
 	PlatformDesc* GetDesc(void) {
 		return descr_cast<PlatformDesc*>(pDescriptor);
 	}
-	void SetMaxMag(void) {
-		Vector* v = &pModel->GetBoundingVolume(-1)->v1;
-		GetDesc()->maxMag = v->Magnitude();
-	}
 };
 
 #endif // PLATFORM_H

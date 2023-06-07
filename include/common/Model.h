@@ -145,6 +145,9 @@ struct Model {
 	int GetNmbrOfSubObjects(void);
 	char* GetSubObjectName(int);
 	BoundingVolume* GetBoundingVolume(int);
+	BoundingVolume* GetModelVolume(void) {
+		return GetBoundingVolume(-1);
+	}
 	char* GetName(void);
 	void SetAlphaLightIntensity(int, float);
 	void SetRenderTypeOverride(int);

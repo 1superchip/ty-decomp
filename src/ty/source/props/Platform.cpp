@@ -77,11 +77,9 @@ void PlatformDesc::Load(KromeIni* pIni) {
 
 void Platform::Init(GameObjDesc* pDesc) {
 	StaticProp::Init(pDesc);
-	SetMaxMag();
+	GetDesc()->maxMag = pModel->GetModelVolume()->v1.Magnitude();
 	numAttached = 0;
-	unk7C.x = 0.0f;
-	unk7C.y = 0.0f;
-	unk7C.z = 0.0f;
+	unk7C.Set(0.0f, 0.0f, 0.0f);
 	attachments.Init(0x20);
 	rider.Init();
 	unkB0.SetZero();
