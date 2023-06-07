@@ -144,15 +144,7 @@ void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume
 
 void GameObjectManager::AddObject(GameObject* pObj, Model* pModel) {
     pObj->pModel = pModel;
-    BoundingVolume* pModelVolume = pModel->GetBoundingVolume(-1);
-    pObj->pLocalToWorld = &pModel->matrices[0];
-    GameObjDesc* pDesc = static_cast<GameObjDesc*>(pObj->pDescriptor);
-    pObj->pDescriptor->pVolume = pModelVolume;
-	CheckVolume(pObj, pModelVolume);
-    if (pObj->pLocalToWorld == NULL) {
-        pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
-    }
-    gSceneManager.AddProp(pObj);
+    AddObject(pObj, &pModel->matrices[0], pModel->GetBoundingVolume(-1));
 }
 
 void GameObjectManager::RemoveObject(GameObject* pObj) {

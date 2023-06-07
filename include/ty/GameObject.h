@@ -53,7 +53,7 @@ struct ModuleInfoBase {
 struct DescriptorIterator;
 
 struct GameObjDesc : MKPropDescriptor {
-	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
+	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
 	virtual void Load(KromeIni*);
 	virtual void* ConstructObject(void* mem) {
 		return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp

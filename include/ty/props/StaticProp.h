@@ -32,8 +32,8 @@ struct StaticPropDescriptor : GameObjDesc {
 	LODDescriptor lodDesc;
 	int collisionInfoFlags;
 	
-	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
-	virtual void Load(KromeIni*);
+	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
+	virtual void Load(KromeIni* pIni);
 };
 
 struct StaticProp : GameObject {
