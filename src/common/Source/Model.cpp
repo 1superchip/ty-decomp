@@ -205,8 +205,8 @@ bool Model::IsSubObjectEnabled(int subObjectIndex) {
     return !(subobjectData[subObjectIndex] & 1);
 }
 
-void Model::EnableSubObject(int subObject, bool arg2) {
-    subobjectData[subObject] = (subobjectData[subObject] & ~1) | (arg2 ? 0 : 1); // lowest bit determines if it's active
+void Model::EnableSubObject(int subObjectIndex, bool arg2) {
+    subobjectData[subObjectIndex] = (subobjectData[subObjectIndex] & ~1) | (arg2 ? 0 : 1); // lowest bit determines if it's active
 }
 
 void Model::EnableOnlySubObject(int subObjectIndex, bool arg2) {
@@ -354,6 +354,8 @@ char* Model::GetSubObjectName(int subObjectIndex) {
 	return pTemplate->pModelData->pSubObjects[subObjectIndex].pName;
 }
 
+// returns the model's volume if subObjectIndex == -1
+// else returns subobject volume
 BoundingVolume* Model::GetBoundingVolume(int subObjectIndex) {
     if (subObjectIndex < 0) {
         return &pTemplate->pModelData->volume;

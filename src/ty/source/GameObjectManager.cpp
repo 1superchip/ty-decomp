@@ -144,7 +144,7 @@ void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume
 
 void GameObjectManager::AddObject(GameObject* pObj, Model* pModel) {
     pObj->pModel = pModel;
-    AddObject(pObj, &pModel->matrices[0], pModel->GetBoundingVolume(-1));
+    AddObject(pObj, &pModel->matrices[0], pModel->GetModelVolume());
 }
 
 void GameObjectManager::RemoveObject(GameObject* pObj) {

@@ -54,7 +54,7 @@ struct StaticProp : GameObject {
     }
 	// TyOn is an inline?
 
-    static Vector loadInfo[2];
+    static Vector loadInfo[2]; // {{rot}, {scale}}
 };
 
 struct StaticFXPropDesc : StaticPropDescriptor {

@@ -128,7 +128,7 @@ struct Model {
 	void SetAnimation(Animation*);
 	void SetLocalToWorldDirty(void);
 	bool IsSubObjectEnabled(int);
-	void EnableSubObject(int, bool);
+	void EnableSubObject(int subObjectIndex, bool);
 	void EnableOnlySubObject(int, bool);
 	void SetInverseScaleValue(int, float);
 	bool RefPointExists(char*, int*);
@@ -140,11 +140,13 @@ struct Model {
 	int GetSubObjectMatrixIndex(int);
 	Vector* GetSubObjectOrigin(int);
 	static void List(void);
-	void GetCentre(Vector*);
+	void GetCentre(Vector* pCentre);
 	int GetNmbrOfMatrices(void);
 	int GetNmbrOfSubObjects(void);
-	char* GetSubObjectName(int);
-	BoundingVolume* GetBoundingVolume(int);
+	char* GetSubObjectName(int subObjectIndex);
+	BoundingVolume* GetBoundingVolume(int subObjectIndex);
+
+	// Returns the volume of the model
 	BoundingVolume* GetModelVolume(void) {
 		return GetBoundingVolume(-1);
 	}

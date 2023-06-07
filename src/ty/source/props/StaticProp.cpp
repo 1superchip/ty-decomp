@@ -62,7 +62,7 @@ static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     mat.Scale(pModel->matrices, &s);
     mat.InverseSimple();
     localPt.ApplyMatrix(pPoint, &mat);
-    BoundingVolume* pModelVolume = pModel->GetBoundingVolume(-1);
+    BoundingVolume* pModelVolume = pModel->GetModelVolume();
     return ((localPt.x >= pModelVolume->v1.x) && localPt.x < pModelVolume->v1.x + pModelVolume->v2.x) &&
         ((localPt.y >= pModelVolume->v1.y) && localPt.y < pModelVolume->v1.y + pModelVolume->v2.y) &&
         ((localPt.z >= pModelVolume->v1.z) && localPt.z < pModelVolume->v1.z + pModelVolume->v2.z);
