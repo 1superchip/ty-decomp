@@ -6,9 +6,6 @@
 #include "common/PtrList.h"
 #include "common/Animation.h"
 
-// from Str.cpp
-extern bool gAssertBool;
-
 // from a different file
 struct MKDefaults {
 	s8 padding[0x44];

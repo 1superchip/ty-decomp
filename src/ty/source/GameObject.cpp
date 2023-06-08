@@ -2,12 +2,11 @@
 #include "ty/GameObject.h"
 #include "ty/MessageMap.h"
 #include "ty/props/WaterVolume.h"
+#include "common/Str.h"
 
 extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
 extern "C" int stricmp(char*, char*);
-
-extern bool gAssertBool; // from Str.cpp
 
 ModuleInfoBase* ModuleInfoBase::pList;
 

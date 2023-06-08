@@ -1,4 +1,5 @@
 #include "ty/props/Platform.h"
+#include "common/Str.h"
 #include "common/Heap.h"
 #include "common/StdMath.h"
 #include "ty/GameObjectManager.h"
@@ -20,7 +21,6 @@ extern struct Ty {
 	void SetAbsolutePosition(Vector*, int, float, bool);
 } ty;
 
-extern bool gAssertBool;
 //extern void LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
 static ModuleInfo<Platform> platformModuleInfo;

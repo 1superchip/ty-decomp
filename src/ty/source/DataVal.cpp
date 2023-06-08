@@ -5,8 +5,6 @@
 
 extern "C" int stricmp(char*, char*);
 
-extern bool gAssertBool; // from Str.cpp
-
 // should these functions be moved to KromeIniLine?
 bool Load_Float(KromeIniLine* pIniLine, float* pFloat, char* name) {
     if (stricmp(pIniLine->pFieldName, name) == 0) {
