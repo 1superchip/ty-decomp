@@ -151,8 +151,6 @@ void GameObjectManager::RemoveObject(GameObject* pObj) {
 	gSceneManager.RemoveProp(pObj);
 }
 
-extern ModuleInfoBase* ModuleInfoBase::pList;
-
 void GameObjectManager::UpdateModules(void) {
     ModuleInfoBase* pInfo = ModuleInfoBase::pList;
     while (pInfo != NULL) {

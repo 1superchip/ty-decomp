@@ -14,6 +14,13 @@ void Model_DeinitModule(void);
 struct BoundingVolume {
 	Vector v1;
 	Vector v2;
+
+	// might not be a struct method?
+	void GetCentre(Vector* pCentre) {
+		pCentre->x = v1.x + (v2.x * 0.5f);
+		pCentre->y = v1.y + (v2.y * 0.5f);
+		pCentre->z = v1.z + (v2.z * 0.5f);
+	}
 };
 
 struct RefPoint {

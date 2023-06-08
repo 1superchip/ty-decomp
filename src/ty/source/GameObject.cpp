@@ -83,14 +83,12 @@ void GameObject::Message(MKMessage* pMsg) {
             break;
         case 2:
             if (pLocalToWorld != NULL) {
-                Vector vec = {0.0f, 0.0f, 0.0f, 1.0f};
+                Vector centre = {0.0f, 0.0f, 0.0f, 1.0f};
                 if (pDescriptor->pVolume != NULL) {
-                    vec.x = pDescriptor->pVolume->v1.x + 0.5f * pDescriptor->pVolume->v2.x;
-                    vec.y = pDescriptor->pVolume->v1.y + 0.5f * pDescriptor->pVolume->v2.y;
-                    vec.z = pDescriptor->pVolume->v1.z + 0.5f * pDescriptor->pVolume->v2.z;
+                    pDescriptor->pVolume->GetCentre(&centre);
                 }
-                vec.ApplyMatrix(&vec, pLocalToWorld);
-                if (WaterVolume_IsWithin(&vec, NULL) != false) {
+                centre.ApplyMatrix(pLocalToWorld);
+                if (WaterVolume_IsWithin(&centre, NULL) != false) {
                     flags |= In_WaterVolume;
                 }
             }
@@ -132,12 +130,10 @@ void GameObject::Deallocate(GameObject* pObj) {
 
 // maybe a ternary would match this as well as DrawDynamicProps?
 uint GameObject::CalcDetailLevel(void) {
-    int _detail = 8;
-    int detail = (int)(8.0f * (1.0f - (1.0f - distSquared / (pDescriptor->maxDrawDist * pDescriptor->maxDrawDist)) * (1.0f - distSquared / (pDescriptor->maxDrawDist * pDescriptor->maxDrawDist))));
-    if (detail <= 8) {
-        _detail = detail;
-    }
-    detailLevel = (char)_detail;
+    float maxDrawSq = Sqr<float>(pDescriptor->maxDrawDist);
+    float tmp = distSquared / maxDrawSq;
+    char level = Min<int>(8, (1.0f - Sqr<float>(1.0f - tmp)) * 8.0f);
+    detailLevel = level;
     return detailLevel;
 }
 
