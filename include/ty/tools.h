@@ -80,6 +80,9 @@ struct Tools_AnimDesc {
 struct Tools_AnimManager {
     Tools_AnimDesc* pDescriptor;
     void Init(Tools_AnimDesc*);
+    MKAnim* GetAnim(int index) {
+        return pDescriptor->pEntries[index].pAnim;
+    }
 };
 
 struct Tools_AnimEvent {

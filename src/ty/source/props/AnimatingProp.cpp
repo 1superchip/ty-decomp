@@ -84,14 +84,12 @@ void AnimatingProp::LoadDone(void) {
     gameObjFlags.SetDefaultFlags();
 }
 
-extern void SoundBank_Stop(int*);
-
 void AnimatingProp::Reset(void) {
     GameObject::Reset();
     gameObjFlags.Reset();
     collisionInfo.bEnabled = gameObjFlags.CheckFlags(GameObjFlags_Enabled) && gameObjFlags.CheckFlags(GameObjFlags_Visible);
     mAnimScript.Reset();
-    SoundBank_Stop(&soundHelper.unk0);
+    soundHelper.Reset();
 }
 
 void AnimatingProp::Update(void) {
@@ -128,7 +126,6 @@ void AnimatingProp::Draw(void) {
     }
 }
 
-extern void SoundBank_Stop(int*);
 void AnimatingProp::Message(MKMessage* pMessage) {
     gameObjFlags.Message(pMessage);
     collisionInfo.bEnabled = gameObjFlags.CheckFlags(GameObjFlags_Enabled) &&
@@ -155,7 +152,7 @@ void AnimatingProp::Message(MKMessage* pMessage) {
     }
     GameObject::Message(pMessage);
     if (pMessage->unk0 == -4 || !collisionInfo.bEnabled) {
-        SoundBank_Stop(&soundHelper.unk0);
+        soundHelper.Reset();
     }
 }
 

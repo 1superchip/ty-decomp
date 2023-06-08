@@ -2,15 +2,10 @@
 #define SOUNDPROP_H
 
 #include "types.h"
+#include "ty/soundbank.h"
 #include "common/Vector.h"
 #include "ty/GameObject.h"
 #include "ty/CommonGameObjectFlags.h"
-
-struct SoundEventHelper {
-	int unk0;
-	
-	void Update(int, bool, bool, GameObject*, Vector*, float, int);
-};
 
 struct SoundProp : GameObject {
 	Matrix localToWorld;
@@ -30,7 +25,6 @@ struct SoundProp : GameObject {
 	virtual void Init(GameObjDesc*);
 	virtual void Deinit(void);
     void Play(void);
-	
 };
 
 void SoundProp_LoadResources(KromeIni*);

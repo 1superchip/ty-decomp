@@ -2,19 +2,11 @@
 #define ANIMATINGPROP_H
 
 #include "ty/props/StaticProp.h"
+#include "ty/soundbank.h"
 #include "ty/CommonGameObjectFlags.h"
 #include "common/MKAnimScript.h"
 #include "ty/tools.h"
 
-// should not go here
-struct SoundEventHelper {
-	int unk0;
-	
-	void Update(int, bool, bool, GameObject*, Vector*, float, int);
-    void Init(void) {
-        unk0 = -1;
-    }
-};
 struct SoundEvent {
     int soundEventIndex;
     char* animEventName;
@@ -56,6 +48,9 @@ struct AnimatingProp : StaticProp {
     virtual void Show(bool bShow);
     virtual void Activate(bool bActivate);
     virtual void Enable(bool bEnable);
+    void SetAnim(uint index) { // this function could be wrong, need to decomp code that uses it
+        mAnimScript.SetAnim(mAnimManager.GetAnim(index));
+    }
 
     AnimatingPropDesc* GetDesc(void) {
         return descr_cast<AnimatingPropDesc*>(pDescriptor);

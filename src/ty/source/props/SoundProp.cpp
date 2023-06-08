@@ -10,7 +10,6 @@ extern struct GlobalVar {
     int unk[483];
     float unk78C;
 } gb;
-extern void SoundBank_Stop(int*);
 extern int SoundBank_ResolveSoundEventIndex(char*);
 extern "C" int Sound_IsVoicePlaying(int);
 
@@ -29,7 +28,7 @@ void SoundProp::Init(GameObjDesc* pDesc) {
 	GameObject::Init(pDesc);
     pModel = NULL;
 	unk84 = -1;
-	unk7C.unk0 = -1;
+	unk7C.Init();
 	maxDelay = 0;
 	minDelay = 0;
     unk88 = 0;
@@ -39,7 +38,7 @@ void SoundProp::Init(GameObjDesc* pDesc) {
 
 void SoundProp::Deinit(void) {
 	GameObject::Deinit();
-	SoundBank_Stop(&unk7C.unk0);
+	unk7C.Deinit();
 }
 
 bool SoundProp::LoadLine(KromeIniLine* pLine) {
@@ -71,24 +70,24 @@ void SoundProp::LoadDone(void) {
 
 void SoundProp::Reset(void) {
 	GameObject::Reset();
-	SoundBank_Stop(&unk7C.unk0);
+    unk7C.Reset();
 	unk88 = 0;
 	unk80 = 1;
-	gameObjFlags.flags = gameObjFlags.defaultFlags;
+	gameObjFlags.Reset();
 }
 
 void SoundProp::Update(void) {
     switch (unk80) {
         case 1:
-            if (gameObjFlags.flags & GameObjFlags_Active) {
+            if (gameObjFlags.CheckFlags(GameObjFlags_Active)) {
                 Play();
                 unk80 = 2;
             }
             break;
         case 2:
             unk7C.Update(unk84, false, true, this, 0, -1.0f, 0);
-            if (!(gameObjFlags.flags & GameObjFlags_Active)) {
-                SoundBank_Stop(&unk7C.unk0);
+            if (!gameObjFlags.CheckFlags(GameObjFlags_Active)) {
+                unk7C.Stop();
                 unk80 = 1;
                 break;
             }
@@ -109,7 +108,7 @@ void SoundProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case -4:
             if (unk80 != 0) {
-                SoundBank_Stop(&unk7C.unk0);
+                unk7C.Stop();
                 unk80 = 1;
             }
             break;
