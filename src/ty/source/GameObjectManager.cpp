@@ -90,7 +90,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
                 int count = CountEntities(pIni, pLine);
                 pDesc->unk74 += count;
                 pDesc->pModule->pData->unk18 += count;
-                if ((pDesc->flags & 0x100000) == false) {
+                if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
                     unkC += count * pDesc->pModule->pData->instanceSize;
                 }
             }
@@ -107,7 +107,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
     GameObject* pObj = static_cast<GameObject*>(unk8);
     GameObjDesc* pDesc = static_cast<GameObjDesc*>(pDescs);
     while (pDesc != NULL) {
-        if ((pDesc->flags & 0x100000) == false) {
+        if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
             pObj = (GameObject*)pDesc->SetUpMem((u8*)pObj);
         }
         pDesc = pDesc->unk80;

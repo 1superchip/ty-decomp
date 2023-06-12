@@ -209,7 +209,7 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
 }
 
 GameObject* GameObjDesc::CreateObject(void) {
-    if (flags & 0x100000) {
+    if (TestFlag((GameObjDescFlags)0x100000)) {
 		// if the descriptor's module has a custom allocation function use it
         return (GameObject*)ConstructObject(pModule->pData->pAllocate());
     }

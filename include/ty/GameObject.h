@@ -52,6 +52,8 @@ struct ModuleInfoBase {
 
 struct DescriptorIterator;
 
+enum GameObjDescFlags {};
+
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
 	virtual void Load(KromeIni*);
@@ -61,7 +63,6 @@ struct GameObjDesc : MKPropDescriptor {
 	u8* SetUpMem(u8*);
 	void LoadObjects(KromeIni*, KromeIniLine*);
     GameObject* CreateObject(void);
-	
 	DescriptorIterator Begin(void);
 	
 	char descrName[0x20];
@@ -71,10 +72,13 @@ struct GameObjDesc : MKPropDescriptor {
 	GameObject* unk78;
 	u8* unk7C;
 	GameObjDesc* unk80;
+
+    bool TestFlag(GameObjDescFlags testFlags) {
+        return testFlags & flags;
+    }
 };
 
 struct GameObject : MKProp {
-	
 	static void InitModule(void);
 	static void DeinitModule(void);
 	static void UpdateModule(void);
@@ -82,10 +86,7 @@ struct GameObject : MKProp {
 	static int* Allocate(void);
 	static void Deallocate(GameObject*);
 	uint CalcDetailLevel(void);
-	
 	static int GetMessageIdFromString(char*);
-	
-	
 	virtual bool LoadLine(KromeIniLine*);
 	virtual void LoadDone(void);
 	virtual void Reset(void);
@@ -127,7 +128,6 @@ inline void* operator new(size_t size, void* mem) {
 
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
-	
 	virtual void Init(void) {
         if (pData == NULL) {
             pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
