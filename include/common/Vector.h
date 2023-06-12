@@ -117,6 +117,9 @@ struct Vector {
 	void ApplyMatrix(Matrix* pMatrix) {
 		ApplyMatrix(this, pMatrix);
 	}
+	void ClampMagnitude(float maxMag) {
+		ClampMagnitude(this, maxMag);
+	}
     inline bool Equals(Vector* pOther) {
         return x == pOther->x && y == pOther->y && z == pOther->z;
     }
