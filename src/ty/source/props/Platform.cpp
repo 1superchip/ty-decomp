@@ -189,7 +189,7 @@ void Platform::UpdateTilt(void) {
 			if (unk58[5].MagSquared() > Sqr<float>(GetDesc()->radius)) {
 				Vector tmp = unk58[5];
 				tmp.y = 0.0f;
-				tmp.ClampMagnitude(&tmp, GetDesc()->maxMag);
+				tmp.ClampMagnitude(GetDesc()->maxMag);
 				tmp.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
 				unk7C.x = AdjustFloat(unk7C.x, -tmp.z, 0.1f);
 				unk7C.z = AdjustFloat(unk7C.z, tmp.x, 0.1f);
