@@ -24,7 +24,10 @@ struct SoundProp : GameObject {
 	virtual void Message(MKMessage*);
 	virtual void Init(GameObjDesc*);
 	virtual void Deinit(void);
-    void Play(void);
+	void Play(void);
+	Vector* GetPos(void) {
+		return localToWorld.Row3();
+	}
 };
 
 void SoundProp_LoadResources(KromeIni*);
