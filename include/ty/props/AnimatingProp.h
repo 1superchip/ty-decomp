@@ -38,8 +38,8 @@ struct AnimatingProp : StaticProp {
     SoundEventHelper soundHelper;
     CommonGameObjFlagsComponent gameObjFlags;
 
-    virtual void Init(GameObjDesc*);
-    virtual bool LoadLine(KromeIniLine*);
+    virtual void Init(GameObjDesc* pDesc);
+    virtual bool LoadLine(KromeIniLine* pLine);
     virtual void LoadDone(void);
     virtual void Reset(void);
     virtual void Update(void);

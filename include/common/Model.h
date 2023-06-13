@@ -130,7 +130,7 @@ struct Model {
 	static Model* Create(char*, char*);
 	void Destroy(void);
 	static void Purge(void);
-	void SetPosition(Vector*);
+	void SetPosition(Vector* pPos);
 	void SetRotation(Vector*);
 	void SetAnimation(Animation*);
 	void SetLocalToWorldDirty(void);

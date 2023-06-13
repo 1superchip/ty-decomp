@@ -41,10 +41,10 @@ struct StaticProp : GameObject {
 	CollisionInfo collisionInfo;
 	LODManager lodManager;
 	
-	virtual bool LoadLine(KromeIniLine*);
+	virtual bool LoadLine(KromeIniLine* pLine);
 	virtual void LoadDone(void);
 	virtual void Draw(void);
-	virtual void Init(GameObjDesc*);
+	virtual void Init(GameObjDesc* pDesc);
 	virtual void Deinit(void);
 	StaticPropDescriptor* GetDesc(void) {
 		return descr_cast<StaticPropDescriptor*>(pDescriptor);
@@ -62,15 +62,15 @@ struct StaticFXPropDesc : StaticPropDescriptor {
 	Vector autoRotate;
 	char rotateSubObj[0x20];
 	// might be wrong
-	virtual void Init(ModuleInfoBase* pMod, char* c, char* y, int t, int s) {
-        StaticPropDescriptor::Init(pMod, c, y, t, s);
+	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
+        StaticPropDescriptor::Init(pMod, pMdlName, pDescrName, _searchMask, _flags);
         effectFlags = 0;
         autoRotate.SetZero();
         rotateSubObj[0] = '\0';
     }
-	virtual void Load(KromeIni *pIni) {
+	virtual void Load(KromeIni* pIni) {
 		StaticPropDescriptor::Load(pIni);
-		KromeIniLine *pLine = pIni->GotoLine(modelName, NULL);
+		KromeIniLine* pLine = pIni->GotoLine(modelName, NULL);
 		if (pLine != NULL) {
 			while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
 				if (pLine->pFieldName != NULL) {
@@ -119,13 +119,13 @@ struct StaticFXProp : StaticProp {
 	int unk9C;
 	int rotateSubObjIndex;
 	
-	virtual bool LoadLine(KromeIniLine*);
+	virtual bool LoadLine(KromeIniLine* pLine);
 	virtual void LoadDone(void);
 	virtual void Reset(void);
 	virtual void Update(void);
 	virtual void Draw(void);
 	virtual void Message(MKMessage*);
-	virtual void Init(GameObjDesc*);
+	virtual void Init(GameObjDesc* pDesc);
 	void UpdateShake(void);
 	void UpdateWaterRipple(void);
 	void UpdateDropLeaf(void);
@@ -135,13 +135,15 @@ struct StaticFXProp : StaticProp {
 		return descr_cast<StaticFXPropDesc*>(pDescriptor);
 	}
     Vector* GetPos(void) {
+		// this is wrong
+		// need to figure this out
         return pModel->matrices[0].Row3();
     }
 
     static bool bTempVisible;
 };
 
-void StaticProp_LoadResources(KromeIni*);
+void StaticProp_LoadResources(KromeIni* pIni);
 
 extern "C" void memset(void*, int, int);
 
