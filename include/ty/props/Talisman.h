@@ -22,15 +22,15 @@ struct Talisman : StaticProp {
     ParticleSystem* pParticleSystem;
     bool bCurrentVisible; // Current visibility
     bool bVisible; // Default visibility setting for this talisman
-	
-	virtual bool LoadLine(KromeIniLine* pLine);
-	virtual void LoadDone(void);
+    
+    virtual bool LoadLine(KromeIniLine* pLine);
+    virtual void LoadDone(void);
     virtual void Reset(void);
-	virtual void Update(void);
-	virtual void Draw(void);
-	virtual void Message(MKMessage* pMessage);
-	virtual void Init(GameObjDesc* pDesc);
-	virtual void Deinit(void);
+    virtual void Update(void);
+    virtual void Draw(void);
+    virtual void Message(MKMessage* pMessage);
+    virtual void Init(GameObjDesc* pDesc);
+    virtual void Deinit(void);
 };
 
 #endif // TALISMAN_H
