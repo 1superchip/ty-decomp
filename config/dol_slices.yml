@@ -1716,15 +1716,15 @@ ty/source/props/StaticProp.cpp:
    .sbss: [0x803fa5f8, 0x803fa610]
    .sdata2: [0x803ff5f8, 0x803ff638]
 
-#ty/source/props/Talisman.cpp:
-#   .text: [0x80111560, 0x80111c6c]
-#   .ctors: [0x8023c9b8, 0x8023c9bc]
-#   .rodata: [0x8023e008, 0x8023e018]
-#   .data: [0x8025ce28, 0x8025cff0]
-#   .bss: [0x802abd20, 0x802ac170]
-#   .sdata: [0x803f7a80, 0x803f7ab8]
-#   .sbss: [0x803fa610, 0x803fa618]
-#   .sdata2: [0x803ff638, 0x803ff668]
+ty/source/props/Talisman.cpp:
+  .text: [0x80111560, 0x80111c6c]
+  .ctors: [0x8023c9b8, 0x8023c9bc]
+  .rodata: [0x8023e008, 0x8023e018]
+  .data: [0x8025ce28, 0x8025cff0]
+  .bss: [0x802abd20, 0x802ac170]
+  .sdata: [0x803f7a80, 0x803f7ab8]
+  .sbss: [0x803fa610, 0x803fa618]
+  .sdata2: [0x803ff638, 0x803ff668]
 
 #ty/source/props/Teleporter.cpp:
 #   .text: [0x80111c6c, 0x80112618]
