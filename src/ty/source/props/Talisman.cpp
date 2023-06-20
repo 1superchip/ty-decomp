@@ -104,8 +104,8 @@ void Talisman::Draw(void) {
     }
 }
 
-void Talisman::Message(MKMessage* pMessage) {
-    switch (pMessage->unk0) {
+void Talisman::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
         case 10:
         case 14:
             bCurrentVisible = true;
@@ -115,5 +115,5 @@ void Talisman::Message(MKMessage* pMessage) {
             bCurrentVisible = false;
             break;
     }
-    GameObject::Message(pMessage);
+    GameObject::Message(pMsg);
 }

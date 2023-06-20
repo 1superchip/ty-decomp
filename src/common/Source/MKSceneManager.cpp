@@ -153,6 +153,8 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
 
 
 void MKSceneManager::AddProp(MKProp* pProp) {
+    // variable here? (PS2)
+    // july 1st needed a variable (long) to match the switch
     switch (pProp->pDescriptor->flags & MKPROP_TypeMask) {
         case MKPROP_Static:
             AddStaticProp(pProp, pProp->pDescriptor->drawLayer);

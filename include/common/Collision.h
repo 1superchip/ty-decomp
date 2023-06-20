@@ -57,6 +57,9 @@ struct CollisionInfo {
         flags = _collisionFlags;
         pProp = _pProp;
     }
+    void Enable(void) {
+        bEnabled = true;
+    }
 };
 
 struct CollisionTriangle {

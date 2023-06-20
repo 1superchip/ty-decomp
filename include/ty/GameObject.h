@@ -56,7 +56,7 @@ enum GameObjDescFlags {};
 
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
-	virtual void Load(KromeIni*);
+	virtual void Load(KromeIni* pIni);
 	virtual void* ConstructObject(void* mem) {
 		return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp
 	};
@@ -87,13 +87,13 @@ struct GameObject : MKProp {
 	static void Deallocate(GameObject*);
 	uint CalcDetailLevel(void);
 	static int GetMessageIdFromString(char*);
-	virtual bool LoadLine(KromeIniLine*);
+	virtual bool LoadLine(KromeIniLine* pLine);
 	virtual void LoadDone(void);
 	virtual void Reset(void);
 	virtual void Update(void);
 	virtual void Draw(void);
-	virtual void Message(MKMessage*);
-	virtual void Init(GameObjDesc*);
+	virtual void Message(MKMessage* pMsg);
+	virtual void Init(GameObjDesc* pDesc);
 	virtual void Deinit(void);
 	
 	Vector* GetPos(void) {

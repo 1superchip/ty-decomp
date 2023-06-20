@@ -17,12 +17,12 @@ struct SoundProp : GameObject {
 	int maxDelay;
 	CommonGameObjFlagsComponent gameObjFlags;
 	
-	virtual bool LoadLine(KromeIniLine*);
+	virtual bool LoadLine(KromeIniLine* pLine);
 	virtual void LoadDone(void);
 	virtual void Reset(void);
 	virtual void Update(void);
-	virtual void Message(MKMessage*);
-	virtual void Init(GameObjDesc*);
+	virtual void Message(MKMessage* pMsg);
+	virtual void Init(GameObjDesc* pDesc);
 	virtual void Deinit(void);
 	void Play(void);
 	Vector* GetPos(void) {

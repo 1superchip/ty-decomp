@@ -64,7 +64,7 @@ void WeatherProp::LoadDone(void) {
 	objectManager.AddObject(this, NULL, NULL);
 }
 
-void WeatherProp::Message(MKMessage * pMsg) {
+void WeatherProp::Message(MKMessage* pMsg) {
 	switch (pMsg->unk0) {
     case 2:
         Reset();

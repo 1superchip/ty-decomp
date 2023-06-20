@@ -28,7 +28,7 @@ struct Talisman : StaticProp {
     virtual void Reset(void);
     virtual void Update(void);
     virtual void Draw(void);
-    virtual void Message(MKMessage* pMessage);
+    virtual void Message(MKMessage* pMsg);
     virtual void Init(GameObjDesc* pDesc);
     virtual void Deinit(void);
 };

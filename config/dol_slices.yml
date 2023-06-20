@@ -1594,13 +1594,13 @@ ty/source/props/Platform.cpp:
 #ty/source/props/Props.cpp:
 #   .text: [0x8010655c, 0x80106768]
 
-#RangStone.cpp:
-#   .text: [0x80106768, 0x80106b70]
-#   .ctors: [0x8023c984, 0x8023c988]
-#   .data: [0x8025b670, 0x8025b760]
-#   .bss: [0x802aae20, 0x802aaf00]
-#   .sdata: [0x803f7580, 0x803f75c8]
-#   .sbss: [0x803fa558, 0x803fa560]
+ty/source/props/RangStone.cpp:
+  .text: [0x80106768, 0x80106b70]
+  .ctors: [0x8023c984, 0x8023c988]
+  .data: [0x8025b670, 0x8025b760]
+  .bss: [0x802aae20, 0x802aaf00]
+  .sdata: [0x803f7580, 0x803f75c8]
+  .sbss: [0x803fa558, 0x803fa560]
 
 #ty/source/props/Rex.cpp:
 #   .text: [0x80106b70, 0x801083a0]
