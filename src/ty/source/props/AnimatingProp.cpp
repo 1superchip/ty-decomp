@@ -126,11 +126,11 @@ void AnimatingProp::Draw(void) {
     }
 }
 
-void AnimatingProp::Message(MKMessage* pMessage) {
-    gameObjFlags.Message(pMessage);
+void AnimatingProp::Message(MKMessage* pMsg) {
+    gameObjFlags.Message(pMsg);
     collisionInfo.bEnabled = gameObjFlags.CheckFlags(GameObjFlags_Enabled) &&
         gameObjFlags.CheckFlags(GameObjFlags_Visible);
-    switch (pMessage->unk0) {
+    switch (pMsg->unk0) {
         case 10:
             Activate(true);
             break;
@@ -150,8 +150,8 @@ void AnimatingProp::Message(MKMessage* pMessage) {
             Show(false);
             break;
     }
-    GameObject::Message(pMessage);
-    if (pMessage->unk0 == -4 || !collisionInfo.bEnabled) {
+    GameObject::Message(pMsg);
+    if (pMsg->unk0 == -4 || !collisionInfo.bEnabled) {
         soundHelper.Reset();
     }
 }

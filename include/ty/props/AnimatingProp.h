@@ -44,7 +44,7 @@ struct AnimatingProp : StaticProp {
     virtual void Reset(void);
     virtual void Update(void);
     virtual void Draw(void);
-    virtual void Message(MKMessage*);
+    virtual void Message(MKMessage* pMsg);
     virtual void Show(bool bShow);
     virtual void Activate(bool bActivate);
     virtual void Enable(bool bEnable);

@@ -13,7 +13,7 @@ struct SpawnPoint : GameObject {
 
     virtual bool LoadLine(KromeIniLine* pLine);
     virtual void LoadDone(void);
-    virtual void Message(MKMessage* pMessage);
+    virtual void Message(MKMessage* pMsg);
     virtual void Init(GameObjDesc* pDesc);
 };
 

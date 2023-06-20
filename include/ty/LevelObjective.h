@@ -23,7 +23,7 @@ struct LevelObjective : GameObject {
     virtual bool LoadLine(KromeIniLine* pLine);
     virtual void LoadDone(void);
     virtual void Reset(void);
-    virtual void Message(MKMessage* pMessage);
+    virtual void Message(MKMessage* pMsg);
     virtual void Init(GameObjDesc* pDesc);
     virtual void Deinit(void);
     virtual void Failure(void);

@@ -80,8 +80,8 @@ void LevelObjective::LoadDone(void) {
     }
 }
 
-void LevelObjective::Message(MKMessage* pMessage) {
-    switch (pMessage->unk0) {
+void LevelObjective::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
         case 2:
             Reset();
             break;
@@ -105,7 +105,7 @@ void LevelObjective::Message(MKMessage* pMessage) {
             OnStart.Resolve();
             OnAbort.Resolve();
     }
-    GameObject::Message(pMessage);
+    GameObject::Message(pMsg);
 }
 
 void LevelObjective::Activate(void) {

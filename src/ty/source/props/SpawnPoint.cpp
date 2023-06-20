@@ -47,13 +47,13 @@ void SpawnPoint::LoadDone(void) {
 	objectManager.AddObject(this, NULL, NULL);
 }
 
-void SpawnPoint::Message(MKMessage* pMessage) {
-    switch (pMessage->unk0) {
+void SpawnPoint::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
         case 1:
             if (fromLevel == gb.gameData.pSaveData->levelAB4) {
                 ty.spawnPos = tySpawnPos;
                 ty.spawnRot = tySpawnRot;
             }
     }
-    GameObject::Message(pMessage);
+    GameObject::Message(pMsg);
 }
