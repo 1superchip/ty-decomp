@@ -40,9 +40,9 @@ void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
         staticPropArray[i].pPrev = &staticPropArray[i];
         dynamicPropArray[i].pPrev = &dynamicPropArray[i];
         globalPropArray[i].pPrev = &globalPropArray[i];
-        staticPropArray[i].unk10 = 0;
-        dynamicPropArray[i].unk10 = 0;
-        globalPropArray[i].unk10 = 0;
+        staticPropArray[i].uniqueID = 0;
+        dynamicPropArray[i].uniqueID = 0;
+        globalPropArray[i].uniqueID = 0;
     }
     props[0].pNextUpdated = &props[0];
     props[0].pPrevUpdated = &props[0];
@@ -183,7 +183,7 @@ void MKSceneManager::AddStaticProp(MKProp* pProp, int propIdx) {
         pProp->pPrev->pNext = pProp;
         pProp->pPrevUpdated = NULL;
         pProp->pNextUpdated = NULL;
-        staticPropArray[propIdx].unk10++;
+        staticPropArray[propIdx].uniqueID++;
     }
 }
 
@@ -200,7 +200,7 @@ void MKSceneManager::AddDynamicProp(MKProp* pProp, int propIdx) {
     pProp->pPrev->pNext = pProp;
     pProp->pPrevUpdated = NULL;
     pProp->pNextUpdated = NULL;
-    dynamicPropArray[propIdx].unk10++;
+    dynamicPropArray[propIdx].uniqueID++;
 }
 
 void MKSceneManager::AddGlobalProp(MKProp* pProp, int propIdx) {
@@ -216,7 +216,7 @@ void MKSceneManager::AddGlobalProp(MKProp* pProp, int propIdx) {
     pProp->pPrev->pNext = pProp;
     pProp->pPrevUpdated = NULL;
     pProp->pNextUpdated = NULL;
-    globalPropArray[propIdx].unk10++;
+    globalPropArray[propIdx].uniqueID++;
 }
 
 void MKSceneManager::Optimise(void) {
@@ -392,7 +392,7 @@ void MKSceneManager::MakeTerrainTree(void) {
 
 void MKSceneManager::MakePropTree(void) {
     for (int i = 0; i < 4; i++) {
-        staticPropTree[i].Init(staticPropArray[i].unk10);
+        staticPropTree[i].Init(staticPropArray[i].uniqueID);
         MKProp* next = staticPropArray[i].pNext;
         SMNode* pNode = staticPropTree[i].pNodes;
         if (next != NULL) {

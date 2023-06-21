@@ -43,7 +43,7 @@ struct MKProp {
 	Model* pModel;
 	Matrix* pLocalToWorld;
 	int flags;
-	int unk10;
+	int uniqueID;
 	float unk14;
 	u16 detailLevel;
 	u16 rejectionResult;

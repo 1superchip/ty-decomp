@@ -182,7 +182,7 @@ void GameObjectManager::SendMessageToAll(MKMessage* pMsg, int mask) {
 GameObject* GameObjectManager::GetObjectFromID(uint id) {
     DescriptorIterator it = Begin();
     while (it.GetPointers()) {
-        if (it.GetPointers()->unk10 == id) {
+        if (it.GetPointers()->uniqueID == id) {
             return it.GetPointers();
         }
         it.UpdatePointers();

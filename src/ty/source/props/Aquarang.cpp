@@ -51,7 +51,7 @@ void AquarangProp::Reset(void) {
     particle.angle = 0.0f;
     randAngle = RandomFR(&gb.randSeed, 0.0f, (2 * PI));
     yaw = 0.0f;
-    yawUpdateVal = unk10 & 1 ? 0.05f : -0.05f;
+    yawUpdateVal = uniqueID & 1 ? 0.05f : -0.05f;
 }
 
 void AquarangProp::Update(void) {

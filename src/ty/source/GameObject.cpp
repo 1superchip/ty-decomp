@@ -37,7 +37,7 @@ void GameObject::Init(GameObjDesc* pDesc) {
     pNext = NULL;
     pPrev = NULL;
     pNextOfThisType = NULL;
-    unk10 = 0; // ID?
+    uniqueID = 0;
     unk14 = 0.0f;
     unk1C = 1.0f;
     detailLevel = 0;
@@ -96,7 +96,7 @@ void GameObject::Message(MKMessage* pMsg) {
 }
 
 bool GameObject::LoadLine(KromeIniLine* pLine) {
-	return LoadLevel_LoadInt(pLine, "ID", &unk10);
+	return LoadLevel_LoadInt(pLine, "ID", &uniqueID);
 }
 
 void GameObject::LoadDone(void) {
