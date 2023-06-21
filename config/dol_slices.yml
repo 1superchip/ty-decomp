@@ -1130,14 +1130,14 @@ ty/source/props/AnimatingProp.cpp:
   .sbss: [0x803fa2d8, 0x803fa2e0]
   .sdata2: [0x803fe608, 0x803fe610]
 
-#ty/source/props/Aquarang.cpp:
-#   .text: [0x800d9ed8, 0x800da3e8]
-#   .ctors: [0x8023c8bc, 0x8023c8c0]
-#   .data: [0x80255c30, 0x80255d30]
-#   .bss: [0x802a6828, 0x802a6908]
-#   .sdata: [0x803f63b0, 0x803f63f0]
-#   .sbss: [0x803fa2e0, 0x803fa2f0]
-#   .sdata2: [0x803fe610, 0x803fe630]
+ty/source/props/Aquarang.cpp:
+  .text: [0x800d9ed8, 0x800da3e8]
+  .ctors: [0x8023c8bc, 0x8023c8c0]
+  .data: [0x80255c30, 0x80255d30]
+  .bss: [0x802a6828, 0x802a6908]
+  .sdata: [0x803f63b0, 0x803f63f0]
+  .sbss: [0x803fa2e0, 0x803fa2f0]
+  .sdata2: [0x803fe610, 0x803fe630]
 
 #ty/source/props/BeachHut.cpp:
 #   .text: [0x800da3e8, 0x800dab6c]
