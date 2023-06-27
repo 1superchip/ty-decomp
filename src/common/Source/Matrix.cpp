@@ -344,7 +344,7 @@ void Matrix::Inverse(Matrix* pMatrix) {
     data[1][2] = (m10 * m02) - (m00 * m12);
     data[2][2] = (m00 * m11) - (m10 * m01);
     if (det) {
-        Scale(this, 1.0f / det);
+        Scale(1.0f / det);
     }
     pos.ApplyRotMatrix(&pos, this);
     Row3()->x = -pos.x;

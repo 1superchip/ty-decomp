@@ -54,7 +54,9 @@ struct Matrix {
 		Row2()->Copy(&normalizedDiff);
 		data[2][3] = 0.0f;
 	}
-
+    void RotatePitch(float pitch) {
+        RotatePitch(this, pitch);
+    }
     void RotateYaw(float yaw) {
         RotateYaw(this, yaw);
     }
@@ -84,6 +86,9 @@ struct Matrix {
 	}
 	void Scale(Vector* pScale) {
 		Scale(this, pScale);
+	}
+	void Scale(float scalar) {
+		Scale(this, scalar);
 	}
 };
 

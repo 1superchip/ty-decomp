@@ -114,7 +114,7 @@ void Vector::ApplyMatrixW(Vector* pVector, Matrix* pMatrix) {
 }
 
 void Vector::ApplyRotMatrix(Vector* pVector, Matrix* pMatrix) {
-    Vector tmp;
+    Vector temp;
     float vx;
     float vy;
     float vz;
@@ -126,8 +126,8 @@ void Vector::ApplyRotMatrix(Vector* pVector, Matrix* pMatrix) {
     float my = (vx * pMatrix->data[0][1]) + (vy * pMatrix->data[1][1]) + (vz * pMatrix->data[2][1]);
     float mz = (vx * pMatrix->data[0][2]) + (vy * pMatrix->data[1][2]) + (vz * pMatrix->data[2][2]);
 
-    tmp.Set(mx, my, mz);
-    Copy(&tmp);
+    temp.Set(mx, my, mz);
+    Copy(&temp);
 }
 
 void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {
