@@ -1,3 +1,5 @@
+#ifndef BOUNDINGREGION_H
+#define BOUNDINGREGION_H
 
 // clean up
 // decomp Path.cpp?
@@ -27,3 +29,5 @@ struct BoundingRegion {
 	bool isIntersect(Vector*, Vector*, Vector*, Vector*);
 	bool isCounterClockWise(Vector*, Vector*, Vector*);
 };
+
+#endif // BOUNDINGREGION_H
