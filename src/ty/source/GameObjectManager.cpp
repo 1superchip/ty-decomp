@@ -206,21 +206,27 @@ GameObjDesc* GameObjectManager::FindDescriptor(char* name) {
     return NULL;
 }
 
-void GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int param_2, Vector* pPt, float radius, int param_5) {
+// Returns the number of objects in range and places the GameObject pointers in ppObjects
+int GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int maxCount, Vector* pPt, float radius, int param_5) {
     param_5 = (param_5 != 0) ? param_5 : -1;
-    gSceneManager.GetPropsInRange((MKProp**)ppObjects, param_2, pPt, radius, param_5, -1, 0);
+    return gSceneManager.GetPropsInRange((MKProp**)ppObjects, maxCount, pPt, radius, param_5, -1, false);
 }
 
+#define MAX_SEARCH_GOBJS (0x400)
+
+// Returns the closest object in range
 GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius, int param_2) {
-    GameObject* objects[0x400];
-    param_2 = (param_2 != 0) ? param_2 : -1;
-    int count = gSceneManager.GetPropsInRange((MKProp**)&objects, 0x400, pPt, radius, param_2, -1, false);
+    GameObject* objects[MAX_SEARCH_GOBJS];
+    int count = GetObjectsInRange(objects, MAX_SEARCH_GOBJS, pPt, radius, param_2); // Total GOBJS = 0x400
     GameObject* pClosestObj = NULL;
-    float minRadius = radius * radius * 2.0f;
+    float minRadius = Sqr<float>(radius) * 2.0f;
+    // Loop over all GameObjects that were found
     for(int i = 0; i < count; i++) {
-        Vector *pLTWTrans = objects[i]->pLocalToWorld->Row3();
-        if (pPt->DistSq(pLTWTrans) < minRadius) {
-            minRadius = pPt->DistSq(pLTWTrans);
+        Vector v;
+        v.Sub(pPt, objects[i]->pLocalToWorld->Row3());
+        float distSq = v.MagSquared();
+        if (distSq < minRadius) {
+            minRadius = distSq;
             pClosestObj = objects[i];
         }
     }

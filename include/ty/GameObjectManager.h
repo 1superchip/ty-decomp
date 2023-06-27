@@ -25,8 +25,8 @@ struct GameObjectManager {
 	GameObject* GetObjectFromID(uint);
 	void AddDescriptor(GameObjDesc*);
 	GameObjDesc* FindDescriptor(char*);
-	void GetObjectsInRange(GameObject**, int, Vector*, float, int); // may return a value
-	GameObject* GetClosestObjectInRange(Vector*, float, int);
+	int GetObjectsInRange(GameObject** pObjects, int, Vector* pPt, float radius, int);
+	GameObject* GetClosestObjectInRange(Vector* pPt, float radius, int);
 	DescriptorIterator Begin(void);
 	int CountEntities(KromeIni*, KromeIniLine*);
 };
