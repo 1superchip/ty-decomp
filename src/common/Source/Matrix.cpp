@@ -236,25 +236,37 @@ void Matrix::Multiply4x4(Matrix *pMatrix1, Matrix *pMatrix2) {
 }
 
 void Matrix::Scale(Matrix* pMatrix, float scalar) {
-    Row0()->Set(pMatrix->Row0()->x * scalar, pMatrix->Row0()->y * scalar,
-        pMatrix->Row0()->z * scalar, pMatrix->Row0()->w);
-    Row1()->Set(pMatrix->Row1()->x * scalar, pMatrix->Row1()->y * scalar,
-        pMatrix->Row1()->z * scalar, pMatrix->Row1()->w);
-    Row2()->Set(pMatrix->Row2()->x * scalar, pMatrix->Row2()->y * scalar,
-        pMatrix->Row2()->z * scalar, pMatrix->Row2()->w);
-    Row3()->Set(pMatrix->Row3()->x, pMatrix->Row3()->y, pMatrix->Row3()->z, pMatrix->Row3()->w);
+    Row0()->Set(
+        scalar * pMatrix->data[0][0], scalar * pMatrix->data[0][1],
+        scalar * pMatrix->data[0][2], pMatrix->data[0][3]
+    );
+    Row1()->Set(
+        scalar * pMatrix->data[1][0], scalar * pMatrix->data[1][1],
+        scalar * pMatrix->data[1][2], pMatrix->data[1][3]
+    );
+    Row2()->Set(
+        scalar * pMatrix->data[2][0], scalar * pMatrix->data[2][1],
+        scalar * pMatrix->data[2][2], pMatrix->data[2][3]
+    );
+    Row3()->Set(pMatrix->data[3][0], pMatrix->data[3][1], pMatrix->data[3][2], pMatrix->data[3][3]);
 }
 
 void Matrix::Scale(Matrix* pMatrix, Vector* pScale) {
     Vector tempv;
     tempv.Copy(pScale);
-    Row0()->Set(pMatrix->Row0()->x * tempv.x, pMatrix->Row0()->y * tempv.x,
-        pMatrix->Row0()->z * tempv.x, pMatrix->Row0()->w);
-    Row1()->Set(pMatrix->Row1()->x * tempv.y, pMatrix->Row1()->y * tempv.y,
-        pMatrix->Row1()->z * tempv.y, pMatrix->Row1()->w);
-    Row2()->Set(pMatrix->Row2()->x * tempv.z, pMatrix->Row2()->y * tempv.z,
-        pMatrix->Row2()->z * tempv.z, pMatrix->Row2()->w);
-    Row3()->Set(pMatrix->Row3()->x, pMatrix->Row3()->y, pMatrix->Row3()->z, pMatrix->Row3()->w);
+    Row0()->Set(
+        tempv.x * pMatrix->data[0][0], tempv.x * pMatrix->data[0][1],
+        tempv.x * pMatrix->data[0][2], pMatrix->data[0][3]
+    );
+    Row1()->Set(
+        tempv.y * pMatrix->data[1][0], tempv.y * pMatrix->data[1][1],
+        tempv.y * pMatrix->data[1][2], pMatrix->data[1][3]
+    );
+    Row2()->Set(
+        tempv.z * pMatrix->data[2][0], tempv.z * pMatrix->data[2][1],
+        tempv.z * pMatrix->data[2][2], pMatrix->data[2][3]
+    );
+    Row3()->Set(pMatrix->data[3][0], pMatrix->data[3][1], pMatrix->data[3][2], pMatrix->data[3][3]);
 }
 
 void Matrix::Translate(Matrix* pMatrix, Vector* pVector) {
