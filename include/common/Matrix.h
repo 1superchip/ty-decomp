@@ -90,6 +90,9 @@ struct Matrix {
 	void Scale(float scalar) {
 		Scale(this, scalar);
 	}
+	void Multiply3x3(Matrix* pMatrix) {
+		Multiply3x3(this, pMatrix);
+	}
 };
 
 

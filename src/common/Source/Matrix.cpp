@@ -34,26 +34,21 @@ void Matrix::SetRotationToNone(void) {
 
 void Matrix::SetRotationQ(QuatRotation* pQuaternion) {
     Vector tempq;
-    tempq.x = pQuaternion->quat.x;
-    tempq.y = pQuaternion->quat.y;
-    tempq.z = pQuaternion->quat.z;
-    tempq.w = pQuaternion->quat.w;
+    tempq = pQuaternion->quat;
+    
+    data[0][0] = 1.0f - 2.0f * (tempq.y * tempq.y + tempq.z * tempq.z);
+    data[0][1] = 2.0f * (tempq.x * tempq.y - tempq.w * tempq.z);
+    data[0][2] = 2.0f * (tempq.x * tempq.z + tempq.w * tempq.y);
 
-    Row0()->x = 1.0f - 2.0f * (tempq.y * tempq.y + tempq.z * tempq.z);
-    Row0()->y = 2.0f * (tempq.x * tempq.y - tempq.w * tempq.z);
-    Row0()->z = 2.0f * (tempq.x * tempq.z + tempq.w * tempq.y);
+    data[1][0] = 2.0f * (tempq.x * tempq.y + tempq.w * tempq.z);
+    data[1][1] = 1.0f - 2.0f * (tempq.x * tempq.x + tempq.z * tempq.z);
+    data[1][2] = 2.0f * (tempq.y * tempq.z - tempq.w * tempq.x);
 
-    Row1()->x = 2.0f * (tempq.x * tempq.y + tempq.w * tempq.z);
-    Row1()->y = 1.0f - 2.0f * (tempq.x * tempq.x + tempq.z * tempq.z);
-    Row1()->z = 2.0f * (tempq.y * tempq.z - tempq.w * tempq.x);
+    data[2][0] = 2.0f * (tempq.x * tempq.z - tempq.w * tempq.y);
+    data[2][1] = 2.0f * (tempq.y * tempq.z + tempq.w * tempq.x);
+    data[2][2] = 1.0f - 2.0f * (tempq.x * tempq.x + tempq.y * tempq.y);
 
-    Row2()->x = 2.0f * (tempq.x * tempq.z - tempq.w * tempq.y);
-    Row2()->y = 2.0f * (tempq.y * tempq.z + tempq.w * tempq.x);
-    Row2()->z = 1.0f - 2.0f * (tempq.x * tempq.x + tempq.y * tempq.y);
-
-    Row2()->w = 0.0f;
-    Row1()->w = 0.0f;
-    Row0()->w = 0.0f;
+    data[0][3] = data[1][3] = data[2][3] = 0.0f;
 }
 
 void Matrix::SetRotationPitch(float pitch) {
@@ -81,16 +76,16 @@ void Matrix::SetRotationRoll(float roll) {
 }
 
 void Matrix::SetRotationPYR(Vector* pAngles) {
+    Vector tempv;
     Matrix tempm;
-    Vector tempv; 
     tempv.x = pAngles->x;
     tempv.y = pAngles->y;
     tempv.z = pAngles->z;
     SetRotationPitch(tempv.x);
     tempm.SetRotationYaw(tempv.y);
-    Multiply3x3(this, &tempm);
+    Multiply3x3(&tempm);
     tempm.SetRotationRoll(tempv.z);
-    Multiply3x3(this, &tempm);
+    Multiply3x3(&tempm);
 }
 
 void Matrix::SetRotationToScale(float scale) {
@@ -100,28 +95,27 @@ void Matrix::SetRotationToScale(float scale) {
 }
 
 void Matrix::SetRotationToScaleXYZ(Vector* pScale) {
-    float sx = pScale->x;
-    float sy = pScale->y;
-    float sz = pScale->z;
-    Row0()->Set(sx, 0.0f, 0.0f, 0.0f);
-    Row1()->Set(0.0f, sy, 0.0f, 0.0f);
-    Row2()->Set(0.0f, 0.0f, sz, 0.0f);
+    Vector tempv;
+    tempv.Copy(pScale);
+    Row0()->Set(tempv.x, 0.0f, 0.0f, 0.0f);
+    Row1()->Set(0.0f, tempv.y, 0.0f, 0.0f);
+    Row2()->Set(0.0f, 0.0f, tempv.z, 0.0f);
 }
 
 void Matrix::Transpose(Matrix* pMatrix) {
     Matrix tempm;
-    tempm.Row0()->Set(pMatrix->Row0()->x, pMatrix->Row1()->x, pMatrix->Row2()->x, pMatrix->Row3()->x);
-    tempm.Row1()->Set(pMatrix->Row0()->y, pMatrix->Row1()->y, pMatrix->Row2()->y, pMatrix->Row3()->y);
-    tempm.Row2()->Set(pMatrix->Row0()->z, pMatrix->Row1()->z, pMatrix->Row2()->z, pMatrix->Row3()->z);
-    tempm.Row3()->Set(pMatrix->Row0()->w, pMatrix->Row1()->w, pMatrix->Row2()->w, pMatrix->Row3()->w);
+    tempm.Row0()->Set(pMatrix->data[0][0], pMatrix->data[1][0], pMatrix->data[2][0], pMatrix->data[3][0]);
+    tempm.Row1()->Set(pMatrix->data[0][1], pMatrix->data[1][1], pMatrix->data[2][1], pMatrix->data[3][1]);
+    tempm.Row2()->Set(pMatrix->data[0][2], pMatrix->data[1][2], pMatrix->data[2][2], pMatrix->data[3][2]);
+    tempm.Row3()->Set(pMatrix->data[0][3], pMatrix->data[1][3], pMatrix->data[2][3], pMatrix->data[3][3]);
     *this = tempm;
 }
 
 void Matrix::Transpose3x3(Matrix* pMatrix) {
     Matrix tempm;
-    tempm.Row0()->Set(pMatrix->Row0()->x, pMatrix->Row1()->x, pMatrix->Row2()->x, 0.0f);
-    tempm.Row1()->Set(pMatrix->Row0()->y, pMatrix->Row1()->y, pMatrix->Row2()->y, 0.0f);
-    tempm.Row2()->Set(pMatrix->Row0()->z, pMatrix->Row1()->z, pMatrix->Row2()->z, 0.0f);
+    tempm.Row0()->Set(pMatrix->data[0][0], pMatrix->data[1][0], pMatrix->data[2][0], 0.0f);
+    tempm.Row1()->Set(pMatrix->data[0][1], pMatrix->data[1][1], pMatrix->data[2][1], 0.0f);
+    tempm.Row2()->Set(pMatrix->data[0][2], pMatrix->data[1][2], pMatrix->data[2][2], 0.0f);
     tempm.CopyTranslation(pMatrix);
     *this = tempm;
 }
@@ -129,10 +123,10 @@ void Matrix::Transpose3x3(Matrix* pMatrix) {
 void Matrix::InverseSimple(Matrix* pMatrix) {
     Matrix tempm;
     tempm.Transpose3x3(pMatrix);
-    tempm.Row3()->x = -pMatrix->Row3()->Dot(pMatrix->Row0());
-    tempm.Row3()->y = -pMatrix->Row3()->Dot(pMatrix->Row1());
-    tempm.Row3()->z = -pMatrix->Row3()->Dot(pMatrix->Row2());
-    tempm.Row3()->w = 1.0f;
+    tempm.data[3][0] = -pMatrix->Row3()->Dot(pMatrix->Row0());
+    tempm.data[3][1] = -pMatrix->Row3()->Dot(pMatrix->Row1());
+    tempm.data[3][2] = -pMatrix->Row3()->Dot(pMatrix->Row2());
+    tempm.data[3][3] = 1.0f;
     *this = tempm;
 }
 
@@ -346,8 +340,8 @@ void Matrix::Inverse(Matrix* pMatrix) {
     if (det) {
         Scale(1.0f / det);
     }
-    pos.ApplyRotMatrix(&pos, this);
-    Row3()->x = -pos.x;
-    Row3()->y = -pos.y;
-    Row3()->z = -pos.z;
+    pos.ApplyRotMatrix(this);
+    data[3][0] = -pos.x;
+    data[3][1] = -pos.y;
+    data[3][2] = -pos.z;
 }

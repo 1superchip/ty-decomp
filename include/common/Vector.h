@@ -120,6 +120,9 @@ struct Vector {
 	void ClampMagnitude(float maxMag) {
 		ClampMagnitude(this, maxMag);
 	}
+	void ApplyRotMatrix(Matrix* pMatrix) {
+		ApplyRotMatrix(this, pMatrix);
+	}
     inline bool Equals(Vector* pOther) {
         return x == pOther->x && y == pOther->y && z == pOther->z;
     }

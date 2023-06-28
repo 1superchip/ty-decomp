@@ -17,7 +17,7 @@ bool Vector::IsNormalised();
 // the comparison uses the wrong float?
 */
 bool Vector__IsNormalised(Vector* pThis) {
-    return Abs<float>(pThis->MagSquared() - 1.0f) < 0.0f;//_unkgp_0x4240;
+    return Abs<float>(pThis->MagSquared() - 1.0f) < 0.00002f;
 }
 
 float Vector::Normalise(Vector* pVector) {
