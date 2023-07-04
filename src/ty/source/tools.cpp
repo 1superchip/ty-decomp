@@ -587,12 +587,12 @@ float Tools_GetFloor(const Vector& pPos, CollisionResult* pCr, float maxRayDist,
     return pPos.y;
 }
 
-bool RayToSphere(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1, float f2, bool r6) {
+bool RayToSphere(Vector* pVec, Vector* pVec1, Vector* pVec2, float radius, float f2, bool r6) {
     if (f2 == -1.0f) {
-        f2 = f1;
+        f2 = radius;
     }
     if (r6) {
-        if (pVec2->DistSq(pVec) < Sqr<float>(f1) || pVec2->DistSq(pVec1) < Sqr<float>(f2)) {
+        if (pVec2->DistSq(pVec) < Sqr<float>(radius) || pVec2->DistSq(pVec1) < Sqr<float>(f2)) {
             return true;
         }
         // if (pVec2->CheckSphereRadius(pVec, f1) || pVec2->CheckSphereRadius(pVec1, f2)) {
@@ -612,7 +612,7 @@ bool RayToSphere(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1, float f2,
     if (t >= 0.0f && t <= 1.0f) {
         Vector interpolated;
         interpolated.InterpolateLinear(pVec, pVec1, t);
-        if (interpolated.CheckSphereRadius(pVec2, f1 + ((f2 - f1) * t))) {
+        if (interpolated.CheckSphereRadius(pVec2, radius + ((f2 - radius) * t))) {
             return true;
         }
     }

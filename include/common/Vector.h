@@ -16,7 +16,7 @@ struct Vector {
 	float Magnitude();
 	float Normalise(Vector*);
 	void ClampMagnitude(Vector* pVector, float);
-	void Cross(Vector*, Vector*);
+	void Cross(Vector* pVector1, Vector* pVector2);
 	void Projection(Vector*, Vector*);
 	void InterpolateLinear(Vector*, Vector*, float);
 	void ApplyMatrix(Vector*, Matrix*);

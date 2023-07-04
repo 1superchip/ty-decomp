@@ -7,6 +7,9 @@ Vector gXAxis = {1.0f, 0.0f, 0.0f, 0.0f};
 Vector gYAxis = {0.0f, 1.0f, 0.0f, 0.0f};
 Vector gZAxis = {0.0f, 0.0f, 1.0f, 0.0f};
 
+/// @brief sqrtf(x * x + y * y + z * z)
+/// @param  None
+/// @return Magnitude of this
 float Vector::Magnitude(void) {
     return sqrtf(MagSquared());
 }
@@ -46,14 +49,12 @@ void Vector::ClampMagnitude(Vector* pVector, float maxMag) {
     *this = *pVector;
 }
 
-void Vector::Cross(Vector* pVector, Vector* pVector1) {
-    Vector tmp;
-    tmp.x = (pVector1->y * pVector->z) - (pVector1->z * pVector->y);
-    tmp.y = (pVector1->z * pVector->x) - (pVector1->x * pVector->z);
-    tmp.z = (pVector1->x * pVector->y) - (pVector1->y * pVector->x);
-    x = tmp.x;
-    y = tmp.y;
-    z = tmp.z;
+void Vector::Cross(Vector* pVector1, Vector* pVector2) {
+    Vector tempv;
+    tempv.x = (pVector2->y * pVector1->z) - (pVector2->z * pVector1->y);
+    tempv.y = (pVector2->z * pVector1->x) - (pVector2->x * pVector1->z);
+    tempv.z = (pVector2->x * pVector1->y) - (pVector2->y * pVector1->x);
+    Copy(&tempv);
 }
 
 void Vector::Projection(Vector* pVector1, Vector* pVector2) {
@@ -66,13 +67,15 @@ void Vector::Projection(Vector* pVector1, Vector* pVector2) {
 	SetZero();
 }
 
+/// @brief Interpolates from pFrom to pTo: this = pFrom + fraction * (pTo - pFrom)
+/// @param pFrom Starting point to interpolate from
+/// @param pTo Ending point to interpolate to
+/// @param fraction Interpolation fraction between 0.0f and 1.0f [0.0f, 1.0f]
 void Vector::InterpolateLinear(Vector* pFrom, Vector* pTo, float fraction) {
-    Vector diff;
-    diff.Sub(pTo, pFrom);
-    diff.Scale(fraction);
-    x = pFrom->x + diff.x;
-    y = pFrom->y + diff.y;
-    z = pFrom->z + diff.z;
+    Vector tempv;
+    tempv.Sub(pTo, pFrom);
+    tempv.Scale(fraction);
+    Add(pFrom, &tempv);
 }
 
 void Vector::ApplyMatrix(Vector* pVector, Matrix* pMatrix) {
@@ -113,29 +116,32 @@ void Vector::ApplyMatrixW(Vector* pVector, Matrix* pMatrix) {
     *this = tmp;
 }
 
+/// @brief Applies a rotation matrix to pVector and stores the rotated vector in this
+/// @param pVector Source vector that rotation is applied to
+/// @param pMatrix Rotation Matrix to use
 void Vector::ApplyRotMatrix(Vector* pVector, Matrix* pMatrix) {
     Vector temp;
-    float vx;
-    float vy;
-    float vz;
-
-    vx = pVector->x;
-    vy = pVector->y;
-    vz = pVector->z;
-    float mx = (vx * pMatrix->data[0][0]) + (vy * pMatrix->data[1][0]) + (vz * pMatrix->data[2][0]);
-    float my = (vx * pMatrix->data[0][1]) + (vy * pMatrix->data[1][1]) + (vz * pMatrix->data[2][1]);
-    float mz = (vx * pMatrix->data[0][2]) + (vy * pMatrix->data[1][2]) + (vz * pMatrix->data[2][2]);
-
-    temp.Set(mx, my, mz);
+    
+    temp.x = (pVector->x * pMatrix->data[0][0]) + (pVector->y * pMatrix->data[1][0]) + (pVector->z * pMatrix->data[2][0]);
+    temp.y = (pVector->x * pMatrix->data[0][1]) + (pVector->y * pMatrix->data[1][1]) + (pVector->z * pMatrix->data[2][1]);
+    temp.z = (pVector->x * pMatrix->data[0][2]) + (pVector->y * pMatrix->data[1][2]) + (pVector->z * pMatrix->data[2][2]);
+    
     Copy(&temp);
 }
 
+/// @brief Applies the translation of pMatrix to pVector and places the result in this (this = pVector + pMatrix->data[3])
+/// @param pVector Vector to apply Matrix Translation
+/// @param pMatrix Translation Matrix
 void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {
     x = pVector->x + pMatrix->data[3][0];
     y = pVector->y + pMatrix->data[3][1];
     z = pVector->z + pMatrix->data[3][2];
 }
 
+/// @brief Clamps each component of a Vector to the range of [min, max]
+/// @param pColour Input vector
+/// @param min Minimum value for each component
+/// @param max Maximum value for each component
 void Vector::CClamp(Vector* pColour, float min, float max) {
     x = Clamp<float>(pColour->x, min, max);
     y = Clamp<float>(pColour->y, min, max);

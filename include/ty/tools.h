@@ -57,7 +57,7 @@ bool Tools_BuildMatrixFromFwd(Matrix* pM, Vector* pFwd, Vector* pUp);
 
 bool Tools_TestFloor(Vector*, CollisionResult* pCr, float, bool bCollisionMode);
 float Tools_GetFloor(const Vector&, CollisionResult* pCr, float, bool bCollisionMode, uint collisionFlags);
-bool RayToSphere(Vector*, Vector*, Vector*, float, float, bool);
+bool RayToSphere(Vector*, Vector*, Vector*, float radius, float, bool);
 bool Tools_ClipSphereToDynamicModel(const Vector&, float, Vector*, Model* pModel, int subobjectIdx);
 bool Tools_CapsuleTest(Vector*, Vector*, Vector*, float, bool);
 bool Tools_RayToVertCyl(Vector*, Vector*, Vector*, float, float);

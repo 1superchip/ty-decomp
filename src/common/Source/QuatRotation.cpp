@@ -38,13 +38,12 @@ void QuatRotation::ConvertVector(Vector* pVector) {
 void QuatRotation::Multiply(QuatRotation *pQuaternion1, QuatRotation *pQuaternion2) {
     Vector sp0;
     Vector sp10;
-    Vector* p0 = &sp0; // this line is needed to get CW to use stack rather than float registers
-    p0->w = (pQuaternion2->quat.w * pQuaternion1->quat.w) - pQuaternion2->quat.Dot(&pQuaternion1->quat);
-    ((Vector*)p0)->Scale(&pQuaternion1->quat, pQuaternion2->quat.w); // this cast is needed...
+    sp0.w = (pQuaternion2->quat.w * pQuaternion1->quat.w) - pQuaternion2->quat.Dot(&pQuaternion1->quat);
+    sp0.Scale(&pQuaternion1->quat, pQuaternion2->quat.w);
     sp10.Scale(&pQuaternion2->quat, pQuaternion1->quat.w);
     sp0.Add(&sp10);
     sp10.Cross(&pQuaternion2->quat, &pQuaternion1->quat);
-    sp0.Add(&sp0, &sp10);
+    sp0.Add((Vector*)&sp0, &sp10); // cast is needed to force stack usage
     quat = sp0;
-    quat.w = p0->w; // fake?
+    quat.w = sp0.w;
 }
