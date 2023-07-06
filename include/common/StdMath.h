@@ -27,6 +27,17 @@ inline T Clamp(T x, T min, T max) {
     return (x < min) ? min : (x > max) ? max : x;
 }
 
+/// @brief Returns the sign of a number, returns 1.0f for 0.0f
+/// @param x Number to return the sign of
+/// @return Sign of x
+template <typename T>
+inline T GetSign(T x) {
+    if (x < 0) {
+        return -1.0;
+    }
+    return 1.0;
+}
+
 int RandomIR(int* pSeed, int min, int max); // returns a ranged random number
 int RandomI(int* pSeed);
 float RandomFR(int* pSeed, float min, float max);

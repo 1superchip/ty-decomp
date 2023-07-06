@@ -10,7 +10,7 @@ struct Matrix {
 	void CopyRotation(Matrix*);
 	void CopyTranslation(Matrix*);
 	void SetIdentity(void);
-	void SetTranslation(Vector*);
+	void SetTranslation(Vector* pVector);
 	void SetRotationToNone(void);
 	void SetRotationQ(QuatRotation*);
 	void SetRotationPitch(float);

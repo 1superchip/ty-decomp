@@ -813,7 +813,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                                 }
                                 pRay->unk60 = lastCollision.unk40;
                                 pRay->pos1.Scale(&pRay->dXYZ, pRay->unk60);
-                                pRay->pos1.Add(&pRay->pos1, &pRay->pos);
+                                pRay->pos1.Add(&pRay->pos);
                             }
                         }
                     }

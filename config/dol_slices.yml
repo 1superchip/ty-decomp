@@ -2028,11 +2028,11 @@ ty/source/BoundingRegion.cpp:
 #   .sbss: [0x803fa848, 0x803fa858]
 #   .sdata2: [0x80400328, 0x80400350]
 
-#ty/source/CollisionObject.cpp:
-#   .text: [0x801500b4, 0x801511e4]
-#   .rodata: [0x8023e790, 0x8023e7b0]
-#   .data: [0x802616a0, 0x802616b0]
-#   .sdata2: [0x80400350, 0x80400390]
+ty/source/CollisionObject.cpp:
+  .text: [0x801500b4, 0x801511e4]
+  .rodata: [0x8023e790, 0x8023e7b0]
+  .data: [0x802616a0, 0x802616b0]
+  .sdata2: [0x80400350, 0x80400390]
 
 ty/source/controlval.cpp:
    .text: [0x801511e4, 0x801513fc]
@@ -3032,8 +3032,8 @@ Dolphin/__ppc_eabi_init.s:
 #   .text: [0x801e9d78, 0x801e9d78]
 #   .sdata: [0x803f97c8, 0x803f97d0]
 
-#abort_exit.c:
-#   .text: [0x801e9d78, 0x801e9d78]
+# Runtime/abort_exit.c:
+#   .text: [0x801e9d78, 0x801e9e44]
 #   .bss: [0x802d5ce8, 0x802d5de8]
 #   .sbss: [0x803fb028, 0x803fb038]
 
@@ -3238,21 +3238,23 @@ Dolphin/__ppc_eabi_init.s:
 #   .sdata: [0x803f9818, 0x803f9820]
 #   .sbss: [0x803fb060, 0x803fb078]
 
-#__mem.c:
+# Runtime/__mem.c:
 #   .init: [0x800033a8, 0x800034e0]
 
 #__va_arg.c:
 #   .text: [0x801f6b48, 0x801f6c10]
 
-#global_destructor_chain.c:
+# Runtime/global_destructor_chain.c:
 #   .text: [0x801f6c10, 0x801f6c58]
 #   .dtors: [0x8023caa8, 0x8023CAAC]
 #   .sbss: [0x803fb078, 0x803fb080]
 
-#NMWException.cp:
+# Runtime/NMWException.cpp:
 #   .text: [0x801f6c58, 0x801f6e08]
+#   extab: [0x80005620, 0x80005640]
+#   extabindex: [0x80005640, 0x80005680]
 
-#ptmf.c:
+# Runtime/ptmf.c:
 #   .text: [0x801f6e08, 0x801f6e9c]
 #   .rodata: [0x8023f910, 0x8023f920]
 
@@ -3260,13 +3262,13 @@ Dolphin/__ppc_eabi_init.s:
 #   .text: [0x801f6e9c, 0x801f762c]
 #   .rodata: [0x8023f920, 0x8023f938]
 
-#__init_cpp_exceptions.cpp:
+# Runtime/__init_cpp_exceptions.cpp:
 #   .text: [0x801f762c, 0x801f76a8]
-#   .ctors: [0x8023c780, 0x8023c784]
+#   .ctors: [0x8023c780, 0x8023c784] # what??
 #   .dtors: [0x8023caa0, 0x8023caa8]
-#   .sdata: [0x803f9820, 0x803f9828]
+#   .sdata: [0x803f9820, 0x803F9828]
 
-#Gecko_ExceptionPPC.cp:
+# Runtime/Gecko_ExceptionPPC.cpp:
 #   .text: [0x801f76a8, 0x801f7710]
 #   .bss: [0x802d6120, 0x802d6130]
 
