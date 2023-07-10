@@ -4,6 +4,14 @@
 #include "types.h"
 #include "Dolphin/gx.h"
 
+struct TexFile {
+	int fmt;
+	int width;
+	int height;
+	int padding[5];
+	u16 unk20;
+};
+
 struct Texture {
 	char name[0x20];
 	int width;

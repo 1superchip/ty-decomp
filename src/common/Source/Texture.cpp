@@ -63,13 +63,12 @@ Texture *Texture::Create(char *pName) {
         pTex = textures.GetNextEntry();
         strcpy(pTex->name, Str_CopyString(pName, 0x1f));
         pTex->bMpegTarget = false;
-        void *texFile = FileSys_Load(Str_Printf("%s.gtx", pName), &size[2], 0, -1);
+        TexFile* texFile = (TexFile*)FileSys_Load(Str_Printf("%s.gtx", pName), &size[2], 0, -1);
         DCStoreRange((uint *)texFile, size[2]);
         pTex->pFileData = texFile;
-        pTex->width = *((int *)texFile + 1);
-        pTex->height = *((int *)texFile + 2);
-		// switch texture format
-        switch (*(int *)texFile) {
+        pTex->width = texFile->width;
+        pTex->height = texFile->height;
+        switch (texFile->fmt) {
         case 0:
 			// RGB5A3
             pTex->bTlut = false;
@@ -79,12 +78,12 @@ Texture *Texture::Create(char *pName) {
         case 1:
 			// Indexed
             pTex->bTlut = true;
-            memset((void *)&pTex->tlutObj, 0, 0xC);
+            memset((void *)&pTex->tlutObj, 0, sizeof(GXTlutObj));
             if (Texture_bColourKey != false) {
-                if (!(*((u16 *)texFile + 16) & 0x8000)) {
-                    *((u16 *)texFile + 16) &= 0x0FFF;
+                if (!(texFile->unk20 & 0x8000)) {
+                    texFile->unk20 &= 0x0FFF;
                 } else {
-                    *((u16 *)texFile + 16) = (*((u16 *)texFile + 16) >> 1) & 0xFFF;
+                    texFile->unk20 = (texFile->unk20 >> 1) & 0xFFF;
                 }
             }
             GXInitTlutObj(&pTex->tlutObj, (void *)((int)texFile + 0x20), 2, 0x100); // file + 0x20 is lookup table, format 2, 256 entries
