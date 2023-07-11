@@ -48,6 +48,10 @@ float NormaliseAngle(float);
 #define PI2 1.5707964f
 #define _table_cosf(angle) _table_sinf((angle) + PI2)
 
+inline float DegToRad(float deg) {
+	return deg * (PI / 180.0f);
+}
+
 extern inline float sqrtf(float x)
 {
 	static const double _half=.5;

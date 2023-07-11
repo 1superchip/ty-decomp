@@ -103,6 +103,8 @@ GXColor Material_MixedColor = {0xff, 0xff, 0xff, 0xff};
 // extra 16 bytes to match rodata length
 const Vector MaterialGC_rodata_hack = {};
 
+// (0x82000 | 0x102000 | 0x42000 | 0x12000 | 0x22000) = 0x1f2000
+
 char *Material::InitFromMatDefs(char *pName) {
     char *zwrite;
     char *pTextureName;
@@ -280,12 +282,8 @@ char *Material::InitFromMatDefs(char *pName) {
                 } else if (stricmp(pLine->pFieldName, "doublesided") == 0) {
                     int tmp;
                     if (pLine->AsFlag(0, &tmp) != false) {
-                        if (tmp != 0) {
-                            flags |= Flag_DoubleSided;
-                        } else {
-                            flags &= ~Flag_DoubleSided;
-                        }
-                        flags |= 0x800;
+                        ConditionallySetRemoveFlags(Flag_DoubleSided, tmp);
+                        SetFlags(0x800);
                     } else {
                         materialIni.Warning("Bad data");
                     }
@@ -302,28 +300,16 @@ char *Material::InitFromMatDefs(char *pName) {
                 } else if (stricmp(pLine->pFieldName, "nocollide") == 0) {
                     int tmp;
                     if (pLine->AsFlag(0, &tmp) != false) {
-                        if (tmp != 0) {
-                            flags |= Flag_NoCollide;
-                        } else {
-                            flags &= ~Flag_NoCollide;
-                        }
-                        flags |= Flag_NoCollide; // why set it here??
+                        ConditionallySetRemoveFlags(Flag_NoCollide, tmp);
+                        SetFlags(Flag_NoCollide); // why set it here???
                     } else {
                         materialIni.Warning("Bad data");
                     }
                 } else if (stricmp(pLine->pFieldName, "address") == 0) {
                     int tmp;
                     if (pLine->AsFlag(0, &tmp) != false) {
-                        if (tmp != 0) {
-                            flags |= 2;
-                        } else {
-                            flags &= ~2;
-                        }
-                        if (tmp != 0) {
-                            flags |= 4;
-                        } else {
-                            flags &= ~4;
-                        }
+                        ConditionallySetRemoveFlags(0x2, tmp);
+                        ConditionallySetRemoveFlags(0x4, tmp);
                     } else {
                         materialIni.Warning("Bad data");
                     }
@@ -332,16 +318,8 @@ char *Material::InitFromMatDefs(char *pName) {
                     int clampV;
                     pLine->AsFlag(0, &clampU);
                     pLine->AsFlag(1, &clampV);
-                    if (clampU != 0) {
-                        flags |= 2;
-                    } else {
-                        flags &= ~2;
-                    }
-                    if (clampV != 0) {
-                        flags |= 4;
-                    } else {
-                        flags &= ~4;
-                    }
+                    ConditionallySetRemoveFlags(0x2, clampU);
+                    ConditionallySetRemoveFlags(0x4, clampV);
                 } else if (stricmp(pLine->pFieldName, "effect") == 0) {
                     char *pEffect;
                     if (pLine->AsString(0, &pEffect) != false) { // first field of line is the name as a string
@@ -354,10 +332,10 @@ char *Material::InitFromMatDefs(char *pName) {
                     int val;
                     pLine->AsFlag(0, &val);
                     if (val != 0) {
-                        flags |= Flag_AlphaMask;
+                        SetFlags(Flag_AlphaMask);
                         unk5C = gMKDefaults.unk34[0]; // set alpha ref to default
                     } else {
-                        flags &= ~Flag_AlphaMask;
+                        ClearFlags(Flag_AlphaMask);
                     }
                 } else {
                     if (stricmp(pLine->pFieldName, "envmap") == 0) {
@@ -415,22 +393,14 @@ char *Material::InitFromMatDefs(char *pName) {
                             if (pLine->AsInt(0, &zread) == false) {
                                 materialIni.Warning("Missing on/off");
                             } else {
-                                if (zread == 0) {
-                                    SetFlags(0x8);
-                                } else {
-                                    ClearFlags(0x8);
-                                }
+                                ConditionallySetRemoveFlags(0x8, zread == 0);
                             }
                         } else if (stricmp(pLine->pFieldName, "zwrite") == 0) {
                             int zwrite;
                             if (pLine->AsInt(0, &zwrite) == false) {
                                 materialIni.Warning("Missing on/off");
                             } else {
-                                if (zwrite == 0) {
-                                    SetFlags(0x10);
-                                } else {
-                                    ClearFlags(0x10);
-                                }
+                                ConditionallySetRemoveFlags(0x10, zwrite == 0);
                             }
                         } else if (stricmp(pLine->pFieldName, "alias") == 0) {
                             if (pLine->AsString(0, &pTextureName) == false) {
@@ -445,7 +415,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                 if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
                                     materialIni.Warning("Missing parameters for 'animate'");
                                 } else {
-                                    flags |= 0x22000;
+                                    flags |= Flag_Animate;
                                 }
                             }
                         } else if (stricmp(pLine->pFieldName, "scroll") == 0) {
@@ -455,7 +425,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                 if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4))) {
                                     materialIni.Warning("Missing parameters");
                                 } else {
-                                    flags |= 0x12000;
+                                    flags |= Flag_Scroll;
                                 }
                             }
                         } else if (stricmp(pLine->pFieldName, "rotate") == 0) {
@@ -465,7 +435,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                 if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
                                     materialIni.Warning("Missing parameters");
                                 } else {
-                                    flags |= 0x42000;
+                                    flags |= Flag_Rotate;
                                 }
                             }
                         } else if (stricmp(pLine->pFieldName, "envscroll") == 0) {
@@ -487,17 +457,17 @@ char *Material::InitFromMatDefs(char *pName) {
                                     materialIni.Warning("Missing parameters");
                                     goto end;
                                 }
-                                flags |= 0x102000;
+                                flags |= Flag_EnvRotate;
                             }
                         } else if (stricmp(pLine->pFieldName, "sinrotate") == 0) {
-                            if ((flags & 0x1f2000)) {
+                            if (flags & 0x1f2000) {
                                 materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
                             } else {
                                 if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
                                     pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
                                     materialIni.Warning("Missing parameters");
                                 } else {
-                                    flags |= 0x82000;
+                                    flags |= Flag_SinRotate;
                                 }
                             }
                         } else if (stricmp(pLine->pFieldName, "matrix") == 0) {
@@ -587,8 +557,9 @@ void Material::Destroy(void) {
 }
 #pragma inline_max_size reset
 
-// iterates though material list
-// returns a Material pointer if the material has already been created else returns NULL
+/// @brief Iterates through the material instance list to find an already created material
+/// @param pName Name of material to search for
+/// @return NULL if a Material does not exist otherwise the Material
 Material* Material::Find(char* pName) {
     Material** list;
     char* tmpName = Str_CopyString(pName, 31);
@@ -691,7 +662,7 @@ void Material::Use(void) {
             return;
         }
     }
-    flags &= ~0x1000;
+    ClearFlags(0x1000);
     pCurrMat[0] = this;
     if (flags & 0x1f0000 && frameCounter1 != frameCounter) {
         Update();
@@ -917,7 +888,6 @@ void Material::Use(void) {
                 GXLoadTexMtxImm((float*)&mat24, 0x1e, 1);
                 GXSetTexCoordGen2(0, 1, 4, 0x1e, 0, 0x7d);
                 pTex->Use();
-                
         }
         switch (blendMode) {
             case Blend_Opaque:
@@ -1195,9 +1165,7 @@ void Material::Update(void) {
         Matrix mat1;
         angle += frameSpeed * unkA8;
         NormaliseAngle(angle);
-        float roll = unkB0 * (PI / 180.0f);
-        float tmp = _table_sinf(angle);
-        tmp *= roll;
+        float roll = _table_sinf(angle) * DegToRad(unkB0);
         Vector vec = {0.0f, 0.0f, 0.0f, 0.0f};
         vec.x = -unkA0;
         vec.y = -unkA4;
@@ -1206,7 +1174,7 @@ void Material::Update(void) {
         Vector vec1 = {0.0f, 0.0f, 0.0f, 0.0f};
         vec1.x = unkA0;
         vec1.y = unkA4;
-        mat1.SetRotationRoll(tmp);
+        mat1.SetRotationRoll(roll);
         mat1.SetTranslation(&vec1);
         unk60.Multiply4x4(&mat, &mat1);
     } else if (matFlags & 0x100000) {
