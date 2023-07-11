@@ -408,121 +408,106 @@ char *Material::InitFromMatDefs(char *pName) {
 								// if ambient light is greater than 0.0f, the material is prelit
                                 type = Type_Prelit;
                             }
-                        } else {
-                            if (stricmp(pLine->pFieldName, "aref") == 0) {
-                                pLine->AsFloat(0, &unk5C); // alpha reference0 for parameter 2 of GXSetAlphaCompare
-                            } else if (stricmp(pLine->pFieldName, "zread") == 0) {
-                                int zread;
-                                if (pLine->AsInt(0, &zread) == false) {
-                                    materialIni.Warning("Missing on/off");
-                                } else {
-                                    if (zread == 0) {
-                                        SetFlags(0x8);
-                                    } else {
-                                        ClearFlags(0x8);
-                                    }
-                                }
-                            } else if (stricmp(pLine->pFieldName, "zwrite") == 0) {
-                                int zwrite;
-                                if (pLine->AsInt(0, &zwrite) == false) {
-                                    materialIni.Warning("Missing on/off");
-                                } else {
-                                    if (zwrite == 0) {
-                                        SetFlags(0x10);
-                                    } else {
-                                        ClearFlags(0x10);
-                                    }
-                                }
+                        } else if (stricmp(pLine->pFieldName, "aref") == 0) {
+                            pLine->AsFloat(0, &unk5C); // alpha reference0 for parameter 2 of GXSetAlphaCompare
+                        } else if (stricmp(pLine->pFieldName, "zread") == 0) {
+                            int zread;
+                            if (pLine->AsInt(0, &zread) == false) {
+                                materialIni.Warning("Missing on/off");
                             } else {
-                                if (stricmp(pLine->pFieldName, "alias") == 0) {
-                                    if (pLine->AsString(0, &pTextureName) == false) {
-                                        materialIni.Warning("Missing texture name");
-                                    } else {
-                                        Texture_IsAlias = true;
-                                    }
+                                if (zread == 0) {
+                                    SetFlags(0x8);
                                 } else {
-                                    if (stricmp(pLine->pFieldName, "animate") == 0) {
-                                        if (flags & 0x1f2000) {
-                                            materialIni.Warning("animate cannot be combined with animate/scrolling/rotating");
-                                        } else {
-                                            if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
-                                                materialIni.Warning("Missing parameters for 'animate'");
-                                            } else {
-                                                flags |= 0x22000;
-                                            }
-                                        }
-                                    } else {
-                                        if (stricmp(pLine->pFieldName, "scroll") == 0) {
-                                            if (flags & 0x1f2000) {
-                                                materialIni.Warning("scroll cannot be combined with animate/scrolling/rotating");
-                                            } else {
-                                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4))) {
-                                                    materialIni.Warning("Missing parameters");
-                                                } else {
-                                                    flags |= 0x12000;
-                                                }
-                                            }
-                                        } else {
-                                            if (stricmp(pLine->pFieldName, "rotate") == 0) {
-                                                if (flags & 0x1f2000) {
-                                                    materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                                                } else {
-                                                    if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
-                                                        materialIni.Warning("Missing parameters");
-                                                    } else {
-                                                        flags |= 0x42000;
-                                                    }
-                                                }
-                                            } else {
-                                                if (stricmp(pLine->pFieldName, "envscroll") == 0) {
-                                                    if (flags & 0x1f2000) {
-                                                        materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                                                    } else {
-                                                        if (pLine->elementCount == 0) {
-                                                            // set default envscroll values if none are provided
-                                                            unkA0 = 1.0f;
-                                                            unkA4 = -1.0f;
-                                                            unkB4 = 0.25f;
-                                                            unkB8 = 0.5f;
-                                                            unkBC = 0.0f;
-                                                            unkC0 = 0.25f;
-                                                        } else {
-                                                            if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
-                                                                pLine->AsFloat(2, &unkB4) | pLine->AsFloat(3, &unkB8) | 
-                                                                pLine->AsFloat(4, &unkBC) | pLine->AsFloat(5, &unkC0))) {
-                                                                materialIni.Warning("Missing parameters");
-                                                                goto end;
-                                                            }
-                                                        }
-                                                        flags |= 0x102000;
-                                                    }
-                                                } else {
-                                                    if (stricmp(pLine->pFieldName, "sinrotate") == 0) {
-                                                        if ((flags & 0x1f2000)) {
-                                                            materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                                                        } else {
-                                                            if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
-                                                                pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
-                                                                materialIni.Warning("Missing parameters");
-                                                            } else {
-                                                                flags |= 0x82000;
-                                                            }
-                                                        }
-                                                    } else if (stricmp(pLine->pFieldName, "matrix") == 0) {
-                                                        if (flags & 0x1f2000) {
-                                                            materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                                                        } else {
-                                                            flags |= 0x2000;
-                                                        }
-                                                    } else {
-                                                        materialIni.Warning("Unknown field name");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    ClearFlags(0x8);
                                 }
                             }
+                        } else if (stricmp(pLine->pFieldName, "zwrite") == 0) {
+                            int zwrite;
+                            if (pLine->AsInt(0, &zwrite) == false) {
+                                materialIni.Warning("Missing on/off");
+                            } else {
+                                if (zwrite == 0) {
+                                    SetFlags(0x10);
+                                } else {
+                                    ClearFlags(0x10);
+                                }
+                            }
+                        } else if (stricmp(pLine->pFieldName, "alias") == 0) {
+                            if (pLine->AsString(0, &pTextureName) == false) {
+                                materialIni.Warning("Missing texture name");
+                            } else {
+                                Texture_IsAlias = true;
+                            }
+                        } else if (stricmp(pLine->pFieldName, "animate") == 0) {
+                            if (flags & 0x1f2000) {
+                                materialIni.Warning("animate cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
+                                    materialIni.Warning("Missing parameters for 'animate'");
+                                } else {
+                                    flags |= 0x22000;
+                                }
+                            }
+                        } else if (stricmp(pLine->pFieldName, "scroll") == 0) {
+                            if (flags & 0x1f2000) {
+                                materialIni.Warning("scroll cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4))) {
+                                    materialIni.Warning("Missing parameters");
+                                } else {
+                                    flags |= 0x12000;
+                                }
+                            }
+                        } else if (stricmp(pLine->pFieldName, "rotate") == 0) {
+                            if (flags & 0x1f2000) {
+                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
+                                    materialIni.Warning("Missing parameters");
+                                } else {
+                                    flags |= 0x42000;
+                                }
+                            }
+                        } else if (stricmp(pLine->pFieldName, "envscroll") == 0) {
+                            if (flags & 0x1f2000) {
+                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                if (pLine->elementCount == 0) {
+                                    // set default envscroll values if none are provided
+                                    unkA0 = 1.0f;
+                                    unkA4 = -1.0f;
+                                    unkB4 = 0.25f;
+                                    unkB8 = 0.5f;
+                                    unkBC = 0.0f;
+                                    unkC0 = 0.25f;
+                                }
+                                else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
+                                        pLine->AsFloat(2, &unkB4) | pLine->AsFloat(3, &unkB8) | 
+                                        pLine->AsFloat(4, &unkBC) | pLine->AsFloat(5, &unkC0))) {
+                                    materialIni.Warning("Missing parameters");
+                                    goto end;
+                                }
+                                flags |= 0x102000;
+                            }
+                        } else if (stricmp(pLine->pFieldName, "sinrotate") == 0) {
+                            if ((flags & 0x1f2000)) {
+                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
+                                    pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
+                                    materialIni.Warning("Missing parameters");
+                                } else {
+                                    flags |= 0x82000;
+                                }
+                            }
+                        } else if (stricmp(pLine->pFieldName, "matrix") == 0) {
+                            if (flags & 0x1f2000) {
+                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                            } else {
+                                flags |= 0x2000;
+                            }
+                        } else {
+                            materialIni.Warning("Unknown field name");
                         }
                     }
                 }
