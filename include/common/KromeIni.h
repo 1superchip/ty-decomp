@@ -26,7 +26,9 @@ struct KromeIni {
     int unk38; // count for "[]" sections
 	
 	inline KromeIniLine* GetNextLine(void);
-	inline KromeIniLine* GetLineWithLine(KromeIniLine*);
+    
+    // seems to just get the next line with the current line
+	inline KromeIniLine* GetLineWithLine(KromeIniLine* pLine);
 	inline KromeIniLine* GetCurrentLine(void);
 	bool Init(char*);
 	void ParseData(void);
@@ -98,8 +100,8 @@ struct Parser {
     bool IsEOL(void);
     bool IsComment(void);
     bool IsName(void);
-    void SkipData(void);
-    void SkipSpaces(void); // returns a bool
+    bool SkipData(void);
+    bool SkipSpaces(void); // returns a bool
     void ResetCurrLine(void);
 };
 

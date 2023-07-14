@@ -288,17 +288,16 @@ void View::DeinitModule(void) {
 }
 
 float View::TransformPoint(IntVector* arg1, Vector* arg2) {
-    Vector transformedVec;
-    Vector unkVec;
-    transformedVec.ApplyMatrix(arg2, &unk148);
-    float fVar1 = 1.0f / transformedVec.w;
-    int tx = ((transformedVec.x * fVar1) * *(float*)&gDisplay.unk10[21]) * 0.5f;
+    Vector temp;
+    temp.ApplyMatrix(arg2, &unk148);
+    float fVar1 = 1.0f / temp.w;
+    int tx = ((temp.x * fVar1) * *(float*)&gDisplay.unk10[21]) * 0.5f;
     arg1->x = ((int)(*(float*)&gDisplay.unk10[21]) >> 1) + tx;
-    int ty = ((transformedVec.y * fVar1) * *(float*)&gDisplay.unk10[22]) * 0.5f;
+    int ty = ((temp.y * fVar1) * *(float*)&gDisplay.unk10[22]) * 0.5f;
     int endY = ((int)(*(float*)&gDisplay.unk10[22]) >> 1) + ty;
     arg1->y = *(float*)&gDisplay.unk10[22] - (float)endY;
-    arg1->z = transformedVec.z * fVar1;
-    arg1->w = (int)transformedVec.w;
+    arg1->z = temp.z * fVar1;
+    arg1->w = (int)temp.w;
     return fVar1;
 }
 

@@ -28,7 +28,7 @@ struct Blitter_Box {
     Vector origin; // origin point (minimum)
     Vector extent; // extent vector (edge length)
     Vector color;
-	char unk[0x10]; // unused Vector?
+    Vector color1;
 	
 	void Draw(int);
 };

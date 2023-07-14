@@ -2,12 +2,21 @@
 #include "common/Model.h"
 #include "common/Material.h"
 #include "ty/LensFlare.h"
+#include "common/Blitter.h"
+
+struct View;
 
 // from another file
 struct ZCheckRequest {
-    int padding[7];
+    Vector unk0;
+    int unk10;
+    View* unk14;
+    int unk18;
     float unk1C;
-	Vector padding1;
+    float unk20;
+    float unk24;
+    float unk28;
+    float unk2C;
 };
 ZCheckRequest* System_CreateZRequest(void);
 void System_DestroyZRequest(ZCheckRequest*);
@@ -21,6 +30,18 @@ static ZCheckRequest* pZRequest;
 static int wait;
 
 static ZCheckRequest zRequestLast;
+
+/*
+// these are unused variables that would have been used by code that was either stripped or unimplemented
+static Vector centre;
+float targetBlend = 1.0f;
+static int flares[7] = { 0, 1, 2, 3, 2, 1, 0 }; // i think this are actually 7 not 8
+static Blitter_Image lensFlareImages[4];
+static Blitter_Image sunImage;
+static float scales[7] = {
+    0.5f, 1.7f, 1.0f, 1.0f, 1.3f, 2.0f, 3.0f
+};
+*/
 
 void LensFlare_Init(void) {
     wait = 0;
@@ -43,14 +64,9 @@ void LensFlare_Deinit(void) {
     }
 }
 
-// clean this function up?
 void LensFlare_Update(void) {
     if (wait <= 0) {
-        __memcpy((void*)&zRequestLast, (void*)pZRequest, sizeof(*pZRequest) - 0x1C);
-        zRequestLast.padding[5] = pZRequest->padding[5];
-        zRequestLast.padding[6] = pZRequest->padding[6];
-        zRequestLast.unk1C = pZRequest->unk1C;
-        zRequestLast.padding1 = pZRequest->padding1;
+        zRequestLast = *pZRequest;
         return;
     }
     wait--;

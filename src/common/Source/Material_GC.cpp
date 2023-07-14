@@ -127,7 +127,7 @@ char *Material::InitFromMatDefs(char *pName) {
     frameCounter1 = frameCounter;
     color.Set(1.0f, 1.0f, 1.0f, 1.0f);
     unk5C = 0.0f;
-    unk50 = NULL;
+    pOverlayMat = NULL;
     unk60.SetIdentity();
     unk58 = NULL;
     unk54 = NULL;
@@ -490,7 +490,7 @@ char *Material::InitFromMatDefs(char *pName) {
         strcpy(textureName, pTextureName);
     }
     if (pOverlayName != NULL) {
-        unk50 = Material::Create(pOverlayName);
+        pOverlayMat = Material::Create(pOverlayName);
     }
     if (pTextureName != NULL) {
         return Str_CopyString(textureName, 0x20);
@@ -498,20 +498,20 @@ char *Material::InitFromMatDefs(char *pName) {
     return name;
 }
 
-Material *Material::Create(char *pName) {
-    Material *pFoundMat = Find(pName);
+Material* Material::Create(char* pName) {
+    Material* pFoundMat = Find(pName);
     if (pFoundMat != NULL) {
         pFoundMat->referenceCount++;
     } else {
         pFoundMat = materials.GetNextEntry();
         pFoundMat->referenceCount = 1;
-        char *textureName = pFoundMat->InitFromMatDefs(pName);
+        char* textureName = pFoundMat->InitFromMatDefs(pName);
         Texture_bColourKey = (pFoundMat->flags & Flag_AlphaMask) == Flag_AlphaMask;
         Texture_filterType = pFoundMat->texture_filterType;
         Texture_Color = pFoundMat->color;
         if (!FileSys_Exists(Str_Printf("%s.tga", textureName), 0) && 
             !FileSys_Exists(Str_Printf("%s.gtx", textureName), 0)) {
-            Material *debugFontMat = (Material *)gpDebugFont[11];
+            Material* debugFontMat = (Material*)gpDebugFont[11];
             pFoundMat->unk54 = debugFontMat->unk58 != NULL ? debugFontMat->unk58 : debugFontMat->unk54;
             pFoundMat->unk54->referenceCount++;
         } else {
@@ -544,8 +544,8 @@ void Material::Destroy(void) {
     if (--referenceCount != 0) {
         return;
     }
-    if (unk50 != NULL) {
-        unk50->Destroy();
+    if (pOverlayMat != NULL) {
+        pOverlayMat->Destroy();
     }
     if (unk54 != NULL) {
         unk54->Destroy();
@@ -599,11 +599,11 @@ void Material::DeinitModule(void) {
     materials.Deinit();
 }
 
-Material* Material::CreateFromRawData(char* pName, void* pData, int arg3, int arg4, int arg5) {
+Material* Material::CreateFromRawData(char* pName, void* pData, int texFmt, int texWidth, int texHeight) {
     Material* pMat = materials.GetNextEntry();
     pMat->referenceCount = 1;
     pMat->InitFromMatDefs(pName);
-    pMat->unk54 = Texture::CreateFromRawData(pName, pData, arg3, arg4, arg5);
+    pMat->unk54 = Texture::CreateFromRawData(pName, pData, texFmt, texWidth, texHeight);
     return pMat;
 }
 

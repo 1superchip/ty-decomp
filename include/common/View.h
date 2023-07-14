@@ -2,6 +2,7 @@
 #define COMMON_VIEW
 
 #include "types.h"
+#include "Dolphin/gx.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
 #include "common/DirectLight.h"
@@ -86,5 +87,30 @@ struct View {
 		return pCurrentView;
 	}
 };
+
+inline void OrthoProject(void) {
+    float projection[4][4];
+    float unk2B0 = View::GetCurrent()->unk2B0;
+    float unk2AC = View::GetCurrent()->unk2AC;
+    // ortho
+    projection[0][0] = 1.0f / (320.0f / unk2AC); // 0x24
+    projection[0][1] = 0.0f; // 0x28
+    projection[0][2] = 0.0f; // 0x2C
+    projection[0][3] = -1.0f * unk2AC; // 0x30
+    projection[1][0] = 0.0f; // 0x34
+    projection[1][1] = -1.0f / (256.0f / unk2B0);
+    projection[1][2] = 0.0f;
+    projection[1][3] = unk2B0;
+    projection[2][0] = 0.0f;
+    projection[2][1] = 0.0f;
+    projection[2][2] = 1.0f;
+    projection[2][3] = -1.0f;
+    projection[3][0] = 0.0f;
+    projection[3][1] = 0.0f;
+    projection[3][2] = 0.0f;
+    projection[3][3] = 1.0f;
+    GXSetProjection((float*)&projection, 1);
+    GXSetCurrentMtx(3);
+}
 
 #endif // COMMON_VIEW

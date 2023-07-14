@@ -35,7 +35,7 @@ struct Texture {
 	void Use(void);
 	static Texture* Find(char*);
 	static Texture* CreateRenderTarget(char*, int, int, int);
-	static Texture* CreateFromRawData(char*, void*, int, int, int);
+	static Texture* CreateFromRawData(char* pName, void* pRawData, int format, int width, int height);
 	static Texture* CreateMpegTarget(char*, void*, int, int);
 };
 

@@ -361,7 +361,7 @@ int Model::Draw(u16* pSubObjs) {
                                 }
                             }
                             GXCallDisplayList((void*)pObjMaterial->pStripData, pObjMaterial->maxOffset * 16);
-                            Material* pTmp = (pMat != pMat->unk50) ? pMat->unk50 : NULL;
+                            Material* pTmp = (pMat != pMat->pOverlayMat) ? pMat->pOverlayMat : NULL;
                             pMat = pTmp;
                         }
                 }
@@ -386,23 +386,26 @@ float Model_TrivialRejectTestMinW;
 float Model_TrivialRejectTestMaxW;
 
 int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
-    float volume[2][4];
-    volume[0][0] = pVolume->v1.x;
-    volume[0][1] = pVolume->v1.y;
-    volume[0][2] = pVolume->v1.z;
-    volume[1][0] = pVolume->v1.x + pVolume->v2.x;
-    volume[1][1] = pVolume->v1.y + pVolume->v2.y;
-    volume[1][2] = pVolume->v1.z + pVolume->v2.z;
+    float corner[2][4];
+    corner[0][0] = pVolume->v1.x;
+    corner[0][1] = pVolume->v1.y;
+    corner[0][2] = pVolume->v1.z;
+    corner[1][0] = pVolume->v1.x + pVolume->v2.x;
+    corner[1][1] = pVolume->v1.y + pVolume->v2.y;
+    corner[1][2] = pVolume->v1.z + pVolume->v2.z;
     int i;
     int cond = 0x3f;
     int bits = 0;
     float diff = View::GetCurrent()->unk2BC - View::GetCurrent()->unk2C0;
     float min = 1e+06f;
     float max = 0.0f;
+
+    // @bug shouldn't these be loading data[x][2] not data[x][3]?
     float m02 = pMatrix->data[0][3];
     float m12 = pMatrix->data[1][3];
     float m22 = pMatrix->data[2][3];
     float m32 = pMatrix->data[3][3];
+
     float m00 = pMatrix->data[0][0];
     float m10 = pMatrix->data[1][0];
     float m20 = pMatrix->data[2][0];
@@ -412,9 +415,9 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     float m21 = pMatrix->data[2][1];
     float m31 = pMatrix->data[3][1];
     for (i = 0; i < 8; i++) {
-        float tx = volume[i & 1][0];
-        float ty = volume[(i >> 1) & 1][1];
-        float tz = volume[(i >> 2) & 1][2];
+        float tx = corner[i & 1][0];
+        float ty = corner[(i >> 1) & 1][1];
+        float tz = corner[(i >> 2) & 1][2];
 
         float z = tx * m02 + ty * m12 + tz * m22 + m32;
         

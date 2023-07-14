@@ -43,7 +43,7 @@ struct Material {
     int effect;
     Vector color;
     int referenceCount;
-    Material* unk50;
+    Material* pOverlayMat;
     Texture* unk54;
     Texture* unk58;
     float unk5C; // used in ref0 parameter for GXSetAlphaCompare
