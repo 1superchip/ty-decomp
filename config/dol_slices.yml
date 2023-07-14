@@ -222,7 +222,7 @@
 #   .sbss: [0x803f9d20, 0x803f9d28]
 #   .sdata2: [0x803fbd70, 0x803fbdd0]
 
-#Avalanche.cpp:
+#ty/source/effects/Avalanche.cpp:
 #   .text: [0x800372c0, 0x800377dc]
 #   .data: [0x80243550, 0x80243630]
 #   .bss: [0x8029be50, 0x8029bf38]
@@ -230,7 +230,7 @@
 #   .sbss: [0x803f9d28, 0x803f9d30]
 #   .sdata2: [0x803fbdd0, 0x803fbe10]
 
-#Bubble.cpp:
+#ty/source/effects/Bubble.cpp:
 #   .text: [0x800377dc, 0x80037b70]
 #   .bss: [0x8029bf38, 0x8029bfb0]
 #   .sdata: [0x803f41a0, 0x803f41b0]
@@ -245,14 +245,14 @@
 #   .sbss: [0x803f9d38, 0x803f9d40]
 #   .sdata2: [0x803fbe30, 0x803fbe78]
 
-#Explosion.cpp:
+#ty/source/effects/Explosion.cpp:
 #   .text: [0x8003877c, 0x80039c3c]
 #   .data: [0x80243690, 0x80243710]
 #   .bss: [0x8029c638, 0x8029c648]
 #   .sdata: [0x803f41c0, 0x803f41d0]
 #   .sdata2: [0x803fbe78, 0x803fbf30]
 
-#Flame.cpp:
+#ty/source/effects/Flame.cpp:
 #   .text: [0x80039c3c, 0x8003a1f8]
 #   .data: [0x80243710, 0x80243768]
 #   .bss: [0x8029c648, 0x8029c6c0]
@@ -274,14 +274,14 @@
 #   .sbss: [0x803f9d48, 0x803f9d60]
 #   .sdata2: [0x803fbf80, 0x803fbf98]
 
-#Rain.cpp:
+#ty/source/effects/Rain.cpp:
 #   .text: [0x8003ae90, 0x8003b208]
 #   .data: [0x802439a0, 0x802439e0]
 #   .sdata: [0x803f41e8, 0x803f41f0]
 #   .sbss: [0x803f9d60, 0x803f9d68]
 #   .sdata2: [0x803fbf98, 0x803fbfb0]
 
-#RainbowEffect.cpp:
+#ty/source/effects/RainbowEffect.cpp:
 #   .text: [0x8003b208, 0x8003bda8]
 #   .rodata: [0x8023cfe0, 0x8023d060]
 #   .data: [0x802439e0, 0x80243a80]
@@ -290,7 +290,7 @@
 #   .sbss: [0x803f9d68, 0x803f9d70]
 #   .sdata2: [0x803fbfb0, 0x803fc008]
 
-#SawDust.cpp:
+#ty/source/effects/SawDust.cpp:
 #   .text: [0x8003bda8, 0x8003c098]
 #   .data: [0x80243a80, 0x80243ad8]
 #   .bss: [0x8029c7b0, 0x8029c828]
@@ -298,7 +298,7 @@
 #   .sbss: [0x803f9d70, 0x803f9d78]
 #   .sdata2: [0x803fc008, 0x803fc040]
 
-#SnowBall.cpp:
+#ty/source/effects/SnowBall.cpp:
 #   .text: [0x8003c098, 0x8003c260]
 #   .data: [0x80243ad8, 0x80243b38]
 #   .bss: [0x8029c828, 0x8029c8a0]
@@ -306,7 +306,7 @@
 #   .sbss: [0x803f9d78, 0x803f9d80]
 #   .sdata2: [0x803fc040, 0x803fc068]
 
-#SnowFootEffects.cpp:
+#ty/source/effects/SnowFootEffects.cpp:
 #   .text: [0x8003c260, 0x8003cedc]
 #   .data: [0x80243b38, 0x80243c58]
 #   .bss: [0x8029c8a0, 0x8029caa0]
@@ -314,13 +314,13 @@
 #   .sbss: [0x803f9d80, 0x803f9d90]
 #   .sdata2: [0x803fc068, 0x803fc100]
 
-#SpeedboatWake.cpp:
+#ty/source/effects/SpeedboatWake.cpp:
 #   .text: [0x8003cedc, 0x8003dc44]
 #   .rodata: [0x8023d060, 0x8023d080]
 #   .sdata: [0x803f4230, 0x803f4238]
 #   .sdata2: [0x803fc100, 0x803fc168]
 
-#Steam.cpp:
+#ty/source/effects/Steam.cpp:
 #   .text: [0x8003dc44, 0x8003ded8]
 #   .data: [0x80243c58, 0x80243cc8]
 #   .bss: [0x8029caa0, 0x8029cb18]
@@ -328,7 +328,7 @@
 #   .sbss: [0x803f9d90, 0x803f9d98]
 #   .sdata2: [0x803fc168, 0x803fc190]
 
-#Teleport.cpp:
+#ty/source/effects/Teleport.cpp:
 #   .text: [0x8003ded8, 0x8003e11c]
 #   .data: [0x80243cc8, 0x80243d80]
 #   .bss: [0x8029cb18, 0x8029cb90]
@@ -336,11 +336,11 @@
 #   .sbss: [0x803f9d98, 0x803f9da0]
 #   .sdata2: [0x803fc190, 0x803fc1c8]
 
-#Trails.cpp:
+#ty/source/effects/Trails.cpp:
 #   .text: [0x8003e11c, 0x8003e5a4]
 #   .sdata2: [0x803fc1c8, 0x803fc1d8]
 
-#Waterdrip.cpp:
+#ty/source/effects/Waterdrip.cpp:
 #   .text: [0x8003e5a4, 0x8003e784]
 #   .data: [0x80243d80, 0x80243de0]
 #   .bss: [0x8029cb90, 0x8029cc08]
@@ -348,7 +348,7 @@
 #   .sbss: [0x803f9da0, 0x803f9da8]
 #   .sdata2: [0x803fc1d8, 0x803fc1e8]
 
-#Weather.cpp:
+#ty/source/effects/Weather.cpp:
 #   .text: [0x8003e784, 0x8003ecac]
 #   .data: [0x80243de0, 0x80243df0]
 #   .bss: [0x8029cc08, 0x8029ccc0]
@@ -401,7 +401,7 @@
 #   .sbss: [0x803f9e00, 0x803f9e28]
 #   .sdata2: [0x803fc3b0, 0x803fc408]
 
-#BossCass.cpp:
+#ty/source/enemies/BossCass.cpp:
 #   .text: [0x80048b48, 0x80048e10]
 #   .ctors: [0x8023c7d8, 0x8023c7dc]
 #   .data: [0x80245338, 0x80245478]
