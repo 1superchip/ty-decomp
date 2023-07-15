@@ -3106,9 +3106,9 @@ Dolphin/os/__ppc_eabi_init.cpp:
 #qsort.c:
 #   .text: [0x801efab4, 0x801efc24]
 
-#rand.c:
-#   .text: [0x801efc24, 0x801efc44]
-#   .sdata: [0x803f97d8, 0x803f97e0]
+Runtime/rand.c:
+  .text: [0x801efc24, 0x801efc44]
+  .sdata: [0x803f97d8, 0x803f97e0]
 
 #scanf.c:
 #   .text: [0x801efc44, 0x801f0c8c]
