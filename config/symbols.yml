@@ -8898,8 +8898,8 @@ global:
     0x8023c760: Debug_InitModule__Fv
     0x8023c76c: Debug_DeinitModule__Fv
     0x8023c770: Debug_SetFont__FP4Font
-    #0x80414780: _db_stack_addr
-    #0x80414780: __ArenaLo
+    0x80414780: _db_stack_addr
+    0x80414780: __ArenaLo
     #0x81700000: __ArenaHi
     #0x80402760: _f_sbss2
     #0x80412780: _stack_addr
@@ -8908,7 +8908,7 @@ global:
     #0x800055f0: _bss_init_info
     #0x803fb860: _SDA_BASE_
     #0x804035a0: _SDA2_BASE_
-    #0x8023C780: _ctors
+    # 0x8023C780: _ctors
     #0x8023caa0: _dtors
     #0x80005658: _eti_init_info
 

@@ -1,11 +1,11 @@
 # ty1-decomp
 
-Decompilation of Ty the Tasmanian Tiger NTSC-U
+Decompilation of Ty the Tasmanian Tiger NTSC-U (GTYE69)
 
 ## Building
 Dump a copy of the game
- - Place main.dol in orig/
- - Place CodeWarrior 1.3.2 in tools/1.3.2/
+ - Place main.dol in *orig/*
+ - Place CodeWarrior 1.3.2 in *tools/1.3.2/*, 1.2.5 in *tools/1.2.5/*, and 1.2.5n in *tools/1.2.5n/*
  - Install DevkitPPC, Ninja and Python
 	- DevkitPPC r39
 	- Ninja 1.3

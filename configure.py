@@ -86,6 +86,8 @@ n.variable("elf2dol", c.ELF2DOL)
 n.variable("codewarrior", c.CODEWARRIOR)
 n.variable("cc", c.CC)
 n.variable("ld", c.LD)
+n.variable("cc125", c.CC_125)
+n.variable("cc125n", c.CC_125n)
 n.variable("devkitppc", c.DEVKITPPC)
 n.variable("as", c.AS)
 n.variable("cpp", c.CPP)
@@ -582,6 +584,7 @@ class CSource(Source):
     def __init__(self, ctx: c.SourceContext, path: str):
         self.cflags = ctx.cflags
         self.iconv_path = f"$builddir/iconv/{path}"
+        # print(vars(self))
         
         #check if flags should be added to a source file
         flagsYml = load_from_yaml(c.FILE_FLAGS, [])
@@ -591,6 +594,15 @@ class CSource(Source):
                 for name,flags in flagsYml[key].items():
                     if name == ".flags":
                         self.cflags = self.cflags + ' ' + flags
+        
+        if path.startswith("src/Runtime"):
+            self.cflags = c.RUNTIME_CFLAGS
+            self.cc = c.CC # CodeWarrior 1.3.2
+        elif path.startswith("src/Dolphin"):
+            self.cflags = c.cflags_base
+            self.cc = c.CC_125n # CodeWarrior 1.2.5n
+        else:
+            self.cc = c.CC # CodeWarrior 1.3.2
 
         # Find generated includes
         with open(path, encoding="utf-8") as f:
@@ -611,7 +623,8 @@ class CSource(Source):
             inputs = self.iconv_path,
             implicit = [inc.path for inc in self.gen_includes],
             variables = {
-                "cflags" : self.cflags
+                "cflags" : self.cflags,
+                "cc": self.cc
             }
         )
         # Optional manual debug target
@@ -621,7 +634,8 @@ class CSource(Source):
             inputs = self.iconv_path,
             implicit = [inc.path for inc in self.gen_includes],
             variables = {
-                "cflags" : self.cflags
+                "cflags" : self.cflags,
+                "cc": self.cc
             }
         )
 
@@ -629,7 +643,13 @@ def load_sources(ctx: c.SourceContext):
     raw = c.get_cmd_stdout(
         f"{c.SLICES} {ctx.binary} {ctx.slices} -o -p {ctx.srcdir}/"
     )
-    return [Source.make(ctx, s) for s in json.loads(raw)]
+    # print(raw)
+    s_list = [Source.make(ctx, s) for s in json.loads(raw)]
+    # for s in s_list:
+        # if type(s) == CSource:
+            # print(vars(s))
+    return s_list
+    #return [Source.make(ctx, s) for s in json.loads(raw)]
 
 forcefiles = []
 

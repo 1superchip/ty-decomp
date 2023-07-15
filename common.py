@@ -202,6 +202,20 @@ if platform != "win32":
     CC = f"wine {CC}"
     LD = f"wine {LD}"
 
+CODEWARRIOR_125 = os.path.join(TOOLS, "1.2.5")
+CC_125 = os.path.join(CODEWARRIOR_125, "mwcceppc")
+LD_125 = os.path.join(CODEWARRIOR_125, "mwldeppc")
+if platform != "win32":
+    CC_125 = f"wine {CC_125}"
+    LD_125 = f"wine {LD_125}"
+
+CODEWARRIOR_125n = os.path.join(TOOLS, "1.2.5n")
+CC_125n = os.path.join(CODEWARRIOR_125n, "mwcceppc")
+LD_125n = os.path.join(CODEWARRIOR_125n, "mwldeppc")
+if platform != "win32":
+    CC_125n = f"wine {CC_125n}"
+    LD_125n = f"wine {LD_125n}"
+
 # DevkitPPC
 DEVKITPPC = os.environ.get("DEVKITPPC")
 AS = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-as")
@@ -295,6 +309,10 @@ LOCAL_CFLAGS = [
 ]
 DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS + LOCAL_CFLAGS)
 EXTERNAL_DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS)
+
+cflags_base = f"-proc gekko -nodefaults -Cpp_exceptions off -RTTI off -fp hard -fp_contract on -O4,p -maxerrors 1 -enum int -inline auto -str reuse -nosyspath -i {INCDIR} -i {PPCDIS_INCDIR} -i {BUILD_INCDIR}"# -i libc"
+
+RUNTIME_CFLAGS = f"{cflags_base} -use_lmw_stmw on -str reuse,pool,readonly -gccinc -inline deferred,auto"
 
 LDFLAGS = ' '.join([
     "-fp hard",
