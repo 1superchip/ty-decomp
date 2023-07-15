@@ -3257,9 +3257,9 @@ Runtime/__mem.c:
 #   extab: [0x80005620, 0x80005640]
 #   extabindex: [0x80005640, 0x80005680]
 
-# Runtime/ptmf.c:
-#   .text: [0x801f6e08, 0x801f6e9c]
-#   .rodata: [0x8023f910, 0x8023f920]
+Runtime/ptmf.c:
+  .text: [0x801f6e08, 0x801f6e9c]
+  .rodata: [0x8023f910, 0x8023f920]
 
 #runtime.c:
 #   .text: [0x801f6e9c, 0x801f762c]
