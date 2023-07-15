@@ -2900,16 +2900,19 @@ ty/source/tools.cpp:
 #   .text: [0x801dbc14, 0x801dc038]
 #   .data: [0x802714c0, 0x80271520]
 
-#Dolphin/os/__start.c:
+# Dolphin/os/__start.c:
 #   .init: [0x80003100, 0x80003354]
 
-#__ppc_eabi_init.cpp:
-#   .text: [0x801dc038, 0x801dc0cc]
-#   .init: [0x80003354, 0x800033a8]
+# Dolphin/linker_info.s:
+#   .init: [0x8000556C, 0x80005620]
+
+Dolphin/os/__ppc_eabi_init.cpp:
+  .text: [0x801dc038, 0x801dc0cc]
+  .init: [0x80003354, 0x800033a8]
 
 # this slice is needed until the rest of the file is decompiled
-Dolphin/__ppc_eabi_init.s:
-   .text: [0x801DC058, 0x801DC0AC]
+# Dolphin/__ppc_eabi_init.s:
+#    .text: [0x801DC058, 0x801DC0AC]
 
 #db.c:
 #   .text: [0x801dc0cc, 0x801dc1b8]
@@ -3238,8 +3241,8 @@ Dolphin/__ppc_eabi_init.s:
 #   .sdata: [0x803f9818, 0x803f9820]
 #   .sbss: [0x803fb060, 0x803fb078]
 
-# Runtime/__mem.c:
-#   .init: [0x800033a8, 0x800034e0]
+Runtime/__mem.c:
+  .init: [0x800033a8, 0x800034e0]
 
 #__va_arg.c:
 #   .text: [0x801f6b48, 0x801f6c10]
