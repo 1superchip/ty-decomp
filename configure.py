@@ -28,10 +28,17 @@ import common as c
 # Setup Validation #
 ####################
 
-# Check CW was added
+# Check CW 1.3.2 was added
 assert os.path.exists("tools/1.3.2/mwcceppc.exe") and \
        os.path.exists("tools/1.3.2/mwldeppc.exe"), \
        "Error: Codewarrior not found in tools/1.3.2"
+# Check CW 1.2.5 was added
+assert os.path.exists("tools/1.2.5/mwcceppc.exe") and \
+       "Error: Codewarrior not found in tools/1.2.5"
+# Check CW 1.2.5n was added
+assert os.path.exists("tools/1.2.5n/mwcceppc.exe") and \
+       "Error: Codewarrior not found in tools/1.2.5n"
+
 
 # Check binaries were added
 assert os.path.exists(c.DOL), \
