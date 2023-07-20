@@ -1,8 +1,7 @@
 #ifndef _DOLPHIN_OSARENA
 #define _DOLPHIN_OSARENA
 
-// #include <dolphin/types.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 void* OSGetArenaHi(void);
 void* OSGetArenaLo(void);
