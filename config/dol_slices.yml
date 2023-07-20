@@ -2820,16 +2820,16 @@ ty/source/tools.cpp:
 #   .text: [0x801d66f8, 0x801d6da4]
 #   .sbss: [0x803fae50, 0x803fae58]
 
-#OSAlloc.c:
+# Dolphin/os/OSAlloc.c:
 #   .text: [0x801d6da4, 0x801d7414]
 #   .data: [0x80270940, 0x80270cd8]
 #   .sdata: [0x803f9758, 0x803f9760]
 #   .sbss: [0x803fae58, 0x803fae68]
 
-#OSArena.c:
-#   .text: [0x801d7414, 0x801d7434]
-#   .sdata: [0x803f9760, 0x803f9768]
-#   .sbss: [0x803fae68, 0x803fae70]
+Dolphin/os/OSArena.c:
+  .text: [0x801d7414, 0x801d7434]
+  .sdata: [0x803f9760, 0x803f9768]
+  .sbss: [0x803fae68, 0x803fae70]
 
 #OSAudioSystem.c:
 #   .text: [0x801d7434, 0x801d76c8]
@@ -2905,6 +2905,9 @@ ty/source/tools.cpp:
 
 # Dolphin/linker_info.s:
 #   .init: [0x8000556C, 0x80005620]
+
+# Dolphin/_eti_init_info.s:
+#   extabindex_: [0x80005658, 0x80005680]
 
 Dolphin/os/__ppc_eabi_init.cpp:
   .text: [0x801dc038, 0x801dc0cc]
@@ -3249,8 +3252,11 @@ Runtime/__mem.c:
 
 # Runtime/global_destructor_chain.c:
 #   .text: [0x801f6c10, 0x801f6c58]
-#   .dtors: [0x8023caa8, 0x8023CAAC]
+# #   .dtors: [0x8023caa8, 0x8023CAAC]
 #   .sbss: [0x803fb078, 0x803fb080]
+
+# Runtime/__global_destructor_chain_dtor_slice.s:
+#   .dtors: [0x8023caa8, 0x8023CAAC]
 
 # Runtime/NMWException.cpp:
 #   .text: [0x801f6c58, 0x801f6e08]
@@ -3267,9 +3273,15 @@ Runtime/ptmf.c:
 
 # Runtime/__init_cpp_exceptions.cpp:
 #   .text: [0x801f762c, 0x801f76a8]
-#   .ctors: [0x8023c780, 0x8023c784] # what??
+# #   .ctors: [0x8023c780, 0x8023c784] # what??
 #   .dtors: [0x8023caa0, 0x8023caa8]
 #   .sdata: [0x803f9820, 0x803F9828]
+
+# Runtime/__init_cpp_exceptions_ctor_slice.s:
+#   .ctors: [0x8023c780, 0x8023c784]
+
+# Runtime/__init_cpp_exceptions_ctor_slice.cpp:
+#   .ctors: [0x8023c780, 0x8023c784]
 
 # Runtime/Gecko_ExceptionPPC.cpp:
 #   .text: [0x801f76a8, 0x801f7710]
