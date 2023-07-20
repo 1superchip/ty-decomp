@@ -2831,9 +2831,9 @@ Dolphin/os/OSArena.c:
   .sdata: [0x803f9760, 0x803f9768]
   .sbss: [0x803fae68, 0x803fae70]
 
-#OSAudioSystem.c:
-#   .text: [0x801d7434, 0x801d76c8]
-#   .data: [0x80270cd8, 0x80270d58]
+Dolphin/os/OSAudioSystem.c:
+  .text: [0x801d7434, 0x801d76c8]
+  .data: [0x80270cd8, 0x80270d58]
 
 #OSCache.c:
 #   .text: [0x801d76c8, 0x801d7d30]
