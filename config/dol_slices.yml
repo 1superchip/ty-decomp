@@ -2858,8 +2858,8 @@ Dolphin/os/OSInterrupt.c:
   .data: [0x80271480, 0x802714b0]
   .sbss: [0x803fae70, 0x803fae88]
 
-#OSLink.c:
-#   .text: [0x801d9224, 0x801d923c]
+Dolphin/os/OSLink.c:
+  .text: [0x801d9224, 0x801d923c]
 
 #OSMessage.c:
 #   .text: [0x801d923c, 0x801d9440]
@@ -2871,7 +2871,7 @@ Dolphin/os/OSInterrupt.c:
 #OSMutex.c:
 #   .text: [0x801d9738, 0x801d97a8]
 
-#OSReboot.c:
+#Dolphin/os/OSReboot.c:
 #   .text: [0x801d97a8, 0x801d99b4]
 #   .bss: [0x802d4dc0, 0x802d4de0]
 #   .sbss: [0x803fae88, 0x803fae98]
