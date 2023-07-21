@@ -8,3 +8,6 @@ forced_types:
 
 sdata_sizes:
   - [0x803fae48, 8]
+  - [0x803fadc0, 8]
+  - [0x803fb4e0, 8]
+  - [0x803fb4f0, 8]
