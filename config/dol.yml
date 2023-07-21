@@ -7,9 +7,9 @@ section_defs:
       - name: .init
       - name: .text
     data:
-      - name: extab_
+      - name: extab
         attr: a
-      - name: extabindex_
+      - name: extabindex
         attr: a
       - name: .ctors
         balign: 0

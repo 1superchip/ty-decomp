@@ -69,8 +69,8 @@ if __name__=="__main__":
         print("Warning: progress for sections other than .text isn't fully accurate")
         dol_secs = [
             ".init",
-            "extab_",
-            "extabindex_",
+            "extab",
+            "extabindex",
             ".text",
             ".ctors",
             ".dtors",
