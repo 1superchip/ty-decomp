@@ -19,7 +19,11 @@ typedef struct OSMutexQueue OSMutexQueue;
 typedef struct OSMutexLink OSMutexLink;
 typedef struct OSCond OSCond;
 
+// Idle function.
 typedef void (*OSIdleFunction)(void* param);
+// Start function.
+typedef void* (*OSThreadStartFunction)(void*);
+
 typedef void (*OSSwitchThreadCallback)(OSThread* from, OSThread* to);
 
 struct OSThreadQueue {
@@ -59,10 +63,10 @@ struct OSThread {
   u8* stackBase;
   u32* stackEnd;
   s32 error;
-  void* specific[OS_THREAD_SPECIFIC_MAX];
 };
 
 enum OS_THREAD_STATE {
+	OS_THREAD_STATE_NULL  = 0,
   OS_THREAD_STATE_READY = 1,
   OS_THREAD_STATE_RUNNING = 2,
   OS_THREAD_STATE_WAITING = 4,

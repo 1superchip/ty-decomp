@@ -5,3 +5,6 @@ blocked_pointers:
 forced_types:
   0x801fc300: FUNCTION # TRKExceptionHandler
   0x801fc460: FUNCTION # TRKInterruptHandlerEnableInterrupts
+
+sdata_sizes:
+  - [0x803fae48, 8]

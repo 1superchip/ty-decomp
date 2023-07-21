@@ -2810,11 +2810,11 @@ ty/source/tools.cpp:
 #   .data: [0x8026e860, 0x80270780]
 #   .sdata: [0x803f9750, 0x803f9758]
 
-# Dolphin/os/OS.c:
-#   .text: [0x801d5d9c, 0x801d66f8]
-#   .data: [0x80270780, 0x80270940]
-#   .bss: [0x802d4d20, 0x802d4d70]
-#   .sbss: [0x803fae20, 0x803fae50]
+Dolphin/os/OS.c:
+  .text: [0x801d5d9c, 0x801d66f8]
+  .data: [0x80270780, 0x80270940]
+  .bss: [0x802d4d20, 0x802d4d70]
+  .sbss: [0x803fae20, 0x803fae50]
 
 #OSAlarm.c:
 #   .text: [0x801d66f8, 0x801d6da4]
@@ -2891,7 +2891,7 @@ Dolphin/os/OSReset.c:
 #OSSync.c:
 #   .text: [0x801daaa8, 0x801dab2c]
 
-#OSThread.c:
+# Dolphin/os/OSThread.c:
 #   .text: [0x801dab2c, 0x801dbc14]
 #   .bss: [0x802d4e38, 0x802d5820]
 #   .sbss: [0x803faec0, 0x803faed0]
