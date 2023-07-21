@@ -1,7 +1,7 @@
 #ifndef _DOLPHIN_VITYPES
 #define _DOLPHIN_VITYPES
 
-#include <dolphin/types.h>
+#include <Dolphin/types.h>
 
 #ifdef __cplusplus
 extern "C" {

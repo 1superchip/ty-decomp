@@ -2810,7 +2810,7 @@ ty/source/tools.cpp:
 #   .data: [0x8026e860, 0x80270780]
 #   .sdata: [0x803f9750, 0x803f9758]
 
-#OS.c:
+# Dolphin/os/OS.c:
 #   .text: [0x801d5d9c, 0x801d66f8]
 #   .data: [0x80270780, 0x80270940]
 #   .bss: [0x802d4d20, 0x802d4d70]
@@ -2876,9 +2876,9 @@ Dolphin/os/OSInterrupt.c:
 #   .bss: [0x802d4dc0, 0x802d4de0]
 #   .sbss: [0x803fae88, 0x803fae98]
 
-#OSReset.c:
-#   .text: [0x801d99b4, 0x801d9d98]
-#   .sbss: [0x803fae98, 0x803faea0]
+Dolphin/os/OSReset.c:
+  .text: [0x801d99b4, 0x801d9d98]
+  .sbss: [0x803fae98, 0x803faea0]
 
 #OSResetSW.c:
 #   .text: [0x801d9d98, 0x801da124]

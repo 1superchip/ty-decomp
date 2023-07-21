@@ -1,9 +1,9 @@
 #ifndef _DOLPHIN_VIFUNCS
 #define _DOLPHIN_VIFUNCS
 
-#include <dolphin/types.h>
+#include <Dolphin/types.h>
 
-#include <dolphin/vitypes.h>
+#include <Dolphin/vitypes.h>
 
 #ifdef __cplusplus
 extern "C" {
