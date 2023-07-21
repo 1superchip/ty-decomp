@@ -1,17 +1,6 @@
 #ifndef _DOLPHIN_TYPES
 #define _DOLPHIN_TYPES
 
-#ifdef TARGET_PC
-#include <stdint.h>
-typedef int8_t s8;
-typedef int16_t s16;
-typedef int32_t s32;
-typedef int64_t s64;
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-#else
 typedef signed char s8;
 typedef signed short int s16;
 typedef signed long s32;
@@ -20,7 +9,6 @@ typedef unsigned char u8;
 typedef unsigned short int u16;
 typedef unsigned long u32;
 typedef unsigned long long int u64;
-#endif
 
 typedef volatile u8 vu8;
 typedef volatile u16 vu16;
@@ -38,32 +26,20 @@ typedef double f64;
 typedef volatile f32 vf32;
 typedef volatile f64 vf64;
 
-#if defined(TARGET_PC) && !defined(_WIN32)
-#include <stdbool.h>
-typedef bool BOOL;
-#ifndef FALSE
-#define FALSE false
-#endif
-#ifndef TRUE
-#define TRUE true
-#endif
-#else
 typedef int BOOL;
+
 #ifndef FALSE
 #define FALSE 0
 #endif
+
 #ifndef TRUE
 #define TRUE 1
 #endif
-#endif
 
-#ifdef TARGET_PC
-#include <stddef.h>
-#else
 #ifndef NULL
 #define NULL 0
 #endif
-#endif
+
 #if !defined(__cplusplus) || __cplusplus < 201103L
 #ifndef nullptr
 #define nullptr NULL

@@ -2891,10 +2891,10 @@ Dolphin/os/OSReset.c:
 #OSSync.c:
 #   .text: [0x801daaa8, 0x801dab2c]
 
-# Dolphin/os/OSThread.c:
-#   .text: [0x801dab2c, 0x801dbc14]
-#   .bss: [0x802d4e38, 0x802d5820]
-#   .sbss: [0x803faec0, 0x803faed0]
+Dolphin/os/OSThread.c:
+  .text: [0x801dab2c, 0x801dbc14]
+  .bss: [0x802d4e38, 0x802d5820]
+  .sbss: [0x803faec0, 0x803faed0]
 
 #OSTime.c:
 #   .text: [0x801dbc14, 0x801dc038]
