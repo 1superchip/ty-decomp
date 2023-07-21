@@ -23,9 +23,9 @@ void Blitter_Box::Draw(int count) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
     while(count-- > 0) {
 		
@@ -40,7 +40,7 @@ void Blitter_Box::Draw(int count) {
         float endY = posY + pBox->extent.y;
         float endZ = posZ + pBox->extent.z;
 		
-        GXBegin(0xB0, 1, 8); // LINESTRIP
+        GXBegin(GX_LINESTRIP, GX_VTXFMT1, 8);
 		
         red1 = (u8)red;
         green1 = (u8)green;
@@ -79,7 +79,7 @@ void Blitter_Box::Draw(int count) {
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(0.0f, 0.0f);
 
-        GXBegin(0xB0, 1, 8); // LINESTRIP
+        GXBegin(GX_LINESTRIP, GX_VTXFMT1, 8);
         
         GXPosition3f32(endX, endY, endZ);
         GXColor4u8(red1, green1, blue1, alpha1);
@@ -122,9 +122,9 @@ void Blitter_Line3D::Draw(int count, float arg2) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
     while (count-- > 0) {
         // Vertex 1 Colors
@@ -138,7 +138,7 @@ void Blitter_Line3D::Draw(int count, float arg2) {
         u8 green1 = 255.0f * pLines->color1.y;
         u8 blue1 = 255.0f * pLines->color1.z;
         u8 alpha1 = 255.0f * (pLines->color1.w * arg2);
-        GXBegin(0xA8, 1, 2); // LINES
+        GXBegin(GX_LINES, GX_VTXFMT1, 2);
 		
         // Vertex 1
         GXPosition3f32(pLines->point.x, pLines->point.y, pLines->point.z);
@@ -180,9 +180,9 @@ void Blitter_Particle::Draw(int count) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
     for(int i = 0; i < count; i++) {
         float (* pUV)[2] = defaultUV;
@@ -225,7 +225,7 @@ void Blitter_Particle::Draw(int count) {
         float dVar25 = fVar13 - fVar14;
         float dVar24 = fVar13 + fVar14;
         
-        GXBegin(0x98, 1, 4); // TRIANGLESTRIP
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         
         WGPIPE.f = pParticle->pos.x + dVar29;
         WGPIPE.f = pParticle->pos.y + dVar28;
@@ -263,9 +263,9 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
     
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     
     Blitter_Particle* pParticle = this;
     
@@ -286,7 +286,7 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
         u8 blue = 255.0f * pParticle->color.z;
         u8 alpha = 255.0f * pParticle->color.w;
         
-        GXBegin(0x98, 1, 4); // TRIANGLESTRIP
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         
         WGPIPE.f = pParticle->pos.x + dVar29;
         WGPIPE.f = pParticle->pos.y + dVar28;
@@ -326,9 +326,9 @@ void Blitter_Image::Draw(int count) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
     GXGetProjectionv((float*)&projection);
 	
@@ -343,7 +343,7 @@ void Blitter_Image::Draw(int count) {
         u8 green = 255.0f * pImage->color.y;
         u8 blue = 255.0f * pImage->color.z;
         u8 alpha = 255.0f * pImage->color.w;
-        GXBegin(0x98, 1, 4); // TRIANGLESTRIP
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
         GXPosition3f32(posX, posY, pImage->unk10.x);
         GXColor4u8(red, green, blue, alpha);
@@ -373,8 +373,8 @@ void Blitter_UntexturedImage::Draw(int count) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 	
 	Material::UseNone(-1);
 	
@@ -390,7 +390,7 @@ void Blitter_UntexturedImage::Draw(int count) {
         red = (pImage->color[0] * 255) >> 7;
         u8 blue = pImage->color[2];
         u8 green = pImage->color[1];
-        GXBegin(0x98, 1, 4); // TRIANGLESTRIP
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
         GXPosition3f32(posX, posY, pImage->unk10);
         GXColor4u8(alpha, blue, green, red);
@@ -415,10 +415,10 @@ void Blitter_TriStrip::Draw(int count, float arg2) {
     GXClearVtxDesc();
 	
     // initiate GX
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
-    GXBegin(0x98, 1, (u16)count);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, (u16)count);
 
     for(int i = 0; i < count; i++) {
         int red = (int)(pTriStrip[i].color.x * 255.0f);
@@ -445,10 +445,10 @@ void Blitter_TriFan::Draw2D(int count, float arg2) {
 	
     // initiate GX
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1); // POS, DIRECT
-    GXSetVtxDesc(11, 1); // CLR0, DIRECT
-    GXSetVtxDesc(13, 1); // TEX0, DIRECT
-    GXBegin(0xA0, 1, (u16)count);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXBegin(GX_TRIANGLEFAN, GX_VTXFMT1, (u16)count);
 
     for(int i = 0; i < count; i++) {
         int red = (int)(pTriStrip[i].color.x * 255.0f);

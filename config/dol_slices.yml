@@ -2839,24 +2839,24 @@ Dolphin/os/OSAudioSystem.c:
 #   .text: [0x801d76c8, 0x801d7d30]
 #   .data: [0x80270d58, 0x80270f88]
 
-#OSContext.c:
-#   .text: [0x801d7d30, 0x801d8598]
-#   .data: [0x80270f88, 0x80271160]
+Dolphin/os/OSContext.c:
+  .text: [0x801d7d30, 0x801d8598]
+  .data: [0x80270f88, 0x80271160]
 
-#OSError.c:
-#   .text: [0x801d8598, 0x801d8960]
-#   .data: [0x80271160, 0x80271480]
-#   .bss: [0x802d4d70, 0x802d4dc0]
-#   .sdata: [0x803f9768, 0x803f9770]
+Dolphin/os/OSError.c:
+  .text: [0x801d8598, 0x801d8960]
+  .data: [0x80271160, 0x80271480]
+  .bss: [0x802d4d70, 0x802d4dc0]
+  .sdata: [0x803f9768, 0x803f9770]
 
 #OSFont.c:
 #   .text: [0x801d8960, 0x801d89b8]
 #   .sdata: [0x803f9770, 0x803f9778]
 
-#OSInterrupt.c:
-#   .text: [0x801d89b8, 0x801d9224]
-#   .data: [0x80271480, 0x802714b0]
-#   .sbss: [0x803fae70, 0x803fae88]
+Dolphin/os/OSInterrupt.c:
+  .text: [0x801d89b8, 0x801d9224]
+  .data: [0x80271480, 0x802714b0]
+  .sbss: [0x803fae70, 0x803fae88]
 
 #OSLink.c:
 #   .text: [0x801d9224, 0x801d923c]
@@ -3385,7 +3385,7 @@ Runtime/ptmf.c:
 #mslsupp.c:
 #   .text: [0x801fe3c8, 0x801fe540]
 
-#dtk.c:
+# Dolphin/dtk.c:
 #   .text: [0x801fe540, 0x801fedd0]
 #   .bss: [0x802da2f8, 0x802da418]
 #   .sbss: [0x803fb080, 0x803fb0b0]

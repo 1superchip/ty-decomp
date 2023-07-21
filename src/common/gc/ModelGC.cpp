@@ -65,18 +65,17 @@ int Model::Draw(u16* pSubObjs) {
         Material::UseNone(-1);
     }
     GXColor color = *(GXColor*)&currView->fogColour;
-    GXSetFog(2, (GXColor&)color, currView->closeFogPlane,
+    GXSetFog(GX_FOG_PERSP_LIN, currView->closeFogPlane,
         (currView->farFogPlane - currView->closeFogPlane) * 2.0f + currView->closeFogPlane,
-        currView->unk2C0,
-        currView->unk2BC);
+        currView->unk2C0, currView->unk2BC, (GXColor&)color);
     Vertex* pVerts = pTemplate->pModelData->pVertices;
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 3);
-    GXSetVtxDesc(10, 3);
-    GXSetVtxDesc(11, 3);
-    GXSetVtxDesc(13, 3);
-    GXSetArray(11, (void*)&pVerts->color, sizeof(Vertex));
-    GXSetArray(13, (void*)&pVerts->uv, sizeof(Vertex));
+    GXSetVtxDesc(GX_VA_POS, GX_INDEX16);
+    GXSetVtxDesc(GX_VA_NRM, GX_INDEX16);
+    GXSetVtxDesc(GX_VA_CLR0, GX_INDEX16);
+    GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
+    GXSetArray(GX_VA_CLR0, (void*)&pVerts->color, sizeof(Vertex));
+    GXSetArray(GX_VA_TEX0, (void*)&pVerts->uv, sizeof(Vertex));
     if (pAnimation != NULL) {
         static int bufferOffset = 0;
         pAnimation->CalculateMatrices();
@@ -154,8 +153,8 @@ int Model::Draw(u16* pSubObjs) {
             vertexBuf += 3;
             vertexCount--;
         }
-        GXSetArray(9, (void*)&vertexBuffer[bufferOffset], 12);
-        GXSetArray(10, (void*)&normalBuffer[bufferOffset], 3);
+        GXSetArray(GX_VA_POS, (void*)&vertexBuffer[bufferOffset], 12);
+        GXSetArray(GX_VA_NRM, (void*)&normalBuffer[bufferOffset], 3);
         DCStoreRange((uint*)&normalBuffer[bufferOffset], r25);
         DCStoreRange((uint*)&vertexBuffer[bufferOffset], r25 * sizeof(float));
         Matrix invMatrix = View::GetCurrent()->unkC8;
@@ -167,8 +166,8 @@ int Model::Draw(u16* pSubObjs) {
         invMatrix.data[2][2] *= -1.0f;
         invMatrix.data[3][2] *= -1.0f;
         invMatrix.Transpose(&invMatrix);
-        GXLoadPosMtxImm((float*)&invMatrix, 0);
-        GXLoadNrmMtxImm((float*)&invMatrix, 0);
+        GXLoadPosMtxImm(invMatrix.data, 0);
+        GXLoadNrmMtxImm(invMatrix.data, 0);
         bufferOffset = bufferOffset + r25;
         bufferOffset = (bufferOffset + 0x20) & ~0x1f;
     } else {
@@ -187,10 +186,10 @@ int Model::Draw(u16* pSubObjs) {
         mat1.data[2][2] *= -1.0f;
         mat1.data[3][2] *= -1.0f;
         mat1.Transpose(&mat1);
-        GXLoadPosMtxImm((float*)&mat1, 0);
-        GXLoadNrmMtxImm((float*)&mat1, 0);
-        GXSetArray(9, (void*)&pVerts->pos, sizeof(Vertex));
-        GXSetArray(10, (void*)&pVerts->normal, sizeof(Vertex));
+        GXLoadPosMtxImm(mat1.data, 0);
+        GXLoadNrmMtxImm(mat1.data, 0);
+        GXSetArray(GX_VA_POS, (void*)&pVerts->pos, sizeof(Vertex));
+        GXSetArray(GX_VA_NRM, (void*)&pVerts->normal, sizeof(Vertex));
     }
     Matrix mat3;
     Matrix mat2;
@@ -211,10 +210,10 @@ int Model::Draw(u16* pSubObjs) {
     mat3.data[3][3] = 1.0f;
     mat2.Multiply(&mat2, &mat3);
     mat2.Transpose(&mat2);
-    GXLoadTexMtxImm((float*)&mat2, 0x39, 1);
+    GXLoadTexMtxImm(mat2.data, 0x39, GX_MTX2x4);
     GXColor chanColor = (GXColor){0xFF, 0xFF, 0xFF, 0xFF};
     int matrixIdx = 0;
-    GXSetChanMatColor(4, chanColor);
+    GXSetChanMatColor(GX_COLOR0A0, chanColor);
     int effectIdx = 0;
     int size = (pSubObjs != NULL) ? *pSubObjs++ : pTemplate->pModelData->nmbrOfSubObjects; // get number of subobjects to run through
     while (size-- != 0) {
@@ -243,8 +242,8 @@ int Model::Draw(u16* pSubObjs) {
                     localMatrix.data[2][2] *= -1.0f;
                     localMatrix.data[3][2] *= -1.0f;
                     localMatrix.Transpose(&localMatrix);
-                    GXLoadPosMtxImm((float*)&localMatrix, 0);
-                    GXLoadNrmMtxImm((float*)&localMatrix, 0);
+                    GXLoadPosMtxImm(localMatrix.data, 0);
+                    GXLoadNrmMtxImm(localMatrix.data, 0);
                 } else {
                     Matrix mat1;
                     View* pView = View::GetCurrent();
@@ -261,8 +260,8 @@ int Model::Draw(u16* pSubObjs) {
                     mat1.data[2][2] *= -1.0f;
                     mat1.data[3][2] *= -1.0f;
                     mat1.Transpose(&mat1);
-                    GXLoadPosMtxImm((float*)&mat1, 0);
-                    GXLoadNrmMtxImm((float*)&mat1, 0);
+                    GXLoadPosMtxImm(mat1.data, 0);
+                    GXLoadNrmMtxImm(mat1.data, 0);
                 }
             }
             EffectDat* effect = pEffect;
@@ -328,9 +327,9 @@ int Model::Draw(u16* pSubObjs) {
                             }
                             if (gRenderState.fillState != 2) {
                                 pMat->Use();
-                                GXSetChanCtrl(4, r15 == 0 ? 1 : 0, 0, 1, 7, 2, 2);
+                                GXSetChanCtrl(GX_COLOR0A0, (r15 == false ? 1 : 0), GX_SRC_REG, GX_SRC_VTX, 7, GX_DF_CLAMP, GX_AF_NONE);
                                 if (renderType == 7) {
-                                    GXSetTevOrder(1, 0, 0, 4);
+                                    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
                                     GXSetNumTevStages(2);
     
                                     float red = colour.x * pSubObj->alphaLightIntensity * 255.0f;
@@ -345,19 +344,19 @@ int Model::Draw(u16* pSubObjs) {
                                     tevColor.r = red;
                                     tevColor.g = green;
                                     tevColor.b = blue;
-                                    GXSetTevColor(1, tevColor);
+                                    GXSetTevColor(GX_TEVREG0, tevColor);
                                     // setup Tev stage 0
-                                    GXSetTevColorIn(0, 2, 15, 11, 10);
-                                    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-                                    GXSetTevAlphaIn(0, 7, 7, 7, 4);
-                                    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+                                    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_ZERO, GX_CC_RASA, GX_CC_RASC);
+                                    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+                                    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
                                     // setup Tev stage 1
-                                    GXSetTevColorIn(1, 15, 8, 0, 15);
-                                    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
-                                    GXSetTevAlphaIn(1, 7, 7, 7, 0);
-                                    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+                                    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV, GX_CC_ZERO);
+                                    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+                                    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
     
-                                    GXSetBlendMode(1, 1, 0, 5);
+                                    GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                                 }
                             }
                             GXCallDisplayList((void*)pObjMaterial->pStripData, pObjMaterial->maxOffset * 16);
@@ -368,7 +367,7 @@ int Model::Draw(u16* pSubObjs) {
             }
         }
     }
-    GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     *(int*)&Material_MixedColor = -1;
     if (effectIdx != 0) {
         while (effectIdx-- > 0) {
@@ -377,7 +376,7 @@ int Model::Draw(u16* pSubObjs) {
                 pEffect->matEffect, pEffect->minW, pEffect->maxW);
         }
     }
-    GXSetFog(0, *(GXColor*)&currView->fogColour, 0.0f, 0.0f, 0.0f, 0.0f);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&currView->fogColour);
     return ret;
 }
 

@@ -6,3 +6,4 @@ trim_ctors: true
 
 symbol_aligns:
   0x802eaa60: 32 # align pBuffer in demoinit.cpp to 32 bytes
+  0x802d4dc0: 32 # Header from OSReboot.c

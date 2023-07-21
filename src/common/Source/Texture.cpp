@@ -6,22 +6,22 @@
 #include "common/Str.h"
 #include "common/FileSys.h"
 
-// not from this file
-struct _GXRenderModeObj {
-    u32 viTVMode;
-    u16 fbWidth;
-    u16 efbHeight;
-    u16 xfbHeight;
-    u16 viXOrigin;
-    u16 viYOrigin;
-    u16 viWidth;
-    u16 viHeight;
-    uint xfbMode;
-    u8 field_rendering;
-    u8 aa;
-    u8 sample_pattern[2][12];
-    u8 vfilter[7];
-};
+// // not from this file
+// struct _GXRenderModeObj {
+//     u32 viTVMode;
+//     u16 fbWidth;
+//     u16 efbHeight;
+//     u16 xfbHeight;
+//     u16 viXOrigin;
+//     u16 viYOrigin;
+//     u16 viWidth;
+//     u16 viHeight;
+//     uint xfbMode;
+//     u8 field_rendering;
+//     u8 aa;
+//     u8 sample_pattern[2][12];
+//     u8 vfilter[7];
+// };
 extern "C" {
 	u32 VIGetTvFormat(void);
 	_GXRenderModeObj* DEMOGetRenderModeObj(void);
@@ -55,7 +55,7 @@ void Texture::DeinitModule(void) {
 }
 
 Texture *Texture::Create(char *pName) {
-    int size[3];
+    int size;
     Texture *pTex = Texture::Find(pName);
     if (pTex != NULL) {
         pTex->referenceCount++;
@@ -63,8 +63,8 @@ Texture *Texture::Create(char *pName) {
         pTex = textures.GetNextEntry();
         strcpy(pTex->name, Str_CopyString(pName, 0x1f));
         pTex->bMpegTarget = false;
-        TexFile* texFile = (TexFile*)FileSys_Load(Str_Printf("%s.gtx", pName), &size[2], 0, -1);
-        DCStoreRange((uint *)texFile, size[2]);
+        TexFile* texFile = (TexFile*)FileSys_Load(Str_Printf("%s.gtx", pName), &size, 0, -1);
+        DCStoreRange((uint *)texFile, size);
         pTex->pFileData = texFile;
         pTex->width = texFile->width;
         pTex->height = texFile->height;
@@ -73,7 +73,7 @@ Texture *Texture::Create(char *pName) {
 			// RGB5A3
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_RGB5A3, 1, 1, 0);
+            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_RGB5A3, GX_REPEAT, GX_REPEAT, 0);
             break;
         case 1:
 			// Indexed
@@ -86,16 +86,15 @@ Texture *Texture::Create(char *pName) {
                     texFile->unk20 = (texFile->unk20 >> 1) & 0xFFF;
                 }
             }
-            GXInitTlutObj(&pTex->tlutObj, (void *)((int)texFile + 0x20), 2, 0x100); // file + 0x20 is lookup table, format 2, 256 entries
+            GXInitTlutObj(&pTex->tlutObj, (void *)((int)texFile + 0x20), GX_TL_RGB5A3, 0x100); // file + 0x20 is lookup table, format 2, 256 entries
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            size[0] = 0;
-            GXInitTexObjCI(&pTex->texObj, (void *)((int)texFile + 0x220), pTex->width, pTex->height, GX_TF_CI8, 1, 1, 0);
+            GXInitTexObjCI(&pTex->texObj, (void *)((int)texFile + 0x220), pTex->width, pTex->height, GX_TF_C8, GX_REPEAT, GX_REPEAT, 0, 0);
             break;
         case 2:
 			// CMPR
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_CMPR, 1, 1, 1);
+            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height, GX_TF_CMPR, GX_REPEAT, GX_REPEAT, 1);
             int bits = pTex->width < pTex->height ? pTex->width : pTex->height;
             int i;
             for (i = 31; i >= 0; i--) {
@@ -115,7 +114,8 @@ Texture *Texture::Create(char *pName) {
             default:
                 minFilter = 5; // GX_LIN_MIP_LIN
             }
-            GXInitTexObjLOD(&pTex->texObj, 0.0f, maxLod, -4.0f, minFilter, 1, 1, 0, 0);
+            // GXInitTexObjLOD(&pTex->texObj, 0.0f, maxLod, -4.0f, minFilter, 1, 1, 0, 0);
+            GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter, GX_LINEAR, 0.0f, maxLod, -4.0f, 1, 0, (GXAnisotropy)0);
             if (Texture_filterType >= 2 && pTex->width > 64) {
                 break;
             }
@@ -124,7 +124,7 @@ Texture *Texture::Create(char *pName) {
             memcpy(mem, texFile, memSize);
             DCStoreRange((uint *)mem, memSize);
             pTex->pFileData = mem;
-            GXInitTexObj(&pTex->texObj, (void *)((int)mem + 0x20), pTex->width, pTex->height, GX_TF_CMPR, 1, 1, 0);
+            GXInitTexObj(&pTex->texObj, (void *)((int)mem + 0x20), pTex->width, pTex->height, GX_TF_CMPR, GX_REPEAT, GX_REPEAT, 0);
             Heap_MemFree(texFile);
         }
         pTex->referenceCount = 1;
@@ -158,9 +158,9 @@ Texture* Texture::Find(char* pName) {
 
 void Texture::Use(void) {
     if (bTlut != false) {
-        GXLoadTlut(&tlutObj, 0);
+        GXLoadTlut(&tlutObj, GX_TLUT0);
     }
-    GXLoadTexObj(&texObj, 0);
+    GXLoadTexObj(&texObj, GX_TEXMAP0);
 }
 
 Texture* Texture::CreateRenderTarget(char* pName, int arg2, int arg3, int arg4) {
@@ -178,12 +178,12 @@ Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int
         case 0:
             pTex->bTlut = false;
             memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, GX_TF_RGBA8, 1, 1, 0);
+            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, GX_TF_RGBA8, GX_REPEAT, GX_REPEAT, 0);
             break;
         case 2:
             pTex->bTlut = false;
             memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, GX_TF_RGB565, 1, 1, 0);
+            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
             break;
     }
     pTex->referenceCount = 1;

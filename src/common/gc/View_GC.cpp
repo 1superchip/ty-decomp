@@ -1,6 +1,6 @@
 #include "types.h"
 #include "common/View.h"
-#include "Dolphin/gx.h"
+// #include "Dolphin/gx.h"
 #include "common/Heap.h"
 #include "common/Material.h"
 #include "common/StdMath.h"
@@ -168,7 +168,7 @@ void View::SetProjection(float arg1, float arg2, float arg3) {
     proj[3][2] = -1.0f;
     proj[3][3] = 0.0f;
     
-    GXSetProjection((float*)&proj, 0);
+    GXSetProjection(proj, GX_PERSPECTIVE);
     unk2C0 = arg2;
     unk2BC = arg3;
 }
@@ -197,8 +197,8 @@ void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
     matrix.data[2][2] *= -1.0f;
     matrix.data[3][2] *= -1.0f;
     matrix.Transpose(&matrix);
-    GXLoadPosMtxImm((float*)&matrix, 0);
-    GXLoadNrmMtxImm((float*)&matrix, 0);
+    GXLoadPosMtxImm(matrix.data, 0);
+    GXLoadNrmMtxImm(matrix.data, 0);
 }
 
 void View::SetDirectLight(DirectLight* pDirectLight) {
@@ -233,13 +233,13 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
             GXInitLightPos(&lo, -lightPos.x, -lightPos.y, -lightPos.z);
             switch (i) {
                 case 0:
-                    GXLoadLightObjImm(&lo, 1);
+                    GXLoadLightObjImm(&lo, GX_LIGHT0);
                     break;
                 case 1:
-                    GXLoadLightObjImm(&lo, 2);
+                    GXLoadLightObjImm(&lo, GX_LIGHT1);
                     break;
                 case 2:
-                    GXLoadLightObjImm(&lo, 4);
+                    GXLoadLightObjImm(&lo, GX_LIGHT2);
                     break;
             }
         }
@@ -247,7 +247,7 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
         ambColor.r = 255.0f * pLight->ambient.x;
         ambColor.g = 255.0f * pLight->ambient.y;
         ambColor.b = 255.0f * pLight->ambient.z;
-        GXSetChanAmbColor(4, ambColor);
+        GXSetChanAmbColor(GX_COLOR0A0, ambColor);
     }
 }
 
@@ -269,8 +269,8 @@ void View::Use(void) {
         matrix.data[2][2] *= -1.0f;
         matrix.data[3][2] *= -1.0f;
         matrix.Transpose(&matrix);
-        GXLoadPosMtxImm((float*)&matrix, 0);
-        GXLoadNrmMtxImm((float*)&matrix, 0);
+        GXLoadPosMtxImm(matrix.data, 0);
+        GXLoadNrmMtxImm(matrix.data, 0);
         SetProjection(unk2CC, unk2C0, unk2BC);
         SetDirectLight(NULL);
     }
@@ -302,34 +302,35 @@ float View::TransformPoint(IntVector* arg1, Vector* arg2) {
 }
 
 void View::ClearZBuffer(void) {
-    float proj[6][4];
-    GXGetProjectionv((float*)&proj);
-    proj[1][3] = 0.02f;
+    float projection[7];
+    float proj[4][4];
+    GXGetProjectionv(projection);
+    proj[0][0] = 0.02f;
+    proj[0][1] = 0.0f;
+    proj[0][2] = 0.0f;
+    proj[0][3] = -1.0f;
+    proj[1][0] = 0.0f;
+    proj[1][1] = -0.02f;
+    proj[1][2] = 0.0f;
+    proj[1][3] = 1.0f;
     proj[2][0] = 0.0f;
     proj[2][1] = 0.0f;
-    proj[2][2] = -1.0f;
-    proj[2][3] = 0.0f;
-    proj[3][0] = -0.02f;
+    proj[2][2] = 1.0f;
+    proj[2][3] = -1.0f;
+    proj[3][0] = 0.0f;
     proj[3][1] = 0.0f;
-    proj[3][2] = 1.0f;
-    proj[3][3] = 0.0f;
-    proj[4][0] = 0.0f;
-    proj[4][1] = 1.0f;
-    proj[4][2] = -1.0f;
-    proj[4][3] = 0.0f;
-    proj[5][0] = 0.0f;
-    proj[5][1] = 0.0f;
-    proj[5][2] = 1.0f;
-    GXSetProjection((float*)&proj[1][3], 1);
+    proj[3][2] = 0.0f;
+    proj[3][3] = 1.0f;
+    GXSetProjection(proj, GX_ORTHOGRAPHIC);
     GXSetCurrentMtx(3);
     Material::UseNone(-1);
     GXSetZMode(1, GX_ALWAYS, 1);
     GXSetAlphaUpdate(0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xB, 1);
-    GXSetVtxDesc(0xD, 1);
-    GXBegin(0x98, 1, 4);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
     float temp = 0.999999f;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
@@ -367,33 +368,51 @@ void View::ClearZBuffer(void) {
     WGPIPE.c = 0;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
-    GXSetProjectionv((float*)&proj);
+    GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
     GXSetZMode(1, GX_LEQUAL, 1);
     GXSetAlphaUpdate(1);
 }
 
 void View::ClearBuffer(int r, int g, int b, int alpha) {
+    float projection[7];
+    float proj[4][4];
     int dstAlpha;
-    float proj[6][4];
-    GXGetProjectionv((float*)&proj);
-    proj[1][3] = 0.02f;
+    // float proj[6][4];
+    GXGetProjectionv(projection);
+    // proj[1][3] = 0.02f;
+    // proj[2][0] = 0.0f;
+    // proj[2][1] = 0.0f;
+    // proj[2][2] = -1.0f;
+    // proj[2][3] = 0.0f;
+    // proj[3][0] = -0.02f;
+    // proj[3][1] = 0.0f;
+    // proj[3][2] = 1.0f;
+    // proj[3][3] = 0.0f;
+    // proj[4][0] = 0.0f;
+    // proj[4][1] = 1.0f;
+    // proj[4][2] = -1.0f;
+    // proj[4][3] = 0.0f;
+    // proj[5][0] = 0.0f;
+    // proj[5][1] = 0.0f;
+    // proj[5][2] = 1.0f;
+    proj[0][0] = 0.02f;
+    proj[0][1] = 0.0f;
+    proj[0][2] = 0.0f;
+    proj[0][3] = -1.0f;
+    proj[1][0] = 0.0f;
+    proj[1][1] = -0.02f;
+    proj[1][2] = 0.0f;
+    proj[1][3] = 1.0f;
     proj[2][0] = 0.0f;
     proj[2][1] = 0.0f;
-    proj[2][2] = -1.0f;
-    proj[2][3] = 0.0f;
-    proj[3][0] = -0.02f;
+    proj[2][2] = 1.0f;
+    proj[2][3] = -1.0f;
+    proj[3][0] = 0.0f;
     proj[3][1] = 0.0f;
-    proj[3][2] = 1.0f;
-    proj[3][3] = 0.0f;
-    proj[4][0] = 0.0f;
-    proj[4][1] = 1.0f;
-    proj[4][2] = -1.0f;
-    proj[4][3] = 0.0f;
-    proj[5][0] = 0.0f;
-    proj[5][1] = 0.0f;
-    proj[5][2] = 1.0f;
-    GXSetProjection((float*)&proj[1][3], 1);
+    proj[3][2] = 0.0f;
+    proj[3][3] = 1.0f;
+    GXSetProjection(proj, GX_ORTHOGRAPHIC);
     GXSetCurrentMtx(3);
     Material::UseNone(-1);
     if (alpha < 0) {
@@ -404,10 +423,10 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     GXSetDstAlpha(1, dstAlpha);
     GXSetZMode(1, GX_ALWAYS, 1);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xB, 1);
-    GXSetVtxDesc(0xD, 1);
-    GXBegin(0x98, 1, 4);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
     float temp = 0.999999f;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
@@ -445,7 +464,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.c = 0xff;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
-    GXSetProjectionv((float*)&proj);
+    GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
     GXSetZMode(1, GX_LEQUAL, 1);
 }
@@ -516,7 +535,7 @@ void View::OrthoBegin(void) {
     ortho.data[3][1] = 0.0f;
     ortho.data[3][2] = 0.0f;
     ortho.data[3][3] = 1.0f;
-    GXSetProjection((float*)&ortho, 1);
+    GXSetProjection(ortho.data, GX_ORTHOGRAPHIC);
     GXSetCurrentMtx(3);
     bOrtho = true;
 }
