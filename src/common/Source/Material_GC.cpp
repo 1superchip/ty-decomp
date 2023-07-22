@@ -8,6 +8,8 @@
 #include "common/Str.h"
 #include "common/View.h"
 #include "common/StdMath.h"
+#include "common/Water_GC.h"
+#include "common/Debug.h"
 
 typedef f32 (*MtxPtr)[4];
 
@@ -74,18 +76,6 @@ struct Display {
     int unk10[23];
 };
 extern Display gDisplay;
-
-// Texture.cpp
-extern Vector Texture_Color;
-extern bool Texture_bColourKey;
-extern int Texture_filterType;
-extern bool Texture_IsAlias;
-
-extern int *gpDebugFont; // Font.cpp
-
-// Water_GC.cpp
-extern bool bWaterUpdate;
-extern GXTexObj waterIndTexObj;
 
 // End EXTERNS
 
@@ -519,7 +509,7 @@ Material* Material::Create(char* pName) {
         Texture_Color = pFoundMat->color;
         if (!FileSys_Exists(Str_Printf("%s.tga", textureName), 0) && 
             !FileSys_Exists(Str_Printf("%s.gtx", textureName), 0)) {
-            Material* debugFontMat = (Material*)gpDebugFont[11];
+            Material* debugFontMat = (Material*)(((int*)gpDebugFont)[11]);
             pFoundMat->unk54 = debugFontMat->unk58 != NULL ? debugFontMat->unk58 : debugFontMat->unk54;
             pFoundMat->unk54->referenceCount++;
         } else {

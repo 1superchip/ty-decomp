@@ -2,7 +2,6 @@
 #include "common/Texture.h"
 #include "common/Heap.h"
 #include "common/PtrListDL.h"
-#include "common/Vector.h"
 #include "common/Str.h"
 #include "common/FileSys.h"
 

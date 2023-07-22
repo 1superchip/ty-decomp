@@ -3627,7 +3627,7 @@ common/Source/Material_GC.cpp:
 #   .sdata: [0x803f9af0, 0x803f9b08]
 #   .sbss: [0x803fb3e8, 0x803fb420]
 
-#MKShadow_GC.cpp:
+#common/gc/MKShadow_GC.cpp:
 #   .text: [0x8022f1bc, 0x80230890]
 #   .rodata: [0x8023ffd0, 0x80240000] # ?
 #   .data: [0x80296db0, 0x802976a8]
@@ -3635,6 +3635,9 @@ common/Source/Material_GC.cpp:
 #   .sdata: [0x803f9b08, 0x803f9b10]
 #   .sbss: [0x803fb420, 0x803fb430]
 #   .sdata2: [0x80402538, 0x80402568]
+
+# common/gc/MKShadow_GC_rodata.s:
+#   .rodata: [0x8023ffd0, 0x80240000]
 
 common/gc/ModelGC.cpp:
    .text: [0x80230890, 0x80232398]
@@ -3706,12 +3709,12 @@ common/gc/View_GC.cpp:
    .sbss: [0x803fb550, 0x803fb558]
    .sdata2: [0x80402688, 0x804026e0]
 
-#Water_GC.cpp:
-#   .text: [0x8023aaa4, 0x8023ae8c]
-#   .bss: [0x803f3440, 0x803F3860] # ?
-#   .sdata: [0x803f9b70, 0x803F9B80]
-#   .sbss: [0x803fb558, 0x803fb568]
-#   .sdata2: [0x804026e0, 0x80402720]
+common/gc/Water_GC.cpp:
+  .text: [0x8023aaa4, 0x8023ae8c]
+  .bss: [0x803f3440, 0x803F3860] # ?
+  .sdata: [0x803f9b70, 0x803F9B80]
+  .sbss: [0x803fb558, 0x803fb568]
+  .sdata2: [0x804026e0, 0x80402720]
 
 #xFont.cpp:
 #   .text: [0x8023ae8c, 0x8023b1ac]

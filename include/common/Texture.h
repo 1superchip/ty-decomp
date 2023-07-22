@@ -2,7 +2,13 @@
 #define COMMON_TEXTURE
 
 #include "types.h"
+#include "common/Vector.h"
 #include "Dolphin/gx.h"
+
+extern Vector Texture_Color;
+extern bool Texture_bColourKey;
+extern int Texture_filterType;
+extern bool Texture_IsAlias;
 
 struct TexFile {
 	int fmt;

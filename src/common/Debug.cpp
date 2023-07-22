@@ -1,6 +1,5 @@
 #include "types.h"
-
-struct Font {};
+#include "common/Debug.h"
 
 Font* gpDebugFont;
 
