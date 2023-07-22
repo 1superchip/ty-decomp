@@ -2900,11 +2900,11 @@ Dolphin/os/OSThread.c:
 #   .text: [0x801dbc14, 0x801dc038]
 #   .data: [0x802714c0, 0x80271520]
 
-# Dolphin/os/__start.c:
-#   .init: [0x80003100, 0x80003354]
+Dolphin/os/__start.c:
+  .init: [0x80003100, 0x80003354]
 
-# Dolphin/linker_info.s:
-#   .init: [0x8000556C, 0x80005620]
+Dolphin/linker_info.s:
+  .init: [0x8000556C, 0x80005620]
 
 Dolphin/os/__ppc_eabi_init.cpp:
   .text: [0x801dc038, 0x801dc0cc]
@@ -3636,8 +3636,8 @@ common/Source/Material_GC.cpp:
 #   .sbss: [0x803fb420, 0x803fb430]
 #   .sdata2: [0x80402538, 0x80402568]
 
-# common/gc/MKShadow_GC_rodata.s:
-#   .rodata: [0x8023ffd0, 0x80240000]
+common/gc/MKShadow_GC_rodata.s:
+  .rodata: [0x8023ffd0, 0x80240000]
 
 common/gc/ModelGC.cpp:
    .text: [0x80230890, 0x80232398]
@@ -3733,12 +3733,3 @@ common/gc/Blitter.cpp:
 common/Debug.cpp:
   .text: [0x8023c760, 0x8023C780]
   .sbss: [0x803fb580, 0x803FB5A0] # ?
-
-#Dolphin/_init_registers.s:
-#   .init: [0x80003278, 0x80003294]
-
-#Dolphin/os/start_init_data.s:
-#    .init: [0x80003294, 0x80003354]
-
-#Dolphin/os/fake_info.s:
-#    .init: [0x8000556C, 0x80005608]
