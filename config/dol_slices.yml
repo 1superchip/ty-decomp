@@ -2884,9 +2884,9 @@ Dolphin/os/OSReset.c:
 #   .text: [0x801d9d98, 0x801da124]
 #   .sbss: [0x803faea0, 0x803faec0]
 
-#OSRtc.c:
-#   .text: [0x801da124, 0x801daaa8]
-#   .bss: [0x802d4de0, 0x802d4e38]
+Dolphin/os/OSRtc.c:
+  .text: [0x801da124, 0x801daaa8]
+  .bss: [0x802d4de0, 0x802d4e38]
 
 #OSSync.c:
 #   .text: [0x801daaa8, 0x801dab2c]
