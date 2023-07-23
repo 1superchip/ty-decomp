@@ -15,8 +15,10 @@ static void* AudioDecode(void*);
 
 int THPAudioDecode(int, int, int);
 
+#define AUDIO_STACK_SIZE (0x1000)
+
 static OSThread AudioDecodeThread;
-static char AudioDecodeThreadStack[0x1000];
+static char AudioDecodeThreadStack[AUDIO_STACK_SIZE];
 static OSMessageQueue FreeAudioBufferQueue;
 static OSMessageQueue DecodedAudioBufferQueue;
 static OSMessage FreeAudioBufferMessage[3];
@@ -27,12 +29,12 @@ static int AudioDecodeThreadCreated;
 int CreateAudioDecodeThread(long r3, void* audioMem) {
     if (audioMem) {
         if (OSCreateThread(&AudioDecodeThread, AudioDecoderForOnMemory, audioMem,
-                &AudioDecodeThreadStack[0x1000], 0x1000, r3, 1) == 0) {
+                &AudioDecodeThreadStack[AUDIO_STACK_SIZE], AUDIO_STACK_SIZE, r3, 1) == 0) {
             return 0;
         }
     } else {
         if (OSCreateThread(&AudioDecodeThread, AudioDecoder, 0,
-                &AudioDecodeThreadStack[0x1000], 0x1000, r3, 1) == 0) {
+                &AudioDecodeThreadStack[AUDIO_STACK_SIZE], AUDIO_STACK_SIZE, r3, 1) == 0) {
             return 0;
         }
     }
