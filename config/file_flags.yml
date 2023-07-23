@@ -24,3 +24,12 @@ ty/source/props/SoundProp.cpp:
 ty/source/Script.cpp:
     .flags: "-pool off"
 
+common/gc/THPAudioDecode.c:
+    .flags: "-lang c"
+
+Dolphin/os/__start.c:
+    .flags: "-lang c"
+    .compiler: "1.2.5"
+
+Runtime/abort_exit.c:
+   .flags: "-lang=c"

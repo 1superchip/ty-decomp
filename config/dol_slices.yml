@@ -3672,10 +3672,10 @@ common/Source/Texture.cpp:
    .sbss: [0x803fb500, 0x803fb510]
    .sdata2: [0x80402648, 0x80402660]
 
-#THPAudioDecode.c:
-#   .text: [0x802368f8, 0x80236cb8]
-#   .bss: [0x803ef150, 0x803f04c0]
-#   .sbss: [0x803fb510, 0x803fb518]
+common/gc/THPAudioDecode.c:
+  .text: [0x802368f8, 0x80236cb8]
+  .bss: [0x803ef150, 0x803f04c0]
+  .sbss: [0x803fb510, 0x803fb518]
 
 #THPPlayer.c:
 #   .text: [0x80236cb8, 0x8023857c]
