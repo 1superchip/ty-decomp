@@ -3460,12 +3460,12 @@ common/Source/FileSys.cpp:
    .sdata: [0x803f9838, 0x803f9848]
    .sbss: [0x803fb258, 0x803fb268]
 
-#common/Source/Font.cpp:
-#   .text: [0x80212734, 0x80214a10]
-#   .data: [0x80274288, 0x80274370]
-#   .sdata: [0x803f9848, 0x803f9850]
-#   .sbss: [0x803fb268, 0x803fb280]
-#   .sdata2: [0x80402280, 0x804022d0]
+common/Source/Font.cpp:
+  .text: [0x80212734, 0x80214a10]
+  .data: [0x80274288, 0x80274370]
+  .sdata: [0x803f9848, 0x803f9850]
+  .sbss: [0x803fb268, 0x803fb280]
+  .sdata2: [0x80402280, 0x804022d0]
 
 common/Source/Heap.cpp:
    .text: [0x80214a10, 0x80214bc8]

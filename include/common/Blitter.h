@@ -70,7 +70,7 @@ struct Blitter_UntexturedImage {
 	u8 color[4];
     float unk20;
 	
-	void Draw(int);
+	void Draw(int count);
 };
 
 struct Blitter_TriStrip {
