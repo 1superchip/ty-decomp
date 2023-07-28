@@ -6,8 +6,9 @@
 #include "common/Vector.h"
 #include "common/Collision.h"
 
-extern struct DisplayStruct {
-    float unk[16];
+extern struct Display {
+    char padding[0xC];
+    float unkC;
 } gDisplay;
 
 /*struct NameFlagPair {
@@ -82,7 +83,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
 					if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, 5, &effectFlags) == false) {
 						bool foundLine = LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate);
 						if (foundLine != false) {
-							float speed = gDisplay.unk[3];
+							float speed = gDisplay.unkC;
 							autoRotate.x *= speed;
 							autoRotate.y *= speed;
 							autoRotate.z *= speed;

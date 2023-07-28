@@ -97,7 +97,7 @@ struct GameObject : MKProp {
 	virtual void Deinit(void);
 	
 	Vector* GetPos(void) {
-		return pModel->pMatrices[0].Row3();
+		return pLocalToWorld->Row3();
 	}
 };
 

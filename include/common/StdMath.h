@@ -44,8 +44,8 @@ float RandomFR(int* pSeed, float min, float max);
 float _table_sinf(float theta);
 float NormaliseAngle(float);
 
-#define PI 3.1415928f
-#define PI2 1.5707964f
+#define PI (3.1415928f)
+#define PI2 (1.5707964f)
 #define _table_cosf(angle) _table_sinf((angle) + PI2)
 
 inline float DegToRad(float deg) {
