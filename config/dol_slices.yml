@@ -1547,14 +1547,14 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa518, 0x803fa528]
 #   .sdata2: [0x803ff1e8, 0x803ff270]
 
-#Picture.cpp:
-#   .text: [0x80102714, 0x80103220]
-#   .ctors: [0x8023c970, 0x8023c974]
-#   .data: [0x8025b120, 0x8025b210]
-#   .bss: [0x802aabd8, 0x802aacb8]
-#   .sdata: [0x803f7428, 0x803f7468]
-#   .sbss: [0x803fa528, 0x803fa530]
-#   .sdata2: [0x803ff270, 0x803ff2b0]
+ty/source/props/Picture.cpp:
+  .text: [0x80102714, 0x80103220]
+  .ctors: [0x8023c970, 0x8023c974]
+  .data: [0x8025b120, 0x8025b210]
+  .bss: [0x802aabd8, 0x802aacb8]
+  .sdata: [0x803f7428, 0x803f7468]
+  .sbss: [0x803fa528, 0x803fa530]
+  .sdata2: [0x803ff270, 0x803ff2b0]
 
 #ty/source/props/PipePart.cpp:
 #   .text: [0x80103220, 0x80103b28]
@@ -1881,7 +1881,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa708, 0x803fa710]
 #   .sdata2: [0x803ff8e8, 0x803ff8f8]
 
-#AS_AirStates.cpp:
+#ty/source/.cpp:
 #   .text: [0x8011d4e4, 0x8012170c]
 #   .ctors: [0x8023ca00, 0x8023ca04]
 #   .rodata: [0x8023e070, 0x8023e0c0]
@@ -1890,7 +1890,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa710, 0x803fa718]
 #   .sdata2: [0x803ff8f8, 0x803ff9a0]
 
-#AS_BiteStates.cpp:
+#ty/source/AS_BiteStates.cpp:
 #   .text: [0x8012170c, 0x80125b74]
 #   .ctors: [0x8023ca04, 0x8023ca08]
 #   .rodata: [0x8023e0c0, 0x8023e1f0]
@@ -1921,7 +1921,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa748, 0x803fa750]
 #   .sdata2: [0x803ffc38, 0x803ffc60]
 
-#AS_SlideStates.cpp:
+#ty/source/AS_SlideStates.cpp:
 #   .text: [0x8012dbc8, 0x80131400]
 #   .ctors: [0x8023ca10, 0x8023ca14]
 #   .rodata: [0x8023e308, 0x8023e428]
@@ -1953,7 +1953,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .text: [0x80135a04, 0x8013654c]
 #   .sdata2: [0x803ffe88, 0x803ffeb0]
 
-#bilby.cpp:
+#ty/source/bilby.cpp:
 #   .text: [0x8013654c, 0x80137fc8]
 #   .rodata: [0x8023e468, 0x8023e4c8]
 #   .data: [0x8025f920, 0x8025f998]
@@ -1962,7 +1962,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa788, 0x803fa798]
 #   .sdata2: [0x803ffeb0, 0x803fff28]
 
-#boomerang.cpp:
+#ty/source/boomerang.cpp:
 #   .text: [0x80137fc8, 0x80140484]
 #   .ctors: [0x8023ca14, 0x8023ca18]
 #   .rodata: [0x8023e4c8, 0x8023e528]
@@ -2038,7 +2038,7 @@ ty/source/controlval.cpp:
    .text: [0x801511e4, 0x801513fc]
    .bss: [0x802b06e8, 0x802b0768]
 
-#crate.cpp:
+#ty/source/crate.cpp:
 #   .text: [0x801513fc, 0x80156434]
 #   .ctors: [0x8023ca2c, 0x8023ca30]
 #   .rodata: [0x8023e7b0, 0x8023e800]
@@ -2060,7 +2060,7 @@ ty/source/DDA.cpp:
    .sdata: [0x803f8518, 0x803f8520]
    .sbss: [0x803fa888, 0x803fa8a0]
 
-#draw.cpp:
+#ty/source/draw.cpp:
 #   .text: [0x8015860c, 0x801591f0]
 #   .rodata: [0x8023e800, 0x8023e8b8]
 #   .data: [0x80262208, 0x80262250]
@@ -2148,7 +2148,7 @@ ty/source/GameObjectManager.cpp:
 #   .sbss: [0x803fa8f0, 0x803fa8f8]
 #   .sdata2: [0x80400730, 0x80400760]
 
-#global.cpp:
+#ty/source/global.cpp:
 #   .text: [0x80162d0c, 0x80163a64]
 #   .ctors: [0x8023ca48, 0x8023ca4c]
 #   .data: [0x80263078, 0x80263e08]
@@ -2235,7 +2235,7 @@ ty/source/LineOfSight.cpp:
   .text: [0x80172594, 0x80172b48]
   .sdata2: [0x80400ba0, 0x80400bb8]
 
-#LoadLevel.cpp:
+#ty/source/LoadLevel.cpp:
 #   .text: [0x80172b48, 0x80176bf4]
 #   .data: [0x80264908, 0x80265128]
 #   .sdata: [0x803f8a80, 0x803f8b48]
