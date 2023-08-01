@@ -86,7 +86,7 @@ struct Font {
 
 	void Destroy(void);
 	float CalcLength(char*);
-	void DrawText(char*, float, float, float, float, FontJustify justify, int);
+	void DrawText(char* pString, float xPos, float yPos, float xScale, float yScale, FontJustify justify, int color);
 	float GetHeight(void);
 	int DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, FontJustify justify,
         Vector* pCharPositions, int numCharPositions, int charPosIndex, uint* pCharColors, 

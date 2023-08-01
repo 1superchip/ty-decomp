@@ -2,7 +2,6 @@
 #include "common/View.h"
 #include "common/StdMath.h"
 #include "common/Blitter.h"
-#include "common/Material.h"
 
 static int pCounterBlitsDrawn; // unused variable
 

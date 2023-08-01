@@ -878,7 +878,7 @@
 #   .sdata: [0x803f5f08, 0x803f5f80]
 #   .sbss: [0x803fa148, 0x803fa150]
 
-#FrontEnd.cpp:
+#ty/source/frontend/FrontEnd.cpp:
 #   .text: [0x800c0b8c, 0x800c16bc]
 #   .rodata: [0x8023d850, 0x8023d880]
 #   .data: [0x802541c8, 0x80254388]
@@ -941,7 +941,7 @@
 #   .sbss: [0x803fa1b8, 0x803fa1c8]
 #   .sdata2: [0x803fde78, 0x803fdec8]
 
-#FrontEnd_Title.cpp:
+#ty/source/frontend/FrontEnd_Title.cpp:
 #   .text: [0x800c5ef4, 0x800c62d4]
 #   .rodata: [0x8023d8b0, 0x8023d8c0]
 #   .data: [0x802545a8, 0x802545b8]
@@ -1038,7 +1038,7 @@
 #   .text: [0x800d0368, 0x800d0490]
 #   .bss: [0x802a5f70, 0x802a5fa0]
 
-#ProgressBar.cpp:
+#ty/source/frontend/ProgressBar.cpp:
 #   .text: [0x800d0490, 0x800d0e60]
 #   .sdata2: [0x803fe380, 0x803fe3a0]
 
@@ -1050,7 +1050,7 @@
 #   .sbss: [0x803fa260, 0x803fa280]
 #   .sdata2: [0x803fe3a0, 0x803fe3d0]
 
-#UITools.cpp:
+#ty/source/frontend/UITools.cpp:
 #   .text: [0x800d1674, 0x800d23b8]
 #   .rodata: [0x8023da70, 0x8023da90]
 #   .data: [0x80255178, 0x802551c0]
@@ -3575,12 +3575,12 @@ common/Source/Vector.cpp:
    .sdata2: [0x80402410, 0x80402440]
 
 #start of common/gc/?
-#demoinit.cpp:
-#   .text: [0x802250dc, 0x80225728]
-#   .data: [0x802759f8, 0x80275a68]
-#   .bss: [0x802eaa60, 0x8036eaa0]
-#   .sbss: [0x803fb350, 0x803fb370]
-#   .sdata2: [0x80402440, 0x80402458]
+common/gc/demoinit.cpp:
+  .text: [0x802250dc, 0x80225728]
+  .data: [0x802759f8, 0x80275a68]
+  .bss: [0x802eaa60, 0x8036eaa0]
+  .sbss: [0x803fb350, 0x803fb370]
+  .sdata2: [0x80402440, 0x80402458]
 
 #DiscErrors.cpp:
 #   .text: [0x80225728, 0x80225994]

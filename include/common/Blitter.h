@@ -2,7 +2,7 @@
 #define COMMON_BLITTER
 
 #include "types.h"
-#include "common/Vector.h"
+#include "common/Material.h"
 
 void Blitter_InitModule(void);
 void Blitter_DeinitModule(void);
@@ -30,7 +30,11 @@ struct Blitter_Box {
     Vector color;
     Vector color1;
 	
-	void Draw(int);
+	void Draw(int count);
+    void DrawNoMat(int count) {
+        Material::UseNone(-1);
+        Draw(count);
+    }
 };
 
 struct Blitter_Line3D {
@@ -39,7 +43,11 @@ struct Blitter_Line3D {
 	Vector color; // vertex 0 color
 	Vector color1; // vertex 1 color
 	
-	void Draw(int, float);
+	void Draw(int count, float);
+    void DrawNoMat(int count, float f1) {
+        Material::UseNone(-1);
+        Draw(count, f1);
+    }
 };
 
 struct Blitter_Particle {

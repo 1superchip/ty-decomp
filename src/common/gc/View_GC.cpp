@@ -427,7 +427,9 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
+
     float temp = 0.999999f;
+
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
     WGPIPE.f = temp;
@@ -437,6 +439,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.c = 0xff;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
+
     WGPIPE.f = 100.0f;
     WGPIPE.f = 0.0f;
     WGPIPE.f = temp;
@@ -446,6 +449,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.c = 0xff;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
+
     WGPIPE.f = 0.0f;
     WGPIPE.f = 100.0f;
     WGPIPE.f = temp;
@@ -455,6 +459,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.c = 0xff;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
+
     WGPIPE.f = 100.0f;
     WGPIPE.f = 100.0f;
     WGPIPE.f = temp;
@@ -464,6 +469,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     WGPIPE.c = 0xff;
     WGPIPE.f = 0.0f;
     WGPIPE.f = 0.0f;
+    
     GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
     GXSetZMode(1, GX_LEQUAL, 1);
