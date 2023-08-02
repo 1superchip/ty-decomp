@@ -44,10 +44,10 @@ Font* Font::Create(char* pName) {
         Heap_MemFree(fontFile);
         strcpy(retFont->name, pName);
         retFont->referenceCount = 1;
-        retFont->pFontMat = Material::Create(pName);
-        retFont->pFontMat->SetFlags(2);
-        retFont->pFontMat->SetFlags(4);
-        retFont->pFontMat->unk5C = 0.9f; // float might be wrong
+        retFont->pFontMaterial = Material::Create(pName);
+        retFont->pFontMaterial->SetFlags(2);
+        retFont->pFontMaterial->SetFlags(4);
+        retFont->pFontMaterial->unk5C = 0.9f; // float might be wrong
     }
     return retFont;
 }
@@ -68,7 +68,7 @@ Font* Font::Find(char* pName) {
 
 void Font::Destroy(void) {
 	if (--referenceCount == 0) {
-		pFontMat->Destroy();
+		pFontMaterial->Destroy();
 		if ((void*)unk20 != NULL) {
 			Heap_MemFree((void*)unk20);
 		}
@@ -135,7 +135,7 @@ float ConvertLongLong2Float(s64 x) {
 void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float yScale,
         FontJustify justify, int color) {
     float projection[7];
-    pFontMat->Use();
+    pFontMaterial->Use();
     View* pView = View::GetCurrent();
     xScale *= pView->unk2B4;
     yScale *= pView->unk2B8;
@@ -296,7 +296,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
     Vector charPos[4];
     float uv[8];
     int numContribChars = 0;
-    pFontMat->Use();
+    pFontMaterial->Use();
 	float sx = 0.0f;
     u8* text = (u8*)pText;
 	while (*text != '\0') {
@@ -881,7 +881,7 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
     } else {
         f29 = -1.0f;
     }
-    pFontMat->Use();
+    pFontMaterial->Use();
     
     BuildLines(pText, f1, f2, &tld);
     f28 = (mHeight * tld.y) * f29;

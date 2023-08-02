@@ -72,7 +72,7 @@ struct Font {
     int unk20;
     float mHeight;
     FontCharData* pChars;
-    Material* pFontMat;
+    Material* pFontMaterial;
     char name[0x20];
     int referenceCount;
 	
