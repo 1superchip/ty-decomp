@@ -325,15 +325,15 @@ void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, fl
         pMaterial->Use();
     }
     Blitter_Image bImage;
-    bImage.pos.x = f1;
-    bImage.pos.z = f9;
-    bImage.pos.y = f2;
-    bImage.pos.w = f10;
-    bImage.unk10.x = 0.0f;
-    bImage.unk10.y = f3;
-    bImage.unk10.w = f11;
-    bImage.unk10.z = f4;
-    bImage.unk20 = f12;
+    bImage.startX = f1;
+    bImage.endX = f9;
+    bImage.startY = f2;
+    bImage.endY = f10;
+    bImage.z = 0.0f;
+    bImage.uvs[0] = f3;
+    bImage.uvs[2] = f11;
+    bImage.uvs[1] = f4;
+    bImage.uvs[3] = f12;
     bImage.color = *pVec;
     bImage.unk40.Set(1.0f, 1.0f, 1.0f, 1.0f);
     bImage.Draw(1);

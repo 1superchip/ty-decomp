@@ -63,13 +63,16 @@ struct Blitter_Particle {
 };
 
 struct Blitter_Image {
-    Vector pos;
-    Vector unk10;
-    float unk20;
+    float startX;
+    float startY;
+    float endX;
+    float endY;
+    float z;
+    float uvs[4];
     Vector color;
     Vector unk40;
 	
-	void Draw(int);
+	void Draw(int count);
 };
 
 struct Blitter_UntexturedImage {

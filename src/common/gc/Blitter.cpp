@@ -334,37 +334,38 @@ void Blitter_Image::Draw(int count) {
 	OrthoProject();
 	
     while (count-- > 0) {
-        float posX = pImage->pos.x;
-        float posY = pImage->pos.y;
-        float posZ = pImage->pos.z;
-        float posW = pImage->pos.w;
+        float _startX = pImage->startX;
+        float _startY = pImage->startY;
+        float _endX = pImage->endX;
+        float _endY = pImage->endY;
         u8 red = 255.0f * pImage->color.x;
         u8 green = 255.0f * pImage->color.y;
         u8 blue = 255.0f * pImage->color.z;
         u8 alpha = 255.0f * pImage->color.w;
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
-        GXPosition3f32(posX, posY, pImage->unk10.x);
+        GXPosition3f32(_startX, _startY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->unk10.y, pImage->unk10.z);
+        GXTexCoord2f32(pImage->uvs[0], pImage->uvs[1]);
 
-        GXPosition3f32(posX, posW, pImage->unk10.x);
+        GXPosition3f32(_startX, _endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->unk10.y, pImage->unk20);
+        GXTexCoord2f32(pImage->uvs[0], pImage->uvs[3]);
 
-        GXPosition3f32(posZ, posY, pImage->unk10.x);
+        GXPosition3f32(_endX, _startY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->unk10.w, pImage->unk10.z);
+        GXTexCoord2f32(pImage->uvs[2], pImage->uvs[1]);
 
-        GXPosition3f32(posZ, posW, pImage->unk10.x);
+        GXPosition3f32(_endX, _endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->unk10.w, pImage->unk20);
+        GXTexCoord2f32(pImage->uvs[2], pImage->uvs[3]);
         pImage++;
     }
 
     GXSetProjectionv((float*)&projection);
     GXSetCurrentMtx(0);
 }
+
 void Blitter_UntexturedImage::Draw(int count) {
     u8 red;
 	Blitter_UntexturedImage* pImage = this;
