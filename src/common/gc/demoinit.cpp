@@ -6,7 +6,7 @@ extern "C" {
     void OSInit(void);
     void DVDInit(void);
     void memset(void*, int, int);
-    void GXPokeARGB(u16, u16, int);
+    void GXPokeARGB(u16 x, u16 y, u32 color);
     u32 OSGetPhysicalMemSize(void);
     u32 OSGetConsoleSimulatedMemSize(void);
     float GXGetYScaleFactor(int, int);
@@ -24,10 +24,16 @@ extern u16 rawCaptureTexData[0x10000];
 void System_CheckZRequests(void);
 extern u8 gMKDefaults[];
 
+#define TEXDATA_STARTX (192)
+#define TEXDATA_WIDTH (128)
+#define TEXDATA_STARTY (160)
+#define TEXDATA_HEIGHT (128)
+
 static void __DEMOInitRenderMode(_GXRenderModeObj*);
 static void __DEMOInitMem(void);
 static void __DEMOInitGX(void);
 
+/// @brief XFB
 static char pBuffer[0x84000] ATTRIBUTE_ALIGN(32);
 static char rmodeobj[60];
 
@@ -68,12 +74,12 @@ extern "C" void DEMOInit(_GXRenderModeObj* prmodeObj) {
     VIFlush();
     GXDrawDone();
     char* rawCaptureData = (char*)rawCaptureTexData + 0x130;
-    for(int i = 160; i < 288; i++) {
-        for(u32 j = 192; j < 320; j++) {
+    for(int y = TEXDATA_STARTY; y < TEXDATA_STARTY + TEXDATA_HEIGHT; y++) {
+        for(u32 x = TEXDATA_STARTX; x < TEXDATA_STARTX + TEXDATA_WIDTH; x++) {
             u16 pixel = rawCaptureTexData[*(u8*)((int)rawCaptureData ^ 3) ^ 1];
             u32 finalPixel = (0xFF000000 | ((pixel << 19) & 0xF80000)) | 
                 ((pixel >> 5) << 11) & 0xF800 | (((pixel >> 10) << 3) & 0xF8);
-            GXPokeARGB(j, i, finalPixel);
+            GXPokeARGB(x, y, finalPixel);
             rawCaptureData++;
         }
     }
@@ -158,7 +164,6 @@ extern "C" void DEMODoneRender(void) {
     VIWaitForRetrace();
     lastCPUCycles = OSTicksToCycles(OSGetTick());
 }
-
 
 extern "C" GXRenderModeObj* DEMOGetRenderModeObj(void) {
     return rmode;
