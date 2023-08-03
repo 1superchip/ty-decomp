@@ -63,10 +63,10 @@ struct Blitter_Particle {
 };
 
 struct Blitter_Image {
-    float startX;
-    float startY;
-    float endX;
-    float endY;
+    float startX; // X position of Corner 1
+    float startY; // Y position of Corner 1
+    float endX; // X position of Corner 2
+    float endY; // Y position of Corner 2
     float z;
     float uvs[4];
     Vector color;

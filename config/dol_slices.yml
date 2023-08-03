@@ -2567,9 +2567,9 @@ ty/source/tools.cpp:
 #   .sbss: [0x803fac10, 0x803fac28]
 #   .sdata2: [0x80401858, 0x804018c8]
 
-#ty/source/UserInterface.cpp:
-#   .text: [0x801be9a4, 0x801bf220]
-#   .sdata2: [0x804018c8, 0x804018e8]
+ty/source/UserInterface.cpp:
+  .text: [0x801be9a4, 0x801bf220]
+  .sdata2: [0x804018c8, 0x804018e8]
 
 #wake.cpp:
 #   .text: [0x801bf220, 0x801bf9b0]

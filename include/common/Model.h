@@ -161,6 +161,9 @@ struct Model {
 	void SetAlphaLightIntensity(int, float);
 	void SetRenderTypeOverride(int);
 	Material* GetSubObjectMaterial(int, int);
+	Animation* GetAnimation(void) {
+		return pAnimation;
+	}
 	
 	int Draw(u16*);
     ModelExplorer_GC* Explore(int* pVertexCount, int* pTriangleCount, int* pStripCount);

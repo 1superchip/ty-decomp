@@ -1,4 +1,5 @@
-
+#ifndef COMMON_TRANSLATION
+#define COMMON_TRANSLATION
 
 struct Language {
 	char* localName;
@@ -35,3 +36,7 @@ bool Translation_IsLanguageAvailable(TranslationLanguage);
 char* Translation_GetLanguageName(TranslationLanguage);
 char* Translation_GetLanguageLocalName(TranslationLanguage);
 char* Translation_GetLanguageCode(TranslationLanguage);
+
+extern char* gpTranslation_StringArray[1025];
+
+#endif // COMMON_TRANSLATION
