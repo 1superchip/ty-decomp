@@ -1050,12 +1050,12 @@
 #   .sbss: [0x803fa260, 0x803fa280]
 #   .sdata2: [0x803fe3a0, 0x803fe3d0]
 
-#ty/source/frontend/UITools.cpp:
-#   .text: [0x800d1674, 0x800d23b8]
-#   .rodata: [0x8023da70, 0x8023da90]
-#   .data: [0x80255178, 0x802551c0]
-#   .sdata: [0x803f6190, 0x803f61b0]
-#   .sdata2: [0x803fe3d0, 0x803fe420]
+ty/source/frontend/UITools.cpp:
+  .text: [0x800d1674, 0x800d23b8]
+  .rodata: [0x8023da70, 0x8023da90]
+  .data: [0x80255178, 0x802551c0]
+  .sdata: [0x803f6190, 0x803f61b0]
+  .sdata2: [0x803fe3d0, 0x803fe420]
 
 #ty/source/minigames/MiniGame_A2.cpp:
 #   .text: [0x800d23b8, 0x800d3a68]

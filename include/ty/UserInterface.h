@@ -18,6 +18,9 @@ struct UIModel {
     void Update(void);
     void Draw(void);
     void SetPosition(Vector* pPos, char, View* pView);
+    void SetScale(Vector* pScale) {
+        pModel->matrices[0].SetRotationToScaleXYZ(pScale);
+    }
 };
 
 struct UIImage {
@@ -58,6 +61,15 @@ struct UIText {
 
     void SetUnk8(float _unk8) {
         unk8 = _unk8;
+    }
+    void SetColor(u32 _color) {
+        color = _color;
+    }
+    char GetFlags(void) {
+        return mFlags;
+    }
+    float GetScale(void) {
+        return mScaleX;
     }
 };
 

@@ -158,6 +158,7 @@ void UIText::Init(Font* t_pFont, int stringIdx) {
     pFont = t_pFont;
     mStringIdx = stringIdx;
     pText = NULL;
+    // Inline here
     x = 0.0f;
     y = 0.0f;
     unk8 = 320.0f;
@@ -195,29 +196,29 @@ float UIText::Draw(char* pDrawString) {
     s.Set(mScaleX, mScaleY, 1.0f, 1.0f);
     matrix.Scale(&s);
     if (!(mFlags & 3)) {
-        matrix.data[3][0] = x + (unk8 / 2.0f) * mScaleX;
+        matrix.Row3()->x = x + (unk8 / 2.0f) * mScaleX;
     } else if (mFlags & 1) {
-        matrix.data[3][0] = x;
+        matrix.Row3()->x = x;
     } else {
-        matrix.data[3][0] = x - (unk8 / 2.0f) * mScaleX;
+        matrix.Row3()->x = x - (unk8 / 2.0f) * mScaleX;
     }
     if (!(mFlags & 12)) {
-        matrix.data[3][1] = y + (fontHeight / 2.0f) * mScaleY;
+        matrix.Row3()->y = y + (fontHeight / 2.0f) * mScaleY;
     } else if (mFlags & 4) {
-        matrix.data[3][1] = y;
+        matrix.Row3()->y = y;
     } else {
-        matrix.data[3][1] = y - (fontHeight / 2.0f) * mScaleY;
+        matrix.Row3()->y = y - (fontHeight / 2.0f) * mScaleY;
     }
     
     View::GetCurrent()->OrthoBegin();
     
     // Interestingly, this code draws the string 2x for a background effect
-    matrix.data[3][0] += 2.0f;
-    matrix.data[3][1] += 2.0f;
+    matrix.Row3()->x += 2.0f;
+    matrix.Row3()->y += 2.0f;
     pFont->DrawString(pDrawString, unk8, fontHeight, &matrix, mFlags, 0x80000000, NULL, NULL);
     
-    matrix.data[3][0] -= 2.0f;
-    matrix.data[3][1] -= 2.0f;
+    matrix.Row3()->x -= 2.0f;
+    matrix.Row3()->y -= 2.0f;
     float ret = pFont->DrawString(pDrawString, unk8, fontHeight, &matrix, mFlags, color, NULL, NULL);
     
     View::GetCurrent()->OrthoEnd();

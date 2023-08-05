@@ -343,25 +343,25 @@ void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, fl
 void Tools_RenderToTarget(Material* pMat, float, float, float, float, float, float, float) {}
 /*
 // July 1st function
-void Tools_RenderToTarget(Material* pMat, float f0, float fv0f, float fa1, float fa2, float fa3, float fa4, float fa5) {
+void Tools_RenderToTarget(Material* pMaterial, float f0, float fv0f, float fa1, float fa2, float fa3, float fa4, float fa5) {
     Blitter_Image image;
-    image.pos.Set(0.0f, 0.0f, 640.0f, 512.0f);
-    // image.unk10.Set(fa2 + f0, f0, f0);
-    image.unk10.y = fa2 + f0;
-    image.unk10.w = fa3 + f0;
-    image.unk10.z = fa4 + fv0f;
-    image.unk10.x = 0.0f;
-
-    image.unk20 = fa5 + fv0f;
+    image.startX = 0.0f;
+    image.startY = 0.0f;
+    image.endX = 640.0f;
+    image.endY = 512.0f;
+    image.z = 0.0f;
+    image.uvs[0] = fa2 + f0;
+    image.uvs[2] = fa3 + f0;
+    image.uvs[1] = fa4 + fv0f;
+    image.uvs[3] = fa5 + fv0f;
     
     image.unk40.x = 1.0f;
     image.unk40.y = 1.0f;
     image.unk40.z = 1.0f;
     image.unk40.w = 1.0f;
-    // image.unk40.Set(1.0f, 1.0f, 1.0f, 1.0f);
     image.color.Set(1.0f, 1.0f, 1.0f);
     image.color.w = fa1;
-    pMat->Use();
+    pMaterial->Use();
     image.Draw(1);
 }
 */

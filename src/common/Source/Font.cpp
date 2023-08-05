@@ -38,7 +38,7 @@ Font* Font::Create(char* pName) {
         retFont = fontList.GetNextEntry();
         void *fontFile = FileSys_Load(Str_Printf("%s.gfn", pName), 0, 0, -1);
         *((int*)fontFile + 10) = (int)fontFile + *((int*)fontFile + 10);
-        *(FontData*)retFont = *(FontData*)fontFile;
+        *(FontData*)retFont = *(FontData*)fontFile; // not a struct copy?
         retFont->pChars = (FontCharData*)Heap_MemAlloc(0x2000);
         memcpy((void*)retFont->pChars, (void*)*((int*)fontFile + 10), sizeof(FontCharData) * 256);
         Heap_MemFree(fontFile);

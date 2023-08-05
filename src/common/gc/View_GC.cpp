@@ -503,21 +503,16 @@ void View::SetAspectRatio(float arg1, float arg2) {
 }
 
 void View::TransformPoint2Dto3D(float arg1, float arg2, float arg3, Vector* out) {
-    Vector transformedPoint;
+    Vector centrePos;
+    Vector point;
     float fVar1 = 2.0f * (float)tan(0.5f * unk2CC) * arg3;
-    float tx = arg3 * unk48.data[2][0];
-    float ty = arg3 * unk48.data[2][1];
-    float tz = arg3 * unk48.data[2][2];
-    transformedPoint.x = fVar1 * ((arg1 / *(float*)&gDisplay.unk10[21]) - 0.5f);
-    transformedPoint.y = 0.8f * fVar1 * (0.5f - (arg2 / *(float*)&gDisplay.unk10[22]));
-    transformedPoint.z = 0.0f;
-    transformedPoint.ApplyRotMatrix(&transformedPoint, &unk48);
-    out->x = tx + transformedPoint.x;
-    out->y = ty + transformedPoint.y;
-    out->z = tz + transformedPoint.z;
-    out->x += unk48.data[3][0];
-    out->y += unk48.data[3][1];
-    out->z += unk48.data[3][2];
+    centrePos.Scale((Vector*)&unk48.data[2], arg3);
+    point.x = fVar1 * ((arg1 / *(float*)&gDisplay.unk10[21]) - 0.5f);
+    point.y = 0.8f * fVar1 * (0.5f - (arg2 / *(float*)&gDisplay.unk10[22]));
+    point.z = 0.0f;
+    point.ApplyRotMatrix(&point, &unk48);
+    out->Add(&centrePos, &point);
+    out->Add(unk48.Row3());
 }
 
 static float ortho_old[7] __attribute__ ((aligned (32)));
