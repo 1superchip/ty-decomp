@@ -3488,7 +3488,7 @@ common/Source/MKAnimScript.cpp:
    .sbss: [0x803fb288, 0x803fb290]
    .sdata2: [0x804022f0, 0x80402300]
 
-#MKPackage.cpp:
+#common/Source/MKPackage.cpp:
 #   .text: [0x8021a4fc, 0x8021b680]
 #   .data: [0x802743d8, 0x80274428]
 #   .bss: [0x802df308, 0x802e3348]
@@ -3496,14 +3496,14 @@ common/Source/MKAnimScript.cpp:
 #   .sbss: [0x803fb290, 0x803fb2e0]
 #   .sdata2: [0x80402300, 0x80402310]
 
-#MKParticleGen.cpp:
+#common/Source/MKParticleGen.cpp:
 #   .text: [0x8021b680, 0x8021ccdc]
 #   .data: [0x80274428, 0x80274718]
 #   .sdata: [0x803f9910, 0x803f9918]
 #   .sbss: [0x803fb2e0, 0x803fb2e8]
 #   .sdata2: [0x80402310, 0x80402338]
 
-#MKRumble.cpp:
+#common/Source/MKRumble.cpp:
 #   .text: [0x8021ccdc, 0x8021d3d8]
 #   .rodata: [0x8023fc50, 0x8023fc90]
 #   .data: [0x80274718, 0x80274758]
@@ -3526,7 +3526,7 @@ common/Source/Model.cpp:
    .sbss: [0x803fb2f8, 0x803fb320]
    .sdata2: [0x80402380, 0x80402388]
 
-#ParticleSystem.cpp:
+#common/Source/ParticleSystem.cpp:
 #   .text: [0x80220d94, 0x80222f38]
 #   .rodata: [0x8023fc90, 0x8023fca0]
 #   .data: [0x80274778, 0x802747f0]
@@ -3534,7 +3534,7 @@ common/Source/Model.cpp:
 #   .sbss: [0x803fb320, 0x803fb330]
 #   .sdata2: [0x80402388, 0x804023c0]
 
-#ParticleSystemManager.cpp:
+#common/Source/ParticleSystemManager.cpp:
 #   .text: [0x80222f38, 0x80223894]
 #   .bss: [0x802e49a8, 0x802e4a00]
 #   .sbss: [0x803fb330, 0x803fb338]
