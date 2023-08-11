@@ -3503,13 +3503,13 @@ common/Source/MKAnimScript.cpp:
 #   .sbss: [0x803fb2e0, 0x803fb2e8]
 #   .sdata2: [0x80402310, 0x80402338]
 
-#common/Source/MKRumble.cpp:
-#   .text: [0x8021ccdc, 0x8021d3d8]
-#   .rodata: [0x8023fc50, 0x8023fc90]
-#   .data: [0x80274718, 0x80274758]
-#   .bss: [0x802e3348, 0x802e3428]
-#   .sbss: [0x803fb2e8, 0x803fb2f0]
-#   .sdata2: [0x80402338, 0x80402360]
+common/Source/MKRumble.cpp:
+  .text: [0x8021ccdc, 0x8021d3d8]
+  .rodata: [0x8023fc50, 0x8023fc90]
+  .data: [0x80274718, 0x80274758]
+  .bss: [0x802e3348, 0x802e3428]
+  .sbss: [0x803fb2e8, 0x803fb2f0]
+  .sdata2: [0x80402338, 0x80402360]
 
 common/Source/MKSceneManager.cpp:
    .text: [0x8021d3d8, 0x8021fcec]
