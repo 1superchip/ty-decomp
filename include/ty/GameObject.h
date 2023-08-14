@@ -52,7 +52,9 @@ struct ModuleInfoBase {
 
 struct DescriptorIterator;
 
-enum GameObjDescFlags {};
+enum GameObjDescFlags {
+    MODULE_ALLOCATION_OVERRIDE = 0x100000,
+};
 
 struct GameObjDesc : MKPropDescriptor {
 	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
@@ -69,8 +71,8 @@ struct GameObjDesc : MKPropDescriptor {
 	char modelName[0x20];
 	ModuleInfoBase* pModule;
 	int unk74;
-	GameObject* unk78;
-	u8* unk7C;
+	GameObject* pInstances; // Memory allocated to all Objects of this Descriptor
+	u8* pCurrInst;
 	GameObjDesc* unk80;
 
     bool TestFlag(GameObjDescFlags testFlags) {
@@ -126,6 +128,8 @@ inline void* operator new(size_t size, void* mem) {
 #define Module_DrawOverride     2
 #define Module_AllocateOverride 8
 
+/// @brief Templated ModuleInfoBase class which contains information about an object
+/// @tparam T Object type
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
 	virtual void Init(void) {
@@ -157,14 +161,22 @@ struct ModuleInfo : ModuleInfoBase {
     }
 };
 
+/// @brief Iterator class to iterate over objects from a GameObjDesc
 struct DescriptorIterator {
-    u8* unk0;
-    u8* unk4;
+    u8* pCurr; // Current GameObject pointer
+    u8* pEnd;
+
+    /// @brief Returns a pointer to a GameObject (May return NULL)!
+    /// @param None
+    /// @return GameObject pointer or NULL
     GameObject* GetPointers(void) {
-        return (unk0 < unk4) ? (GameObject*)unk0 : NULL;
+        return (pCurr < pEnd) ? (GameObject*)pCurr : NULL;
     }
+
+    /// @brief Updates the current memory pointer to move to the next GameObject
+    /// @param None
     void UpdatePointers(void) {
-        unk0 += static_cast<GameObjDesc*>(((GameObject *)unk0)->pDescriptor)->pModule->pData->instanceSize;
+        pCurr += static_cast<GameObjDesc*>(((GameObject *)pCurr)->pDescriptor)->pModule->pData->instanceSize;
     }
 };
 

@@ -14,8 +14,8 @@ GameObjectManager objectManager;
 void GameObjectManager::Init(void) {
 	bLevelInitialised = false;
 	pDescs = NULL;
-	unk8 = NULL;
-	unkC = 0;
+	pObjectMem = NULL;
+	objectMemSize = 0;
 }
 
 void GameObjectManager::Deinit(void) {
@@ -27,12 +27,12 @@ void GameObjectManager::InitLevel(void) {
         GameObjDesc* descriptor = pDescs;
         while (descriptor != NULL) {
             descriptor->unk74 = NULL;
-            descriptor->unk78 = NULL;
+            descriptor->pInstances = NULL;
             descriptor->pModule->Reset();
             descriptor = descriptor->unk80;
         }
-        unk8 = 0;
-        unkC = 0;
+        pObjectMem = NULL;
+        objectMemSize = 0;
         bLevelInitialised = true;
     }
 }
@@ -56,16 +56,16 @@ void GameObjectManager::DeinitLevel(void) {
             pNextDesc->pModule->pData->bUpdate = false;
             pNextDesc->pModule->pData->unk18 = 0;
             pNextDesc->unk74 = NULL;
-            pNextDesc->unk7C = NULL;
-            pNextDesc->unk78 = NULL;
+            pNextDesc->pCurrInst = NULL;
+            pNextDesc->pInstances = NULL;
         }
         pNextDesc = pNextDesc->unk80;
     }
-    if (unk8 != NULL) {
-        Heap_MemFree(unk8);
+    if (pObjectMem != NULL) {
+        Heap_MemFree(pObjectMem);
     }
-    unk8 = NULL;
-    unkC = NULL;
+    pObjectMem = NULL;
+    objectMemSize = 0;
     bLevelInitialised = false;
 }
 
@@ -80,31 +80,31 @@ char* RemStaticPrefix(char* str) {
 }
 
 void GameObjectManager::LoadLevel(KromeIni* pIni) {
-    unkC = NULL;
+    objectMemSize = 0;
     KromeIniLine* pLine = pIni->GotoLine(NULL, NULL);
     while (pLine != NULL) {
         if (pLine->section != NULL) {
-            char* str = RemStaticPrefix(pLine->section);
+            char* str = RemStaticPrefix(pLine->section); // remove "static" from string
             GameObjDesc* pDesc = FindDescriptor(str);
             if (pDesc != NULL) {
                 int count = CountEntities(pIni, pLine);
                 pDesc->unk74 += count;
                 pDesc->pModule->pData->unk18 += count;
-                if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
-                    unkC += count * pDesc->pModule->pData->instanceSize;
+                if (!pDesc->TestFlag(MODULE_ALLOCATION_OVERRIDE)) {
+                    objectMemSize += count * pDesc->pModule->pData->instanceSize;
                 }
             }
         }
         pLine = pIni->GetLineWithLine(pLine);
     }
-    if (unkC != 0) {
-        unk8 = Heap_MemAlloc(unkC + 4);
-        memset(unk8, 0xCF, unkC);
-        strcpy((char*)unk8 + unkC, "end");
+    if (objectMemSize != 0) {
+        pObjectMem = Heap_MemAlloc(objectMemSize + 4);
+        memset(pObjectMem, 0xCF, objectMemSize);
+        strcpy((char*)pObjectMem + objectMemSize, "end");
     } else {
-        unk8 = NULL;
+        pObjectMem = NULL;
     }
-    GameObject* pObj = static_cast<GameObject*>(unk8);
+    GameObject* pObj = static_cast<GameObject*>(pObjectMem);
     GameObjDesc* pDesc = static_cast<GameObjDesc*>(pDescs);
     while (pDesc != NULL) {
         if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
@@ -223,7 +223,7 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
     // Loop over all GameObjects that were found
     for(int i = 0; i < count; i++) {
         Vector v;
-        v.Sub(pPt, objects[i]->pLocalToWorld->Row3());
+        v.Sub(pPt, objects[i]->GetPos());
         float distSq = v.MagSquared();
         if (distSq < minRadius) {
             minRadius = distSq;
@@ -234,13 +234,15 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
 }
 
 DescriptorIterator GameObjectManager::Begin(void) {
-    DescriptorIterator git = {(u8*)unk8, (u8*)objectManager.unk8 + (int)objectManager.unkC};
+    DescriptorIterator git = {(u8*)pObjectMem, (u8*)objectManager.pObjectMem + (int)objectManager.objectMemSize};
     return git;
 }
 
 int GameObjectManager::CountEntities(KromeIni* pIni, KromeIniLine* pIniLine) {
     int count = 0;
     KromeIniLine *pLine = pIni->GetLineWithLine(pIniLine);
+    // iterate until line is NULL or section is not NULL
+    // a new section means a new object type in this case
     while (pLine != NULL && pLine->section == NULL) {
         while (pLine->comment == NULL && pLine->pFieldName == NULL) {
             pLine = pIni->GetLineWithLine(pLine);

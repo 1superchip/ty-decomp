@@ -173,10 +173,10 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
 }
 
 u8* GameObjDesc::SetUpMem(u8* pMem) {
-    if (0 < unk74) {
-        unk78 = (GameObject*)pMem;
-        memset((void*)unk78, unk74, unk74 * pModule->pData->instanceSize);
-        unk7C = (u8*)unk78;
+    if (unk74 > 0) {
+        pInstances = (GameObject*)pMem;
+        memset((void*)pInstances, unk74, unk74 * pModule->pData->instanceSize);
+        pCurrInst = (u8*)pInstances;
         pMem += unk74 * pModule->pData->instanceSize;
     }
     return pMem;
@@ -209,12 +209,12 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
 }
 
 GameObject* GameObjDesc::CreateObject(void) {
-    if (TestFlag((GameObjDescFlags)0x100000)) {
+    if (TestFlag(MODULE_ALLOCATION_OVERRIDE)) {
 		// if the descriptor's module has a custom allocation function use it
         return (GameObject*)ConstructObject(pModule->pData->pAllocate());
     }
-    void* mem = unk7C;
-    unk7C = unk7C + pModule->pData->instanceSize;
+    void* mem = pCurrInst;
+    pCurrInst = pCurrInst + pModule->pData->instanceSize;
     return (GameObject*)ConstructObject(mem);
 }
 
@@ -232,6 +232,6 @@ void GameObjDesc::Load(KromeIni* pIni) {
 }
 
 DescriptorIterator GameObjDesc::Begin(void) {
-    DescriptorIterator it = {(u8*)unk78, (u8*)unk78 + (pModule->pData->instanceSize * unk74)};
+    DescriptorIterator it = {(u8*)pInstances, (u8*)pInstances + (pModule->pData->instanceSize * unk74)};
     return it;
 }

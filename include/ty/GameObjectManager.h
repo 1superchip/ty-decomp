@@ -7,8 +7,8 @@
 struct GameObjectManager {
 	GameObjDesc* pDescs;
 	bool bLevelInitialised;
-	void* unk8;
-	int unkC;
+	void* pObjectMem;
+	int objectMemSize;
 	
 	void Init(void);
 	void Deinit(void);
