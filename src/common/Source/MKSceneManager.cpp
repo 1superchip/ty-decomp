@@ -708,58 +708,56 @@ void MKSceneManager::UpdateProps(void) {
     }
 }
 
+void SendMessageToProp(MKProp* pProp, MKMessage* pMessage, uint mask, Vector* pPos, float radius) {
+    if (mask == 0 || mask & pProp->pDescriptor->searchMask) {
+        if (pPos != NULL) {
+            Vector *pLTWTrans = pProp->pLocalToWorld->Row3();
+            float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
+            if (distSq < Sqr<float>(radius)) {
+                pProp->Message(pMessage);
+            }
+        } else {
+            pProp->Message(pMessage);
+        }
+    }
+}
+
 void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vector *pPos, float radius) {
     int i;
     int index;
+
     if (arg2 != false) {
-        float radiusSq = radius * radius;
+        // Loop over and check all static props
         for (i = 0; i < 4; i++) {
             SMNode *node = staticPropTree[i].pNodes;
             index = 0;
             while (index < staticPropTree[i].propCount) {
                 MKProp *currProp = (MKProp *)node->pData;
                 node++;
-                if (currProp != NULL && (mask == 0 || mask & currProp->pDescriptor->searchMask)) {
-                    if (pPos != NULL) {
-                        Vector *pLTWTrans = currProp->pLocalToWorld->Row3();
-                        float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
-                        if (distSq < radiusSq) {
-                            currProp->Message(pMessage);
-                        }
-                    } else {
-                        currProp->Message(pMessage);
-                    }
+                if (currProp) {
+                    SendMessageToProp(currProp, pMessage, mask, pPos, radius);
                 }
                 index++;
             }
         }
     }
-    float radiusSq = radius * radius;
+
+    // Loop over and check all dynamic props
     for (i = 0; i < 4; i++) {
         MKProp *dynamicProp = dynamicPropArray[i].pNext;
         while (dynamicProp != &dynamicPropArray[i]) {
             prop1C0 = dynamicProp->pNext;
-            if (mask == 0 || mask & dynamicProp->pDescriptor->searchMask) { // if the mask is equal to zero, send a message
-                if (pPos != NULL) {
-                    Vector *pLTWTrans = dynamicProp->pLocalToWorld->Row3();
-                    float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
-                    if (distSq < radiusSq) {
-                        dynamicProp->Message(pMessage);
-                    }
-                } else {
-                    dynamicProp->Message(pMessage);
-                }
-            }
+            SendMessageToProp(dynamicProp, pMessage, mask, pPos, radius);
             dynamicProp = prop1C0;
         }
     }
+
+    // Loop over and check all global props
     for (i = 0; i < 4; i++) {
         MKProp *globalProp = globalPropArray[i].pNext;
         while (globalProp != &globalPropArray[i]) {
             prop1C0 = globalProp->pNext;
-            if (mask == 0 || mask & globalProp->pDescriptor->searchMask) {
-                globalProp->Message(pMessage);
-            }
+            SendMessageToProp(globalProp, pMessage, mask, NULL, radius);
             globalProp = prop1C0;
         }
     }
