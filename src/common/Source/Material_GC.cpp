@@ -617,7 +617,7 @@ void Material::SetTextureAlias(Material* arg1) {
     if (alias != NULL) {
         alias->referenceCount++;
     }
-    flags |= 0x1000;
+    SetFlags(0x1000);
 }
 
 void Material::SetTextureAlias(Texture* pTexAlias) {
