@@ -7,7 +7,7 @@
 
 extern "C" void memset(void*, int, int);
 
-static Vector occludeArray[160];
+static Vector occludeArray[16][10];
 static u16 terrainSubObjects[1024];
 static SMTree staticPropTree[4];
 static MKProp staticPropArray[4];
@@ -411,49 +411,36 @@ void MKSceneManager::MakePropTree(void) {
 }
 
 void MKSceneManager::CalcZoneVis(void) {
-    Vector vec;
-    Vector vec1;
-    Vector vec2;
-    Vector vec3;
-    Vector vec4;
-    Vector vec5;
-    Vector vec6;
-    Vector vec7;
+    Vector rayToOcc[4];
+    Vector occLine[4];
     View* pCurrView = View::GetCurrent();
-    Vector* pVec2 = &vec2;
-    Vector* pVec1 = &vec1;
-    Vector* pVec = &vec;
-    Vector* pVec6 = &vec6;
-    Vector* pVec5 = &vec5;
-    Vector* pVec4 = &vec4;
+    Vector* pViewPos = pCurrView->unk48.Row3();
 
     for (int objectIdx = 0; objectIdx < occlusionObjects; objectIdx++) {
-        Vector* pOccludeVector = &occludeArray[objectIdx * 10];
-        vec3.Sub(pOccludeVector + 1, pCurrView->unk48.Row3());
-        vec2.Sub(pOccludeVector + 2, pCurrView->unk48.Row3());
-        vec1.Sub(pOccludeVector + 3, pCurrView->unk48.Row3());
-        vec.Sub(pOccludeVector + 4, pCurrView->unk48.Row3());
-        vec7.Sub(pOccludeVector + 3, pOccludeVector + 1);
-        vec6.Sub(pOccludeVector + 1, pOccludeVector + 2);
-        vec5.Sub(pOccludeVector + 4, pOccludeVector + 3);
-        vec4.Sub(pOccludeVector + 2, pOccludeVector + 4);
-        (pOccludeVector + 5)->Cross(&vec3, &vec7);
-        (pOccludeVector + 6)->Cross(pVec2, pVec6);
-        (pOccludeVector + 7)->Cross(pVec1, pVec5);
-        (pOccludeVector + 8)->Cross(pVec, pVec4);
-        if (vec3.Dot(pOccludeVector) > 0.0f) {
-            (pOccludeVector + 5)->Inverse();
-            (pOccludeVector + 6)->Inverse();
-            (pOccludeVector + 7)->Inverse();
-            (pOccludeVector + 8)->Inverse();
-            (pOccludeVector + 9)->x = pOccludeVector->x;
-            (pOccludeVector + 9)->y = pOccludeVector->y;
-            (pOccludeVector + 9)->z = pOccludeVector->z;
-            (pOccludeVector + 9)->w = pOccludeVector->w;
+        rayToOcc[0].Sub(&occludeArray[objectIdx][1], pViewPos);
+        rayToOcc[1].Sub(&occludeArray[objectIdx][2], pViewPos);
+        rayToOcc[2].Sub(&occludeArray[objectIdx][3], pViewPos);
+        rayToOcc[3].Sub(&occludeArray[objectIdx][4], pViewPos);
+        
+        occLine[0].Sub(&occludeArray[objectIdx][3], &occludeArray[objectIdx][1]);
+        occLine[1].Sub(&occludeArray[objectIdx][1], &occludeArray[objectIdx][2]);
+        occLine[2].Sub(&occludeArray[objectIdx][4], &occludeArray[objectIdx][3]);
+        occLine[3].Sub(&occludeArray[objectIdx][2], &occludeArray[objectIdx][4]);
+        occludeArray[objectIdx][5].Cross(&rayToOcc[0], &occLine[0]);
+        occludeArray[objectIdx][6].Cross(&rayToOcc[1], &occLine[1]);
+        occludeArray[objectIdx][7].Cross(&rayToOcc[2], &occLine[2]);
+        occludeArray[objectIdx][8].Cross(&rayToOcc[3], &occLine[3]);
+        if (rayToOcc[0].Dot(&occludeArray[objectIdx][0]) > 0.0f) {
+            occludeArray[objectIdx][5].Inverse();
+            occludeArray[objectIdx][6].Inverse();
+            occludeArray[objectIdx][7].Inverse();
+            occludeArray[objectIdx][8].Inverse();
+            occludeArray[objectIdx][9].x = occludeArray[objectIdx][0].x;
+            occludeArray[objectIdx][9].y = occludeArray[objectIdx][0].y;
+            occludeArray[objectIdx][9].z = occludeArray[objectIdx][0].z;
+            occludeArray[objectIdx][9].w = occludeArray[objectIdx][0].w;
         } else {
-            (pOccludeVector + 9)->x = pOccludeVector->x * -1.0f;
-            (pOccludeVector + 9)->y = pOccludeVector->y * -1.0f;
-            (pOccludeVector + 9)->z = pOccludeVector->z * -1.0f;
+            occludeArray[objectIdx][9].Inverse(&occludeArray[objectIdx][0]);
         }
     }
 }
@@ -663,8 +650,8 @@ void MKSceneManager::UpdateProps(void) {
                 Vector *pActivePoint = &activePoint;
                 float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + Sqr<float>(pLTWTrans->y - pActivePoint->y) + Sqr<float>(pLTWTrans->z - pActivePoint->z);
                 data->distSquared = dist; // set distSquared to the distance of the prop from the active point
-                if (data->distSquared < data->pDescriptor->maxUpdateDist * data->pDescriptor->maxUpdateDist) {
-                    // if the dist is less than the prop's max update distance, update the prop
+                if (data->distSquared < Sqr<float>(data->pDescriptor->maxUpdateDist)) {
+                    // if the dist is less than the prop's max update distance squared, update the prop
                     UpdateProp(data, &message);
                 }
             }
@@ -722,11 +709,12 @@ void SendMessageToProp(MKProp* pProp, MKMessage* pMessage, uint mask, Vector* pP
     }
 }
 
-void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool arg2, Vector *pPos, float radius) {
+void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool bIncludeStatic, Vector *pPos, float radius) {
     int i;
     int index;
 
-    if (arg2 != false) {
+    // Only check static props if bIncludeStatic is true
+    if (bIncludeStatic) {
         // Loop over and check all static props
         for (i = 0; i < 4; i++) {
             SMNode *node = staticPropTree[i].pNodes;

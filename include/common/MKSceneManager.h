@@ -127,7 +127,7 @@ struct MKSceneManager {
 	void DrawDynamicProps(int);
 	void DrawGlobalProps(int);
 	void UpdateProps(void);
-	void SendMessage(MKMessage*, uint, bool, Vector*, float);
+	void SendMessage(MKMessage* pMessage, uint mask, bool bIncludeStatic, Vector* pPos, float radius);
 	void SetActivePoint(Vector*);
 	void UpdateProp(MKProp*, MKMessage*);
 	void RemoveProp(MKProp*);
