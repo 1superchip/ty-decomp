@@ -17,6 +17,8 @@ static TranslationLanguage gCurrentLanguage = Language_NotSet;
 
 static int gNmbrOfStrings;
 static char* gpTranslationBuffer;
+
+// this is the Language string used by the stripped DebugOptions code
 static char* pDOLanguage;
 static int gLanguageDebugOption;
 
@@ -70,10 +72,10 @@ TranslationLanguage Translation_GetLanguage(void) {
 }
 
 TranslationLanguage Translation_GetDefaultLanguage(void) {
-    TranslationLanguage defaultLanguage = Language_English;
+    TranslationLanguage defaultLanguage = LANGUAGE_ENGLISH;
     switch (OSGetLanguage()) {
     case 0:
-        defaultLanguage = Language_English;
+        defaultLanguage = LANGUAGE_ENGLISH;
         break;
     case 1:
         defaultLanguage = Language_German;
@@ -91,23 +93,14 @@ TranslationLanguage Translation_GetDefaultLanguage(void) {
         defaultLanguage = Language_Dutch;
         break;
     }
-    if (defaultLanguage == Language_English || Translation_IsLanguageAvailable(defaultLanguage) == false) {
+    if (defaultLanguage == LANGUAGE_ENGLISH || Translation_IsLanguageAvailable(defaultLanguage) == false) {
         if (gDisplay[0] == 1 && Translation_IsLanguageAvailable(Language_American) != false) {
             defaultLanguage = Language_American;
         } else {
-            defaultLanguage = Language_English;
+            defaultLanguage = LANGUAGE_ENGLISH;
         }
     }
     return defaultLanguage;
-}
-
-inline void SetDebugOption(void) {
-    int option = 0;
-    gLanguageDebugOption = 0;
-    while (gCurrentLanguage != gLanguageOptionLanguages[option]) {
-        option++;
-    }
-    gLanguageDebugOption = option;
 }
 
 void Translation_SetLanguage(TranslationLanguage language) {
@@ -131,76 +124,75 @@ void Translation_SetLanguage(TranslationLanguage language) {
         }
         if (translationBuffer[0] == '\n') {
             translationBuffer++;
+        } else if (translationBuffer[0] == '#') {
+            while (translationBuffer[0] != '\0' && translationBuffer[0] != '\n') {
+                translationBuffer++;
+            }
         } else {
-            if (translationBuffer[0] == '#') {
+            gpEnumTagArray[gNmbrOfStrings] = translationBuffer;
+            while (translationBuffer[0] > ' ') {
+                translationBuffer++;
+            }
+            *translationBuffer = '\0';
+            translationBuffer++;
+            if (*gpEnumTagArray[gNmbrOfStrings] == '[') {
+                if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[]") == 0) {
+                    platformId = Platform_NotSet;
+                } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[PS2]") == 0) {
+                    platformId = Platform_PS2;
+                } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[GCN]") == 0) {
+                    platformId = Platform_GCN;
+                } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[XBOX]") == 0) {
+                    platformId = Platform_XBOX;
+                }
                 while (translationBuffer[0] != '\0' && translationBuffer[0] != '\n') {
                     translationBuffer++;
                 }
             } else {
-                gpEnumTagArray[gNmbrOfStrings] = translationBuffer;
-                while (translationBuffer[0] > ' ') {
-                    translationBuffer++;
-                }
-                *translationBuffer = '\0';
-                translationBuffer++;
-                if (*gpEnumTagArray[gNmbrOfStrings] == '[') {
-                    if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[]") == 0) {
-                        platformId = Platform_NotSet;
-                    } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[PS2]") == 0) {
-                        platformId = Platform_PS2;
-                    } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[GCN]") == 0) {
-                        platformId = Platform_GCN;
-                    } else if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[XBOX]") == 0) {
-                        platformId = Platform_XBOX;
+                // not set or GCN
+                // load strings for set platform
+                if (platformId == Platform_NotSet || platformId == currentPlatform) {
+                    char *found = Str_FindChar(gpEnumTagArray[gNmbrOfStrings], '=');
+                    if (found != NULL) {
+                        int value = atoi(found + 1);
+                        while (gNmbrOfStrings < value) {
+                            gpEnumTagArray[gNmbrOfStrings + 1] = gpEnumTagArray[gNmbrOfStrings];
+                            gpEnumTagArray[gNmbrOfStrings] = gNullStr;
+                            gNmbrOfStrings++;
+                        }
+                        *found = '\0';
                     }
-                    while (translationBuffer[0] != '\0' && translationBuffer[0] != '\n') {
+                    while (translationBuffer[0] == ' ' || translationBuffer[0] == '\t') {
                         translationBuffer++;
                     }
-                } else {
-                    // not set or GCN
-					// load strings for set platform
-                    if (platformId == Platform_NotSet || platformId == currentPlatform) {
-                        char *found = Str_FindChar(gpEnumTagArray[gNmbrOfStrings], '=');
-                        if (found != NULL) {
-                            int value = atoi(found + 1);
-                            while (gNmbrOfStrings < value) {
-                                gpEnumTagArray[gNmbrOfStrings + 1] = gpEnumTagArray[gNmbrOfStrings];
-                                gpEnumTagArray[gNmbrOfStrings] = gNullStr;
-                                gNmbrOfStrings++;
+                    if (translationBuffer[0] == '\0' || translationBuffer[0] == '\n') {
+                        gpTranslation_StringArray[gNmbrOfStrings++] = gNullStr;
+                    } else {
+                        gpTranslation_StringArray[gNmbrOfStrings++] = translationBuffer;
+                        while (*translationBuffer != '\0' && *translationBuffer != '\n') {
+                            if (*translationBuffer == '\\' && *(translationBuffer + 1) == 'n') {
+                                memmove(translationBuffer, translationBuffer + 1,
+                                        strlen(translationBuffer));
+                                *translationBuffer = '\n';
                             }
-                            *found = '\0';
-                        }
-                        while (translationBuffer[0] == ' ' || translationBuffer[0] == '\t') {
                             translationBuffer++;
                         }
-                        if (translationBuffer[0] == '\0' || translationBuffer[0] == '\n') {
-                            gpTranslation_StringArray[gNmbrOfStrings++] = gNullStr;
-                        } else {
-                            gpTranslation_StringArray[gNmbrOfStrings++] = translationBuffer;
-                            while (*translationBuffer != '\0' && *translationBuffer != '\n') {
-                                if (*translationBuffer == '\\' && *(translationBuffer + 1) == 'n') {
-                                    memmove(translationBuffer, translationBuffer + 1,
-                                            strlen(translationBuffer));
-                                    *translationBuffer = '\n';
-                                }
-                                translationBuffer++;
+                        char *buffer = translationBuffer - 1;
+                        *translationBuffer++ = '\0';
+                        while (buffer >= gpTranslation_StringArray[gNmbrOfStrings - 1] - 1) {
+                            if (*buffer != ' ' && *buffer != '\t') {
+                                break;
                             }
-                            char *buffer = translationBuffer - 1;
-                            *translationBuffer++ = '\0';
-                            while (buffer >= gpTranslation_StringArray[gNmbrOfStrings - 1] - 1) {
-                                if (*buffer != ' ' && *buffer != '\t') {
-                                    break;
-                                }
-                                *buffer = '\0';
-                                buffer--;
-                            }
+                            *buffer = '\0';
+                            buffer--;
                         }
                     }
                 }
             }
         }
     }
-    SetDebugOption();
+    for(gLanguageDebugOption = 0; gLanguageOptionLanguages[gLanguageDebugOption] != gCurrentLanguage; 
+    gLanguageDebugOption++) {};
 }
 
 bool Translation_IsLanguageAvailable(TranslationLanguage language) {

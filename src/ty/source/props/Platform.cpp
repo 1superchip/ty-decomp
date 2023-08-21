@@ -315,7 +315,7 @@ void PlatformRider::UpdateDynamicAttach(CollisionResult* pCr, GameObject* pObj) 
     if (pInfo == NULL) {
         return;
     }
-    if (pInfo->pProp && (pInfo->pProp->pDescriptor->searchMask & 0x40) &&
+    if (pInfo->pProp && (pInfo->pProp->pDescriptor->searchMask & GOID_Platform) &&
             pInfo->pProp != pObject) {
         // if (pObject && unk8) {
         //     reinterpret_cast<Platform*>(pObject)->Detach(pObj);
