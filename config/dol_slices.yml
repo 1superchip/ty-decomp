@@ -1881,7 +1881,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa708, 0x803fa710]
 #   .sdata2: [0x803ff8e8, 0x803ff8f8]
 
-#ty/source/.cpp:
+#ty/source/AS_AirStates.cpp:
 #   .text: [0x8011d4e4, 0x8012170c]
 #   .ctors: [0x8023ca00, 0x8023ca04]
 #   .rodata: [0x8023e070, 0x8023e0c0]
@@ -2641,10 +2641,10 @@ ty/source/UserInterface.cpp:
 #   .sbss: [0x803fac88, 0x803fac98]
 #   .sdata2: [0x80401b90, 0x80401ba8]
 
-#ty/source/WobbleTexture.cpp:
-#   .text: [0x801c5200, 0x801c60b8]
-#   .rodata: [0x8023f060, 0x8023f0e0]
-#   .sdata2: [0x80401ba8, 0x80401be8]
+ty/source/WobbleTexture.cpp:
+  .text: [0x801c5200, 0x801c60b8]
+  .rodata: [0x8023f060, 0x8023f0e0]
+  .sdata2: [0x80401ba8, 0x80401be8]
 
 #EXIBios.c:
 #   .text: [0x801c60b8, 0x801c7984]
