@@ -211,15 +211,15 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
         for(int i = 0; i < 3; i++) {
             GXColor color;
             int r,g,b;
-            r = 255.0f * pLight->lightArray[3+i].x;
+            r = 255.0f * pLight->mLightColors[i].x;
             color.r = r > 0xff ? 0xff : r;
-            g = 255.0f * pLight->lightArray[3+i].y;
+            g = 255.0f * pLight->mLightColors[i].y;
             color.g = g > 0xff ? 0xff : g;
-            b = 255.0f * pLight->lightArray[3+i].z;
+            b = 255.0f * pLight->mLightColors[i].z;
             color.b = b > 0xff ? 0xff : b;
             color.a = 0xff;
             GXInitLightColor(&lo, color);
-            Vector* vec = pLight->lightArray;
+            Vector* vec = pLight->mLightDirs;
             lightPos.Set(vec[i].x, vec[i].y, vec[i].z);
             Matrix m;
             m.SetIdentity();
@@ -244,9 +244,9 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
             }
         }
         GXColor ambColor = (GXColor){0, 0, 0, 0xff};
-        ambColor.r = 255.0f * pLight->ambient.x;
-        ambColor.g = 255.0f * pLight->ambient.y;
-        ambColor.b = 255.0f * pLight->ambient.z;
+        ambColor.r = 255.0f * pLight->mAmbient.x;
+        ambColor.g = 255.0f * pLight->mAmbient.y;
+        ambColor.b = 255.0f * pLight->mAmbient.z;
         GXSetChanAmbColor(GX_COLOR0A0, ambColor);
     }
 }

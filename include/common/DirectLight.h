@@ -1,11 +1,13 @@
-
+#ifndef COMMON_DIRECTLIGHT
+#define COMMON_DIRECTLIGHT
 
 // sizeof 0xf0
 // clean this up
 struct DirectLight {
 	Vector pad[8];
-    Vector lightArray[6]; // colors
-	Vector ambient;
+	Vector mLightDirs[3];
+	Vector mLightColors[3];
+	Vector mAmbient;
 	
 	static void InitModule(void);
 	static void DeinitModule(void);
@@ -18,4 +20,4 @@ struct DirectLight {
 	static DirectLight* pDefaultLight;
 };
 
-extern DirectLight* DirectLight::pDefaultLight;
+#endif // COMMON_DIRECTLIGHT
