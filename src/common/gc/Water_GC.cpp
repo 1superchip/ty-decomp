@@ -18,31 +18,6 @@ void Water_InitModule(void) {
 
 void Water_DeinitModule(void) {}
 
-// TODO: Clean up this entire file
-void orderFloats_watergc(void) {
-    volatile float x = 0.1f;
-    x = PI * 2.0f;
-    x = 0.32f;
-    x = 57.0f;
-    x = 30.0f;
-}
-
-float InlineTest(char* r28, char* r27, float* seedF, int* seedI, float i, float j, float& out0, float out1) {
-    float f24 = j;// + 30.0f;
-    float f16 = i;// + 57.0f;
-    *seedF = (f24 * f16) * f16 * (0.2f + f24) * (0.8f + f16);
-    float randAngle = RandomFR(seedI, 0.0f, PI * 2.0f);
-    *seedF = (0.05f + f24) * (1.2f + f24) * (2.15f + f16) * (1.2f + f16);
-    float f15 = RandomFR(seedI, 0.0f, PI * 2.0f);
-    out0 = randAngle;
-    return f15;
-    // f15 += angle;
-    // int dat0 = 128.0f + (127.0f * _table_sinf(randAngle + angle));
-    // int dat1 = 128.0f + (127.0f * _table_sinf(f15));
-    // r28[0] = dat0;
-    // r27[1] = dat1;
-}
-
 void Water_Update(void) {
     if (!bWaterUpdate) return;
     static u8 phaseU = 0;
@@ -53,8 +28,8 @@ void Water_Update(void) {
     char* r27 = &waterIndTexData[1][0];
     static float angle = 0.0f;
     angle += 0.1f;
-    if (angle > PI * 2.0f) {
-        angle -= PI * 2.0f;
+    if (angle > 2 * PI) {
+        angle -= 2 * PI;
     }
     union {
         float f;
@@ -65,26 +40,16 @@ void Water_Update(void) {
             int* rand = &rngSeed.i;
             rngSeed.f = 0.32f;
             for(int i = r26; i < r26 + 4; i++) {
-                // float f16 = (float)i + 57.0f;
-                // float f22 = 0.8f + f16;
-                // float f26 = 1.2f + f16;
-                // float f28 = 2.15f + f16;
                 for(int j = r25; j < r25 + 4; j++) {
-                    // float f24 = (float)j + 30.0f;
-                    // rngSeed.f = (f24 * f16) * f16 * (0.2f + f24) * (0.8f + f16);
-                    // float randAngle = RandomFR(&rngSeed.i, 0.0f, 6.28319f);
-                    // rngSeed.f = (0.05f + f24) * (1.2f + f24) * (1.2f + f16) * (2.15f + f16);
-                    // float f15 = RandomFR(rand, 0.0f, 6.28319f);
-                    // f15 += angle;
-                    // int dat0 = 128.0f + (127.0f * _table_sinf(randAngle + angle));
-                    // int dat1 = 128.0f + (127.0f * _table_sinf(f15));
-                    // r28[0] = dat0;
-                    // r27[1] = dat1;
-                    float x, y;
-                    y = InlineTest(r28, r27, &rngSeed.f, rand, i + 57.0f, j + 30.0f, x, 0.0f);
-                    y += angle;
-                    int dat0 = 128.0f + (127.0f * _table_sinf(x + angle));
-                    int dat1 = 128.0f + (127.0f * _table_sinf(y));
+                    float f16 = (float)i + 57.0f;
+                    float f24 = (float)j + 30.0f;
+                    rngSeed.f = (f24 * f16) * f16 * (0.2f + f24) * (0.8f + f16);
+                    float randAngle = RandomFR(rand, 0.0f, 2 * PI);
+                    rngSeed.f = (0.05f + f24) * (1.2f + f24) * (2.15f + f16) * (1.2f + f16);
+                    float f15 = RandomFR(rand, 0.0f, 2 * PI);
+                    f15 += angle;
+                    int dat0 = 128.0f + (127.0f * _table_sinf(randAngle + angle));
+                    int dat1 = 128.0f + (127.0f * _table_sinf(f15));
                     r28[0] = dat0;
                     r27[1] = dat1;
                     r28 += 2;
