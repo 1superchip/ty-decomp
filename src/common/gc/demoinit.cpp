@@ -1,4 +1,4 @@
-#include "Dolphin/gx.h"
+#include "common/demoinit.h"
 #include "Dolphin/os.h"
 #include "Dolphin/vi.h"
 
@@ -12,10 +12,6 @@ extern "C" {
     float GXGetYScaleFactor(int, int);
     u32 VIGetRetraceCount(void);
 };
-
-extern _GXRenderModeObj GXNtsc480IntDf;
-extern _GXRenderModeObj GXPal528IntDf;
-extern _GXRenderModeObj GXMpal480IntDf;
 
 #define ALIGN_UP(x, a) (((x) + (a - 1)) & ~(a - 1))
 
@@ -41,8 +37,8 @@ static void* DefaultFifo;
 static GXFifoObj* DefaultFifoObj;
 static GXRenderModeObj* rmode;
 static bool bNeedAFlip;
-int gCPUCycles;
-int gGXCycles;
+u32 gCPUCycles;
+u32 gGXCycles;
 
 static void RetraceCallback(u32 param_1) {
     if (bNeedAFlip) {
@@ -86,6 +82,8 @@ extern "C" void DEMOInit(_GXRenderModeObj* prmodeObj) {
     bNeedAFlip = true;
 }
 
+/// @brief Initiates the Render Mode Object
+/// @param pRMode Optional, pass NULL to use default tv formats
 static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
     if (pRMode != NULL) {
         rmode = pRMode;
