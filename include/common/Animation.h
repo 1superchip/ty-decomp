@@ -6,6 +6,9 @@
 #include "common/Matrix.h"
 //#include "common/GC_ByteFixup.h"
 
+void Animation_InitModule(void);
+void Animation_DeinitModule(void);
+
 struct AnimDef {
 	enum Type {};
 	char* pName;
