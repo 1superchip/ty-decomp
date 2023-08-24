@@ -1,4 +1,5 @@
-
+#ifndef COMMON_CAMERA
+#define COMMON_CAMERA
 
 struct KeyMap {
 	int unk0;
@@ -87,3 +88,5 @@ struct Camera {
 	
 	static KeyMap keyMapDS;
 };
+
+#endif // COMMON_CAMERA
