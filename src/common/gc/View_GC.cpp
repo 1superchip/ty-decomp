@@ -133,16 +133,27 @@ void View::SetCameraRollAndLookAt(Vector* arg1, Vector* arg2, float roll) {
 
 extern "C" double tan(double);
 
-void View::SetProjection(float arg1, float arg2, float arg3) {
+void View::SetProjection(float fov, float arg2, float arg3) {
     float fVar28 = arg3 - arg2;
     float fVar27 = arg3 / fVar28;
     memset((void*)&unk108, 0, sizeof(Matrix));
-    unk2CC = arg1;
-    float tangent = tan(arg1 / 2.0f);
+    unk2CC = fov;
+    float tangent = tan(fov / 2.0f);
     float fVar26 = 1.0f / tangent;
     float fVar31 = fVar26 / 0.8f;
     fVar26 *= unk2AC;
     fVar31 *= unk2B0;
+
+    /*
+    unk108 = 
+    {
+        {fVar26,       0.0f,         0.0f,             0.0f},
+        {0.0f,         fVar31,       0.0f,             0.0f},
+        {0.0f,         0.0f,         fVar27,           1.0f},
+        {0.0f,         0.0f,         -fVar27 * arg2,   0.0f}
+    }
+    */
+
     unk108.data[0][0] = fVar26;
     unk108.data[1][1] = fVar31;
     unk108.data[2][2] = fVar27;
@@ -150,6 +161,7 @@ void View::SetProjection(float arg1, float arg2, float arg3) {
     unk108.data[2][3] = 1.0f;
     unk1C8.Multiply4x4(&unkC8, &unk108);
     unk148.Multiply4x4(&unk88, &unk1C8);
+
     float proj[4][4];
     proj[0][0] = fVar26;
     proj[0][1] = 0.0f;
@@ -185,7 +197,7 @@ void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
         unk148 = unk1C8;
     }
     if (pLight != NULL) {
-        unk208.Multiply3x3(&unk88, (Matrix*)pLight);
+        unk208.Multiply3x3(&unk88, &pLight->mDirMatrix);
         unk208.SetTranslation(&trans);
     }
     matrix.Multiply(&unk88, &unkC8);

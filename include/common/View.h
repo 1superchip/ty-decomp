@@ -63,7 +63,7 @@ struct View {
 	void CalcMatrices(void);
 	void SetCameraLookAt(Vector*, Vector*);
 	void SetCameraRollAndLookAt(Vector*, Vector*, float);
-	void SetProjection(float, float, float);
+	void SetProjection(float fov, float, float);
     void SetLocalToWorldMatrix(Matrix*);
 	void SetDirectLight(DirectLight*);
 	void Use(void);
@@ -85,6 +85,9 @@ struct View {
 	static View* pDefaultView;
 	static View* GetCurrent(void) {
 		return pCurrentView;
+	}
+	static View* GetDefault(void) {
+		return pDefaultView;
 	}
 };
 

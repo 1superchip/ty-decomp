@@ -56,43 +56,43 @@ void DirectLight::SetAmbient(Vector* pAmbient) {
 }
 
 void DirectLight::RecalcMatrices(void) {
-    pad[0].x = -mLightDirs[0].x;
-    pad[0].y = -mLightDirs[1].x;
-    pad[0].z = -mLightDirs[2].x;
-    pad[0].w = 0.0f;
+    mDirMatrix.data[0][0] = -mLightDirs[0].x;
+    mDirMatrix.data[0][1] = -mLightDirs[1].x;
+    mDirMatrix.data[0][2] = -mLightDirs[2].x;
+    mDirMatrix.data[0][3] = 0.0f;
 
-    pad[1].x = -mLightDirs[0].y;
-    pad[1].y = -mLightDirs[1].y;
-    pad[1].z = -mLightDirs[2].y;
-    pad[1].w = 0.0f;
+    mDirMatrix.data[1][0] = -mLightDirs[0].y;
+    mDirMatrix.data[1][1] = -mLightDirs[1].y;
+    mDirMatrix.data[1][2] = -mLightDirs[2].y;
+    mDirMatrix.data[1][3] = 0.0f;
 
-    pad[2].x = -mLightDirs[0].z;
-    pad[2].y = -mLightDirs[1].z;
-    pad[2].z = -mLightDirs[2].z;
-    pad[2].w = 0.0f;
+    mDirMatrix.data[2][0] = -mLightDirs[0].z;
+    mDirMatrix.data[2][1] = -mLightDirs[1].z;
+    mDirMatrix.data[2][2] = -mLightDirs[2].z;
+    mDirMatrix.data[2][3] = 0.0f;
 
-    pad[3].x = 0.0f;
-    pad[3].y = 0.0f;
-    pad[3].z = 0.0f;
-    pad[3].w = 1.0f;
+    mDirMatrix.data[3][0] = 0.0f;
+    mDirMatrix.data[3][1] = 0.0f;
+    mDirMatrix.data[3][2] = 0.0f;
+    mDirMatrix.data[3][3] = 1.0f;
 
-    pad[4].x = mLightColors[0].x;
-    pad[4].y = mLightColors[0].y;
-    pad[4].z = mLightColors[0].z;
-    pad[4].w = 0.0f;
+    mNewColors[0].x = mLightColors[0].x;
+    mNewColors[0].y = mLightColors[0].y;
+    mNewColors[0].z = mLightColors[0].z;
+    mNewColors[0].w = 0.0f;
 
-    pad[5].x = mLightColors[1].x;
-    pad[5].y = mLightColors[1].y;
-    pad[5].z = mLightColors[1].z;
-    pad[5].w = 0.0f;
+    mNewColors[1].x = mLightColors[1].x;
+    mNewColors[1].y = mLightColors[1].y;
+    mNewColors[1].z = mLightColors[1].z;
+    mNewColors[1].w = 0.0f;
 
-    pad[6].x = mLightColors[2].x;
-    pad[6].y = mLightColors[2].y;
-    pad[6].z = mLightColors[2].z;
-    pad[6].w = 0.0f;
+    mNewColors[2].x = mLightColors[2].x;
+    mNewColors[2].y = mLightColors[2].y;
+    mNewColors[2].z = mLightColors[2].z;
+    mNewColors[2].w = 0.0f;
 
-    pad[7].x = mAmbient.x;
-    pad[7].y = mAmbient.y;
-    pad[7].z = mAmbient.z;
-    pad[7].w = 1.0f;
+    mNewAmbient.x = mAmbient.x;
+    mNewAmbient.y = mAmbient.y;
+    mNewAmbient.z = mAmbient.z;
+    mNewAmbient.w = 1.0f;
 }

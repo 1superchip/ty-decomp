@@ -1,10 +1,14 @@
 #ifndef COMMON_DIRECTLIGHT
 #define COMMON_DIRECTLIGHT
 
-// sizeof 0xf0
-// clean this up
+#include "common/Vector.h"
+#include "common/Matrix.h"
+
 struct DirectLight {
-	Vector pad[8];
+	Matrix mDirMatrix;
+	Vector mNewColors[3];
+	Vector mNewAmbient;
+
 	Vector mLightDirs[3];
 	Vector mLightColors[3];
 	Vector mAmbient;
