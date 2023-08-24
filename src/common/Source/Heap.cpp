@@ -7,7 +7,7 @@ extern "C" void printf(char*, ...);
 extern "C" void exit(int);
 
 
-static bool heapInitialised;
+static bool heapInitialised = false;
 
 void Heap_InitModule(int arg0) {
 	heapInitialised = true;

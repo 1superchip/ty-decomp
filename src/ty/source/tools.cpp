@@ -40,7 +40,7 @@ struct Display {
 
 extern Display gDisplay;
 
-static bool bDropShadowsIsInit;
+static bool bDropShadowsIsInit = false;
 static StructList<ShadowInfo> shadows;
 
 struct UnkLevelInfo {

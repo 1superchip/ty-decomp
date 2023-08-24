@@ -14,8 +14,8 @@ static InputDeviceStruct ves[INPUTDEVICE_COUNT] = {
 
 static VibrationEffect vibrationEffect[NUM_VIBRA_EFFECTS];
 
-static int effectsPlaying;
-static bool vibrationPaused;
+static int effectsPlaying = 0;
+static bool vibrationPaused = false;
 
 /// @brief Resets all vibration effects
 /// @param None

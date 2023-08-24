@@ -1,8 +1,8 @@
 #include "common/Collision.h"
 
 CollisionResult lastCollision;
-static bool bCollisionInit;
-static bool bFound;
+static bool bCollisionInit = false;
+static bool bFound = false;
 int collisionHeapSize;
 void* pCollisionHeap;
 int collisionHeapIndex;

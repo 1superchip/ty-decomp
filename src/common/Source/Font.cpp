@@ -16,9 +16,9 @@ extern "C" int stricmp(char*, char*);
 bool Font::initialised;
 static PtrListDL<Font> fontList;
 static int pFontMenu;
-static int pDebugShowFontWrapArea;
+static int pDebugShowFontWrapArea = 0;
 static int pDebugCrossHair;
-static bool showFontWrapArea;
+static bool showFontWrapArea = false;
 
 // Several unused parameters
 Font* Font::Create(char* pName, char* pCharMap, float, float aspectRatio, float) {

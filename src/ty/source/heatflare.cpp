@@ -4,8 +4,8 @@
 
 Material* pCaptureMaterial;
 static PtrListDL<HeatFlare> heatFlares;
-static bool bHeatFlares;
-static bool bScreenGrabbed;
+static bool bHeatFlares = false;
+static bool bScreenGrabbed = false;
 
 void HeatFlare_LoadResources(void) {
 	pCaptureMaterial = Material::Create("capture");
