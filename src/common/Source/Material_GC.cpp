@@ -1,5 +1,6 @@
 #include "types.h"
 #include "common/Material.h"
+#include "common/System_GC.h"
 #include "common/FileSys.h"
 #include "common/PtrListDL.h"
 #include "common/Heap.h"
@@ -22,32 +23,6 @@ extern "C" void C_MTXOrtho(Mtx44* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern "C" void C_MTXIdentity(Mtx44*);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
-struct MKDefaults {
-    char padding[0x10];
-    bool fpsSetting;
-    float unk14;
-    int screenshot;
-    int materialCount;
-    int materialTextureFilterType;
-    int materialType;
-    int materialflags;
-    int materialBlendMode;
-    int collisionFlags;
-    float unk34[4];
-	int modelInstanceCount;
-	int modelTemplateCount;
-    char unk4C[52];
-};
-extern MKDefaults gMKDefaults;
-struct RenderState {
-    Material* pDefaultMaterial;
-    int fillState;
-    char unk8[8];
-    Texture* pDefaultTex;
-    char unk14[4];
-    int alpha;
-};
-extern RenderState gRenderState;
 // struct _GXRenderModeObj {
 //     u32 viTVMode;
 //     u16 fbWidth;
@@ -68,14 +43,6 @@ extern "C" {
     _GXRenderModeObj* DEMOGetRenderModeObj(void);
     double fmod(double, double);
 };
-struct Display {
-    int region;
-    int unk4;
-    float gameSpeed;
-    float unkC;
-    int unk10[23];
-};
-extern Display gDisplay;
 
 // End EXTERNS
 
@@ -112,7 +79,7 @@ char *Material::InitFromMatDefs(char *pName) {
     char textureName[0x20];
     texture_filterType = gMKDefaults.materialTextureFilterType;
     type = gMKDefaults.materialType;
-    flags = gMKDefaults.materialflags;
+    flags = gMKDefaults.materialFlags;
     blendMode = gMKDefaults.materialBlendMode;
     collisionFlags = gMKDefaults.collisionFlags;
     grass = 0;
@@ -331,7 +298,7 @@ char *Material::InitFromMatDefs(char *pName) {
                     pLine->AsFlag(0, &val);
                     if (val != 0) {
                         SetFlags(Flag_AlphaMask);
-                        unk5C = gMKDefaults.unk34[0]; // set alpha ref to default
+                        unk5C = gMKDefaults.materialAlphaRef; // set alpha ref to default
                     } else {
                         ClearFlags(Flag_AlphaMask);
                     }
@@ -666,7 +633,7 @@ void Material::Use(void) {
         Update();
     }
     Texture* pTex;
-    Texture* defTex = gRenderState.pDefaultTex;
+    Texture* defTex = gRenderState.pDefaultTexture;
     if (defTex != NULL) {
         pTex = defTex;
     } else {
@@ -960,7 +927,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     float proj[4][4];
     float projection[7];
     GXGetProjectionv(projection);
-    proj[0][0] = 1.0f / (float)(gDisplay.unk10[0] / 2);
+    proj[0][0] = 1.0f / (float)(gDisplay.unk10 / 2);
     proj[0][1] = 0.0f;
     proj[0][2] = 0.0f;
     proj[0][3] = -1.0f;
@@ -1125,7 +1092,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
 }
 
 void Material::Update(void) {
-    float frameSpeed = gDisplay.unkC * (float)(frameCounter - frameCounter1);
+    float frameSpeed = gDisplay.updateFreq * (float)(frameCounter - frameCounter1);
     frameCounter1 = frameCounter;
     int matFlags = flags;
     if (matFlags & 0x10000) {

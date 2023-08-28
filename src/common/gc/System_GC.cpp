@@ -63,8 +63,8 @@ MKDefaults gMKDefaults = {
     0x400, // unk38
     0x200, // unk3C
     0x20, // unk40
-    2500, // modelInstanceCount
-    256, // modelInstanceCount2
+    2500, // numModelInstances
+    256, // numModelTemplateInstances
     0x4000, // unk4C, gMKDefaults.mdl.maxVerticesArray
     5500, // unk50, some heap variable which went unused
     0, // unk54

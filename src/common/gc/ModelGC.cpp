@@ -1,17 +1,10 @@
 #include "types.h"
+#include "common/System_GC.h"
 #include "common/Model.h"
 #include "common/View.h"
 #include "common/Heap.h"
 #include "Dolphin/gx.h"
 
-extern struct RenderState {
-    Material* pDefaultMaterial;
-    int fillState;
-    char unk8[8];
-    Texture* pDefaultTex;
-    char unk14[4];
-    int alpha;
-} gRenderState;
 extern "C" void DCStoreRange(uint*, int);
 extern GXColor Material_MixedColor;
 void Grass_DrawGC(Model*, u8*, int, int, float, float);

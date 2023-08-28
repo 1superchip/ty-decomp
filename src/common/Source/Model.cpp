@@ -1,4 +1,5 @@
 #include "types.h"
+#include "common/System_GC.h"
 #include "common/Model.h"
 #include "common/Heap.h"
 #include "common/FileSys.h"
@@ -6,16 +7,7 @@
 #include "common/PtrList.h"
 #include "common/Animation.h"
 
-// from a different file
-struct MKDefaults {
-	s8 padding[0x44];
-	int modelInstanceCount;
-	int modelTemplateCount;
-	int padding1[13];
-};
-extern MKDefaults gMKDefaults;
-
-bool moduleInitialised;
+bool moduleInitialised = false;
 PtrList<Model> modelInstances;
 PtrList<ModelTemplate> modelTemplates;
 int pCounterModelsDrawnRejected;
@@ -27,8 +19,8 @@ static int pDebugDave;
 static int pModelMenu;
 
 void Model_InitModule(void) {
-    modelInstances.Init(gMKDefaults.modelInstanceCount);
-    modelTemplates.Init(gMKDefaults.modelTemplateCount);
+    modelInstances.Init(gMKDefaults.numModelInstances);
+    modelTemplates.Init(gMKDefaults.numModelTemplateInstances);
     
     pCounterModelTrianglesInScene = 0;
     pCounterModelsDrawnRejected = 0;

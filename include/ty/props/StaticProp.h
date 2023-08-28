@@ -1,15 +1,11 @@
 #ifndef STATICPROP_H
 #define STATICPROP_H
 
+#include "common/System_GC.h"
 #include "ty/GameObject.h"
 #include "ty/RangeCheck.h"
 #include "common/Vector.h"
 #include "common/Collision.h"
-
-extern struct Display {
-    char padding[0xC];
-    float unkC;
-} gDisplay;
 
 /*struct NameFlagPair {
     char* name;
@@ -83,7 +79,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
 					if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, 5, &effectFlags) == false) {
 						bool foundLine = LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate);
 						if (foundLine != false) {
-							float speed = gDisplay.unkC;
+							float speed = gDisplay.updateFreq;
 							autoRotate.x *= speed;
 							autoRotate.y *= speed;
 							autoRotate.z *= speed;

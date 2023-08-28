@@ -1,15 +1,9 @@
 #include "ty/Script.h"
 #include "ty/GameObjectManager.h"
+#include "common/System_GC.h"
 #include "common/Str.h"
 #include "ty/GameData.h"
 
-extern struct Display {
-    int region;
-    int unk4;
-    float gameSpeed;
-    float unkC;
-    int unk10[23];
-} gDisplay;
 extern struct GlobalVar {
     char unk[0x104];
     GameData gameData;
@@ -60,7 +54,7 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
 
 void ScriptProp::Update(void) {
 	if (unk44) {
-		unk40 -= gDisplay.unkC;
+		unk40 -= gDisplay.updateFreq;
 		if (!(unk40 <= 0.0f)) {
 			return;
 		}

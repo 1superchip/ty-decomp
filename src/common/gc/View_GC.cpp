@@ -1,4 +1,5 @@
 #include "types.h"
+#include "common/System_GC.h"
 #include "common/View.h"
 // #include "Dolphin/gx.h"
 #include "common/Heap.h"
@@ -6,13 +7,6 @@
 #include "common/StdMath.h"
 
 extern "C" void memset(void*, int, int);
-extern struct Display {
-    int region;
-    int unk4;
-    float gameSpeed;
-    float unkC;
-    int unk10[23];
-} gDisplay;
 
 template <typename T>
 T& ByteReverse(T&);
@@ -290,7 +284,7 @@ void View::Use(void) {
 
 void View::InitModule(void) {
     pDefaultView = (View*)Heap_MemAlloc(sizeof(View));
-    pDefaultView->Init(0.0f, 0.0f, (float)(gDisplay.unk10[0] - 1), (float)(gDisplay.unk10[1] - 1));
+    pDefaultView->Init(0.0f, 0.0f, (float)(gDisplay.unk10 - 1), (float)(gDisplay.unk14 - 1));
     pCurrentView = NULL;
 }
 
@@ -303,11 +297,11 @@ float View::TransformPoint(IntVector* arg1, Vector* arg2) {
     Vector temp;
     temp.ApplyMatrix(arg2, &unk148);
     float fVar1 = 1.0f / temp.w;
-    int tx = ((temp.x * fVar1) * *(float*)&gDisplay.unk10[21]) * 0.5f;
-    arg1->x = ((int)(*(float*)&gDisplay.unk10[21]) >> 1) + tx;
-    int ty = ((temp.y * fVar1) * *(float*)&gDisplay.unk10[22]) * 0.5f;
-    int endY = ((int)(*(float*)&gDisplay.unk10[22]) >> 1) + ty;
-    arg1->y = *(float*)&gDisplay.unk10[22] - (float)endY;
+    int tx = ((temp.x * fVar1) * gDisplay.orthoXSize) * 0.5f;
+    arg1->x = ((int)gDisplay.orthoXSize >> 1) + tx;
+    int ty = ((temp.y * fVar1) * gDisplay.orthoYSize) * 0.5f;
+    int endY = ((int)gDisplay.orthoYSize >> 1) + ty;
+    arg1->y = gDisplay.orthoYSize - (float)endY;
     arg1->z = temp.z * fVar1;
     arg1->w = (int)temp.w;
     return fVar1;
@@ -519,8 +513,8 @@ void View::TransformPoint2Dto3D(float arg1, float arg2, float arg3, Vector* out)
     Vector point;
     float fVar1 = 2.0f * (float)tan(0.5f * unk2CC) * arg3;
     centrePos.Scale((Vector*)&unk48.data[2], arg3);
-    point.x = fVar1 * ((arg1 / *(float*)&gDisplay.unk10[21]) - 0.5f);
-    point.y = 0.8f * fVar1 * (0.5f - (arg2 / *(float*)&gDisplay.unk10[22]));
+    point.x = fVar1 * ((arg1 / gDisplay.orthoXSize) - 0.5f);
+    point.y = 0.8f * fVar1 * (0.5f - (arg2 / gDisplay.orthoYSize));
     point.z = 0.0f;
     point.ApplyRotMatrix(&point, &unk48);
     out->Add(&centrePos, &point);

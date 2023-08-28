@@ -47,8 +47,8 @@ struct MKDefaults {
     int unk38;
     int unk3C;
     int unk40;
-    int modelInstanceCount;
-    int modelInstanceCount2;
+    int numModelInstances; // Model instance count
+    int numModelTemplateInstances; // Model Template instance count
     int unk4C; // gMKDefaults.mdl.maxVerticesArray
     int unk50;
     int unk54;
@@ -80,7 +80,7 @@ extern MKDefaults gMKDefaults;
 
 struct RenderState {
     Material* pDefaultMaterial;
-    int unk4; // shadow related?
+    int fillState; // shadow related?
     char padding_0x8[0x8];
     Texture* pDefaultTexture;
     int unk14;
