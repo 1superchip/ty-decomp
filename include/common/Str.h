@@ -2,6 +2,7 @@
 #define COMMON_STR
 
 extern bool gAssertBool;
+extern char gNullStr[];
 
 char* Str_Printf(char* fmt, ...);
 char* Str_CopyString(char* string, int len);

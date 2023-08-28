@@ -81,7 +81,7 @@ struct Font {
 	static void InitModule(void);
 	static void DeinitModule(void);
 	static Font* Create(char* pName);
-	static Font* Create(char* pName, char*, float, float, float);
+	static Font* Create(char* pName, char* pCharMap, float, float, float);
 	static Font* Find(char* pName);
 
 	void Destroy(void);

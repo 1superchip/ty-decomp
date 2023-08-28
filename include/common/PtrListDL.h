@@ -20,7 +20,7 @@ inline void Swap(T& p, T& p1) {
 template <typename T>
 struct PtrListDL {
     T **pMem;
-	void Init(int, int);
+	void Init(int count, int size);
 	void Deinit(void);
 	void Destroy(T** p);
 	void Destroy(T* p);

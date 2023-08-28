@@ -3656,14 +3656,14 @@ common/gc/ModelGC.cpp:
 common/gc/system_extras.cpp:
    .text: [0x802348cc, 0x80234b10]
 
-#System_GC.cpp:
-#   .text: [0x80234b10, 0x80236008]
-#   .data: [0x802978b8, 0x80297bf8]
-#   .bss: [0x803e7080, 0x803ef140]
-#   .sdata: [0x803f9b20, 0x803f9b50]
-#   .sbss: [0x803fb498, 0x803fb500]
-#   .sdata2: [0x80402608, 0x80402648]
-#   .sbss2: [0x80402778, 0x8040277C]
+common/gc/System_GC.cpp:
+  .text: [0x80234b10, 0x80236008]
+  .data: [0x802978b8, 0x80297bf8]
+  .bss: [0x803e7080, 0x803ef140]
+  .sdata: [0x803f9b20, 0x803f9b50]
+  .sbss: [0x803fb498, 0x803fb500]
+  .sdata2: [0x80402608, 0x80402648]
+  .sbss2: [0x80402778, 0x8040277C]
 
 common/Source/Texture.cpp:
    .text: [0x80236008, 0x802368f8]
