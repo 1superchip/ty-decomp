@@ -22,6 +22,10 @@ struct DirectLight {
 	void RecalcMatrices(void);
 	
 	static DirectLight* pDefaultLight;
+
+	static DirectLight* GetDefault(void) {
+		return pDefaultLight;
+	}
 };
 
 #endif // COMMON_DIRECTLIGHT

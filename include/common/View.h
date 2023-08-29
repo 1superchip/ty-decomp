@@ -16,8 +16,8 @@ struct IntVector {
 };
 
 struct View {
-	Vector unk0;
-	Vector unk10;
+	Vector mCamPos;
+	Vector mCamTarget;
 	Vector unk20;
 	char unk30[4];
 	bool bDisableZWrite;
@@ -26,9 +26,9 @@ struct View {
     int unk3C;
     int unk40;
     int unk44;
-	Matrix unk48;
+	Matrix unk48; // Camera matrix?
 	Matrix unk88;
-	Matrix unkC8;
+	Matrix unkC8; // View matrix?
 	Matrix unk108;
 	Matrix unk148;
 	char unk188[64];
@@ -61,7 +61,8 @@ struct View {
 	void Init(void);
 	void Init(float, float, float, float);
 	void CalcMatrices(void);
-	void SetCameraLookAt(Vector*, Vector*);
+	static void SetCameraMatrixLookAt(Matrix* pMatrix, Vector* pCamPos, Vector* pCamTarget);
+	void SetCameraLookAt(Vector* pCamPos, Vector* pCamTarget);
 	void SetCameraRollAndLookAt(Vector*, Vector*, float);
 	void SetProjection(float fov, float, float);
     void SetLocalToWorldMatrix(Matrix*);

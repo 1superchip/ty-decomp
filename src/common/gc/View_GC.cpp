@@ -15,26 +15,22 @@ View* View::pCurrentView;
 View* View::pDefaultView;
 
 void View::Init(void) {
-    Vector vec;
-    Vector vec1;
+    Vector camPos;
+    Vector camTarget;
     unk2AC = 1.0f;
     unk2B0 = 1.0f;
-    vec.x = 0.0f;
-    vec.y = 0.0f;
-    vec.z = 0.0f;
-    vec1.x = 0.0f;
-    vec1.y = 0.0f;
-    vec1.z = 1.0f;
+    camPos.Set(0.0f, 0.0f, 0.0f);
+    camTarget.Set(0.0f, 0.0f, 1.0f);
     unk88.SetIdentity();
     unkC8.SetIdentity();
     unk108.SetIdentity();
-    SetCameraLookAt(&vec, &vec1);
+    SetCameraLookAt(&camPos, &camTarget);
     SetProjection(PI2, 0.5f, 1000.0f);
     closeFogPlane = 500.0f;
     farFogPlane = 900.0f;
     SetFogIntensity(0.0f, 255.0f);
     SetFogColour(0x808080);
-    SetDirectLight(DirectLight::pDefaultLight);
+    SetDirectLight(DirectLight::GetDefault());
     unk2E8 = 0;
     unk29C = 0;
     bDisableZWrite = false;
@@ -44,27 +40,24 @@ void View::Init(void) {
     bOrtho = false;
 }
 
+// floating args are unused but they are viewport related in other builds
 void View::Init(float arg1, float arg2, float arg3, float arg4) {
-    Vector vec;
-    Vector vec1;
+    Vector camPos;
+    Vector camTarget;
     unk2AC = 1.0f;
     unk2B0 = 1.0f;
-    vec.x = 0.0f;
-    vec.y = 0.0f;
-    vec.z = 0.0f;
-    vec1.x = 0.0f;
-    vec1.y = 0.0f;
-    vec1.z = 1.0f;
+    camPos.Set(0.0f, 0.0f, 0.0f);
+    camTarget.Set(0.0f, 0.0f, 1.0f);
     unk88.SetIdentity();
     unkC8.SetIdentity();
     unk108.SetIdentity();
-    SetCameraLookAt(&vec, &vec1);
+    SetCameraLookAt(&camPos, &camTarget);
     SetProjection(PI2, 0.5f, 1000.0f);
     closeFogPlane = 500.0f;
     farFogPlane = 900.0f;
     SetFogIntensity(0.0f, 255.0f);
     SetFogColour(0x808080);
-    SetDirectLight(DirectLight::pDefaultLight);
+    SetDirectLight(DirectLight::GetDefault());
     unk2E8 = 0;
     unk2B4 = 1.0f;
     unk2B8 = 1.0f;
@@ -79,48 +72,73 @@ void View::CalcMatrices(void) {
     unk148.Multiply4x4(&unk88, &unk1C8);
 }
 
-void View::SetCameraLookAt(Vector* arg1, Vector* arg2) {
-    unk0 = *arg1;
-    unk10 = *arg2;
-    unk48.SetLookAt(arg1, arg2);
-    unk48.SetTranslation(arg1);
+void View::SetCameraMatrixLookAt(Matrix* pMatrix, Vector* pCamPos, Vector* pCamTarget) {
+    Vector xDir;
+    Vector yDir;
+    Vector zDir;
+    
+    zDir.Sub(pCamTarget, pCamPos);
+    zDir.Normalise(&zDir);
+    
+    yDir.Set(0.0f, 1.0f, 0.0f);
+    
+    xDir.Cross(&zDir, &yDir);
+    xDir.Normalise(&xDir);
+    
+    yDir.Cross(&xDir, &zDir);
+    
+    pMatrix->Row0()->Copy(&xDir);
+    pMatrix->Row0()->w = 0.0f;
+    
+    pMatrix->Row1()->Copy(&yDir);
+    pMatrix->Row1()->w = 0.0f;
+    
+    pMatrix->Row2()->Copy(&zDir);
+    pMatrix->Row2()->w = 0.0f;
+    
+    pMatrix->SetTranslation(pCamPos);
+}
+
+void View::SetCameraLookAt(Vector* pCamPos, Vector* pCamTarget) {
+    mCamPos = *pCamPos;
+    mCamTarget = *pCamTarget;
+    View::SetCameraMatrixLookAt(&unk48, pCamPos, pCamTarget);
     unk20 = *unk48.Row2();
     unkC8.InverseSimple(&unk48);
 	CalcMatrices();
 }
 
-void View::SetCameraRollAndLookAt(Vector* arg1, Vector* arg2, float roll) {
-    Vector cross;
-    Vector up;
-    Vector normalizedDiff;
-    Matrix tempm;
-    unk0 = *arg1;
-    unk10 = *arg2;
-    up.Set(0.0f, 1.0f, 0.0f);
-    normalizedDiff.x = arg2->x - arg1->x;
-    normalizedDiff.y = arg2->y - arg1->y;
-    normalizedDiff.z = arg2->z - arg1->z;
-    normalizedDiff.Normalise(&normalizedDiff);
-    tempm.SetRotationRoll(roll);
-    unk20 = normalizedDiff;
-    cross.Cross(&normalizedDiff, &up);
-    cross.Normalise(&cross);
-    up.Cross(&cross, &normalizedDiff);
+void View::SetCameraRollAndLookAt(Vector* pCamPos, Vector* pCamTarget, float roll) {
+    Vector xDir;
+    Vector yDir;
+    Vector zDir;
+    Matrix rollMatrix;
+
+    mCamPos = *pCamPos;
+    mCamTarget = *pCamTarget;
+
+    yDir.Set(0.0f, 1.0f, 0.0f);
+    zDir.Sub(pCamTarget, pCamPos);
+    zDir.Normalise(&zDir);
+    rollMatrix.SetRotationRoll(roll);
+
+    unk20 = zDir;
+
+    xDir.Cross(&zDir, &yDir);
+    xDir.Normalise(&xDir);
+    yDir.Cross(&xDir, &zDir);
+
+    // Create Matrix
     unk48.SetIdentity();
-    unk48.data[0][0] = cross.x;
-    unk48.data[0][1] = cross.y;
-    unk48.data[0][2] = cross.z;
-    unk48.data[0][3] = 0.0f;
-    unk48.data[1][0] = up.x;
-    unk48.data[1][1] = up.y;
-    unk48.data[1][2] = up.z;
-    unk48.data[1][3] = 0.0f;
-    unk48.data[2][0] = normalizedDiff.x;
-    unk48.data[2][1] = normalizedDiff.y;
-    unk48.data[2][2] = normalizedDiff.z;
-    unk48.data[2][3] = 0.0f;
-    unk48.Multiply3x3(&tempm, &unk48);
-    unk48.SetTranslation(arg1);
+    unk48.Row0()->Copy(&xDir);
+    unk48.Row0()->w = 0.0f;
+    unk48.Row1()->Copy(&yDir);
+    unk48.Row1()->w = 0.0f;
+    unk48.Row2()->Copy(&zDir);
+    unk48.Row2()->w = 0.0f;
+
+    unk48.Multiply3x3(&rollMatrix, &unk48);
+    unk48.SetTranslation(pCamPos);
     unkC8.InverseSimple(&unk48);
 	CalcMatrices();
 }

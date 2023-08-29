@@ -770,7 +770,7 @@ void Material::Use(void) {
                 static float vOffset = 0.5f;
                 if (unkCC != false) {
                     Mtx44 ortho;
-                    Vector vec = View::GetCurrent()->unk0;
+                    Vector vec = View::GetCurrent()->mCamPos;
                     C_MTXOrtho(&ortho, 25000.0f + vec.z, -25000.0f + vec.z,
                         -25000.0f + vec.x, 25000.0f + vec.x, 0.0f, 1000.0f);
                     float tmp02 = ortho.data[0][2];
