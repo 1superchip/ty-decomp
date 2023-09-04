@@ -16,9 +16,9 @@ struct IntVector {
 };
 
 struct View {
-	Vector mCamPos;
-	Vector mCamTarget;
-	Vector unk20;
+	Vector mCamPos; // Camera Position
+	Vector mCamTarget; // Target position for Camera to lookat
+	Vector mFwdDir; // Forward Direction of the Camera
 	char unk30[4];
 	bool bDisableZWrite;
 	bool bOrtho;

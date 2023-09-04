@@ -425,6 +425,7 @@ void System_DestroyZRequest(ZCheckRequest* pRequest) {
 }
 
 extern "C" void GXPeekZ(u16 x, u16 y, u32* z);
+#define Z_BUFFER_DEPTH (16777216.0f - 1.0f) // 2^24 - 1
 
 /// @brief Updates zCheckRequests every frame for Screen Z Buffer checking
 /// @param  None
@@ -456,7 +457,7 @@ void System_CheckZRequests(void) {
         IntVector vec;
         vec.x = (r26 >> 1) + (int)(f1  * 0.5f);
         vec.y = r31 - ((r31 >> 1) + (int)(f3 * 0.5f));
-        vec.z = (spC.z * f5) * 16777215.0f;
+        vec.z = (spC.z * f5) * Z_BUFFER_DEPTH;
 
         if (f5 < 0.0f || vec.x < 0 || vec.x >= r26 || vec.y < 0 || vec.y >= r31) {
             pCheck->unk18 = 0;
@@ -571,12 +572,12 @@ extern "C" int main(int argc, char* argv[]) {
     // Initiate GX
     Matrix mtx;
     mtx.SetIdentity();
-    GXLoadPosMtxImm(mtx.data, 3);
+    GXLoadPosMtxImm(mtx.data, GX_PNMTX1);
     GXSetLineWidth(6, GX_TO_ZERO);
     GXSetPointSize(4, GX_TO_ZERO);
     GXSetCullMode(GX_CULL_NONE);
     GXSetAlphaUpdate(true);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     GXSetDstAlpha(true, 127);
     GXPokeZMode(0, 7, 1);
     GXPokeBlendMode(1, 1, 0, 15);

@@ -103,7 +103,7 @@ void View::SetCameraLookAt(Vector* pCamPos, Vector* pCamTarget) {
     mCamPos = *pCamPos;
     mCamTarget = *pCamTarget;
     View::SetCameraMatrixLookAt(&unk48, pCamPos, pCamTarget);
-    unk20 = *unk48.Row2();
+    mFwdDir = *unk48.Row2();
     unkC8.InverseSimple(&unk48);
 	CalcMatrices();
 }
@@ -122,7 +122,7 @@ void View::SetCameraRollAndLookAt(Vector* pCamPos, Vector* pCamTarget, float rol
     zDir.Normalise(&zDir);
     rollMatrix.SetRotationRoll(roll);
 
-    unk20 = zDir;
+    mFwdDir = zDir;
 
     xDir.Cross(&zDir, &yDir);
     xDir.Normalise(&xDir);
@@ -146,8 +146,8 @@ void View::SetCameraRollAndLookAt(Vector* pCamPos, Vector* pCamTarget, float rol
 extern "C" double tan(double);
 
 void View::SetProjection(float fov, float arg2, float arg3) {
-    float fVar28 = arg3 - arg2;
-    float fVar27 = arg3 / fVar28;
+    float far_minus_near = arg3 - arg2;
+    float fVar27 = arg3 / far_minus_near;
     memset((void*)&unk108, 0, sizeof(Matrix));
     unk2CC = fov;
     float tangent = tan(fov / 2.0f);
@@ -185,8 +185,8 @@ void View::SetProjection(float fov, float arg2, float arg3) {
     proj[1][3] = 0.0f;
     proj[2][0] = 0.0f;
     proj[2][1] = 0.0f;
-    proj[2][2] = (-arg2 * (1.0f / fVar28));
-    proj[2][3] = -(arg3 * arg2) * (1.0f / fVar28);
+    proj[2][2] = (-arg2 * (1.0f / far_minus_near));
+    proj[2][3] = -(arg3 * arg2) * (1.0f / far_minus_near);
     proj[3][0] = 0.0f;
     proj[3][1] = 0.0f;
     proj[3][2] = -1.0f;
@@ -221,8 +221,8 @@ void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
     matrix.data[2][2] *= -1.0f;
     matrix.data[3][2] *= -1.0f;
     matrix.Transpose(&matrix);
-    GXLoadPosMtxImm(matrix.data, 0);
-    GXLoadNrmMtxImm(matrix.data, 0);
+    GXLoadPosMtxImm(matrix.data, GX_PNMTX0);
+    GXLoadNrmMtxImm(matrix.data, GX_PNMTX0);
 }
 
 void View::SetDirectLight(DirectLight* pDirectLight) {
@@ -293,8 +293,8 @@ void View::Use(void) {
         matrix.data[2][2] *= -1.0f;
         matrix.data[3][2] *= -1.0f;
         matrix.Transpose(&matrix);
-        GXLoadPosMtxImm(matrix.data, 0);
-        GXLoadNrmMtxImm(matrix.data, 0);
+        GXLoadPosMtxImm(matrix.data, GX_PNMTX0);
+        GXLoadNrmMtxImm(matrix.data, GX_PNMTX0);
         SetProjection(unk2CC, unk2C0, unk2BC);
         SetDirectLight(NULL);
     }
@@ -311,18 +311,19 @@ void View::DeinitModule(void) {
 	Heap_MemFree((void*)pDefaultView);
 }
 
+// ProjectPoint?
 float View::TransformPoint(IntVector* arg1, Vector* arg2) {
     Vector temp;
     temp.ApplyMatrix(arg2, &unk148);
-    float fVar1 = 1.0f / temp.w;
-    int tx = ((temp.x * fVar1) * gDisplay.orthoXSize) * 0.5f;
+    float oneOverW = 1.0f / temp.w;
+    int tx = ((temp.x * oneOverW) * gDisplay.orthoXSize) * 0.5f;
     arg1->x = ((int)gDisplay.orthoXSize >> 1) + tx;
-    int ty = ((temp.y * fVar1) * gDisplay.orthoYSize) * 0.5f;
+    int ty = ((temp.y * oneOverW) * gDisplay.orthoYSize) * 0.5f;
     int endY = ((int)gDisplay.orthoYSize >> 1) + ty;
     arg1->y = gDisplay.orthoYSize - (float)endY;
-    arg1->z = temp.z * fVar1;
+    arg1->z = temp.z * oneOverW;
     arg1->w = (int)temp.w;
-    return fVar1;
+    return oneOverW;
 }
 
 void View::ClearZBuffer(void) {

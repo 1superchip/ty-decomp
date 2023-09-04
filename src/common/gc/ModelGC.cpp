@@ -159,8 +159,8 @@ int Model::Draw(u16* pSubObjs) {
         invMatrix.data[2][2] *= -1.0f;
         invMatrix.data[3][2] *= -1.0f;
         invMatrix.Transpose(&invMatrix);
-        GXLoadPosMtxImm(invMatrix.data, 0);
-        GXLoadNrmMtxImm(invMatrix.data, 0);
+        GXLoadPosMtxImm(invMatrix.data, GX_PNMTX0);
+        GXLoadNrmMtxImm(invMatrix.data, GX_PNMTX0);
         bufferOffset = bufferOffset + r25;
         bufferOffset = (bufferOffset + 0x20) & ~0x1f;
     } else {
@@ -179,8 +179,8 @@ int Model::Draw(u16* pSubObjs) {
         mat1.data[2][2] *= -1.0f;
         mat1.data[3][2] *= -1.0f;
         mat1.Transpose(&mat1);
-        GXLoadPosMtxImm(mat1.data, 0);
-        GXLoadNrmMtxImm(mat1.data, 0);
+        GXLoadPosMtxImm(mat1.data, GX_PNMTX0);
+        GXLoadNrmMtxImm(mat1.data, GX_PNMTX0);
         GXSetArray(GX_VA_POS, (void*)&pVerts->pos, sizeof(Vertex));
         GXSetArray(GX_VA_NRM, (void*)&pVerts->normal, sizeof(Vertex));
     }
@@ -235,8 +235,8 @@ int Model::Draw(u16* pSubObjs) {
                     localMatrix.data[2][2] *= -1.0f;
                     localMatrix.data[3][2] *= -1.0f;
                     localMatrix.Transpose(&localMatrix);
-                    GXLoadPosMtxImm(localMatrix.data, 0);
-                    GXLoadNrmMtxImm(localMatrix.data, 0);
+                    GXLoadPosMtxImm(localMatrix.data, GX_PNMTX0);
+                    GXLoadNrmMtxImm(localMatrix.data, GX_PNMTX0);
                 } else {
                     Matrix mat1;
                     View* pView = View::GetCurrent();
@@ -253,8 +253,8 @@ int Model::Draw(u16* pSubObjs) {
                     mat1.data[2][2] *= -1.0f;
                     mat1.data[3][2] *= -1.0f;
                     mat1.Transpose(&mat1);
-                    GXLoadPosMtxImm(mat1.data, 0);
-                    GXLoadNrmMtxImm(mat1.data, 0);
+                    GXLoadPosMtxImm(mat1.data, GX_PNMTX0);
+                    GXLoadNrmMtxImm(mat1.data, GX_PNMTX0);
                 }
             }
             EffectDat* effect = pEffect;

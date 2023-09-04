@@ -769,6 +769,7 @@ void Material::Use(void) {
                 static float uOffset = 0.5f;
                 static float vOffset = 0.5f;
                 if (unkCC != false) {
+                    // Move the water texture with the camera
                     Mtx44 ortho;
                     Vector vec = View::GetCurrent()->mCamPos;
                     C_MTXOrtho(&ortho, 25000.0f + vec.z, -25000.0f + vec.z,
@@ -805,6 +806,8 @@ void Material::Use(void) {
                 }
                 if (unkCD != false) {
                     Mtx44 texMtx;
+                    // indirectWaterVec.x/.y are the texture scales for the water "waves"
+                    // the larger the value, the more subdivisions there are within the water texture
                     float xcomp = 25000.0f / indirectWaterVec.x;
                     float ycomp = 25000.0f / indirectWaterVec.y;
                     C_MTXOrtho(&texMtx, xcomp, -xcomp, -ycomp, ycomp, 0.0f, 1e+09f);
@@ -925,14 +928,18 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     _GXRenderModeObj* rmodeObj = DEMOGetRenderModeObj();
     GXSetCopyFilter(0, 0, 0, 0);
     float proj[4][4];
+
+    // Get original projection matrix
     float projection[7];
     GXGetProjectionv(projection);
+
+    // Create Orthographic projection matrix
     proj[0][0] = 1.0f / (float)(gDisplay.unk10 / 2);
     proj[0][1] = 0.0f;
     proj[0][2] = 0.0f;
     proj[0][3] = -1.0f;
     proj[1][0] = 0.0f;
-    proj[1][1] = -1.0f / (float)((VIGetTvFormat() == 1) ? 0xf8 : 0xe0);
+    proj[1][1] = -1.0f / (float)((VIGetTvFormat() == VI_PAL) ? 248 : 224);
     proj[1][2] = 0.0f;
     proj[1][3] = 1.0f;
     proj[2][0] = 0.0f;
@@ -943,8 +950,9 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     proj[3][1] = 0.0f;
     proj[3][2] = 0.0f;
     proj[3][3] = 1.0f;
-    GXSetProjection(proj, GX_ORTHOGRAPHIC);
+    GXSetProjection(proj, GX_ORTHOGRAPHIC); // Use Orthographic projection matrix
     GXSetCurrentMtx(3);
+
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
@@ -1070,6 +1078,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     WGPIPE.f = 1.0f;
     GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
+    // Material::UseNone() inlined here?
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);

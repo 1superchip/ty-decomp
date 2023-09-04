@@ -5,26 +5,7 @@
 #include "common/Str.h"
 #include "common/FileSys.h"
 
-// // not from this file
-// struct _GXRenderModeObj {
-//     u32 viTVMode;
-//     u16 fbWidth;
-//     u16 efbHeight;
-//     u16 xfbHeight;
-//     u16 viXOrigin;
-//     u16 viYOrigin;
-//     u16 viWidth;
-//     u16 viHeight;
-//     uint xfbMode;
-//     u8 field_rendering;
-//     u8 aa;
-//     u8 sample_pattern[2][12];
-//     u8 vfilter[7];
-// };
 extern "C" {
-	u32 VIGetTvFormat(void);
-	_GXRenderModeObj* DEMOGetRenderModeObj(void);
-	double fmod(double, double);
 	void memcpy(void*, void*, int);
 	void strcpy(char*, char*);
 	void DCStoreRange(uint*, int);
@@ -35,7 +16,7 @@ extern "C" {
 
 Vector Texture_Color;
 
-bool Texture::initialised;
+bool Texture::initialised = false;
 static PtrListDL<Texture> textures;
 bool Texture_bColourKey;
 bool Texture_IsAlias;
@@ -114,7 +95,7 @@ Texture *Texture::Create(char *pName) {
                 minFilter = 5; // GX_LIN_MIP_LIN
             }
             // GXInitTexObjLOD(&pTex->texObj, 0.0f, maxLod, -4.0f, minFilter, 1, 1, 0, 0);
-            GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter, GX_LINEAR, 0.0f, maxLod, -4.0f, 1, 0, (GXAnisotropy)0);
+            GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter, GX_LINEAR, 0.0f, maxLod, -4.0f, 1, 0, GX_ANISO_1);
             if (Texture_filterType >= 2 && pTex->width > 64) {
                 break;
             }

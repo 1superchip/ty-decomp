@@ -120,6 +120,10 @@ void Matrix::Transpose3x3(Matrix* pMatrix) {
     *this = tempm;
 }
 
+// InverseTranspose or Adjoint of a matrix?
+// This is a "simple" inverse function for an Orthogonal matrix
+// The tranpose of an orthogonal matrix is equal to its inverse
+// this only works as the inverse function for an orthogonal matrix
 void Matrix::InverseSimple(Matrix* pMatrix) {
     Matrix tempm;
     tempm.Transpose3x3(pMatrix);
