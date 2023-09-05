@@ -13,21 +13,27 @@ enum InputDevices {
     MAX_CHANS   = 5
 };
 
+// "Stick" is the left joystick on the controller
+// "C-stick" is the right stick (C-stick)
+
 // TODO document all fields
 struct Input_Joypad {
     PADStatus* pPad;
-    u16 unk4;
-    u16 unk6;
-    int unk8;
-    int unkC;
-    int unk10;
-    int unk14;
-    int unk18;
-    int unk1C;
-    int unk20;
-    int unk24;
-    u8 triggerL;
-    u8 triggerR;
+
+    // Label previous frame fields
+    u16 buttonFlags; // Bitflags pressed buttons
+    u16 buttonFlags2; // Bitflags pressed buttons
+
+    int unk8; // Stick X
+    int unkC; // Stick Y
+    int unk10; // C-stick X
+    int unk14; // C-stick Y
+    int unk18; // Stick X
+    int unk1C; // Stick Y
+    int unk20; // C-stick X
+    int unk24; // C-stick Y
+    u8 triggerL; // Left analog trigger
+    u8 triggerR; // Right analog trigger
 };
 
 void Input_InitModule(void);

@@ -39,7 +39,7 @@ void Input_Update(bool bReadInputs) {
     u32 invalidControllers = 0;
     for(int i = 0; i < JoyStickCount; i++) {
         u32 r9 = (0x80000000 >> i);
-        joyPad[i].unk4 = joyPad[i].unk6;
+        joyPad[i].buttonFlags = joyPad[i].buttonFlags2;
         joyPad[i].unk18 = joyPad[i].unk8;
         joyPad[i].unk1C = joyPad[i].unkC;
         joyPad[i].unk20 = joyPad[i].unk10;
@@ -54,7 +54,7 @@ void Input_Update(bool bReadInputs) {
                 break;
         }
         if (pad[i].err == PAD_ERR_NONE) {
-            joyPad[i].unk6 = joyPad[i].pPad->button;
+            joyPad[i].buttonFlags2 = joyPad[i].pPad->button;
             
             joyPad[i].unk8 = Clamp<int>((joyPad[i].pPad->stickX * 2), -128, 127) + 128;
             joyPad[i].unkC = Clamp<int>(-(joyPad[i].pPad->stickY * 2), -128, 127) + 128;
@@ -85,7 +85,8 @@ void Input_Update(bool bReadInputs) {
             joyPad[i].triggerL = joyPad[i].pPad->triggerL;
             joyPad[i].triggerR = joyPad[i].pPad->triggerR;
         } else {
-            joyPad[i].unk6 = 0;
+            // if there is an error such as the controller is unplugged
+            joyPad[i].buttonFlags2 = 0;
             joyPad[i].unk8 = 0x7f;
             joyPad[i].unkC = 0x7f;
             joyPad[i].unk10 = 0x7f;
@@ -133,11 +134,11 @@ int Input_GetDeviceStatus(InputDevices deviceID) {
                 case PAD_ERR_NONE:
                     status = 0;
                     break;
-                case -2:
+                case PAD_ERR_NOT_READY:
                     status = 1;
                     break;
-                case -1:
-                case -3:
+                case PAD_ERR_NO_CONTROLLER:
+                case PAD_ERR_TRANSFER:
                     status = 2;
                     break;
             }
@@ -156,7 +157,7 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
     deviceID = CHAN_0; // Only check Channel 0
     if (deviceID == ALL_CHANS) {
         // Never will happen
-        // This code checks every channel for the button=
+        // This code checks every channel for the button
         bool isStickButton = Input_IsButtonStick(button);
         for(int i = 0; i < 4; i++) {
             int buttonState = Input_GetButtonState((InputDevices)i, button, pFoundDevice);
@@ -198,7 +199,7 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
                     break;
                 case 12:
                 default:
-                    if (joyPad[deviceID].unk6 & ButtonMasks[button]) {
+                    if (joyPad[deviceID].buttonFlags2 & ButtonMasks[button]) {
                         ret = 0xff;
                     }
                     break;
@@ -230,8 +231,8 @@ bool Input_WasButtonPressed(InputDevices deviceID, int button, InputDevices* pFo
         case CHAN_1:
         case CHAN_2:
         case CHAN_3:
-            if ((joyPad[deviceID].unk6 & ButtonMasks[button]) &&
-                !(joyPad[deviceID].unk4 & ButtonMasks[button])) {
+            if ((joyPad[deviceID].buttonFlags2 & ButtonMasks[button]) &&
+                !(joyPad[deviceID].buttonFlags & ButtonMasks[button])) {
                 return true;
             }
     }
@@ -269,8 +270,8 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
 /// @param  None
 void Input_ClearPadData(void) {
     for(int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
-        joyPad[i].unk4 = 0;
-        joyPad[i].unk6 = 0;
+        joyPad[i].buttonFlags = 0;
+        joyPad[i].buttonFlags2 = 0;
         joyPad[i].unk8 = 0x7f;
         joyPad[i].unkC = 0x7f;
         joyPad[i].unk10 = 0x7f;
@@ -316,7 +317,7 @@ bool Input_IsButtonStick(int buttonVal) {
     }
 }
 
-static void ClampGenericStick(s8*, s8*, float, float, long);
+static void ClampGenericStick(s8*, s8*, float radius, float radiusSquared, long min);
 static void ClampGenericTrigger(u8* p, u8 min, u8 max);
 
 #define STICK_MIN           (15)
@@ -334,7 +335,7 @@ void PADClampCircle(PADStatus* status) {
         ClampGenericStick(&status->substickX, &status->substickY, SUBSTICK_RADIUS, SUBSTICK_RADIUS * SUBSTICK_RADIUS, STICK_MIN);
         ClampGenericTrigger(&status->triggerL, CLAMP_MIN_TRIGGER, CLAMP_MAX_TRIGGER);
         ClampGenericTrigger(&status->triggerR, CLAMP_MIN_TRIGGER, CLAMP_MAX_TRIGGER);
-  }
+    }
 }
 
 static void ClampGenericStick(s8* px, s8* py, float radius, float radiusSquared, long min) {
