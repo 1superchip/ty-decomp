@@ -6,7 +6,7 @@
 
 Vector* GameCamera_GetPos(void);
 Vector* GameCamera_GetDir(void);
-void GameCamera_GetVectors(Vector*, Vector*, Vector*);
+void GameCamera_GetVectors(Vector* pCamPos, Vector* pTargetPoint, Vector* pCamDir);
 extern "C" void memset(void*, int, int);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
@@ -85,12 +85,12 @@ void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float 
         return;
     }
     if (arg1 == 0) {
-        Vector vec = *pModel->matrices[0].Row3();
-        Vector vec1;
-        Vector vec2;
-        vec.y += arg3 / 2.0f;
-        GameCamera_GetVectors(&vec2, &vec1, NULL);
-        if (RayToSphere(&vec2, &vec1, &vec, 10.0f + arg4, -1.0f, true) && ty.state != 0x2d) {
+        Vector center = *pModel->matrices[0].Row3();
+        Vector target;
+        Vector source;
+        center.y += arg3 / 2.0f;
+        GameCamera_GetVectors(&source, &target, NULL);
+        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.state != 0x2d) {
             pModel->colour.w = Max<float>(arg5, pModel->colour.w - 0.05625f);
             return;
         }
@@ -319,12 +319,12 @@ void LODManager::InternalUpdate(Model *pModel, int arg1, float arg2) {
             return;
         }
         if (subobjectEnableFlags <= 0 && pDescriptor->flags & LODFlags_CameraFade) {
-            Vector vec = *pModel->matrices[0].Row3();
-            Vector vec1;
-            Vector vec2;
-            vec.y += pDescriptor->height / 2.0f;
-            GameCamera_GetVectors(&vec2, &vec1, NULL);
-            if (RayToSphere(&vec2, &vec1, &vec, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != 0x2d) {
+            Vector center = *pModel->matrices[0].Row3();
+            Vector target;
+            Vector source;
+            center.y += pDescriptor->height / 2.0f;
+            GameCamera_GetVectors(&source, &target, NULL);
+            if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != 0x2d) {
                 pModel->colour.w = (pDescriptor->minalpha > pModel->colour.w - 0.05625f) ? pDescriptor->minalpha : pModel->colour.w - 0.05625f;
                 return;
             }

@@ -231,16 +231,16 @@ void Platform::UpdateAttached(void) {
 }
 
 void Platform::UpdateShadow(void) {
-	Vector vec = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y - 10.0f,
+	Vector start = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y - 10.0f,
 		pModel->matrices[0].Row3()->z, 0.0f};
-	Vector vec1 = {vec.x, vec.y - GetDesc()->maxShadowHeight, vec.z, 0.0f};
-	if (CompareVectors(&vec, &unkA0) == false) {
+	Vector end = {start.x, start.y - GetDesc()->maxShadowHeight, start.z, 0.0f};
+	if (CompareVectors(&start, &unkA0) == false) {
 		unkD0 = false;
 		CollisionResult cr;
-		if (Collision_RayCollide(&vec, &vec1, &cr, (CollisionMode)2, 0)) {
+		if (Collision_RayCollide(&start, &end, &cr, (CollisionMode)2, 0)) {
 			unkC0 = cr.normal;
 			unkB0 = cr.pos;
-			unkA0 = vec;
+			unkA0 = start;
 			unkD0 = true;
 			if (GetDesc()->bUseGroundColor) {
 				pModel->colour = Tools_GroundColor(&cr);

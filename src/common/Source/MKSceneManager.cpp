@@ -767,8 +767,7 @@ void MKSceneManager::UpdateProp(MKProp* pProp, MKMessage* pMessage) {
     pProp->pNextUpdated = prop->pNextUpdated;
     pProp->pPrevUpdated = prop;
     pProp->pNextUpdated->pPrevUpdated = pProp;
-    prop = pProp->pPrevUpdated;
-    prop->pNextUpdated = pProp;
+    pProp->pPrevUpdated->pNextUpdated = pProp;
 
     pProp->Update();
 }
