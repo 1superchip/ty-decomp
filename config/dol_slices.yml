@@ -3601,14 +3601,14 @@ common/File.cpp:
 #   .sbss: [0x803fb370, 0x803fb3a8]
 #   .sdata2: [0x80402458, 0x80402480]
 
-#Input_GC.cpp:
-#   .text: [0x80227254, 0x8022825c]
-#   .rodata: [0x8023fea0, 0x8023fec8]
-#   .data: [0x80276990, 0x80276a80]
-#   .bss: [0x8036f720, 0x8036f760]
-#   .sdata: [0x803f9a00, 0x803f9a08]
-#   .sbss: [0x803fb3a8, 0x803fb3b0]
-#   .sdata2: [0x80402480, 0x804024c0]
+common/gc/Input_GC.cpp:
+  .text: [0x80227254, 0x8022825c]
+  .rodata: [0x8023fea0, 0x8023fec8]
+  .data: [0x80276990, 0x80276a80]
+  .bss: [0x8036f720, 0x8036f760]
+  .sdata: [0x803f9a00, 0x803f9a08]
+  .sbss: [0x803fb3a8, 0x803fb3b0]
+  .sdata2: [0x80402480, 0x804024c0]
 
 common/Source/Material_GC.cpp:
    .text: [0x8022825c, 0x8022bb50]

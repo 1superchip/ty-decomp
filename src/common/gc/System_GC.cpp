@@ -17,6 +17,7 @@
 #include "common/Heap.h"
 #include "common/Blitter.h"
 #include "common/DiscErrors.h"
+#include "common/Input.h"
 #include "common/MKRumble.h"
 #include "common/Water_GC.h"
 
@@ -112,7 +113,6 @@ char* gpBuildVersion = "<not set>";
 
 extern void Game_InitSystem(void);
 extern void MKPackage_InitModule(void);
-extern void Input_InitModule(void);
 extern void MKMemoryCard_InitModule(void);
 extern "C" void Sound_InitModule(void);
 extern void Video_InitModule(void);
@@ -170,7 +170,6 @@ extern void MKGrass_DeinitTypes(void);
 extern void MKShadow_DeinitModule();
 extern void Video_DeinitModule(void);
 extern void MKMemoryCard_DeinitModule(void);
-extern void Input_DeinitModule(void);
 extern void MKPackage_DeinitModule(void);
 
 // might be missing inlines that cause the inline depth limit
@@ -211,7 +210,6 @@ void System_DeinitModule(void) {
 
 void System_GameDraw(void);
 bool System_Update_Normal(void);
-extern bool Input_IsKeyMappingEnabled(void);
 extern void Game_Init(void);
 extern void Input_Update(bool);
 extern void Game_Deinit(void);
@@ -221,10 +219,6 @@ extern int Game_Update(void);
 extern "C" int OSGetConsoleSimulatedMemSize(void);
 extern void Game_Draw(void);
 extern void MKMemoryCard_Update(void);
-extern void Input_EnableKeyMapping(bool);
-extern bool Input_WasButtonPressed(InputDevices, int, InputDevices*);
-extern int Input_GetButtonState(InputDevices, int, InputDevices*);
-extern void Input_ClearPadData(void);
 
 // Main game loop function
 void System_DoGameLoop(void) {
@@ -631,9 +625,7 @@ extern "C" int main(int argc, char* argv[]) {
     return 0;
 }
 
-extern void Input_StopAllVibration(void);
 extern "C" void Sound_DeinitModule(void);
-extern "C" void PADRecalibrate(int);
 extern "C" void OSResetSystem(int reset, u32 resetCode, BOOL forceMenu);
 int MKMemoryCard_GetStatus(int);
 

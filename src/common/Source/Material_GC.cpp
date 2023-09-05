@@ -46,11 +46,11 @@ extern "C" {
 
 // End EXTERNS
 
-char rawCaptureTexData[0x20000] = {
+char rawCaptureTexData[0x20000] __attribute__ ((aligned (32))) = {
 	#include "assets/materialgc_rawCaptureData.inc"
 };
 
-static KromeIni materialIni;
+static KromeIni materialIni __attribute__ ((aligned (32)));
 static GXTexObj restorationTexObj __attribute__ ((aligned (16)));
 static char restorationTexData[32768];
 static GXTexObj rawCaptureTexObj;

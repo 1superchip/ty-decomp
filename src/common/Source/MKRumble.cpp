@@ -4,7 +4,7 @@
 extern "C" double fmod(double, double);
 extern void Input_Vibrate(InputDevices, int, bool);
 
-static InputDeviceStruct ves[INPUTDEVICE_COUNT] = {
+static InputDeviceStruct ves[MAX_CHANS] = {
     {0, false, 0.0f}, 
     {0, false, 0.0f}, 
     {0, false, 0.0f},
@@ -21,7 +21,7 @@ static bool vibrationPaused = false;
 /// @param None
 void MKRumble_Reset(void) {
     vibrationPaused = false;
-    for(int i = 0; i < INPUTDEVICE_COUNT; i++) {
+    for(int i = 0; i < MAX_CHANS; i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = 0;
         ves[i].unk8 = 0;
@@ -89,7 +89,7 @@ void MKRumble_Update(void) {
             effectsPlaying--;
         }
     }
-    for(int i = 0; i < INPUTDEVICE_COUNT; i++) {
+    for(int i = 0; i < MAX_CHANS; i++) {
         if (smallActMag[i] > 1.0f) {
             smallActMag[i] = 1.0f;
         }
@@ -116,7 +116,7 @@ void MKRumble_Update(void) {
 /// @param  None
 void MKRumble_Pause(void) {
     vibrationPaused = true; // Set vibrations to paused
-    for(int i = 0; i < INPUTDEVICE_COUNT; i++) {
+    for(int i = 0; i < MAX_CHANS; i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = false;
         ves[i].unk8 = 0.0f;

@@ -1,10 +1,9 @@
 #ifndef COMMON_MKRUMBLE
 #define COMMON_MKRUMBLE
 
-#define INPUTDEVICE_COUNT (5)
-#define NUM_VIBRA_EFFECTS (8)
+#include "common/Input.h"
 
-enum InputDevices {};
+#define NUM_VIBRA_EFFECTS (8)
 
 struct InputDeviceStruct {
     int unk0;
