@@ -10,15 +10,15 @@ struct Language {
 };
 
 enum TranslationLanguage {
-    Language_NotSet = -1,
-	LANGUAGE_ENGLISH = 0,
-	Language_American = 1,
-	Language_French = 2,
-	Language_Spanish = 3,
-	Language_German = 4,
-	Language_Italian = 5,
-	Language_Dutch = 6,
-    LANGUAGE_NMBR_OF_LANGUAGES = 8,
+    Language_NotSet 			= -1,
+	LANGUAGE_ENGLISH 			= 0,
+	Language_American 			= 1,
+	Language_French 			= 2,
+	Language_Spanish 			= 3,
+	Language_German 			= 4,
+	Language_Italian 			= 5,
+	Language_Dutch 				= 6,
+    LANGUAGE_NMBR_OF_LANGUAGES 	= 8,
 };
 
 enum Translation_Platform {
@@ -32,11 +32,11 @@ void Translation_InitModule(void);
 void Translation_DeinitModule(void);
 TranslationLanguage Translation_GetLanguage(void);
 TranslationLanguage Translation_GetDefaultLanguage(void);
-void Translation_SetLanguage(TranslationLanguage);
-bool Translation_IsLanguageAvailable(TranslationLanguage);
-char* Translation_GetLanguageName(TranslationLanguage);
-char* Translation_GetLanguageLocalName(TranslationLanguage);
-char* Translation_GetLanguageCode(TranslationLanguage);
+void Translation_SetLanguage(TranslationLanguage language);
+bool Translation_IsLanguageAvailable(TranslationLanguage language);
+char* Translation_GetLanguageName(TranslationLanguage language);
+char* Translation_GetLanguageLocalName(TranslationLanguage language);
+char* Translation_GetLanguageCode(TranslationLanguage language);
 
 #define MAX_TRANSLATION_STRINGS (0x400)
 

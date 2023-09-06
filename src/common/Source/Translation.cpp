@@ -1,5 +1,6 @@
 #include "types.h"
 #include "common/Translation.h"
+#include "common/System_GC.h"
 #include "common/Heap.h"
 #include "common/FileSys.h"
 #include "common/Str.h"
@@ -9,8 +10,6 @@ extern "C" int strcmpi(char*, char*);
 extern "C" int strlen(char*);
 extern "C" void memmove(char*, char*, int);
 extern "C" u8 OSGetLanguage(void);
-extern char gNullStr[];
-extern int gDisplay[27];
 
 
 static TranslationLanguage gCurrentLanguage = Language_NotSet;
@@ -67,6 +66,9 @@ void Translation_DeinitModule(void) {
     gCurrentLanguage = Language_NotSet;
 }
 
+/// @brief Gets the current language
+/// @param  None
+/// @return Current Language
 TranslationLanguage Translation_GetLanguage(void) {
 	return gCurrentLanguage;
 }
@@ -94,7 +96,7 @@ TranslationLanguage Translation_GetDefaultLanguage(void) {
         break;
     }
     if (defaultLanguage == LANGUAGE_ENGLISH || Translation_IsLanguageAvailable(defaultLanguage) == false) {
-        if (gDisplay[0] == 1 && Translation_IsLanguageAvailable(Language_American) != false) {
+        if (gDisplay.region == 1 && Translation_IsLanguageAvailable(Language_American) != false) {
             defaultLanguage = Language_American;
         } else {
             defaultLanguage = LANGUAGE_ENGLISH;
@@ -195,18 +197,30 @@ void Translation_SetLanguage(TranslationLanguage language) {
     gLanguageDebugOption++) {};
 }
 
+/// @brief Returns whether a language is avaliable or not
+/// @param language Language id
+/// @return True if avaliable otherwise false
 bool Translation_IsLanguageAvailable(TranslationLanguage language) {
     return gLanguageInfo[language].size;
 }
 
+/// @brief Returns the language name of a language
+/// @param language Language id
+/// @return string of the language name
 char* Translation_GetLanguageName(TranslationLanguage language) {
 	return gLanguageInfo[language].languageName;
 }
 
+/// @brief Returns the local (translated) language name
+/// @param language Language id
+/// @return String of the translated language name
 char* Translation_GetLanguageLocalName(TranslationLanguage language) {
 	return gLanguageInfo[language].localName;
 }
 
+/// @brief Returns the language code
+/// @param language Language id
+/// @return String of the language code
 char* Translation_GetLanguageCode(TranslationLanguage language) {
 	return gLanguageInfo[language].languageCode;
 }

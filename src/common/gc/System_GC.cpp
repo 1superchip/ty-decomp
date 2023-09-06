@@ -211,7 +211,6 @@ void System_DeinitModule(void) {
 void System_GameDraw(void);
 bool System_Update_Normal(void);
 extern void Game_Init(void);
-extern void Input_Update(bool);
 extern void Game_Deinit(void);
 extern "C" void Sound_Update(void);
 extern "C" int VIGetRetraceCount(void);

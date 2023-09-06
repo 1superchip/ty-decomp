@@ -12,9 +12,9 @@ u32 x[0x6f0];
 extern "C" void memset(void*, int, int);
 extern "C" int ty[0x1178]; // from Ty.cpp
 
-bool DDASession::bInitialised;
+bool DDASession::bInitialised = false;
 bool DDASession::bSessionStarted;
-bool DDASession::bConvertToReadable;
+bool DDASession::bConvertToReadable = false;
 static int pDDAMenu;
 static int pDDADrawEnabled;
 static int pDDADrawCameraEnabled;

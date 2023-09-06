@@ -1,3 +1,7 @@
+#ifndef MESSAGES_H
+#define MESSAGES_H
+
+#include "ty/GameObject.h"
 
 struct EventMessage {
     union {
@@ -11,3 +15,5 @@ struct EventMessage {
 	void Resolve(void);
 	void Send(void);
 };
+
+#endif // MESSAGES_H

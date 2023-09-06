@@ -132,4 +132,6 @@ struct DDASession {
 
 // structs of "DDACheckpointInfoList" / "DDADeathInfoList"
 
+extern DDASession dda;
+
 #endif // DDA_H

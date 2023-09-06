@@ -1,8 +1,12 @@
 #include "common/MKRumble.h"
 #include "common/StdMath.h"
 
+/*
+// File: MKRumble.cpp
+// File to control rumble of controllers
+*/
+
 extern "C" double fmod(double, double);
-extern void Input_Vibrate(InputDevices, int, bool);
 
 static InputDeviceStruct ves[MAX_CHANS] = {
     {0, false, 0.0f}, 

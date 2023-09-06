@@ -1,8 +1,7 @@
-#include "types.h"
-#include "Dolphin/os/OSTime.h"
+#ifndef COMMON_TIMER
+#define COMMON_TIMER
 
-extern "C" void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime* td);
-extern "C" OSTime OSGetTime(void);
+#include "types.h"
 
 #define MINUTES_TO_SECONDS 60
 #define HOURS_TO_SECONDS 3600
@@ -22,3 +21,5 @@ struct TimerInfo {
 void Timer_GetSystemTime(TimerInfo*);
 int Timer_GetDHMSInSeconds(TimerInfo*);
 void Timer_GetDifference(TimerInfo*, TimerInfo*, TimerInfo*);
+
+#endif // COMMON_TIMER

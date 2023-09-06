@@ -11,7 +11,7 @@ struct UIModel {
     Vector mPos;
     Model* pModel;
     MKAnimScript mAnimScript;
-    float unk34;
+    float mCenterY; // Y Center of the Model's BoundingVolume
 
     void Init(char* pModelName, char* pAnimName);
     void Deinit(void);

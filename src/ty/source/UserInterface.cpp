@@ -14,8 +14,8 @@ void UIModel::Init(char* pModelName, char* pAnimName) {
     pModel = Model::Create(pModelName, pAnimName);
     pModel->matrices[0].SetIdentity();
     BoundingVolume* pBV = pModel->GetBoundingVolume(-1);
-    unk34 = pBV->v1.y + (pBV->v2.y * 0.5f);
-    pModel->matrices[0].Row3()->Set(0.0f, unk34, 100.0f, 1.0f);
+    mCenterY = pBV->v1.y + (pBV->v2.y * 0.5f);
+    pModel->matrices[0].Row3()->Set(0.0f, mCenterY, 100.0f, 1.0f);
     pModel->SetLocalToWorldDirty();
     if (pAnimName != NULL) {
         mAnimScript.Init(pAnimName);

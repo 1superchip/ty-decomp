@@ -51,6 +51,8 @@ void AquarangProp::Reset(void) {
     particle.angle = 0.0f;
     randAngle = RandomFR(&gb.randSeed, 0.0f, (2 * PI));
     yaw = 0.0f;
+
+    // ID of object determines which way it spins
     yawUpdateVal = uniqueID & 1 ? 0.05f : -0.05f;
 }
 

@@ -11,7 +11,7 @@ struct UIHeading {
 };
 
 struct UIButtonDescriptor {
-    bool unk0;
+    bool bAnimateTextScale; // If enabled, makes the text size change as if it is "bouncing"
     u32 unselectedColor; // Color of text when the button is unselected
     u32 selectedColor; // Color of text when the button is selected
     u32 disabledColor; // Color of text when the button is disabled
@@ -51,6 +51,8 @@ struct SelectionRang {
     void SetTarget(Vector*, char, View*);
     void FlipHorizontal(void);
     void Update(void);
+
+    // Checks if the Model's X scale is flipped horizontally
     bool Check_Row0X(void) {
         return mRangModel.pModel->matrices[0].data[0][0] < 0.0f;
     }

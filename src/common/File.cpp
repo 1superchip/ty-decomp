@@ -1,7 +1,7 @@
 #include "types.h"
+#include "Dolphin/os.h"
 #include "common/File.h"
 #include "common/Heap.h"
-#include "Dolphin/os/OSTime.h"
 
 #define MAX_FILES 8
 
@@ -9,11 +9,7 @@ static FileEntry gcFiles[MAX_FILES];
 
 extern "C" void memset(void*, char, int);
 extern "C" void memmove(void*, void*, int);
-extern "C" u32 OSGetTick(void);
 extern "C" int DVDGetCommandBlockStatus(DVDFileInfo*);
-extern "C" void OSYieldThread(void);
-extern "C" void DCStoreRange(uint*, int);
-volatile u32 BUS_SPEED : 0x800000f8;
 extern "C" int DVDReadPrio(DVDFileInfo*, void*, int, int, int prio);
 extern "C" BOOL DVDReadAsyncPrio(DVDFileInfo *, void *, int length, int offset, uint callback, int prio);
 extern "C" int DVDClose(void*);
@@ -185,7 +181,7 @@ int File_Sync(int fd, int arg1) {
     u32 startTick = OSGetTick();
     while (DVDGetCommandBlockStatus((DVDFileInfo*)&gcFiles[fd])) {
         FileEntry* entry = &gcFiles[fd];
-        if (((OSGetTick() - startTick) / ((BUS_SPEED >> 2) / 1000)) > arg1) {
+        if (OSTicksToMilliseconds(OSGetTick() - startTick) > arg1) {
             return File_IsBusy(fd);
         }
         OSYieldThread();

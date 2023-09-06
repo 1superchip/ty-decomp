@@ -1,3 +1,6 @@
+#ifndef DATAVAL_H
+#define DATAVAL_H
+
 #include "common/KromeIni.h"
 
 struct DataVal {
@@ -101,3 +104,5 @@ struct DataVal {
 	
 	void Load(void);
 };
+
+#endif // DATAVAL_H

@@ -1,4 +1,5 @@
 #include "ty/frontend/UITools.h"
+#include "common/System_GC.h"
 #include "common/Str.h"
 #include "common/Heap.h"
 
@@ -10,13 +11,6 @@ extern struct {
     View view;
     Blitter_UntexturedImage untexturedImage;
 } gFERes;
-extern struct Display {
-    int region;
-    int unk4;
-    float gameSpeed;
-    float unkC;
-    int unk10[23];
-} gDisplay;
 
 UIButtonDescriptor buttonType1 = {
     true,
@@ -78,8 +72,10 @@ void UIButton::Update(void) {
     }
     float f2 = mText.GetScale();
     if (bSelected) {
-        if (pDescriptor->unk0 && mAngle > 0.0f) {
-            mAngle += 6.0f / gDisplay.gameSpeed;
+        // If selected, update text scale
+        
+        if (pDescriptor->bAnimateTextScale && mAngle > 0.0f) {
+            mAngle += 6.0f / gDisplay.displayFreq;
             if (mAngle > (2.0f * PI)) {
                 mAngle -= (2.0f * PI);
             }
@@ -87,14 +83,14 @@ void UIButton::Update(void) {
             return;
         }
         if (f2 >= unk34 * 1.2f) {
-            if (pDescriptor->unk0) {
-                mAngle = 6.0f / gDisplay.gameSpeed;
+            if (pDescriptor->bAnimateTextScale) {
+                mAngle = 6.0f / gDisplay.displayFreq;
                 mText.SetScale((_table_sinf(mAngle) * 0.025f + 1.2f) * unk34);
             } else {
                 mText.SetScale(unk34 * 1.2f);
             }
         } else {
-            mText.SetScale(f2 + (2.0f / gDisplay.gameSpeed) * unk34);
+            mText.SetScale(f2 + (2.0f / gDisplay.displayFreq) * unk34);
         }
         return;
     }
@@ -102,7 +98,7 @@ void UIButton::Update(void) {
         mText.SetScale(unk34);
         return;
     }
-    mText.SetScale(mText.GetScale() - (2.0f / gDisplay.gameSpeed) * unk34);
+    mText.SetScale(mText.GetScale() - (2.0f / gDisplay.displayFreq) * unk34);
 }
 
 void UIButton::Draw(void) {
@@ -181,6 +177,8 @@ void UIButtonGroup::Init(int numButtons) {
     mpButtons = (UIButton*)Heap_MemAlloc(size * sizeof(UIButton));
 }
 
+/// @brief Deinits a UIButtonGroup
+/// @param  None
 void UIButtonGroup::Deinit(void) {
     if (mpButtons) {
         // Deinitate all buttons
@@ -203,6 +201,7 @@ void UIButtonGroup::Reset(int newSelectedButton) {
         mpButtons[i].Reset();
     }
     if (marker) {
+        // Reset the marker if the UIButtonGroup uses one
         *marker->mRangModel.pModel->matrices[0].Row3() = marker->mPos;
         marker->mRangModel.pModel->matrices[0].Row3()->w = 1.0f;
         marker->mRangModel.pModel->SetLocalToWorldDirty();
@@ -215,12 +214,12 @@ void UIButtonGroup::Reset(int newSelectedButton) {
 bool UIButtonGroup::SetSelection(int newButtonIdx) {
     // Only select a button that is not disabled
     if (mpButtons[newButtonIdx].IsEnabled()) {
-
+        
         // Deselect currently selected button
         if (selection >= 0 && selection < size) {
             mpButtons[selection].SetSelected(false);
         }
-
+        
         // Select new button
         selection = newButtonIdx;
         mpButtons[selection].SetSelected(true);

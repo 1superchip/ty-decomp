@@ -1,4 +1,5 @@
 #include "common/Timer.h"
+#include "Dolphin/os.h"
 
 void Timer_GetSystemTime(TimerInfo* pTimerInfo) {
 	OSCalendarTime calendarTime;
@@ -14,9 +15,9 @@ void Timer_GetSystemTime(TimerInfo* pTimerInfo) {
 };
 
 int Timer_GetDHMSInSeconds(TimerInfo *pTimerInfo) {
-    int ret = pTimerInfo->day * 0x15180;
-    ret += pTimerInfo->hours * 0xE10;
-    ret += pTimerInfo->minutes * 0x3C;
+    int ret = pTimerInfo->day * DAYS_TO_SECONDS;
+    ret += pTimerInfo->hours * HOURS_TO_SECONDS;
+    ret += pTimerInfo->minutes * MINUTES_TO_SECONDS;
     ret += pTimerInfo->seconds;
     return ret;
 }
