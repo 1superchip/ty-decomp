@@ -3496,12 +3496,12 @@ common/Source/MKAnimScript.cpp:
 #   .sbss: [0x803fb290, 0x803fb2e0]
 #   .sdata2: [0x80402300, 0x80402310]
 
-#common/Source/MKParticleGen.cpp:
-#   .text: [0x8021b680, 0x8021ccdc]
-#   .data: [0x80274428, 0x80274718]
-#   .sdata: [0x803f9910, 0x803f9918]
-#   .sbss: [0x803fb2e0, 0x803fb2e8]
-#   .sdata2: [0x80402310, 0x80402338]
+common/Source/MKParticleGen.cpp:
+  .text: [0x8021b680, 0x8021ccdc]
+  .data: [0x80274428, 0x80274718]
+  .sdata: [0x803f9910, 0x803f9918]
+  .sbss: [0x803fb2e0, 0x803fb2e8]
+  .sdata2: [0x80402310, 0x80402338]
 
 common/Source/MKRumble.cpp:
   .text: [0x8021ccdc, 0x8021d3d8]

@@ -5,6 +5,7 @@
 #include "ty/StructList.h"
 #include "ty/RangeCheck.h"
 #include "common/Str.h"
+#include "common/System_GC.h"
 #include "common/system_extras.h"
 
 // array of pregenerated random floats
@@ -29,16 +30,6 @@ float randomFloats[32] = {
 
 extern "C" void Sound_SetPitch(int, float);
 extern "C" void strcpy(char*, const char*);
-
-struct Display {
-    int region;
-    int unk4;
-    float gameSpeed;
-    float unkC;
-    int unk10[23];
-};
-
-extern Display gDisplay;
 
 static bool bDropShadowsIsInit = false;
 static StructList<ShadowInfo> shadows;
@@ -517,15 +508,13 @@ float ExactMag(float x, float z) {
 }
 
 void Tools_Dampen(Vector* arg0, Vector* arg1, float f1) {
-    // vector names "force" and "damping"
-    Vector tmp;
-    Vector tmp2;
+    Vector damping;
+    Vector force;
     
-    tmp.Scale(arg0, 2.0f * f1);
-    tmp2.Scale(arg1, f1 * f1);
-    arg0->Add(&tmp2);
-
-    arg0->Subtract(&tmp);
+    damping.Scale(arg0, 2.0f * f1);
+    force.Scale(arg1, f1 * f1);
+    arg0->Add(&force);
+    arg0->Subtract(&damping);
 }
 
 // about line 1118 on debug build (has quite a few more functions though)
@@ -1479,9 +1468,9 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
                 f31 = 1.0f - f31;
         }
     }
-    unk10 = gDisplay.gameSpeed * f1;
-    unk14 = gDisplay.gameSpeed * f2;
-    unk18 = gDisplay.gameSpeed * f3;
+    unk10 = gDisplay.displayFreq * f1;
+    unk14 = gDisplay.displayFreq * f2;
+    unk18 = gDisplay.displayFreq * f3;
     fadeMode = mode;
     FaderObject::FadeState nextState = GetNextState((FaderObject::FadeState)0, mode);
     prevFadeState = currFadeState;

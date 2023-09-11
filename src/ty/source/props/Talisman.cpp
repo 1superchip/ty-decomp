@@ -84,9 +84,9 @@ void Talisman::Update(void) {
         Vector vec; // particlePos?
         Vector vec1; // vel?
         Vector colour = {1.0f, 1.0f, 0.0f, 0.0f};
-        float rand = ((RandomI(&gb.randSeed) % 100) * (2 * PI)) / 100.0f;
+        float randomAngle = ((RandomI(&gb.randSeed) % 100) * (2 * PI)) / 100.0f;
         float rand1 = ((RandomI(&gb.randSeed) % 100) * 50.0f) / 100.0f;
-        vec.Set(_table_sinf(rand) * rand1, RandomI(&gb.randSeed) % 5, _table_cosf(rand) * rand1);
+        vec.Set(_table_sinf(randomAngle) * rand1, RandomI(&gb.randSeed) % 5, _table_cosf(randomAngle) * rand1);
         vec1 = vec;
         vec1.Normalise();
         vec1.Scale(15.0f);

@@ -17,7 +17,10 @@ bool Font::initialised;
 static PtrListDL<Font> fontList;
 static int pFontMenu;
 static int pDebugShowFontWrapArea = 0;
+
+// Unused, Crosshair that was created by DebugOptions_CreateCrossHair
 static int pDebugCrossHair;
+
 static bool showFontWrapArea = false;
 
 // Several unused parameters

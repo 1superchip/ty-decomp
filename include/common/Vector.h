@@ -152,6 +152,11 @@ struct Vector {
     float Normalise(void) {
         return Normalise(this);
     }
+
+	// Used in a few cases to get the Alpha of a color vector
+    float* GetAlpha(void) {
+        return &w;
+    }
 };
 
 
