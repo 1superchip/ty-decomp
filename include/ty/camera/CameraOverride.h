@@ -1,0 +1,17 @@
+#ifndef CAMERAOVERRIDE_H
+#define CAMERAOVERRIDE_H
+
+
+enum CameraOverrideCreateType {
+    OVERRIDE_DIR        = 0x2711,
+    OVERRIDE_FIXEDPOINT = 0x2712,
+    OVERRIDE_TOPDOWN    = 0x2713,
+    OVERRIDE_HIGH       = 0x2714,
+    OVERRIDE_PATH       = 0x2715,
+    OVERRIDE_RAIL       = 0x2716,
+    OVERRIDE_FIXEDRAIL  = 0x2717,
+    OVERRIDE_SPIRAL     = 0x2718,
+};
+
+
+#endif // CAMERAOVERRIDE_H

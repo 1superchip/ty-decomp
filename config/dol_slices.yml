@@ -23,12 +23,12 @@
 #   .sbss: [0x803f9b88, 0x803f9bd8]
 #   .sdata2: [0x803fb5e8, 0x803fb7a0]
 
-#GameCameraTools.cpp:
-#   .text: [0x8001baf8, 0x8001e788]
-#   .rodata: [0x8023cc88, 0x8023ccc8]
-#   .data: [0x80240ed0, 0x80240f40]
-#   .sdata: [0x803f38c0, 0x803f3908]
-#   .sdata2: [0x803fb7a0, 0x803fb7d8]
+ty/source/camera/GameCameraTools.cpp:
+  .text: [0x8001baf8, 0x8001e788]
+  .rodata: [0x8023cc88, 0x8023ccc8]
+  .data: [0x80240ed0, 0x80240f40]
+  .sdata: [0x803f38c0, 0x803f3908]
+  .sdata2: [0x803fb7a0, 0x803fb7d8]
 
 #Bird.cpp:
 #   .text: [0x8001e788, 0x8001ed4c]
