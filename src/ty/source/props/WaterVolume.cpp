@@ -63,18 +63,6 @@ void WaterVolume::LoadDone(void) {
     objectManager.AddObject(this, NULL, NULL);
 }
 
-inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {
-    bool isWithin = false;
-    if ((point->x >= volume->v1.x) && point->x <= volume->v1.x + volume->v2.x) {
-        if ((point->y >= volume->v1.y) && point->y <= volume->v1.y + volume->v2.y) {
-            if ((point->z >= volume->v1.z) && point->z <= volume->v1.z + volume->v2.z) {
-                isWithin = true;
-            }
-        }
-    }
-    return isWithin;
-}
-
 bool WaterVolume_IsWithin(Vector *point, float *arg1) {
     Vector transformedPoint;
     bool isWithin = false;

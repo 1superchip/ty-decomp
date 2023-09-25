@@ -157,29 +157,29 @@ static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vect
 
 void InterpolateVertexColor(Vector* pVec, Vector* pVec1, Vector* pos0, Vector* color0,
             Vector* pos1, Vector* color1, Vector* pos2, Vector* color2) {
-    Vector diff0;
-    Vector diff1;
-    Vector cross;
-    Vector diff2;
-    diff0.Sub(pos1, pos0);
-    diff1.Sub(pos2, pos0);
-    cross.Cross(&diff0, &diff1);
-    diff2.Sub(pVec, pos0);
-    Vector cross2;
-    cross2.Cross(&cross, &diff2);
-    float dot = cross2.Dot(&diff0);
-    float dot1 = dot - cross2.Dot(&diff1);
+    Vector side1;
+    Vector side2;
+    Vector cProduct;
+    Vector toPoint;
+    Vector cProduct2;
+    side1.Sub(pos1, pos0);
+    side2.Sub(pos2, pos0);
+    cProduct.Cross(&side1, &side2);
+    toPoint.Sub(pVec, pos0);
+    cProduct2.Cross(&cProduct, &toPoint);
+    float dot = cProduct2.Dot(&side1);
+    float dot1 = dot - cProduct2.Dot(&side2);
     float y = 0.0f;
     if (dot1) {
         y = dot / dot1;
     }
     dot = Clamp<float>(y, 0.0f, 1.0f);
     pVec1->InterpolateLinear(color1, color2, dot);
-    Vector unkB8;
-    unkB8.InterpolateLinear(pos1, pos2, dot);
-    unkB8.Subtract(pos0);
-    float t = unkB8.Dot(&diff2);
-    float mag = unkB8.MagSquared();
+    Vector midPoint;
+    midPoint.InterpolateLinear(pos1, pos2, dot);
+    midPoint.Subtract(pos0);
+    float t = midPoint.Dot(&toPoint);
+    float mag = midPoint.MagSquared();
     float x = 0.0f;
     if (mag) {
         x = t / mag;
@@ -207,7 +207,7 @@ void GetVertexColorFromPoly(Vector* vec1, Vector* vec2, Item* pItem) {
 // pA and pB are line endpoints
 // pVec is the vector to project on line AB
 // pProj is the projected point if the point is not projected on pA or pB
-Vector* PROJECT_TO_LINE_SEGMENT(Vector *pVec, Vector *pProj, Vector *pA, Vector *pB)
+Vector* PROJECT_TO_LINE_SEGMENT(Vector *pVec, Vector *pA, Vector *pB, Vector* pProj)
 {
     Vector diff, dispAB;
     diff.Sub(pVec, pA);
@@ -270,9 +270,9 @@ static void NearestPointOnTriEdge(Vector* pVec, Vector* pA, Vector* pB, Vector* 
     Vector onAB;
     Vector onBC;
     Vector onCA;
-    Vector* pNearestOnAB = PROJECT_TO_LINE_SEGMENT(pVec, &onAB, pA, pB);
-    Vector* pNearestOnBC = PROJECT_TO_LINE_SEGMENT(pVec, &onBC, pB, pC);
-    Vector* pNearestOnCA = PROJECT_TO_LINE_SEGMENT(pVec, &onCA, pC, pA);
+    Vector* pNearestOnAB = PROJECT_TO_LINE_SEGMENT(pVec, pA, pB, &onAB);
+    Vector* pNearestOnBC = PROJECT_TO_LINE_SEGMENT(pVec, pB, pC, &onBC);
+    Vector* pNearestOnCA = PROJECT_TO_LINE_SEGMENT(pVec, pC, pA, &onCA);
     Vector* pNearest = NEAREST_POINT(pVec, pNearestOnAB, NEAREST_POINT(pVec, pNearestOnBC, pNearestOnCA));
 	
     pVec->Copy(pNearest);
@@ -283,10 +283,10 @@ static void NearestPointOnQuadEdge(Vector* pVec, Vector* pA, Vector* pB, Vector*
     Vector onBC;
     Vector onCD;
     Vector onDA;
-    Vector* pNearestOnAB = PROJECT_TO_LINE_SEGMENT(pVec, &onAB, pA, pB);
-    Vector* pNearestOnBC = PROJECT_TO_LINE_SEGMENT(pVec, &onBC, pB, pC);
-    Vector* pNearestOnCD = PROJECT_TO_LINE_SEGMENT(pVec, &onCD, pC, pD);
-    Vector* pNearestOnDA = PROJECT_TO_LINE_SEGMENT(pVec, &onDA, pD, pA);
+    Vector* pNearestOnAB = PROJECT_TO_LINE_SEGMENT(pVec, pA, pB, &onAB);
+    Vector* pNearestOnBC = PROJECT_TO_LINE_SEGMENT(pVec, pB, pC, &onBC);
+    Vector* pNearestOnCD = PROJECT_TO_LINE_SEGMENT(pVec, pC, pD, &onCD);
+    Vector* pNearestOnDA = PROJECT_TO_LINE_SEGMENT(pVec, pD, pA, &onDA);
 
     Vector* pNearest = NEAREST_POINT(pVec, pNearestOnAB, NEAREST_POINT(pVec, pNearestOnBC, 
             NEAREST_POINT(pVec, pNearestOnCD, pNearestOnDA)));
@@ -319,69 +319,69 @@ float SubDot(Vector* vec, Vector* vec1, Vector* vec2) {
 }
 
 static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, int numVerts, Vector* arg5, Vector* arg6, CollisionResult* pResult) {
-    Vector pos = pRay->pos;
+    Vector pos = pRay->mStart;
     Vector vec = *arg5;
     float min;
-    if (arg6->Dot(&pRay->dXYZ) < 0.0f) {
+    if (arg6->Dot(&pRay->mDir) < 0.0f) {
         return false;
     }
-    float d = SubDot(&pRay->pos, &pVectors[indices[0]], arg5);
-    if (d > pRay->unk60 + pRay->radius) {
+    float d = SubDot(&pRay->mStart, &pVectors[indices[0]], arg5);
+    if (d > pRay->mLength + pRay->radius) {
         return false;
     }
     if (d <= pRay->radius) {
         pos.Scale(arg6, d);
         min = 0.0f;
-        pos.x += pRay->pos.x;
-        pos.y += pRay->pos.y;
-        pos.z += pRay->pos.z;
+        pos.x += pRay->mStart.x;
+        pos.y += pRay->mStart.y;
+        pos.z += pRay->mStart.z;
     } else {
         Vector tmp;
         tmp.Scale(arg6, pRay->radius);
-        tmp.Add(&tmp, &pRay->pos);
+        tmp.Add(&tmp, &pRay->mStart);
         float t;
-        if (arg5->Dot(&pRay->dXYZ) == 0.0f) {
+        if (arg5->Dot(&pRay->mDir) == 0.0f) {
             t = -1e+12f;
         } else {
             t = -(arg5->x * (tmp.x - pVectors[indices[0]].x) + 
                 arg5->y * (tmp.y - pVectors[indices[0]].y) + 
-                arg5->z * (tmp.z - pVectors[indices[0]].z)) / arg5->Dot(&pRay->dXYZ);
+                arg5->z * (tmp.z - pVectors[indices[0]].z)) / arg5->Dot(&pRay->mDir);
         }
         min = t;
-        if (t <= 0.0f || t > pRay->unk60) {
+        if (t <= 0.0f || t > pRay->mLength) {
             return false;
         }
-        pos.x = (min * pRay->dXYZ.x);
-        pos.y = (min * pRay->dXYZ.y);
-        pos.z = (min * pRay->dXYZ.z);
+        pos.x = (min * pRay->mDir.x);
+        pos.y = (min * pRay->mDir.y);
+        pos.z = (min * pRay->mDir.z);
         pos.x += tmp.x;
         pos.y += tmp.y;
         pos.z += tmp.z;
     }
-    if (!PointInPoly(&pos, &pRay->pos, pVectors, indices, numVerts)) {
+    if (!PointInPoly(&pos, &pRay->mStart, pVectors, indices, numVerts)) {
 		// point isn't in the polygon
         NearestPointOnPolyEdge(&pos, pVectors, indices, numVerts);
         // pos is now the coordinate on the polygon's edge 
-        if (pos.CheckSphereRadius(&pRay->pos, pRay->radius)) {
+        if (pos.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
             Collision_BInteriorPoint = true;
             min = 0.0f;
-            vec.Sub(&pRay->pos, &pos);
-            if (vec.Dot(&pRay->dXYZ) > 0.0f) {
+            vec.Sub(&pRay->mStart, &pos);
+            if (vec.Dot(&pRay->mDir) > 0.0f) {
                 return false;
             }
         } else {
             // position is in polygon
-            min = GetDiv(&pos, &pRay->pos, &pRay->negDXYZ, pRay->radius);
-            if (min <= 0.0f || min > pRay->unk60) {
+            min = GetDiv(&pos, &pRay->mStart, &pRay->negDXYZ, pRay->radius);
+            if (min <= 0.0f || min > pRay->mLength) {
                 return false;
             }
             Vector tmp;
             tmp.Scale(&pRay->negDXYZ, min);
             tmp.Add(&tmp, &pos);
-            vec.x = pRay->pos.x - tmp.x;
-            vec.y = pRay->pos.y - tmp.y;
-            vec.z = pRay->pos.z - tmp.z;
+            vec.x = pRay->mStart.x - tmp.x;
+            vec.y = pRay->mStart.y - tmp.y;
+            vec.z = pRay->mStart.z - tmp.z;
         }
     } else {
         Collision_BInteriorPoint = 0.0f == min;
@@ -394,76 +394,70 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
 
 static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1, 
             Vector* pVec2, Vector* pVec3, Vector* pVec4, CollisionResult* pResult) {
-    Vector pos = pRay->pos;
-    Vector vec = *pVec3;
+    Vector hitPoint = pRay->mStart;
+    Vector hitNormal = *pVec3;
     float min;
-    if (pVec4->Dot(&pRay->dXYZ) < 0.0f) {
+    if (pVec4->Dot(&pRay->mDir) < 0.0f) {
         return false;
     }
-    float d = SubDot(&pRay->pos, pVec, pVec3);
-    if (d > pRay->unk60 + pRay->radius) {
+    float d = SubDot(&pRay->mStart, pVec, pVec3);
+    if (d > pRay->mLength + pRay->radius) {
         return false;
     }
     if (d <= pRay->radius) {
-        pos.Scale(pVec4, d);
+        hitPoint.Scale(pVec4, d);
         min = 0.0f;
-        pos.x += pRay->pos.x;
-        pos.y += pRay->pos.y;
-        pos.z += pRay->pos.z;
+        hitPoint.Add(&pRay->mStart);
     } else {
         Vector tmp;
         tmp.Scale(pVec4, pRay->radius);
-        tmp.Add(&tmp, &pRay->pos);
+        tmp.Add(&tmp, &pRay->mStart);
         float t;
-        if (pVec3->Dot(&pRay->dXYZ) == 0.0f) {
+        if (pVec3->Dot(&pRay->mDir) == 0.0f) {
             t = -1e+12f;
         } else {
             t = -(pVec3->x * (tmp.x - pVec->x) + 
                 pVec3->y * (tmp.y - pVec->y) + 
-                pVec3->z * (tmp.z - pVec->z)) / pVec3->Dot(&pRay->dXYZ);
+                pVec3->z * (tmp.z - pVec->z)) / pVec3->Dot(&pRay->mDir);
         }
         min = t;
-        if (t <= 0.0f || t > pRay->unk60) {
+        if (t <= 0.0f || t > pRay->mLength) {
             return false;
         }
-        pos.x = (min * pRay->dXYZ.x);
-        pos.y = (min * pRay->dXYZ.y);
-        pos.z = (min * pRay->dXYZ.z);
-        pos.x += tmp.x;
-        pos.y += tmp.y;
-        pos.z += tmp.z;
+        hitPoint.Scale(&pRay->mDir, min);
+        hitPoint.Add(&tmp);
     }
-    if (!CheckPoint(&pos, &pRay->pos, pVec1, pVec) || 
-            !CheckPoint(&pos, &pRay->pos, pVec2, pVec1) || !CheckPoint(&pos, &pRay->pos, pVec, pVec2)) {
+    if (!CheckPoint(&hitPoint, &pRay->mStart, pVec1, pVec) || 
+            !CheckPoint(&hitPoint, &pRay->mStart, pVec2, pVec1) || !CheckPoint(&hitPoint, &pRay->mStart, pVec, pVec2)) {
 		// point isn't in the triangle
-        NearestPointOnTriEdge(&pos, pVec, pVec1, pVec2);
+        NearestPointOnTriEdge(&hitPoint, pVec, pVec1, pVec2);
         // pos is now the coordinate on the polygon's edge 
-        if (pos.CheckSphereRadius(&pRay->pos, pRay->radius)) {
+        if (hitPoint.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
             Collision_BInteriorPoint = true;
             min = 0.0f;
-            vec.Sub(&pRay->pos, &pos);
-            if (vec.Dot(&pRay->dXYZ) > 0.0f) {
+            hitNormal.Sub(&pRay->mStart, &hitPoint);
+            if (hitNormal.Dot(&pRay->mDir) > 0.0f) {
                 return false;
             }
         } else {
             // position is in polygon
-            min = GetDiv(&pos, &pRay->pos, &pRay->negDXYZ, pRay->radius);
-            if (min <= 0.0f || min > pRay->unk60) {
+            min = GetDiv(&hitPoint, &pRay->mStart, &pRay->negDXYZ, pRay->radius);
+            if (min <= 0.0f || min > pRay->mLength) {
                 return false;
             }
             Vector tmp;
             tmp.Scale(&pRay->negDXYZ, min);
-            tmp.Add(&tmp, &pos);
-            vec.x = pRay->pos.x - tmp.x;
-            vec.y = pRay->pos.y - tmp.y;
-            vec.z = pRay->pos.z - tmp.z;
+            tmp.Add(&tmp, &hitPoint);
+            hitNormal.x = pRay->mStart.x - tmp.x;
+            hitNormal.y = pRay->mStart.y - tmp.y;
+            hitNormal.z = pRay->mStart.z - tmp.z;
         }
     } else {
         Collision_BInteriorPoint = 0.0f == min;
     }
-    pResult->normal = vec;
-    pResult->pos = pos;
+    pResult->normal = hitNormal;
+    pResult->pos = hitPoint;
     pResult->unk40 = min;
     return true;
 }
@@ -536,9 +530,11 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                         SubDot(pPos, (Vector *)&pItem->collisionThing->verts[0], &pItem->collisionThing->normal);
                     float fVar0 = fVar19 < 0.0f ? -fVar19 : fVar19; // abs
                     if (!(fVar0 > radius)) {
-                        Vector v1Diff;
-                        v1Diff.Sub(triVert0, pPos);
-                        if (v1Diff.MagSquared() <= radius * radius) {
+                        Vector v1;
+                        Vector v2;
+                        Vector v3;
+                        v1.Sub(triVert0, pPos);
+                        if (v1.MagSquared() <= radius * radius) {
                             numCollisions++;
                             StoreSphereResult(pItem, pPos, pCr, fVar19);
                             maxCollisions--;
@@ -549,8 +545,8 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                 pCr++;
                             }
                         } else {
-                            v1Diff.Sub(triVert1, pPos);
-                            if (v1Diff.MagSquared() <= radius * radius) {
+                            v1.Sub(triVert1, pPos);
+                            if (v1.MagSquared() <= radius * radius) {
                                 numCollisions++;
                                 StoreSphereResult(pItem, pPos, pCr, fVar19);
                                 maxCollisions--;
@@ -561,8 +557,8 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                     pCr++;
                                 }
                             } else {
-                                v1Diff.Sub(triVert2, pPos);
-                                if (v1Diff.MagSquared() <= radius * radius) {
+                                v1.Sub(triVert2, pPos);
+                                if (v1.MagSquared() <= radius * radius) {
                                     numCollisions++;
                                     StoreSphereResult(pItem, pPos, pCr, fVar19);
                                     maxCollisions--;
@@ -573,11 +569,8 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                         pCr++;
                                     }
                                 } else {
-                                    Vector tmp25;
-                                    Vector cross;
-                                    Vector diff;
-                                    v1Diff.Sub(triVert1, triVert0);
-                                    if (CylTest_CapsFirst(triVert0, triVert1, v1Diff.MagSquared(), radius * radius,
+                                    v1.Sub(triVert1, triVert0);
+                                    if (CylTest_CapsFirst(triVert0, triVert1, v1.MagSquared(), radius * radius,
                                                           pPos) != -1.0f) {
                                         numCollisions++;
                                         StoreSphereResult(pItem, pPos, pCr, fVar19);
@@ -589,8 +582,8 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                             pCr++;
                                         }
                                     } else {
-                                        v1Diff.Sub(triVert2, triVert1);
-                                        if (CylTest_CapsFirst(triVert1, triVert2, v1Diff.MagSquared(), radius * radius,
+                                        v1.Sub(triVert2, triVert1);
+                                        if (CylTest_CapsFirst(triVert1, triVert2, v1.MagSquared(), radius * radius,
                                                               pPos) != -1.0f) {
                                             numCollisions++;
                                             StoreSphereResult(pItem, pPos, pCr, fVar19);
@@ -602,9 +595,8 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                                 pCr++;
                                             }
                                         } else {
-                                            Vector cross;
-                                            v1Diff.Sub(triVert0, triVert2);
-                                            if (CylTest_CapsFirst(triVert2, triVert0, v1Diff.MagSquared(),
+                                            v1.Sub(triVert0, triVert2);
+                                            if (CylTest_CapsFirst(triVert2, triVert0, v1.MagSquared(),
                                                                   radius * radius, pPos) != -1.0f) {
 
                                                 numCollisions++;
@@ -617,25 +609,23 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
                                                     pCr++;
                                                 }
                                             } else {
-                                                v1Diff.Sub(triVert1, triVert0);
-                                                cross.Cross(&v1Diff, &pItem->collisionThing->normal);
-                                                Vector tmp;
-                                                tmp.Sub(pPos, triVert0);
-                                                if (tmp.Dot(&cross) >= 0.0f) {
+                                                v1.Sub(triVert1, triVert0);
+                                                v2.Cross(&v1, &pItem->collisionThing->normal);
+                                                v3.Sub(pPos, triVert0);
+                                                if (v3.Dot(&v2) >= 0.0f) {
 
-                                                    v1Diff.Sub(triVert2, triVert1);
-                                                    cross.Cross(&v1Diff, &pItem->collisionThing->normal);
+                                                    v1.Sub(triVert2, triVert1);
+                                                    v2.Cross(&v1, &pItem->collisionThing->normal);
 
-                                                    tmp.Sub(pPos, triVert1);
+                                                    v3.Sub(pPos, triVert1);
 
-                                                    if (tmp.Dot(&cross) >= 0.0f) {
+                                                    if (v3.Dot(&v2) >= 0.0f) {
 
-                                                        v1Diff.Sub(triVert0, triVert2);
-                                                        cross.Cross(&v1Diff, &pItem->collisionThing->normal);
-                                                        Vector tmp;
-                                                        tmp.Sub(pPos, triVert2);
+                                                        v1.Sub(triVert0, triVert2);
+                                                        v2.Cross(&v1, &pItem->collisionThing->normal);
+                                                        v3.Sub(pPos, triVert2);
 
-                                                        if (tmp.Dot(&cross) >= 0.0f) {
+                                                        if (v3.Dot(&v2) >= 0.0f) {
                                                             numCollisions++;
                                                             StoreSphereResult(pItem, pPos, pCr, fVar19);
                                                             maxCollisions--;
@@ -767,7 +757,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
     int minz;
     int maxx;
     int maxz;
-    FindGridBoundaries(&pRay->unk40, &pRay->unk50, &minx, &minz, &maxx, &maxz);
+    FindGridBoundaries(&pRay->mMinPos, &pRay->mMaxPos, &minx, &minz, &maxx, &maxz);
 
     for(int j = minz; j <= maxz; j++) {
         for(int i = minx; i <= maxx; i++) {
@@ -784,7 +774,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                     !(pItem->collisionThing->verts[1].pos[2] < local_64) &&
                     !(pItem->collisionThing->verts[2].pos[2] < local_64)))) {
                         // check ray bounds (including y) and then the triangle
-                        if (!CheckItemSphereRay(pItem, &pRay->unk40, &pRay->unk50) && 
+                        if (!CheckItemSphereRay(pItem, &pRay->mMinPos, &pRay->mMaxPos) && 
                             (pItem->pTriangle->pCollisionInfo == NULL ||
                             pItem->pTriangle->pCollisionInfo->bEnabled) &&
                             !(pItem->pTriangle->flags & flags)) {
@@ -795,7 +785,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                             Vector invNormal = pItem->collisionThing->normal;
                             invNormal.Inverse();
                             bool swept;
-                            if (CheckTrianglePoint((float*)&pRay->pos, pItem)) {
+                            if (CheckTrianglePoint((float*)&pRay->mStart, pItem)) {
                                 swept = SweepSphereToTri(pRay, p1, p3, p2, &normal, &invNormal, &lastCollision);
                             } else {
                                 swept = SweepSphereToTri(pRay, p1, p2, p3, &invNormal, &normal, &lastCollision);
@@ -811,9 +801,9 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                                     // if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
                                 }
-                                pRay->unk60 = lastCollision.unk40;
-                                pRay->pos1.Scale(&pRay->dXYZ, pRay->unk60);
-                                pRay->pos1.Add(&pRay->pos);
+                                pRay->mLength = lastCollision.unk40;
+                                pRay->mEnd.Scale(&pRay->mDir, pRay->mLength);
+                                pRay->mEnd.Add(&pRay->mStart);
                             }
                         }
                     }
@@ -849,7 +839,7 @@ static void Collision_AddItem(Item* pItem) {
 }
 
 float CalcDynamicItemRadius(SphereRay* pRay, DynamicItem* pDynItem) {
-	return (pRay->unk60 + (2.0f * pRay->radius) + pDynItem->unk8);
+	return (pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8);
 }
 
 void Collision_Init(int heapSize, float minX, float /* unused */ minY, float minZ, 
@@ -982,8 +972,8 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     Vector v2;
     v1.Copy(&pVolume->v1);
     v2.Add(&pVolume->v1, &pVolume->v2);
-    if (pDynItem->GetMatrix()->Row3()->DistSq(&pRay->pos) >
-        Sqr<float>(pRay->unk60 + (2.0f * pRay->radius) + pDynItem->unk8)) return false;
+    if (pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart) >
+        Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) return false;
     // "corners"?
     Vector vecs[8] = {{}, {}, {}, {}, {}, {}, {}, {}};
     vecs[0].x = v1.x;
@@ -1039,17 +1029,17 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     vecs2[5].Scale(&vecs2[4], -1.0f);
     
     for(int i = 0; i < 3; i++) {
-        int dotTest = vecs2[i * 2].Dot(&pRay->dXYZ) > 0.0f ? 1 : 0;
-        if (CheckPoint(&pRay->pos, &vecs[indices[(dotTest + 2*i)][0]], &vecs[indices[(dotTest + 2*i)][1]], &vecs[indices[(dotTest + 2*i)][2]]) &&
+        int dotTest = vecs2[i * 2].Dot(&pRay->mDir) > 0.0f ? 1 : 0;
+        if (CheckPoint(&pRay->mStart, &vecs[indices[(dotTest + 2*i)][0]], &vecs[indices[(dotTest + 2*i)][1]], &vecs[indices[(dotTest + 2*i)][2]]) &&
                     SweepSphereToPoly(pRay, vecs, &indices[(dotTest + 2*i)][0], 4, &vecs2[(dotTest + 2*i)], &vecs2[(1 - dotTest) + 2*i], &lastCollision)) {
             lastCollision.pInfo = pDynItem->pInfo;
             lastCollision.pModel = pDynItem->pModel;
             lastCollision.collisionFlags = pDynItem->pModel->GetSubObjectMaterial(0, 0)->collisionFlags;
             lastCollision.itemIdx = Max<int>(0, pDynItem->idx);
             lastCollision.color = pDynItem->pModel->colour;
-            pRay->unk60 = lastCollision.unk40;
-            pRay->pos1.Scale(&pRay->dXYZ, pRay->unk60);
-            pRay->pos1.Add(&pRay->pos1, &pRay->pos);
+            pRay->mLength = lastCollision.unk40;
+            pRay->mEnd.Scale(&pRay->mDir, pRay->mLength);
+            pRay->mEnd.Add(&pRay->mEnd, &pRay->mStart);
             ret = true;
         }
     }
@@ -1286,7 +1276,7 @@ bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadiu
         int startZ;
         int lengthX;
         int lengthZ;
-        Collision_FindSphereDynamicGrid(&ray.unk40, &ray.unk50, &startX, &startZ, &lengthX, &lengthZ);
+        Collision_FindSphereDynamicGrid(&ray.mMinPos, &ray.mMaxPos, &startX, &startZ, &lengthX, &lengthZ);
         for(int i = startZ; i < startZ + lengthZ; i++) {
             for (int j = startX; j < startX + lengthX; j++) {
                 CollisionNode* currNode = dynGrid[i * 0x20 + j].pNext;

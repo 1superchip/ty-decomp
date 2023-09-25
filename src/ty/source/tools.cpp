@@ -714,52 +714,71 @@ bool Tools_RayToVertCyl(Vector* pRayStart, Vector* pRayEnd, Vector* pCylPos, flo
     return false;
 }
 
-bool Tools_PlaneTest(Vector* pVec, Vector* pVec1, Vector* pNormal, CollisionResult* pCr) {
+/// @brief Tests for a intersection of a plane by the line formed by (pStart, pEnd)
+/// @param pStart Ray Start
+/// @param pEnd Ray End
+/// @param pNormal Plane Vector
+/// @param pCr Optional, CollisionResult to store collision info to
+/// @return True when the line intersected the plane, otherwise false
+bool Tools_PlaneTest(Vector* pStart, Vector* pEnd, Vector* pNormal, CollisionResult* pCr) {
     Vector ray;
-    ray.Sub(pVec1, pVec);
+    ray.Sub(pEnd, pStart);
     float f5 = pNormal->Dot(&ray);
     if (f5 < 0.0f) {
         return false;
     }
-    float t = (pNormal->Dot(pVec) - pNormal->w) / f5;
+    float t = (pNormal->Dot(pStart) - pNormal->w) / f5;
     if (t >= 0.0f && t <= 1.0f) {
+        // Ray intersects plane
         if (pCr) {
-            pCr->pos.InterpolateLinear(pVec, pVec1, t);
+            // Store collision information if a CollisionResult was poseed
+            pCr->pos.InterpolateLinear(pStart, pEnd, t);
             pCr->unk40 = t;
             pCr->normal = *pNormal;
         }
+
+        // Intersection did occur
         return true;
     }
+
+    // Plane Intersection did not occur
     return false;
 }
 
-bool Tools_SweepSphereToPlane(Vector* pVec, Vector* pVec1, float f1, Vector* pVec2, CollisionResult* pCr) {
-    Vector tmp;
-    tmp.Sub(pVec1, pVec);
-    if (tmp.Dot(pVec2) < 0.0f) {
+bool Tools_SweepSphereToPlane(Vector* pStart, Vector* pEnd, float radius, Vector* pPlane, CollisionResult* pCr) {
+    Vector ray;
+    Vector spherePos;
+    Vector sphereRayEnd;
+    ray.Sub(pEnd, pStart);
+    if (ray.Dot(pPlane) < 0.0f) {
         return false;
     }
-    float f5 = pVec2->Dot(pVec) - pVec2->w;
-    if (f5 < f1) {
+    float f5 = pPlane->Dot(pStart) - pPlane->w;
+    if (f5 < radius) {
+        // inside the sphere?
         if (pCr) {
+            // If a CollisionResult was passed, store the collision information
             pCr->unk40 = 0.0f;
-            pCr->normal = *pVec2;
-            pCr->pos.Scale(pVec2, -f5);
-            pCr->pos.Add(pVec);
+            pCr->normal = *pPlane;
+            pCr->pos.Scale(pPlane, -f5);
+            pCr->pos.Add(pStart);
         }
         return true;
     }
-    Vector sp18;
-    sp18.Scale(pVec2, -f1);
-    sp18.Add(pVec);
-    Vector sp8;
-    sp8.Add(&sp18, &tmp);
-    return Tools_PlaneTest(&sp18, &sp8, pVec2, pCr);
+    spherePos.Scale(pPlane, -radius);
+    spherePos.Add(pStart);
+    sphereRayEnd.Add(&spherePos, &ray);
+    return Tools_PlaneTest(&spherePos, &sphereRayEnd, pPlane, pCr);
 }
 
-Vector Tools_MakePlane(Vector* pVec, Vector* pVec1) {
-    Vector res = *pVec;
-    res.w = pVec->Dot(pVec1);
+/// @brief Creates a plane vector from a Normal and a Position
+/// @param pNormal Normal Vector of the plane
+/// @param pPos Position Vector of the plane
+/// @return Plane Vector
+Vector Tools_MakePlane(Vector* pNormal, Vector* pPos) {
+    // Creates a plane vector of ax + by + cz = d
+    Vector res = *pNormal;
+    res.w = pNormal->Dot(pPos);
     return res;
 }
 

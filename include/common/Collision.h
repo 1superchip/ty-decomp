@@ -118,6 +118,7 @@ struct DynamicItem {
     }
 };
 
+/// @brief Contains result information about a collision
 struct CollisionResult {
     Vector pos;
     Vector normal;
@@ -130,28 +131,28 @@ struct CollisionResult {
 };
 
 struct SphereRay {
-    Vector pos;
-    Vector pos1;
-    Vector dXYZ;
-    Vector negDXYZ;
-    Vector unk40;
-    Vector unk50;
-    float unk60;
+    Vector mStart; // Start position
+    Vector mEnd; // End position
+    Vector mDir; // Direction of the ray
+    Vector negDXYZ; // -mDir
+    Vector mMinPos; // Minimum point of the SphereRay
+    Vector mMaxPos; // Maximum point of the SphereRay
+    float mLength; // Length of ray
     float radius;
 
     void Create(Vector* v1, Vector* v2, float sphereRadius) {
-        pos = *v1;
-        pos1 = *v2;
+        mStart = *v1;
+        mEnd = *v2;
         radius = sphereRadius;
-        dXYZ.Sub(v2, v1);
-        unk60 = dXYZ.Normalise();
-        negDXYZ.Scale(&dXYZ, -1.0f);
-        unk40.x = Min<float>(v1->x - sphereRadius, v2->x - sphereRadius);
-        unk40.y = Min<float>(v1->y - sphereRadius, v2->y - sphereRadius);
-        unk40.z = Min<float>(v1->z - sphereRadius, v2->z - sphereRadius);
-        unk50.x = Max<float>(v1->x + sphereRadius, v2->x + sphereRadius);
-        unk50.y = Max<float>(v1->y + sphereRadius, v2->y + sphereRadius);
-        unk50.z = Max<float>(v1->z + sphereRadius, v2->z + sphereRadius);
+        mDir.Sub(v2, v1);
+        mLength = mDir.Normalise();
+        negDXYZ.Scale(&mDir, -1.0f);
+        mMinPos.x = Min<float>(v1->x - sphereRadius, v2->x - sphereRadius);
+        mMinPos.y = Min<float>(v1->y - sphereRadius, v2->y - sphereRadius);
+        mMinPos.z = Min<float>(v1->z - sphereRadius, v2->z - sphereRadius);
+        mMaxPos.x = Max<float>(v1->x + sphereRadius, v2->x + sphereRadius);
+        mMaxPos.y = Max<float>(v1->y + sphereRadius, v2->y + sphereRadius);
+        mMaxPos.z = Max<float>(v1->z + sphereRadius, v2->z + sphereRadius);
     }
 };
 
