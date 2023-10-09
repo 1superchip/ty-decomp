@@ -3,7 +3,7 @@
 #extab_: [0x80005620, 0x80005640]
 #extabindex_: [0x80005640, 0x80005680]
 
-#CameraOverride.cpp:
+# ty/source/camera/CameraOverride.cpp:
 #   .text: [0x80005680, 0x800088ec]
 #   .ctors: [0x8023c784, 0x8023c788]
 #   .rodata: [0x8023cac0, 0x8023cae0]
@@ -3582,10 +3582,10 @@ common/gc/demoinit.cpp:
   .sbss: [0x803fb350, 0x803fb370]
   .sdata2: [0x80402440, 0x80402458]
 
-#DiscErrors.cpp:
-#   .text: [0x80225728, 0x80225994]
-#   .data: [0x80275a68, 0x802764d8]
-#   .sdata: [0x803f99e0, 0x803f99e8]
+common/gc/DiscErrors.cpp:
+  .text: [0x80225728, 0x80225994]
+  .data: [0x80275a68, 0x802764d8]
+  .sdata: [0x803f99e0, 0x803f99e8]
 
 common/File.cpp:
    .text: [0x80225994, 0x80226398]
