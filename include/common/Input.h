@@ -20,18 +20,21 @@ enum InputDevices {
 struct Input_Joypad {
     PADStatus* pPad;
 
-    // Label previous frame fields
-    u16 buttonFlags; // Bitflags pressed buttons
-    u16 buttonFlags2; // Bitflags pressed buttons
+    u16 mPrevButtonFlags; // Previous frame inputs
+    u16 mCurrButtonFlags; // Current frame inputs
 
-    int unk8; // Stick X
-    int unkC; // Stick Y
-    int unk10; // C-stick X
-    int unk14; // C-stick Y
-    int unk18; // Stick X
-    int unk1C; // Stick Y
-    int unk20; // C-stick X
-    int unk24; // C-stick Y
+    // Current Frame Stick Fields
+    int mCurrStickX; // Stick X
+    int mCurrStickY; // Stick Y
+    int mCurrSubStickX; // C-stick X
+    int mCurrSubStickY; // C-stick Y
+
+    // Previous Frame Stick Fields
+    int mPrevStickX; // Stick X
+    int mPrevStickY; // Stick Y
+    int mPrevSubStickX; // C-stick X
+    int mPrevSubStickY; // C-stick Y
+
     u8 triggerL; // Left analog trigger
     u8 triggerR; // Right analog trigger
 };

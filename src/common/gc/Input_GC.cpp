@@ -39,11 +39,13 @@ void Input_Update(bool bReadInputs) {
     u32 invalidControllers = 0;
     for(int i = 0; i < JoyStickCount; i++) {
         u32 r9 = (0x80000000 >> i);
-        joyPad[i].buttonFlags = joyPad[i].buttonFlags2;
-        joyPad[i].unk18 = joyPad[i].unk8;
-        joyPad[i].unk1C = joyPad[i].unkC;
-        joyPad[i].unk20 = joyPad[i].unk10;
-        joyPad[i].unk24 = joyPad[i].unk14;
+
+        // Copy Previous Frame inputs
+        joyPad[i].mPrevButtonFlags = joyPad[i].mCurrButtonFlags;
+        joyPad[i].mPrevStickX = joyPad[i].mCurrStickX;
+        joyPad[i].mPrevStickY = joyPad[i].mCurrStickY;
+        joyPad[i].mPrevSubStickX = joyPad[i].mCurrSubStickX;
+        joyPad[i].mPrevSubStickY = joyPad[i].mCurrSubStickY;
         switch (pad[i].err) {
             case PAD_ERR_TRANSFER:
             case PAD_ERR_NONE:
@@ -54,43 +56,43 @@ void Input_Update(bool bReadInputs) {
                 break;
         }
         if (pad[i].err == PAD_ERR_NONE) {
-            joyPad[i].buttonFlags2 = joyPad[i].pPad->button;
+            joyPad[i].mCurrButtonFlags = joyPad[i].pPad->button;
             
-            joyPad[i].unk8 = Clamp<int>((joyPad[i].pPad->stickX * 2), -128, 127) + 128;
-            joyPad[i].unkC = Clamp<int>(-(joyPad[i].pPad->stickY * 2), -128, 127) + 128;
-            joyPad[i].unk10 = Clamp<int>((joyPad[i].pPad->substickX * 2), -128, 127) + 128;
-            joyPad[i].unk14 = Clamp<int>(-(joyPad[i].pPad->substickY * 2), -128, 127) + 128;
+            joyPad[i].mCurrStickX = Clamp<int>((joyPad[i].pPad->stickX * 2), -128, 127) + 128;
+            joyPad[i].mCurrStickY = Clamp<int>(-(joyPad[i].pPad->stickY * 2), -128, 127) + 128;
+            joyPad[i].mCurrSubStickX = Clamp<int>((joyPad[i].pPad->substickX * 2), -128, 127) + 128;
+            joyPad[i].mCurrSubStickY = Clamp<int>(-(joyPad[i].pPad->substickY * 2), -128, 127) + 128;
             
-            if (joyPad[i].unk8 < 0) {
-                joyPad[i].unk8 = 0;
-            } else if (joyPad[i].unk8 > 0xff) {
-                joyPad[i].unk8 = 0xff;
+            if (joyPad[i].mCurrStickX < 0) {
+                joyPad[i].mCurrStickX = 0;
+            } else if (joyPad[i].mCurrStickX > 0xff) {
+                joyPad[i].mCurrStickX = 0xff;
             }
-            if (joyPad[i].unkC < 0) {
-                joyPad[i].unkC = 0;
-            } else if (joyPad[i].unkC > 0xff) {
-                joyPad[i].unkC = 0xff;
+            if (joyPad[i].mCurrStickY < 0) {
+                joyPad[i].mCurrStickY = 0;
+            } else if (joyPad[i].mCurrStickY > 0xff) {
+                joyPad[i].mCurrStickY = 0xff;
             }
-            if (joyPad[i].unk10 < 0) {
-                joyPad[i].unk10 = 0;
-            } else if (joyPad[i].unk10 > 0xff) {
-                joyPad[i].unk10 = 0xff;
+            if (joyPad[i].mCurrSubStickX < 0) {
+                joyPad[i].mCurrSubStickX = 0;
+            } else if (joyPad[i].mCurrSubStickX > 0xff) {
+                joyPad[i].mCurrSubStickX = 0xff;
             }
-            if (joyPad[i].unk14 < 0) {
-                joyPad[i].unk14 = 0;
-            } else if (joyPad[i].unk14 > 0xff) {
-                joyPad[i].unk14 = 0xff;
+            if (joyPad[i].mCurrSubStickY < 0) {
+                joyPad[i].mCurrSubStickY = 0;
+            } else if (joyPad[i].mCurrSubStickY > 0xff) {
+                joyPad[i].mCurrSubStickY = 0xff;
             }
             
             joyPad[i].triggerL = joyPad[i].pPad->triggerL;
             joyPad[i].triggerR = joyPad[i].pPad->triggerR;
         } else {
             // if there is an error such as the controller is unplugged
-            joyPad[i].buttonFlags2 = 0;
-            joyPad[i].unk8 = 0x7f;
-            joyPad[i].unkC = 0x7f;
-            joyPad[i].unk10 = 0x7f;
-            joyPad[i].unk14 = 0x7f;
+            joyPad[i].mCurrButtonFlags = 0;
+            joyPad[i].mCurrStickX = 0x7f;
+            joyPad[i].mCurrStickY = 0x7f;
+            joyPad[i].mCurrSubStickX = 0x7f;
+            joyPad[i].mCurrSubStickY = 0x7f;
             joyPad[i].triggerL = 0;
             joyPad[i].triggerR = 0;
         }
@@ -162,11 +164,10 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
         for(int i = 0; i < 4; i++) {
             int buttonState = Input_GetButtonState((InputDevices)i, button, pFoundDevice);
             if (isStickButton) {
-                if (buttonState < 0x6b || buttonState > 0x93) {
+                if (buttonState < 107 || buttonState > 147) {
                     return buttonState;
                 }
-            }
-            else if (buttonState != 0) {
+            } else if (buttonState != 0) {
                 return buttonState;
             }
         }
@@ -180,16 +181,16 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
         case CHAN_3:
             switch (button) {
                 case 0x11:
-                    ret = joyPad[deviceID].unk8;
+                    ret = joyPad[deviceID].mCurrStickX;
                     break;
                 case 0x10:
-                    ret = joyPad[deviceID].unkC;
+                    ret = joyPad[deviceID].mCurrStickY;
                     break;
                 case 0x13:
-                    ret = joyPad[deviceID].unk10;
+                    ret = joyPad[deviceID].mCurrSubStickX;
                     break;
                 case 0x12:
-                    ret = joyPad[deviceID].unk14;
+                    ret = joyPad[deviceID].mCurrSubStickY;
                     break;
                 case 11:
                     ret = joyPad[deviceID].triggerR;
@@ -199,7 +200,7 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
                     break;
                 case 12:
                 default:
-                    if (joyPad[deviceID].buttonFlags2 & ButtonMasks[button]) {
+                    if (joyPad[deviceID].mCurrButtonFlags & ButtonMasks[button]) {
                         ret = 0xff;
                     }
                     break;
@@ -231,8 +232,8 @@ bool Input_WasButtonPressed(InputDevices deviceID, int button, InputDevices* pFo
         case CHAN_1:
         case CHAN_2:
         case CHAN_3:
-            if ((joyPad[deviceID].buttonFlags2 & ButtonMasks[button]) &&
-                !(joyPad[deviceID].buttonFlags & ButtonMasks[button])) {
+            if ((joyPad[deviceID].mCurrButtonFlags & ButtonMasks[button]) &&
+                (joyPad[deviceID].mPrevButtonFlags & ButtonMasks[button]) == 0) {
                 return true;
             }
     }
@@ -270,12 +271,12 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
 /// @param  None
 void Input_ClearPadData(void) {
     for(int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
-        joyPad[i].buttonFlags = 0;
-        joyPad[i].buttonFlags2 = 0;
-        joyPad[i].unk8 = 0x7f;
-        joyPad[i].unkC = 0x7f;
-        joyPad[i].unk10 = 0x7f;
-        joyPad[i].unk14 = 0x7f;
+        joyPad[i].mPrevButtonFlags = 0;
+        joyPad[i].mCurrButtonFlags = 0;
+        joyPad[i].mCurrStickX = 0x7f;
+        joyPad[i].mCurrStickY = 0x7f;
+        joyPad[i].mCurrSubStickX = 0x7f;
+        joyPad[i].mCurrSubStickY = 0x7f;
     }
 }
 
