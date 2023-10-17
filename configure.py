@@ -681,9 +681,30 @@ def make_asm_list(path: str, asm_includes: List[AsmInclude]):
             f
         )
 
+def make_objdiff_json(sources: List[Source]):
+    data = {
+        'min_version' : "0.4.3",
+        'custom_make' : "ninja",
+        'target_dir' : f"{c.EXPECTED}/build",
+        'base_dir' : f"{c.BUILDDIR}",
+        'build_target' : False,
+        'objects' : [
+            {
+                'path' : src.o_path.removeprefix("$builddir/"),
+                'name' : src.src_path,
+            }
+            for src in sources
+            if src.decompiled
+        ]
+    }
+    with open("objdiff.json", 'w') as f:
+        json.dump(data, f, indent=4)
+
 dol_sources = load_sources(c.DOL_CTX)
 dol_gen_includes = find_gen_includes(dol_sources)
 make_asm_list(c.DOL_ASM_LIST, dol_gen_includes[AsmInclude])
+
+make_objdiff_json(dol_sources)
 
 ##########
 # Builds #
