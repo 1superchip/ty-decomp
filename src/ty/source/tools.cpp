@@ -321,10 +321,10 @@ void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, fl
     bImage.startY = f2;
     bImage.endY = f10;
     bImage.z = 0.0f;
-    bImage.uvs[0] = f3;
-    bImage.uvs[2] = f11;
-    bImage.uvs[1] = f4;
-    bImage.uvs[3] = f12;
+    bImage.uv0 = f3;
+    bImage.uv2 = f11;
+    bImage.uv1 = f4;
+    bImage.uv3 = f12;
     bImage.color = *pVec;
     bImage.unk40.Set(1.0f, 1.0f, 1.0f, 1.0f);
     bImage.Draw(1);
@@ -341,10 +341,10 @@ void Tools_RenderToTarget(Material* pMaterial, float f0, float fv0f, float fa1, 
     image.endX = 640.0f;
     image.endY = 512.0f;
     image.z = 0.0f;
-    image.uvs[0] = fa2 + f0;
-    image.uvs[2] = fa3 + f0;
-    image.uvs[1] = fa4 + fv0f;
-    image.uvs[3] = fa5 + fv0f;
+    image.uv0 = fa2 + f0;
+    image.uv2 = fa3 + f0;
+    image.uv1 = fa4 + fv0f;
+    image.uv3 = fa5 + fv0f;
     
     image.unk40.x = 1.0f;
     image.unk40.y = 1.0f;

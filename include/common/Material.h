@@ -112,6 +112,12 @@ struct Material {
             flags &= ~_flags;
         }
     }
+    Texture* GetTexture(void) {
+        if (unk58 != NULL) {
+            return unk58;
+        }
+        return unk54;
+    }
 
 	static Material* pCurrMat[2];
     static int frameCounter;

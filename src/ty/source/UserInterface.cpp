@@ -69,10 +69,10 @@ void UIImage::Init(char* pMatName) {
     img.endX = getTexture(pMaterial)->width;
     img.endY = getTexture(pMaterial)->height;
     img.z = 0.0f;
-    img.uvs[0] = 0.0f;
-    img.uvs[1] = 0.0f;
-    img.uvs[2] = 1.0f;
-    img.uvs[3] = 1.0f;
+    img.uv0 = 0.0f;
+    img.uv1 = 0.0f;
+    img.uv2 = 1.0f;
+    img.uv3 = 1.0f;
     img.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -98,10 +98,10 @@ void UIImage::Init(float endX, float endY) {
     img.endX = endX;
     img.endY = endY;
     img.z = 0.0f;
-    img.uvs[0] = 0.0f;
-    img.uvs[1] = 0.0f;
-    img.uvs[2] = 1.0f;
-    img.uvs[3] = 1.0f;
+    img.uv0 = 0.0f;
+    img.uv1 = 0.0f;
+    img.uv2 = 1.0f;
+    img.uv3 = 1.0f;
     img.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -120,10 +120,10 @@ void UIImage::Draw(void) {
 }
 
 void UIImage::SetUVs(float uv0, float uv1, float uv2, float uv3) {
-    img.uvs[0] = uv0;
-    img.uvs[1] = uv1;
-    img.uvs[2] = uv2;
-    img.uvs[3] = uv3;
+    img.uv0 = uv0;
+    img.uv1 = uv1;
+    img.uv2 = uv2;
+    img.uv3 = uv3;
 }
 
 // TODO: Document these flags

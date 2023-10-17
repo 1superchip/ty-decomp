@@ -346,19 +346,19 @@ void Blitter_Image::Draw(int count) {
 
         GXPosition3f32(_startX, _startY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->uvs[0], pImage->uvs[1]);
+        GXTexCoord2f32(pImage->uv0, pImage->uv1);
 
         GXPosition3f32(_startX, _endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->uvs[0], pImage->uvs[3]);
+        GXTexCoord2f32(pImage->uv0, pImage->uv3);
 
         GXPosition3f32(_endX, _startY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->uvs[2], pImage->uvs[1]);
+        GXTexCoord2f32(pImage->uv2, pImage->uv1);
 
         GXPosition3f32(_endX, _endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
-        GXTexCoord2f32(pImage->uvs[2], pImage->uvs[3]);
+        GXTexCoord2f32(pImage->uv2, pImage->uv3);
         pImage++;
     }
 

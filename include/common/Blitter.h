@@ -68,7 +68,10 @@ struct Blitter_Image {
     float endX; // X position of Corner 2
     float endY; // Y position of Corner 2
     float z;
-    float uvs[4];
+    float uv0;
+    float uv1;
+    float uv2;
+    float uv3;
     Vector color;
     Vector unk40;
 	
