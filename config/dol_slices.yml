@@ -1038,9 +1038,9 @@ ty/source/camera/GameCameraTools.cpp:
 #   .text: [0x800d0368, 0x800d0490]
 #   .bss: [0x802a5f70, 0x802a5fa0]
 
-#ty/source/frontend/ProgressBar.cpp:
-#   .text: [0x800d0490, 0x800d0e60]
-#   .sdata2: [0x803fe380, 0x803fe3a0]
+ty/source/frontend/ProgressBar.cpp:
+  .text: [0x800d0490, 0x800d0e60]
+  .sdata2: [0x803fe380, 0x803fe3a0]
 
 #StartupScreens.cpp:
 #   .text: [0x800d0e60, 0x800d1674]
