@@ -2448,11 +2448,11 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fab18, 0x803fab28]
 #   .sdata2: [0x80401350, 0x80401390]
 
-#Spline.cpp:
-#   .text: [0x8019b040, 0x8019d70c]
-#   .rodata: [0x8023ec18, 0x8023ec38]
-#   .data: [0x802685a8, 0x80268628]
-#   .sdata2: [0x80401390, 0x804013d8]
+ty/source/Spline.cpp:
+  .text: [0x8019b040, 0x8019d70c]
+  .rodata: [0x8023ec18, 0x8023ec38]
+  .data: [0x802685a8, 0x80268628]
+  .sdata2: [0x80401390, 0x804013d8]
 
 #staticSpikes.cpp:
 #   .text: [0x8019d70c, 0x8019db4c]
