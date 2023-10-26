@@ -7,14 +7,18 @@
 Vector Spline_GetPosition(Vector*, Vector*, Vector*, Vector*, float);
 Vector Spline_GetVelocity(Vector*, Vector*, Vector*, Vector*, float);
 
+// Related:
+// https://decomp.me/scratch/PbMFN
+// https://decomp.me/scratch/4PTkP
+
 struct SplinePoint {
-    Vector unk0;
+    Vector mPos;
     Vector unk10;
 };
 
 struct Spline {
-    int mNumPoints;
-    int nodeIndex;
+    int mNumPoints; // Maximum number of points
+    int nodeIndex; // Current Node Index
     SplinePoint* mpPoints;
     bool unkC; // seems to relate to normalizing?
 
@@ -29,7 +33,7 @@ struct Spline {
 };
 
 struct UniformSplinePoint {
-    Vector unk0;
+    Vector mPos;
     Vector unk10;
     float unk20;
 };

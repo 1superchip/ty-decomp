@@ -1,8 +1,14 @@
 #ifndef HEATFLARE_H
 #define HEATFLARE_H
 
+#include "common/Vector.h"
+
+// possibly called "HeatFlareInfo" based on assertions?
 struct HeatFlare {
-	char padding[0x1C];
+    Vector unk0;
+    float unk10;
+    float unk14;
+    int unk18;
 };
 
 void HeatFlare_LoadResources(void);
