@@ -33,6 +33,13 @@ struct StaticPropDescriptor : GameObjDesc {
 	virtual void Load(KromeIni* pIni);
 };
 
+// Not sure if this was actually a structure
+// but this makes it clearer what the 2 Vectors represent
+struct StaticPropLoadInfo {
+	Vector defaultRot;
+	Vector defaultScale;
+};
+
 struct StaticProp : GameObject {
 	bool collide;
 	CollisionInfo collisionInfo;
@@ -51,7 +58,7 @@ struct StaticProp : GameObject {
     }
 	// TyOn is an inline?
 
-    static Vector loadInfo[2]; // {{rot}, {scale}}
+    static StaticPropLoadInfo loadInfo;
 };
 
 struct StaticFXPropDesc : StaticPropDescriptor {
@@ -97,7 +104,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
 
 struct StaticFXProp : StaticProp {
 	Vector unk58;
-	Vector rot; // default prop rotation
+	Vector mDefaultRot; // default prop rotation
 	// autoRotation is the rotation that is constantly updated by the description's autoRotate parameter
 	// this is added to the prop rotation (rot) on stack and rotates the default matrix in the prop's model
 	Vector autoRotation; // autoRotate is added to this vector

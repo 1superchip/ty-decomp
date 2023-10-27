@@ -27,8 +27,8 @@ void Collapsible_LoadResources(KromeIni *pIni) {
 
 void Collapsible::LoadDone(void) {
     StaticProp::LoadDone();
-    scale = StaticProp::loadInfo[1];
-    defaultRot = StaticProp::loadInfo[0];
+    scale = StaticProp::loadInfo.defaultScale;
+    defaultRot = StaticProp::loadInfo.defaultRot;
     // Set the default translation to the translation of the model
     defaultTrans = *pModel->matrices[0].Row3();
 }

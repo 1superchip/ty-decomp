@@ -41,7 +41,10 @@ static float OrderStaticPropFloats(void) {
 	return 1.0f;
 }
 
-Vector StaticProp::loadInfo[2] = {{0.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.0f}};
+StaticPropLoadInfo StaticProp::loadInfo = {
+    {0.0f, 0.0f, 0.0f, 0.0f}, // Default Rotation
+    {1.0f, 1.0f, 1.0f, 0.0f} // Default Scale
+};
 
 static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -129,16 +132,16 @@ void StaticProp::Deinit(void) {
 
 bool StaticProp::LoadLine(KromeIniLine* pLine) {
     return GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
-        LoadLevel_LoadVector(pLine, "rot", &loadInfo[0]) || 
-        LoadLevel_LoadVector(pLine, "scale", &loadInfo[1]) || 
+        LoadLevel_LoadVector(pLine, "rot", &loadInfo.defaultRot) || 
+        LoadLevel_LoadVector(pLine, "scale", &loadInfo.defaultScale) || 
         LoadLevel_LoadBool(pLine, "collide", &collide);
 }
 
 void StaticProp::LoadDone(void) {
     CollisionResult cr;
     pModel->matrices[0].SetTranslation(pModel->matrices[0].Row3());
-    pModel->matrices[0].SetRotationPYR(&loadInfo[0]);
-    pModel->matrices[0].Scale(&loadInfo[1]);
+    pModel->matrices[0].SetRotationPYR(&loadInfo.defaultRot);
+    pModel->matrices[0].Scale(&loadInfo.defaultScale);
     pModel->SetLocalToWorldDirty();
     if (pModel->pAnimation != NULL) {
         pModel->pAnimation->CalculateMatrices();
@@ -167,8 +170,8 @@ void StaticProp::LoadDone(void) {
             }
         }
     }
-    loadInfo[0].SetZero();
-    loadInfo[1].Set(1.0f, 1.0f, 1.0f, 1.0f);
+    loadInfo.defaultRot.SetZero();
+    loadInfo.defaultScale.Set(1.0f, 1.0f, 1.0f, 1.0f);
     objectManager.AddObject(this, pModel);
 }
 
@@ -192,7 +195,7 @@ bool StaticFXProp::LoadLine(KromeIniLine* pLine) {
 }
 
 void StaticFXProp::LoadDone(void) {
-    rot = StaticProp::loadInfo[0];
+    mDefaultRot = StaticProp::loadInfo.defaultRot;
     StaticProp::LoadDone();
     CollisionResult cr;
     
@@ -321,7 +324,7 @@ void StaticFXProp::UpdateRotate(void) {
     autoRotation.z += pDesc->autoRotate.z;
     autoRotation.NormaliseRot(&autoRotation);
     if (rotateSubObjIndex < 0) {
-        Vector modelRot = rot;
+        Vector modelRot = mDefaultRot;
         modelRot.x += autoRotation.x;
         modelRot.y += autoRotation.y;
         modelRot.z += autoRotation.z;

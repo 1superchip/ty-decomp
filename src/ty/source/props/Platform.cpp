@@ -79,7 +79,7 @@ void Platform::Init(GameObjDesc* pDesc) {
 	StaticProp::Init(pDesc);
 	GetDesc()->maxMag = pModel->GetModelVolume()->v1.Magnitude();
 	numAttached = 0;
-	unk7C.Set(0.0f, 0.0f, 0.0f);
+	mCurrRot.Set(0.0f, 0.0f, 0.0f);
 	attachments.Init(0x20);
 	rider.Init();
 	unkB0.SetZero();
@@ -104,9 +104,9 @@ bool Platform::LoadLine(KromeIniLine* pLine) {
 }
 
 void Platform::LoadDone(void) {
-	scale = StaticProp::loadInfo[1];
-	defaultRot = StaticProp::loadInfo[0];
-	unk7C = defaultRot;
+	scale = StaticProp::loadInfo.defaultScale;
+	mDefaultRot = StaticProp::loadInfo.defaultRot;
+	mCurrRot = mDefaultRot;
 	StaticProp::LoadDone();
 }
 
@@ -117,8 +117,9 @@ void Platform::Update(void) {
 }
 
 void Platform::Reset(void) {
-	unk7C = defaultRot;
-	pModel->matrices[0].SetRotationPYR(&unk7C);
+	// Reset Platform rotation
+	mCurrRot = mDefaultRot;
+	pModel->matrices[0].SetRotationPYR(&mCurrRot);
 	unk58 = NULL;
 }
 
@@ -133,9 +134,9 @@ void Platform::Message(MKMessage* pMsg) {
 			PlatformMoveMsg* updateMsg = (PlatformMoveMsg*)pMsg;
 			pModel->matrices[0].Row3()->Copy(updateMsg->trans);
 			Vector* rotUpdate = updateMsg->rot;
-			unk7C.x += rotUpdate->x;
-			unk7C.y += rotUpdate->y;
-			unk7C.z += rotUpdate->z;
+			mCurrRot.x += rotUpdate->x;
+			mCurrRot.y += rotUpdate->y;
+			mCurrRot.z += rotUpdate->z;
 			EndUpdate();
 			break;
 		case MKMSG_AttachObject:
@@ -155,7 +156,7 @@ void Platform::BeginUpdate(void) {
     unk58 = TempAlloc(numAttached * sizeof(Vector) + 0x70);
 	mat.Inverse(&pModel->matrices[0]);
 	*(Matrix*)unk58 = mat;
-	unk58[4] = unk7C;
+	unk58[4] = mCurrRot;
 	unk58[5].Set(0.0f, 0.0f, 0.0f, 1.0f);
 	int idx = 0;
 	GameObject** iter = attachments.GetPointers();
@@ -191,22 +192,22 @@ void Platform::UpdateTilt(void) {
 				tmp.y = 0.0f;
 				tmp.ClampMagnitude(GetDesc()->maxMag);
 				tmp.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
-				unk7C.x = AdjustFloat(unk7C.x, -tmp.z, 0.1f);
-				unk7C.z = AdjustFloat(unk7C.z, tmp.x, 0.1f);
+				mCurrRot.x = AdjustFloat(mCurrRot.x, -tmp.z, 0.1f);
+				mCurrRot.z = AdjustFloat(mCurrRot.z, tmp.x, 0.1f);
 				return;
 			}
 		}
-		unk7C.x = AdjustFloat(unk7C.x, 0.0f, 0.1f);
-		unk7C.z = AdjustFloat(unk7C.z, 0.0f, 0.1f);
+		mCurrRot.x = AdjustFloat(mCurrRot.x, 0.0f, 0.1f);
+		mCurrRot.z = AdjustFloat(mCurrRot.z, 0.0f, 0.1f);
 	}
 }
 
 void Platform::UpdateRotationMatrix(void) {
 	Matrix tmpMat;
-	pModel->matrices[0].SetRotationPitch(unk7C.x);
-	tmpMat.SetRotationRoll(unk7C.z);
+	pModel->matrices[0].SetRotationPitch(mCurrRot.x);
+	tmpMat.SetRotationRoll(mCurrRot.z);
 	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
-	tmpMat.SetRotationYaw(unk7C.y);
+	tmpMat.SetRotationYaw(mCurrRot.y);
 	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
 	pModel->matrices[0].Scale(&pModel->matrices[0], &scale);
 }
@@ -215,7 +216,7 @@ void Platform::UpdateAttached(void) {
 	PlatformMoveMsg msg;
 	Vector deltaPyr;
 	if (unk58 != NULL) {
-    	deltaPyr.Sub(&unk7C, &unk58[4]);
+    	deltaPyr.Sub(&mCurrRot, &unk58[4]);
 	    GameObject** iter = attachments.GetPointers();
     	int idx = 0;
 		// iterate through attached objects and send the Move Message to them
