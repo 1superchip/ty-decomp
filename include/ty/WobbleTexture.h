@@ -34,6 +34,9 @@ struct WobbleTexture {
     WobbleEntry* GetWobbleEntry(int i, int j) {
         return &mpEntries[j * mWidth] + i;
     }
+    void IncrementUnk4(void) {
+        unk4 += 1.0f;
+    }
 };
 
 #endif // WOBBLETEXURE_H

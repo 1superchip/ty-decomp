@@ -9,6 +9,7 @@ struct SoundEventHelper {
     int unk0;
     
     void Update(int, bool, bool, GameObject*, Vector*, float, int);
+    void Message(MKMessage*);
     void Init(void) {
         unk0 = -1;
     }

@@ -153,7 +153,7 @@ struct Model {
 	bool RefPointExists(char*, int*);
 	int GetRefPointIndex(char*);
 	Vector* GetRefPointOrigin(int);
-	void GetRefPointWorldPosition(int, Vector*);
+	void GetRefPointWorldPosition(int refPointIndex, Vector* pOut);
 	bool SubObjectExists(char*, int*);
 	int GetSubObjectIndex(char*);
 	int GetSubObjectMatrixIndex(int);

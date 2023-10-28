@@ -143,12 +143,12 @@ struct Vector {
     //     return DistSq(pCentre) < Sqr<float>(radius);
     // }
 	// this might be the correct inline?
-    // bool CheckSphereRadius(Vector* pCentre, float radius) {
-    //     float dx = (x - pCentre->x);
-    //     float dy = (y - pCentre->y);
-    //     float dz = (z - pCentre->z);
-    //     return dx * dx + dy * dy + dz * dz < radius * radius;
-    // }
+    bool IsInsideSphere(Vector* pCentre, float radius) {
+        float dx = (x - pCentre->x);
+        float dy = (y - pCentre->y);
+        float dz = (z - pCentre->z);
+        return dx * dx + dy * dy + dz * dz < radius * radius;
+    }
     float Normalise(void) {
         return Normalise(this);
     }
