@@ -2488,15 +2488,15 @@ ty/source/tools.cpp:
   .sbss: [0x803fab80, 0x803fab88]
   .sdata2: [0x80401478, 0x804014f0]
 
-#Torch.cpp:
-#   .text: [0x801a5d28, 0x801a6c44]
-#   .ctors: [0x8023ca88, 0x8023ca8c]
-#   .rodata: [0x8023eca8, 0x8023ecc8]
-#   .data: [0x80268bc8, 0x80268ca8]
-#   .bss: [0x802b6598, 0x802b6678]
-#   .sdata: [0x803f93a0, 0x803f9400]
-#   .sbss: [0x803fab88, 0x803fab98]
-#   .sdata2: [0x804014f0, 0x80401550]
+ty/source/Torch.cpp:
+  .text: [0x801a5d28, 0x801a6c44]
+  .ctors: [0x8023ca88, 0x8023ca8c]
+  .rodata: [0x8023eca8, 0x8023ecc8]
+  .data: [0x80268bc8, 0x80268ca8]
+  .bss: [0x802b6598, 0x802b6678]
+  .sdata: [0x803f93a0, 0x803f9400]
+  .sbss: [0x803fab88, 0x803fab98]
+  .sdata2: [0x804014f0, 0x80401550]
 
 #Ty.cpp:
 #   .text: [0x801a6c44, 0x801b5694]

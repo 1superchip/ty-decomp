@@ -146,8 +146,16 @@ void Torch::Update(void) {
     mSoundHelper.Update(199, 0, bEmitFire, 0, &mWorldPos, distSquared, 0);
 }
 
+// #include "common/Font.h"
+// #include "common/Str.h"
+// #include "common/Debug.h"
 
 void Torch::Draw(void) {
+    // Vector textPos = mWorldPos;
+    // textPos.y += 100.0f;
+    // gpDebugFont->DrawText3d(Str_Printf("%d", mFrozenTimer), &textPos, 1.0f, 1.0f, (FontJustify)0,
+    //     NULL, 0, 0, NULL, 0, NULL
+    // );
     lodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
     pModel->GetRefPointWorldPosition(flameRefIndex, &mWorldPos);
     if (bFoundWater) {
