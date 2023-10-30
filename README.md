@@ -1,4 +1,6 @@
-# ty1-decomp
+# ty1-decomp [![Discord Channel][discord-badge]][discord]
+[discord]: https://discord.gg/hKx3FJJgrV
+[discord-badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
 
 Decompilation of Ty the Tasmanian Tiger NTSC-U (GTYE69)
 
