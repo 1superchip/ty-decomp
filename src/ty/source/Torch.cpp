@@ -101,7 +101,7 @@ void Torch::Reset(void) {
         flameRefIndex = pModel->GetRefPointIndex("R_Flame");
     }
     mFlameRefIndex = flameRefIndex;
-    pModel->GetRefPointWorldPosition(mFlameRefIndex, &mWorldPos);
+    pModel->GetRefPointWorldPosition(mFlameRefIndex, &mFlamePos);
     mLightCol = lightCol;
     bEmitFire2 = true;
     unk10C = 500.0f;
@@ -143,14 +143,14 @@ void Torch::Update(void) {
         UpdateShadow();
     }
     bEmitFire2 = bEmitFire;
-    mSoundHelper.Update(199, 0, bEmitFire, 0, &mWorldPos, distSquared, 0);
+    mSoundHelper.Update(199, 0, bEmitFire, 0, &mFlamePos, distSquared, 0);
 }
 
 void Torch::Draw(void) {
     lodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
-    pModel->GetRefPointWorldPosition(flameRefIndex, &mWorldPos);
+    pModel->GetRefPointWorldPosition(flameRefIndex, &mFlamePos);
     if (bFoundWater) {
-        mWobbleTex.SetUpGrid(&mWorldPos, 100.0f, 200.0f, mWaterY);
+        mWobbleTex.SetUpGrid(&mFlamePos, 100.0f, 200.0f, mWaterY);
         mWobbleTex.WobbleUVs(0.33f);
         if (mWaterY < View::GetCurrent()->mCamPos.y) {
             mWobbleTex.Draw(mpWobbleTexMat, false);
@@ -208,12 +208,12 @@ void Torch::Hit(void) {
             }
             break;
         case 4:
-            SetState((TorchState)1, 0);
+            SetState(TORCH_IDLE, 0);
             mRot = mDefaultRot;
             break;
     }
     pModel->SetRotation(&mRot);
-    pModel->GetRefPointWorldPosition(mFlameRefIndex, &mWorldPos);
+    pModel->GetRefPointWorldPosition(mFlameRefIndex, &mFlamePos);
     EmitFire();
 }
 
@@ -240,15 +240,15 @@ void Particle_Fire_Create(ParticleSystem**, Vector*, float, bool);
 /// @param None
 void Torch::EmitFire(void) {
     if (bEmitFire) {
-        Particle_Fire_Create(&mpParticleSys1, &mWorldPos, mDefaultScale.x * 2.0f, false);
+        Particle_Fire_Create(&mpParticleSys1, &mFlamePos, mDefaultScale.x * 2.0f, false);
         unkA8 += 0.2833f;
         while (unkA8 > 1.0f) {
             Vector sp8;
             unkA8 -= 1.0f;
             sp8.Set(
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mWorldPos.x - 5.0f),
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mWorldPos.y - 5.0f),
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mWorldPos.z - 5.0f)
+                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.x - 5.0f),
+                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.y - 5.0f),
+                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.z - 5.0f)
             );
             Particle_Fire_Create(&mpParticleSys0, &sp8, mDefaultScale.x, true);
         }
@@ -267,13 +267,13 @@ extern Ty ty;
 /// @brief Adds a shadow to Ty when Ty is near a lit torch
 /// @param  None
 void Torch::UpdateShadow(void) {
-    if (mWorldPos.IsInsideSphere(&ty.unk338, 500.0f)) {
-        Vector sp8 = mWorldPos;
-        sp8.x += RandomFR(&gb.randSeed, -4.0f, 4.0f);
-        sp8.y += RandomFR(&gb.randSeed, -4.0f, 4.0f);
-        sp8.z += RandomFR(&gb.randSeed, -4.0f, 4.0f);
-        float mag = Sqr<float>(Max<float>(ApproxMag(&mWorldPos, &ty.unk338), 10.0f));
-        ty.AddShadowLight(&sp8, (Sqr<float>(500.0f) / mag) - 1.0f);
+    if (mFlamePos.IsInsideSphere(&ty.unk338, 500.0f)) {
+        Vector particlePos = mFlamePos;
+        particlePos.x += RandomFR(&gb.randSeed, -4.0f, 4.0f);
+        particlePos.y += RandomFR(&gb.randSeed, -4.0f, 4.0f);
+        particlePos.z += RandomFR(&gb.randSeed, -4.0f, 4.0f);
+        float mag = Sqr<float>(Max<float>(ApproxMag(&mFlamePos, &ty.unk338), 10.0f));
+        ty.AddShadowLight(&particlePos, (Sqr<float>(500.0f) / mag) - 1.0f);
     }
 }
 
@@ -300,18 +300,18 @@ void Torch::CheckForHit(void) {
                 unkAC = 0;
             }
             // Plays the torch model wobbling back-and-forth sound
-            SoundBank_Play(0x12f, GetPos(), 0);
+            SoundBank_Play(303, GetPos(), 0);
         }
 
-        // Check if a boomerang collides with a sphere at mWorldPos
-        pBoomerang = Boomerang_CheckForHitSphere(&mWorldPos, 50.0f, false);
+        // Check if a boomerang collides with a sphere at mFlamePos
+        pBoomerang = Boomerang_CheckForHitSphere(&mFlamePos, 50.0f, false);
         if (pBoomerang) {
             // if the Boomerang was the Frostyrang
             // Set the torch frozen timer and play a sound if it was emitting fire
             if (((int*)pBoomerang)[0x50 / 0x4] == 1) {
                 mFrozenTimer = 300;
                 if (bEmitFire) {
-                    SoundBank_Play(0xC8, GetPos(), 0);
+                    SoundBank_Play(200, GetPos(), 0);
                     mSoundHelper.Stop(); // Stop playing the fire crackling sound
                 }
             } else if (bEmitFire) {

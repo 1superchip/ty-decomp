@@ -37,7 +37,7 @@ struct Torch : StaticProp {
     Vector mRot;
     Vector mDefaultRot;
     Vector mDefaultScale; // X component is used for flames
-    Vector mWorldPos;
+    Vector mFlamePos; // Flame Position
     float mRotInc; // How much rotation is updated by
     float mFloorY; // not exactly?
     float mCeilingY; // not exactly?
