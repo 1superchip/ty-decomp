@@ -238,7 +238,7 @@ void Platform::UpdateShadow(void) {
 	if (CompareVectors(&start, &unkA0) == false) {
 		unkD0 = false;
 		CollisionResult cr;
-		if (Collision_RayCollide(&start, &end, &cr, (CollisionMode)2, 0)) {
+		if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0)) {
 			unkC0 = cr.normal;
 			unkB0 = cr.pos;
 			unkA0 = start;

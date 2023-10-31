@@ -8,7 +8,11 @@
 #include "common/MKSceneManager.h"
 #include "common/StdMath.h"
 
-enum CollisionMode {};
+enum CollisionMode {
+    COLLISION_MODE_ALL       = 0,
+    COLLISION_MODE_DYNAMIC   = 1, // Dynamic?
+    COLLISION_MODE_POLY      = 2, // Ground?
+};
 
 struct CollisionNode
 {

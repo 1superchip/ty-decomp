@@ -177,7 +177,7 @@ void Picture::Spawn(int frameNumber, Vector* pPos) {
     Vector end = mid;
     mid.y += 50.0f;
     end.y -= 2000.0f;
-    if (Collision_RayCollide(&mid, &end, &cr, (CollisionMode)0, 0)) {
+    if (Collision_RayCollide(&mid, &end, &cr, COLLISION_MODE_ALL, 0)) {
         end.y = cr.pos.y + 25.0f;
         unk68 = cr.pos.y + 25.0f;
     }

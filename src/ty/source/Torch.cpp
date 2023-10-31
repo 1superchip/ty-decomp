@@ -43,7 +43,8 @@ void Torch::LoadDone(void) {
             GetPos()->y - 50.0f,
             GetPos()->z
         };
-        if (Collision_RayCollide(&top, &bottom, &cr, (CollisionMode)2, 0) &&
+        // Check for collisions with ground and if the collision occured against water
+        if (Collision_RayCollide(&top, &bottom, &cr, COLLISION_MODE_POLY, 0) &&
             (cr.collisionFlags & 0x400)) {
             bFoundWater = true;
             mWaterY = cr.pos.y;

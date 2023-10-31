@@ -91,7 +91,8 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
     end.Add(&startPos);
     start.y += unk14;
     end.y += unk14;
-    bool sweepResult = Collision_SweepSphereCollide(&start, &end, radius, &cr, (CollisionMode)0, 0);
+    bool sweepResult = Collision_SweepSphereCollide(&start, &end,
+        radius, &cr, COLLISION_MODE_ALL, 0);
     if (unk4 == unk64 && sweepResult) {
         float maxRadius = 2.0f * radius;
         if (ApproxMag(&targetPos, &cr.pos) <= maxRadius) {
@@ -101,7 +102,8 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
             start.Add(&end);
             end.Add(&cr.pos);
             end.y = start.y;
-            sweepResult = Collision_SweepSphereCollide(&start, &end, radius, &cr, (CollisionMode)0, 0);
+            sweepResult = Collision_SweepSphereCollide(&start, &end,
+                radius, &cr, COLLISION_MODE_ALL, 0);
         }
     }
     if (sweepResult) {

@@ -264,12 +264,14 @@ float GetFloor(Vector* pPos, float arg1, CollisionResult* pCr) {
     unk18.Set(pPos->x, pPos->y - 100000.0f, pPos->z);
     // if pCr is not NULL, use the pCr argument otherwise use a local CollisionResult
     if (pCr) {
-        if (Collision_RayCollide(&unk8, &unk18, pCr, (CollisionMode)2, 0)) {
+        // Only collide with ground
+        if (Collision_RayCollide(&unk8, &unk18, pCr, COLLISION_MODE_POLY, 0)) {
             collideY = pCr->pos.y;
         }
     } else {
         CollisionResult cr;
-        if (Collision_RayCollide(&unk8, &unk18, &cr, (CollisionMode)2, 0)) {
+        // Only collide with ground
+        if (Collision_RayCollide(&unk8, &unk18, &cr, COLLISION_MODE_POLY, 0)) {
             collideY = cr.pos.y;
         }
     }
@@ -297,7 +299,8 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
     end.Sub(&end, &top);
     end.Scale(4.0f);
     end.Add(&top);
-    if (Collision_RayCollide(&top, &end, &cr, (CollisionMode)2, 0)) {
+    // Only check for ground collisions
+    if (Collision_RayCollide(&top, &end, &cr, COLLISION_MODE_POLY, 0)) {
         if (pOut && (cr.collisionFlags & 0x400)) {
             // collision against water iirc?
             *pOut = true;
@@ -561,7 +564,8 @@ bool Tools_TestFloor(Vector* pt, CollisionResult* pCr, float f1, bool bCollision
     CollisionResult localCR;
     pCr = pCr ? pCr : &localCR;
     Vector end = {pt->x, pt->y - f1, pt->z};
-    return Collision_RayCollide(pt, &end, pCr, bCollisionMode ? (CollisionMode)0 : (CollisionMode)2, 0);
+    return Collision_RayCollide(pt, &end, pCr,
+        bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, 0);
 }
 
 // Returns the y coordinate of the floor under pPos
@@ -570,7 +574,8 @@ float Tools_GetFloor(const Vector& pPos, CollisionResult* pCr, float maxRayDist,
     CollisionResult localCR;
     pCr = pCr ? pCr : &localCR;
     Vector end = {pPos.x, pPos.y - maxRayDist, pPos.z};
-    if (Collision_RayCollide((Vector*)&pPos, &end, pCr, bCollisionMode ? (CollisionMode)0 : (CollisionMode)2, collisionFlags)) {
+    if (Collision_RayCollide((Vector*)&pPos, &end, pCr, 
+            bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, collisionFlags)) {
         return pCr->pos.y;
     }
     return pPos.y;

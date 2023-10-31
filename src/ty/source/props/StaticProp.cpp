@@ -150,7 +150,8 @@ void StaticProp::LoadDone(void) {
     start.Add(&start, GetPos());
     Vector end = {0.0f, -12300.0f, 0.0f, 0.0f};
     end.Add(&end, GetPos());
-    if (GetDesc()->bUseGroundColor != false && Collision_RayCollide(&start, &end, &cr, (CollisionMode)2, 0x400) != false) {
+    if (GetDesc()->bUseGroundColor &&
+        Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0x400)) {
         pModel->colour = Tools_GroundColor(&cr);
     }
     if (collide != false) {
@@ -209,7 +210,7 @@ void StaticFXProp::LoadDone(void) {
     end.x += unk58.x;
     end.y += unk58.y;
     end.z += unk58.z;
-    if (Collision_RayCollide(&start, &end, &cr, (CollisionMode)2, -0x401) && (GetDesc()->effectFlags & FX_WaterRipple)) {
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, -0x401) && (GetDesc()->effectFlags & FX_WaterRipple)) {
 		// if collision against water occurs and this prop has Water Ripple effects
 		// set collides with water and the position of the collision
         bCollidesWithWater = true;

@@ -92,11 +92,15 @@ void GCT_ClearCollisionResult(CollisionResult* pCr) {
     pCr->unk40 = 0.0f;
 }
 
+// Basically the same code as Tools_TestFloor in Tools.cpp
 bool GCT_TestFloor(Vector* r3, float f1, float f2, int collisionFlags,
         bool bCollisionMode, CollisionResult* pCr) {
+    
     Vector start = {r3->x, r3->y + f1, r3->z};
     Vector end = {start.x, start.y - f2, start.z};
-    return Collision_RayCollide(&start, &end, pCr, bCollisionMode ? (CollisionMode)0 : (CollisionMode)2, collisionFlags);
+
+    return Collision_RayCollide(&start, &end, pCr,
+        bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, collisionFlags);
 }
 
 // Exact same as the stipped Vector method...

@@ -1215,7 +1215,7 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
 
 bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, CollisionMode mode, int r7) {
     bFound = false;
-    if (mode == (CollisionMode)0 || mode == (CollisionMode)1) {
+    if (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_DYNAMIC) {
 		// Dynamic_Collides()
         Vector diff;
         diff.Sub(vec1, vec2);
@@ -1256,7 +1256,7 @@ bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, Coll
             }
         }
     }
-    if (!bFound && (mode == (CollisionMode)0 || mode == (CollisionMode)2)) {
+    if (!bFound && (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_POLY)) {
         // Stack_Collides()
         Vector vec;
         vec.Sub(vec2, vec1);
@@ -1271,7 +1271,7 @@ bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadiu
     SphereRay ray;
     bFound = false;
     ray.Create(pVec, pVec1, sphereRadius);
-    if (pMode == 0 || pMode == 1) {
+    if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_DYNAMIC) {
         int startX;
         int startZ;
         int lengthX;
@@ -1291,7 +1291,7 @@ bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadiu
             }
         }
     }
-    if (pMode == 0 || pMode == 2) {
+    if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_POLY) {
         Collision_PolySweepSphereCollide(&ray, pCr, arg3);
         // if a collision is found and the collision result parameter isn't NULL
         // normalise the result's normal field
