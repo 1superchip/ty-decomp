@@ -34,6 +34,10 @@ void RainbowScaleObjective::Update(void) {
         return;
     }
     if (gb.gameData.GetLevelCollectedGemCount() == 1 && !bStarted) {
+        // if the first Rainbow Scale has been collected
+        // and this objective hasn't been started
+        // send the OnStart message and set this Objective to active
+        // and started
         OnStart.Send();
         bActive = true;
         bStarted = true;
@@ -47,10 +51,13 @@ void RainbowScaleObjective::Update(void) {
 
 void RainbowScaleObjective::Message(MKMessage* pMessage) {
     switch (pMessage->unk0) {
+        // 2 = start?
         case 2:
+            // Get Opal Descriptor and iterate over all Opals
             GameObjDesc* pOpalDesc = objectManager.FindDescriptor("Opal");
             DescriptorIterator itr = pOpalDesc->Begin();
             while (itr.GetPointers()) {
+                // Count all of the opals in the level
                 unk66++;
                 itr.UpdatePointers();
             }

@@ -5,17 +5,25 @@
 
 extern "C" int stricmp(char*, char*);
 
-char* globalMessageStrings[43] = {"Activate", "Deactivate", "Enable", "Disable", "Show", "Hide", "Open", "Close", 
-"Toggle", "Spawn", "Shatter", "Fall", "ObjectiveIncrement", "LearntToSwim", "LearntToDive", "GotBothRangs", 
-"WeatherLightning", "WeatherStormy", "WeatherRain", "WeatherSnow", "WeatherPlankton", "WeatherFoggy", "Start", 
-"GotAquarang", "GotFlamerang", "GotFrostyrang", "GotSmasharang", "GotZappyrang", "GotZoomerang", "GotMultirang", "GotInfrarang", 
-"GotMegarang", "GotKaboomarang", "GotChronorang", "GotDoomarang", "RequestElementalRang", "RequestTechnoRang", "RequestTalisman", 
-"Abort", "GotExtraHealth", "FallingOffGeoFluffy", "TimeAttackStart", "TimeAttackEnd"};
+#define GLOBAL_MESSAGE_COUNT (43)
+
+char* globalMessageStrings[GLOBAL_MESSAGE_COUNT] = {
+    "Activate", "Deactivate", "Enable", "Disable",
+    "Show", "Hide", "Open", "Close", "Toggle", "Spawn",
+    "Shatter", "Fall", "ObjectiveIncrement", "LearntToSwim",
+    "LearntToDive", "GotBothRangs",  "WeatherLightning", "WeatherStormy",
+    "WeatherRain", "WeatherSnow", "WeatherPlankton", "WeatherFoggy",
+    "Start", "GotAquarang", "GotFlamerang", "GotFrostyrang", "GotSmasharang",
+    "GotZappyrang", "GotZoomerang", "GotMultirang", "GotInfrarang", "GotMegarang",
+    "GotKaboomarang", "GotChronorang", "GotDoomarang", "RequestElementalRang",
+    "RequestTechnoRang", "RequestTalisman", "Abort", "GotExtraHealth",
+    "FallingOffGeoFluffy", "TimeAttackStart", "TimeAttackEnd"
+};
 
 char* mkMessageStrings[2] = {"MK_Destroy", "Reset"};
 
 MessageMap mkMessageMap = {-2, 2, mkMessageStrings};
-MessageMap globalMessageMap = {10, 43, globalMessageStrings};
+MessageMap globalMessageMap = {10, GLOBAL_MESSAGE_COUNT, globalMessageStrings};
 
 void EventMessage::Init(void) {
 	targetId = -1;

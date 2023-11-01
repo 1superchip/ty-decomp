@@ -265,10 +265,13 @@ struct Ty {
 
 extern Ty ty;
 
+// void DebugInfo_Sphere(char*, Vector*, float, int, Vector*);
+
 /// @brief Adds a shadow to Ty when Ty is near a lit torch
 /// @param  None
 void Torch::UpdateShadow(void) {
     if (mFlamePos.IsInsideSphere(&ty.unk338, 500.0f)) {
+        // DebugInfo_Sphere("-tomLowe", &mFlamePos, 500.0f, 1, 0);
         Vector particlePos = mFlamePos;
         particlePos.x += RandomFR(&gb.randSeed, -4.0f, 4.0f);
         particlePos.y += RandomFR(&gb.randSeed, -4.0f, 4.0f);
