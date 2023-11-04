@@ -814,14 +814,14 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa100, 0x803fa108]
 #   .sdata2: [0x803fdb70, 0x803fdbe8]
 
-#Friend.cpp:
-#   .text: [0x800b8a94, 0x800b9880]
-#   .ctors: [0x8023c884, 0x8023c888]
-#   .rodata: [0x8023d800, 0x8023d820]
-#   .data: [0x80252fd0, 0x802530f0]
-#   .sdata: [0x803f5c90, 0x803f5ce0]
-#   .sbss: [0x803fa108, 0x803fa110]
-#   .sdata2: [0x803fdbe8, 0x803fdc08]
+ty/source/friends/Friend.cpp:
+  .text: [0x800b8a94, 0x800b9880]
+  .ctors: [0x8023c884, 0x8023c888]
+  .rodata: [0x8023d800, 0x8023d820]
+  .data: [0x80252fd0, 0x802530f0]
+  .sdata: [0x803f5c90, 0x803f5ce0]
+  .sbss: [0x803fa108, 0x803fa110]
+  .sdata2: [0x803fdbe8, 0x803fdc08]
 
 #julius.cpp:
 #   .text: [0x800b9880, 0x800baa70]

@@ -89,6 +89,12 @@ struct RenderState {
 
 extern RenderState gRenderState;
 
+// not sure where to put this
+inline void SetDefaultMaterial_UseNone(Material* pMat) {
+    Material::UseNone(-1);
+    gRenderState.pDefaultMaterial = pMat;
+}
+
 struct Display {
     int region; // Default = 2
     int unk4;

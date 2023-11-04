@@ -268,11 +268,11 @@ void Platform::Detach(GameObject* pObj) {
 	numAttached--;
 }
 
-void Platform::PushTy(int arg1) {
+void Platform::PushTy(int subObjectIndex) {
 	float tyRadius = ty.radius;
 	Vector vec;
 	Vector tyPos = {ty.pos.x, ty.pos.y + ty.radius, ty.pos.z, ty.pos.w};
-	if (Tools_ClipSphereToDynamicModel(tyPos, tyRadius, &vec, pModel, arg1)) {
+	if (Tools_ClipSphereToDynamicModel(tyPos, tyRadius, &vec, pModel, subObjectIndex)) {
 		vec.y -= tyRadius;
 		if (vec.y > ty.pos.y) {
 			vec.y = ty.pos.y;

@@ -2,7 +2,6 @@
 #define PLATFORM_H
 
 #include "ty/props/StaticProp.h"
-#include "types.h"
 /*#include "common/KromeIni.h"
 #include "common/Vector.h"*/
 #include "common/PtrList.h"
@@ -33,8 +32,8 @@ struct PlatformDesc : StaticPropDescriptor {
 	float rotVel;
 	float maxShadowHeight;
 	
-	void Init(ModuleInfoBase*, char*, char*, int, int);
-	void Load(KromeIni*);
+	virtual void Init(ModuleInfoBase*, char*, char*, int, int);
+	virtual void Load(KromeIni*);
 };
 
 struct Platform : StaticProp {
@@ -66,7 +65,7 @@ struct Platform : StaticProp {
 	void UpdateShadow(void);
 	void Attach(GameObject*);
 	void Detach(GameObject*);
-	void PushTy(int);
+	void PushTy(int subObjectIndex);
 	
 	PlatformDesc* GetDesc(void) {
 		return descr_cast<PlatformDesc*>(pDescriptor);

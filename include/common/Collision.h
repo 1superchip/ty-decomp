@@ -64,6 +64,9 @@ struct CollisionInfo {
     void Enable(void) {
         bEnabled = true;
     }
+    void Disable(void) {
+        bEnabled = false;
+    }
 };
 
 struct CollisionTriangle {

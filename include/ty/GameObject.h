@@ -28,6 +28,9 @@ struct MKMessage_GOBJ : MKMessage {
 	GameObject* pObj;
 };
 
+// Ty 2 has a Message named "PlatformMoveMsg"
+// Might be called "Message_PlatformMove" based on Jimmy Neutron?
+// might be good to move this to Platform.h?
 struct PlatformMoveMsg : MKMessage {
     Vector* trans;
     Vector* rot;
@@ -89,6 +92,7 @@ struct GameObject : MKProp {
 	static void Deallocate(GameObject*);
 	uint CalcDetailLevel(void);
 	static int GetMessageIdFromString(char*);
+    
 	virtual bool LoadLine(KromeIniLine* pLine);
 	virtual void LoadDone(void);
 	virtual void Reset(void);
