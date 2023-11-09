@@ -111,6 +111,8 @@ struct Boomerang {
     void PlaySound(BoomerangSound, int);
 };
 
+// BoomerangMessage is a real structure
+// Furnace::HandleRangMsg(BoomerangMessage*)
 struct BoomerangMessage : MKMessage {
     Boomerang* pBoomerang;
     bool unk8;
@@ -133,7 +135,7 @@ void Friend::Message(MKMessage* pMsg) {
             pModel->matrices[0].SetRotationPYR(&mRot);
             pModel->matrices[0].SetTranslation(&mPos);
             break;
-        case 8:
+        case 8: // BoomerangMessage id
             // BoomerangMessage?
             BoomerangMessage* pBoomerangMsg = (BoomerangMessage*)pMsg;
             if (mFlags & FSF_Visible) {

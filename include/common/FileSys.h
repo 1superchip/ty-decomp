@@ -1,3 +1,5 @@
+#ifndef COMMON_FILESYS
+#define COMMON_FILESYS
 
 struct DirectoryEntry {
 	char name[0x100];
@@ -6,7 +8,7 @@ struct DirectoryEntry {
 struct RkvFileEntry {
 	char name[0x20];
     int directoryIndex;
-    int length;
+    int length; // is this the decompressed length in sunny garcia?
 	// unk28 would have been some value for decompression in earlier games
     int unk28; // unused in Ty
     int offset; // offset of file in RKV
@@ -43,13 +45,17 @@ struct RkvTOC {
 void FileSys_InitModule(void);
 void FileSys_DeinitModule(void);
 void FileSys_Update(void);
+
 static int EntryCompare(void*, void*);
+
 void* FileSys_SetLoadInterceptHandler(void* (*)(char*, int*, void*, int*));
-bool FileSys_Exists(char*, int*);
+bool FileSys_Exists(char* pFilename, int* pOutLen);
 static void FileSys_SetOrder(RkvFileEntry*);
-void* FileSys_Load(char*, int*, void*, int);
-int FileSys_Save(char*, bool, void*, int) ;
+void* FileSys_Load(char* pFileName, int* pOutLen, void* pMemoryAllocated, int spaceAllocated);
+int FileSys_Save(char*, bool, void*, int);
 void FileSys_OutputFileOrder(void);
-int FileSys_Open(char*, int*, bool);
-void FileSys_Close(int);
-int FileSys_GetOffset(char*);
+int FileSys_Open(char* pFilename, int* pOutLen, bool arg2);
+void FileSys_Close(int fd);
+int FileSys_GetOffset(char* pFilename);
+
+#endif // COMMON_FILESYS

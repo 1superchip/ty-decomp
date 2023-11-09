@@ -16,6 +16,8 @@ extern "C" int DVDClose(void*);
 extern "C" int DVDOpen(char*, void*);
 extern "C" void strcpy(char*, char*);
 
+/// @brief Initiaites all File entries
+/// @param  None
 void File_InitModule(void) {
     for(int i = 0; i < MAX_FILES; ++i) {
         memset(&gcFiles[i], 0, sizeof(FileEntry));
@@ -23,6 +25,10 @@ void File_InitModule(void) {
     }
 }
 
+/// @brief Opens and returns an fd for a file
+/// @param filepath Name of the file
+/// @param openMode Open mode parameter
+/// @return FD of the opened file, -1 for failure to open
 int File_Open(char* filepath, int openMode) {
     int fd = 0;
     for (; fd < MAX_FILES; fd++) {
@@ -114,23 +120,31 @@ void File_ReadCallback(long arg0, DVDFileInfo* arg1) {
     }
 }
 
-void* File_Seek(int fd, int arg1, int arg2) {
-    switch(arg2) {
+/// @brief Updates a file's position
+/// @param fd Descriptor of file
+/// @param offset Value to use
+/// @param seekType Seek type
+/// @return 
+void* File_Seek(int fd, int offset, int seekType) {
+    switch(seekType) {
         case 0:
-            gcFiles[fd].unk48 = arg1;
+            gcFiles[fd].unk48 = offset;
             break;
         case 1:
-            gcFiles[fd].unk48 += arg1;
+            gcFiles[fd].unk48 += offset;
             break;
         case 2:
 			// unk34 is a field in DVDFileInfo
-            gcFiles[fd].unk48 = gcFiles[fd].unk34 + arg1; // seek from end of the file
+            gcFiles[fd].unk48 = gcFiles[fd].unk34 + offset; // seek from end of the file
         default:
             break;
     }
     return (void*)gcFiles[fd].unk48;
 }
 
+/// @brief Returns the length of a file
+/// @param filename Name of the file
+/// @return Length of the file, -1 if the file could not be opened
 int File_Length(char* filename) {
     int fd = File_Open(filename, 0);
     int length = -1;

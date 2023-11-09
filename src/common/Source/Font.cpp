@@ -50,7 +50,7 @@ Font* Font::Create(char* pName) {
         retFont->pFontMaterial = Material::Create(pName);
         retFont->pFontMaterial->SetFlags(2);
         retFont->pFontMaterial->SetFlags(4);
-        retFont->pFontMaterial->unk5C = 0.9f; // float might be wrong
+        retFont->pFontMaterial->unk5C = 0.9f;
     }
     return retFont;
 }
@@ -134,7 +134,7 @@ float ConvertLongLong2Float(s64 x) {
 /// @param xScale X scale
 /// @param yScale Y scale
 /// @param justify 
-/// @param color Color of string
+/// @param color Color of string (alpha = 255)
 void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float yScale,
         FontJustify justify, int color) {
     float projection[7];
@@ -196,10 +196,13 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_NONE);
     GXSetZMode(1, GX_ALWAYS, 1);
+    // this gets the color to ABGR (0 - 255) from (0 - 128)
+    // color is later read backwards when storing to WGPIPE
+    // (color >> 0x18 & 0xFF) -> get highest byte
     color = (((color >> 0x18 & 0xFF) * 255) >> 7) << 0x18 |
             (((color >> 0x10 & 0xFF) * 255) >> 7) << 0x10 |
             (((color >> 8 & 0xFF) * 255) >> 7) << 8 |
-            (((color & 0xFF) * 255) >> 7) | 0xFF000000;
+            (((color & 0xFF) * 255) >> 7) | 0xFF000000; // always set alpha to 255
     GXGetProjectionv((float*)&projection);
     OrthoProject();
 

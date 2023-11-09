@@ -146,8 +146,8 @@ int Model::Draw(u16* pSubObjs) {
             vertexBuf += 3;
             vertexCount--;
         }
-        GXSetArray(GX_VA_POS, (void*)&vertexBuffer[bufferOffset], 12);
-        GXSetArray(GX_VA_NRM, (void*)&normalBuffer[bufferOffset], 3);
+        GXSetArray(GX_VA_POS, (void*)&vertexBuffer[bufferOffset], sizeof(float) * 3);
+        GXSetArray(GX_VA_NRM, (void*)&normalBuffer[bufferOffset], sizeof(char) * 3);
         DCStoreRange((uint*)&normalBuffer[bufferOffset], r25);
         DCStoreRange((uint*)&vertexBuffer[bufferOffset], r25 * sizeof(float));
         Matrix invMatrix = View::GetCurrent()->unkC8;

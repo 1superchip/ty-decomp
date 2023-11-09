@@ -103,7 +103,7 @@ void StaticPropDescriptor::Load(KromeIni* pIni) {
                             pLine->AsString(1, &pString);
                         }
                     }
-                    strncpy(subObjectName, pString, 0x20);
+                    strncpy(subObjectName, pString, sizeof(subObjectName));
                 }
                 LoadLevel_LoadBool(pLine, "bUseGroundColor", &bUseGroundColor);
                 NameFlagPair flagsTmp[3] = {{"Grabable", 1}, {"NoIce", 2}, {"JumpCamera", 4}};
@@ -296,7 +296,7 @@ void StaticFXProp::UpdateShake(void) {
 
 void StaticFXProp::UpdateWaterRipple(void) {
     if (ty.pos.DistSq(&unk58) < 640000.0f && bCollidesWithWater && ((uint)gb.unk[469] > (uint)unk9C)) {
-        unk9C = gb.unk[469] + RandomIR((int*)&gb.unk[174], 0x3c, 0xb4);
+        unk9C = gb.unk[469] + RandomIR((int*)&gb.unk[174], 60, 180);
         Vector ripplePosition = {0.0f, 5.0f, 0.0f, 0.0f};
         ripplePosition.x += waterCollisionPos.x;
         ripplePosition.y += waterCollisionPos.y;

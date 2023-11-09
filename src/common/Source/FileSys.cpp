@@ -45,7 +45,7 @@ static int EntryCompare(void* arg0, void* arg1) {
 	return stricmp((char*)arg0, (char*)arg1);
 }
 
-void RkvTOC::Init(char *pName) {
+void RkvTOC::Init(char* pName) {
 	strcpy(name, pName);
     int fileLength = File_Length(pName);
     int fd;
@@ -120,7 +120,7 @@ void* FileSys_SetLoadInterceptHandler(void* loadInterceptFunc(char*, int*, void*
     return oldHandler;
 }
 
-bool FileSys_Exists(char *pFilename, int *pOutLen) {
+bool FileSys_Exists(char* pFilename, int* pOutLen) {
     if (pExistInterceptHandler != NULL) {
         if (pExistInterceptHandler(pFilename, pOutLen, 0) != false) {
             return true;
@@ -136,7 +136,7 @@ bool FileSys_Exists(char *pFilename, int *pOutLen) {
     return pEntry != NULL;
 }
 
-static void FileSys_SetOrder(RkvFileEntry *pEntry) {
+static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     if (pEntry->unk3C != 0) {
         return;
     }
@@ -213,7 +213,7 @@ static void FileSys_SetOrder(RkvFileEntry *pEntry) {
     }
 }
 
-void *FileSys_Load(char *pFilename, int *pOutLen, void *pMemoryAllocated, int spaceAllocated) {
+void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int spaceAllocated) {
     int foundFd = -1;
     RkvFileEntry *pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry) {
@@ -342,7 +342,12 @@ void FileSys_OutputFileOrder(void) {
     Heap_MemFree(sortedEntries);
 }
 
-int FileSys_Open(char *pFilename, int *pOutLen, bool arg2) {
+/// @brief Opens a file within an RKV
+/// @param pFilename Filename
+/// @param pOutLen Optional pointer to place file length
+/// @param arg2 
+/// @return Fd of file, possibly -1
+int FileSys_Open(char* pFilename, int* pOutLen, bool arg2) {
     int foundFd = -1;
     RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry != NULL) {
@@ -386,6 +391,9 @@ void FileSys_Close(int fd) {
     }
 }
 
+/// @brief Returns the offset into the RKV of a file
+/// @param pFilename Name of file
+/// @return Offset of file inside the RKV, can return -1
 int FileSys_GetOffset(char* pFilename) {
     int offset;
     RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);

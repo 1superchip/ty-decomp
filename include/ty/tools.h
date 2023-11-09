@@ -8,7 +8,7 @@
 #include "common/View.h"
 #include "common/Blitter.h"
 
-void Tools_ApplyDoppler(Vector*, Vector*, Vector*, Vector*);
+void Tools_ApplyDoppler(int, Vector*, Vector*, Vector*, Vector*);
 Model* Tools_GetGroundLightModel(Vector*, int* pSubObjectIndex, float maxDist);
 bool Tools_CollideXZ(Vector*, Vector*, Vector*, Vector*, float, float, float, float);
 

@@ -1,3 +1,6 @@
+#ifndef COMMON_FILE
+#define COMMON_FILE
+
 // clean this file up
 
 struct FileEntry {
@@ -59,14 +62,16 @@ struct DVDFileInfo
 };
 
 void File_InitModule(void);
-int File_Open(char*, int);
-int File_Close(int);
-int File_Read(int, void*, int, int);
+int File_Open(char* filepath, int openMode);
+int File_Close(int fd);
+int File_Read(int fd, void* buf, int size, int arg3);
 void File_ReadCallback(s32, DVDFileInfo*);
 void* File_Seek(int, int, int);
 int File_Length(char*);
 char* File_FileServerFilename(char*);
 int File_Sync(int, int);
 bool File_IsAnyBusy(void);
-char* File_FileServerOutputFilename(char*);
-int File_Write(int, void*, int);
+char* File_FileServerOutputFilename(char* name);
+int File_Write(int fd, void* pData, int len);
+
+#endif // COMMON_FILE

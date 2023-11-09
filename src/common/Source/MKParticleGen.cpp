@@ -4,7 +4,6 @@
 #include "common/Str.h"
 #include "common/Blitter.h"
 
-// Initialize the data
 MKParticleGenType::Envelope wobbleEnv[16] = {
     {0.0f, -10.0f, 10.0f, 0.0f, 0.0f, 0.0f},
     {3.8f, -7.10f, 9.20f, 0.0f, 0.0f, 0.0f},
@@ -23,6 +22,7 @@ MKParticleGenType::Envelope wobbleEnv[16] = {
     {-7.1f, 0.00f, 7.10f, 0.0f, 0.0f, 0.0f},
     {-3.8f, -7.10f, 9.2f, 0.0f, 0.0f, 0.0f},
 };
+
 MKParticleGenType::Envelope testEnv[12] = {
     {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
     {-10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
@@ -37,6 +37,7 @@ MKParticleGenType::Envelope testEnv[12] = {
     {30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
     {10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
 };
+
 MKParticleGenType::Envelope defaultPGTEnvelope = {};
 
 static bool gbDrawParticles = true;
