@@ -13,7 +13,7 @@
 #   .sbss: [0x803f9b80, 0x803f9b88]
 #   .sdata2: [0x803fb5a0, 0x803fb5e8]
 
-#GameCamera.cpp:
+#ty/source/camera/GameCamera.cpp:
 #   .text: [0x800088ec, 0x8001baf8]
 #   .ctors: [0x8023c788, 0x8023c78c]
 #   .rodata: [0x8023cae0, 0x8023cc88]
@@ -30,7 +30,7 @@ ty/source/camera/GameCameraTools.cpp:
   .sdata: [0x803f38c0, 0x803f3908]
   .sdata2: [0x803fb7a0, 0x803fb7d8]
 
-#Bird.cpp:
+#ty/source/critters/Bird.cpp:
 #   .text: [0x8001e788, 0x8001ed4c]
 #   .ctors: [0x8023c78c, 0x8023c790]
 #   .data: [0x80240f40, 0x80241150]
@@ -39,7 +39,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9bd8, 0x803f9be0]
 #   .sdata2: [0x803fb7d8, 0x803fb7f8]
 
-#Cattle.cpp:
+#ty/source/critters/Cattle.cpp:
 #   .text: [0x8001ed4c, 0x8001fef0]
 #   .ctors: [0x8023c790, 0x8023c794]
 #   .rodata: [0x8023ccc8, 0x8023cce8]
@@ -49,11 +49,11 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9be0, 0x803f9be8]
 #   .sdata2: [0x803fb7f8, 0x803fb870]
 
-#CritterDefs.cpp:
+#ty/source/critters/CritterDefs.cpp:
 #   .text: [0x8001fef0, 0x800205a8]
 #   .sdata2: [0x803fb870, 0x803fb8a0]
 
-#Critterfield.cpp:
+#ty/source/critters/Critterfield.cpp:
 #   .text: [0x800205a8, 0x800223cc]
 #   .ctors: [0x8023c794, 0x8023c798]
 #   .rodata: [0x8023cce8, 0x8023cd58]
@@ -62,13 +62,13 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9be8, 0x803f9bf8]
 #   .sdata2: [0x803fb8a0, 0x803fb8d0]
 
-#Critters.cpp:
+#ty/source/critters/Critters.cpp:
 #   .text: [0x800223cc, 0x80022510]
 #   .bss: [0x8029a0e0, 0x8029a0f0]
 #   .sbss: [0x803f9bf8, 0x803f9c00]
 #   .sdata2: [0x803fb8d0, 0x803fb8d8]
 
-#CuttleFish.cpp:
+#ty/source/critters/CuttleFish.cpp:
 #   .text: [0x80022510, 0x80022fd8]
 #   .ctors: [0x8023c798, 0x8023c79c]
 #   .rodata: [0x8023cd58, 0x8023cd78]
@@ -78,14 +78,14 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9c00, 0x803f9c10]
 #   .sdata2: [0x803fb8d8, 0x803fb920]
 
-#Fish.cpp:
+#ty/source/critters/Fish.cpp:
 #   .text: [0x80022fd8, 0x80023950]
 #   .rodata: [0x8023cd78, 0x8023cd88]
 #   .data: [0x802417d8, 0x802417f0]
 #   .sbss: [0x803f9c10, 0x803f9c28]
 #   .sdata2: [0x803fb920, 0x803fb970]
 
-#FishShoal.cpp:
+#ty/source/critters/FishShoal.cpp:
 #   .text: [0x80023950, 0x80024fa4]
 #   .ctors: [0x8023c79c, 0x8023c7a0]
 #   .rodata: [0x8023cd88, 0x8023ce28]
@@ -95,7 +95,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9c28, 0x803f9c40]
 #   .sdata2: [0x803fb970, 0x803fb9c8]
 
-#Fly.cpp:
+#ty/source/critters/Fly.cpp:
 #   .text: [0x80024fa4, 0x8002646c]
 #   .ctors: [0x8023c7a0, 0x8023c7a4]
 #   .data: [0x80241b70, 0x80241e40]
@@ -104,7 +104,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9c40, 0x803f9c60]
 #   .sdata2: [0x803fb9c8, 0x803fba70]
 
-#Frog.cpp:
+#ty/source/critters/Frog.cpp:
 #   .text: [0x8002646c, 0x80028650]
 #   .ctors: [0x8023c7a4, 0x8023c7a8]
 #   .rodata: [0x8023ce28, 0x8023ce88]
@@ -114,7 +114,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9c60, 0x803f9c98]
 #   .sdata2: [0x803fba70, 0x803fbad8]
 
-#Gecko.cpp:
+#ty/source/critters/Gecko.cpp:
 #   .text: [0x80028650, 0x800294a8]
 #   .ctors: [0x8023c7a8, 0x8023c7ac]
 #   .rodata: [0x8023ce88, 0x8023cec8]
@@ -124,7 +124,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9c98, 0x803f9ca0]
 #   .sdata2: [0x803fbad8, 0x803fbb20]
 
-#Grasshopper2.cpp:
+#ty/source/critters/Grasshopper2.cpp:
 #   .text: [0x800294a8, 0x80029c8c]
 #   .ctors: [0x8023c7ac, 0x8023c7b0]
 #   .data: [0x802424c0, 0x802425f0]
@@ -133,7 +133,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ca0, 0x803f9ca8]
 #   .sdata2: [0x803fbb20, 0x803fbb60]
 
-#Ibis.cpp:
+#ty/source/critters/Ibis.cpp:
 #   .text: [0x80029c8c, 0x8002a8c4]
 #   .ctors: [0x8023c7b0, 0x8023c7b4]
 #   .data: [0x802425f0, 0x80242878]
@@ -142,7 +142,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ca8, 0x803f9cb0]
 #   .sdata2: [0x803fbb60, 0x803fbba8]
 
-#KingFisher.cpp:
+#ty/source/critters/KingFisher.cpp:
 #   .text: [0x8002a8c4, 0x8002bc40]
 #   .ctors: [0x8023c7b4, 0x8023c7b8]
 #   .rodata: [0x8023cec8, 0x8023cf08]
@@ -152,7 +152,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9cb0, 0x803f9cd0]
 #   .sdata2: [0x803fbba8, 0x803fbbe8]
 
-#Moth.cpp:
+#ty/source/critters/Moth.cpp:
 #   .text: [0x8002bc40, 0x8002c620]
 #   .ctors: [0x8023c7b8, 0x8023c7bc]
 #   .rodata: [0x8023cf08, 0x8023cf28]
@@ -162,7 +162,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9cd0, 0x803f9cd8]
 #   .sdata2: [0x803fbbe8, 0x803fbc30]
 
-#SmallCrab.cpp:
+#ty/source/critters/SmallCrab.cpp:
 #   .text: [0x8002c620, 0x8002d6bc]
 #   .ctors: [0x8023c7bc, 0x8023c7c0]
 #   .rodata: [0x8023cf28, 0x8023cf88]
@@ -172,7 +172,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9cd8, 0x803f9ce0]
 #   .sdata2: [0x803fbc30, 0x803fbc78]
 
-#Spider.cpp:
+#ty/source/critters/Spider.cpp:
 #   .text: [0x8002d6bc, 0x8002de30]
 #   .rodata: [0x8023cf88, 0x8023cfa0]
 #   .bss: [0x8029b918, 0x8029b928]
@@ -180,7 +180,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ce0, 0x803f9cf0]
 #   .sdata2: [0x803fbc78, 0x803fbca8]
 
-#Turtle.cpp:
+#ty/source/critters/Turtle.cpp:
 #   .text: [0x8002de30, 0x8002ee8c]
 #   .data: [0x80242e80, 0x80242ec0]
 #   .bss: [0x8029b928, 0x8029b948]
@@ -188,7 +188,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9cf0, 0x803f9d00]
 #   .sdata2: [0x803fbca8, 0x803fbcd8]
 
-#WaterDragon.cpp:
+#ty/source/critters/WaterDragon.cpp:
 #   .text: [0x8002ee8c, 0x8002fa8c]
 #   .rodata: [0x8023cfa0, 0x8023cfc0]
 #   .data: [0x80242ec0, 0x80242ed8]
@@ -197,7 +197,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9d00, 0x803f9d10]
 #   .sdata2: [0x803fbcd8, 0x803fbd20]
 
-#LetterBox.cpp:
+#ty/source/cutscene/LetterBox.cpp:
 #   .text: [0x8002fa8c, 0x8002fec0]
 #   .rodata: [0x8023cfc0, 0x8023cfd0]
 #   .data: [0x80242ed8, 0x80242ef8]
@@ -259,7 +259,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f41d0, 0x803f41d8]
 #   .sdata2: [0x803fbf30, 0x803fbf58]
 
-#GreySmoke.cpp:
+#ty/source/effects/GreySmoke.cpp:
 #   .text: [0x8003a1f8, 0x8003a3c8]
 #   .data: [0x80243768, 0x802437e8]
 #   .bss: [0x8029c6c0, 0x8029c738]
@@ -267,7 +267,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9d40, 0x803f9d48]
 #   .sdata2: [0x803fbf58, 0x803fbf80]
 
-#Lightning.cpp:
+#ty/source/effects/Lightning.cpp:
 #   .text: [0x8003a3c8, 0x8003ae90]
 #   .data: [0x802437e8, 0x802439a0]
 #   .sdata: [0x803f41e0, 0x803f41e8]
@@ -355,7 +355,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f4258, 0x803f4260]
 #   .sbss: [0x803f9da8, 0x803f9db8]
 
-#BadBoonie.cpp:
+#ty/source/enemies/BadBoonie.cpp:
 #   .text: [0x8003ecac, 0x80040af4]
 #   .ctors: [0x8023c7c4, 0x8023c7c8]
 #   .rodata: [0x8023d080, 0x8023d0a0]
@@ -365,7 +365,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9db8, 0x803f9dc8]
 #   .sdata2: [0x803fc1e8, 0x803fc250]
 
-#Barracuda.cpp:
+#ty/source/enemies/Barracuda.cpp:
 #   .text: [0x80040af4, 0x8004236c]
 #   .ctors: [0x8023c7c8, 0x8023c7cc]
 #   .data: [0x802441d8, 0x80244508]
@@ -374,7 +374,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9dc8, 0x803f9de0]
 #   .sdata2: [0x803fc250, 0x803fc2b8]
 
-#Bat.cpp:
+#ty/source/enemies/Bat.cpp:
 #   .text: [0x8004236c, 0x80044340]
 #   .ctors: [0x8023c7cc, 0x8023c7d0]
 #   .data: [0x80244508, 0x802447f8]
@@ -383,7 +383,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9de0, 0x803f9df0]
 #   .sdata2: [0x803fc2b8, 0x803fc368]
 
-#BlueTongue.cpp:
+#ty/source/enemies/BlueTongue.cpp:
 #   .text: [0x80044340, 0x80046a74]
 #   .ctors: [0x8023c7d0, 0x8023c7d4]
 #   .data: [0x802447f8, 0x80244d30]
@@ -392,7 +392,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9df0, 0x803f9e00]
 #   .sdata2: [0x803fc368, 0x803fc3b0]
 
-#BlueTongueRock.cpp:
+#ty/source/enemies/BlueTongueRock.cpp:
 #   .text: [0x80046a74, 0x80048b48]
 #   .ctors: [0x8023c7d4, 0x8023c7d8]
 #   .data: [0x80244d30, 0x80245338]
@@ -409,7 +409,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f44b0, 0x803f44f0]
 #   .sbss: [0x803f9e28, 0x803f9e30]
 
-#bull.cpp:
+#ty/source/enemies/bull.cpp:
 #   .text: [0x80048e10, 0x80050574]
 #   .ctors: [0x8023c7dc, 0x8023c7e0]
 #   .rodata: [0x8023d0a0, 0x8023d1e8]
@@ -419,7 +419,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e30, 0x803f9e40]
 #   .sdata2: [0x803fc408, 0x803fc590]
 
-#CaveBat.cpp:
+#ty/source/enemies/CaveBat.cpp:
 #   .text: [0x80050574, 0x800523e4]
 #   .ctors: [0x8023c7e0, 0x8023c7e4]
 #   .rodata: [0x8023d1e8, 0x8023d208]
@@ -429,7 +429,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e40, 0x803f9e58]
 #   .sdata2: [0x803fc590, 0x803fc5d8]
 
-#Crikey.cpp:
+#ty/source/enemies/Crikey.cpp:
 #   .text: [0x800523e4, 0x800582f8]
 #   .ctors: [0x8023c7e4, 0x8023c7e8]
 #   .rodata: [0x8023d208, 0x8023d228]
@@ -439,7 +439,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e58, 0x803f9e78]
 #   .sdata2: [0x803fc5d8, 0x803fc708]
 
-#croc.cpp:
+#ty/source/enemies/croc.cpp:
 #   .text: [0x800582f8, 0x8005a6a0]
 #   .ctors: [0x8023c7e8, 0x8023c7ec]
 #   .data: [0x80246a88, 0x80246f88]
@@ -448,7 +448,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e78, 0x803f9e80]
 #   .sdata2: [0x803fc708, 0x803fc778]
 
-#Dennis.cpp:
+#ty/source/enemies/Dennis.cpp:
 #   .text: [0x8005a6a0, 0x8005bf10]
 #   .ctors: [0x8023c7ec, 0x8023c7f0]
 #   .data: [0x80246f88, 0x802472b8]
@@ -457,7 +457,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e80, 0x803f9e88]
 #   .sdata2: [0x803fc778, 0x803fc7a8]
 
-#Eel.cpp:
+#ty/source/enemies/Eel.cpp:
 #   .text: [0x8005bf10, 0x8005dc74]
 #   .ctors: [0x8023c7f0, 0x8023c7f4]
 #   .rodata: [0x8023d228, 0x8023d248]
@@ -467,7 +467,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9e88, 0x803f9ea0]
 #   .sdata2: [0x803fc7a8, 0x803fc858]
 
-#Enemies.cpp:
+#ty/source/enemies/Enemies.cpp:
 #   .text: [0x8005dc74, 0x80063274]
 #   .rodata: [0x8023d248, 0x8023d2d8]
 #   .data: [0x802475f8, 0x80247998]
@@ -476,7 +476,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ea0, 0x803f9eb0]
 #   .sdata2: [0x803fc858, 0x803fc918]
 
-#EnemySpawner.cpp:
+#ty/source/enemies/EnemySpawner.cpp:
 #   .text: [0x80063274, 0x80064834]
 #   .ctors: [0x8023c7f4, 0x8023c7f8]
 #   .data: [0x80247998, 0x80247ad0]
@@ -485,7 +485,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9eb0, 0x803f9eb8]
 #   .sdata2: [0x803fc918, 0x803fc950]
 
-#Fluffy.cpp:
+#ty/source/enemies/Fluffy.cpp:
 #   .text: [0x80064834, 0x8006ae3c]
 #   .ctors: [0x8023c7f8, 0x8023c7fc]
 #   .rodata: [0x8023d2d8, 0x8023d338]
@@ -495,7 +495,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9eb8, 0x803f9ed8]
 #   .sdata2: [0x803fc950, 0x803fcab8]
 
-#FrillBike.cpp:
+#ty/source/enemies/FrillBike.cpp:
 #   .text: [0x8006ae3c, 0x8006e0d0]
 #   .ctors: [0x8023c7fc, 0x8023c800]
 #   .rodata: [0x8023d338, 0x8023d358]
@@ -505,7 +505,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ed8, 0x803f9ee8]
 #   .sdata2: [0x803fcab8, 0x803fcbb8]
 
-#frilllizard.cpp:
+#ty/source/enemies/frilllizard.cpp:
 #   .text: [0x8006e0d0, 0x80073144]
 #   .ctors: [0x8023c800, 0x8023c804]
 #   .data: [0x80248ca0, 0x802496c8]
@@ -514,7 +514,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ee8, 0x803f9ef8]
 #   .sdata2: [0x803fcbb8, 0x803fcc38]
 
-#FrillSpeedboat.cpp:
+#ty/source/enemies/FrillSpeedboat.cpp:
 #   .text: [0x80073144, 0x800757c8]
 #   .ctors: [0x8023c804, 0x8023c808]
 #   .rodata: [0x8023d358, 0x8023d368]
@@ -524,7 +524,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ef8, 0x803f9f10]
 #   .sdata2: [0x803fcc38, 0x803fccb0]
 
-#Grouper.cpp:
+#ty/source/enemies/Grouper.cpp:
 #   .text: [0x800757c8, 0x8007780c]
 #   .ctors: [0x8023c808, 0x8023c80c]
 #   .rodata: [0x8023d368, 0x8023d388]
@@ -534,7 +534,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f10, 0x803f9f18]
 #   .sdata2: [0x803fccb0, 0x803fcd50]
 
-#leech.cpp:
+#ty/source/enemies/leech.cpp:
 #   .text: [0x8007780c, 0x80079b54]
 #   .ctors: [0x8023c80c, 0x8023c810]
 #   .rodata: [0x8023d388, 0x8023d3a8]
@@ -544,7 +544,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f18, 0x803f9f20]
 #   .sdata2: [0x803fcd50, 0x803fce00]
 
-#LilNeddy.cpp:
+#ty/source/enemies/LilNeddy.cpp:
 #   .text: [0x80079b54, 0x8007bc68]
 #   .ctors: [0x8023c810, 0x8023c814]
 #   .data: [0x8024a558, 0x8024ab60]
@@ -553,7 +553,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f20, 0x803f9f38]
 #   .sdata2: [0x803fce00, 0x803fce60]
 
-#muddie.cpp:
+#ty/source/enemies/muddie.cpp:
 #   .text: [0x8007bc68, 0x8007e0dc]
 #   .ctors: [0x8023c814, 0x8023c818]
 #   .data: [0x8024ab60, 0x8024aff0]
@@ -562,7 +562,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f38, 0x803f9f48]
 #   .sdata2: [0x803fce60, 0x803fcec8]
 
-#neddy.cpp:
+#ty/source/enemies/neddy.cpp:
 #   .text: [0x8007e0dc, 0x800813e4]
 #   .ctors: [0x8023c818, 0x8023c81c]
 #   .data: [0x8024aff0, 0x8024b600]
@@ -571,7 +571,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f48, 0x803f9f50]
 #   .sdata2: [0x803fcec8, 0x803fcfa0]
 
-#NinjaGecko.cpp:
+#ty/source/enemies/NinjaGecko.cpp:
 #   .text: [0x800813e4, 0x80083afc]
 #   .ctors: [0x8023c81c, 0x8023c820]
 #   .data: [0x8024b600, 0x8024be10]
@@ -580,7 +580,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f50, 0x803f9f60]
 #   .sdata2: [0x803fcfa0, 0x803fd008]
 
-#Rhino.cpp:
+#ty/source/enemies/Rhino.cpp:
 #   .text: [0x80083afc, 0x800864bc]
 #   .ctors: [0x8023c820, 0x8023c824]
 #   .data: [0x8024be10, 0x8024c3b0]
@@ -589,7 +589,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f60, 0x803f9f70]
 #   .sdata2: [0x803fd008, 0x803fd080]
 
-#RhinoGround.cpp:
+#ty/source/enemies/RhinoGround.cpp:
 #   .text: [0x800864bc, 0x800886d8]
 #   .ctors: [0x8023c824, 0x8023c828]
 #   .rodata: [0x8023d3a8, 0x8023d448]
@@ -599,7 +599,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f70, 0x803f9f88]
 #   .sdata2: [0x803fd080, 0x803fd100]
 
-#Roach.cpp:
+#ty/source/enemies/Roach.cpp:
 #   .text: [0x800886d8, 0x8008b0d0]
 #   .ctors: [0x8023c828, 0x8023c82c]
 #   .rodata: [0x8023d448, 0x8023d530]
@@ -609,7 +609,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9f88, 0x803f9fa0]
 #   .sdata2: [0x803fd100, 0x803fd1a8]
 
-#rufus.cpp:
+#ty/source/enemies/rufus.cpp:
 #   .text: [0x8008b0d0, 0x8008ecc8]
 #   .ctors: [0x8023c82c, 0x8023c830]
 #   .data: [0x8024ce08, 0x8024d488]
@@ -618,7 +618,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9fa0, 0x803f9fa8]
 #   .sdata2: [0x803fd1a8, 0x803fd220]
 
-#ScrubTurkey.cpp:
+#ty/source/enemies/ScrubTurkey.cpp:
 #   .text: [0x8008ecc8, 0x800919b4]
 #   .ctors: [0x8023c830, 0x8023c834]
 #   .rodata: [0x8023d530, 0x8023d560]
@@ -628,7 +628,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9fa8, 0x803f9fb8]
 #   .sdata2: [0x803fd220, 0x803fd2a8]
 
-#ScubaFrill.cpp:
+#ty/source/enemies/ScubaFrill.cpp:
 #   .text: [0x800919b4, 0x800947fc]
 #   .ctors: [0x8023c834, 0x8023c838]
 #   .rodata: [0x8023d560, 0x8023d580]
@@ -638,7 +638,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9fb8, 0x803f9fd8]
 #   .sdata2: [0x803fd2a8, 0x803fd380]
 
-#ShadowBat.cpp:
+#ty/source/enemies/ShadowBat.cpp:
 #   .text: [0x800947fc, 0x80098678]
 #   .ctors: [0x8023c838, 0x8023c83c]
 #   .rodata: [0x8023d580, 0x8023d590]
@@ -648,7 +648,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9fd8, 0x803f9fe0]
 #   .sdata2: [0x803fd380, 0x803fd438]
 
-#Shark.cpp:
+#ty/source/enemies/Shark.cpp:
 #   .text: [0x80098678, 0x8009b7b8]
 #   .ctors: [0x8023c83c, 0x8023c840]
 #   .data: [0x8024e740, 0x8024eb98]
@@ -657,7 +657,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9fe0, 0x803f9ff8]
 #   .sdata2: [0x803fd438, 0x803fd4f0]
 
-#Skink.cpp:
+#ty/source/enemies/Skink.cpp:
 #   .text: [0x8009b7b8, 0x8009fd24]
 #   .ctors: [0x8023c840, 0x8023c844]
 #   .rodata: [0x8023d590, 0x8023d5a0]
@@ -667,7 +667,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9ff8, 0x803fa010]
 #   .sdata2: [0x803fd4f0, 0x803fd5c0]
 
-#Sly.cpp:
+#ty/source/enemies/Sly.cpp:
 #   .text: [0x8009fd24, 0x800a23e0]
 #   .ctors: [0x8023c844, 0x8023c848]
 #   .rodata: [0x8023d5a0, 0x8023d600]
@@ -677,7 +677,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa010, 0x803fa030]
 #   .sdata2: [0x803fd5c0, 0x803fd620]
 
-#SnowRoo.cpp:
+#ty/source/enemies/SnowRoo.cpp:
 #   .text: [0x800a23e0, 0x800a3ce8]
 #   .ctors: [0x8023c848, 0x8023c84c]
 #   .data: [0x8024f9f0, 0x8024fe88]
@@ -686,7 +686,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa030, 0x803fa040]
 #   .sdata2: [0x803fd620, 0x803fd670]
 
-#SnowSpider.cpp:
+#ty/source/enemies/SnowSpider.cpp:
 #   .text: [0x800a3ce8, 0x800a5ebc]
 #   .ctors: [0x8023c84c, 0x8023c850]
 #   .rodata: [0x8023d600, 0x8023d6c8]
@@ -696,6 +696,8 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa040, 0x803fa050]
 #   .sdata2: [0x803fd670, 0x803fd718]
 
+# july 1st mdebug says "/src/ty/source/props/SpiderTrapdoor.cpp"?
+# probably moved to /enemies/ later on
 #SpiderTrapdoor.cpp:
 #   .text: [0x800a5ebc, 0x800a62e8]
 #   .ctors: [0x8023c850, 0x8023c854]
@@ -713,7 +715,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f56e8, 0x803f5738]
 #   .sbss: [0x803fa058, 0x803fa060]
 
-#SynkerFrill.cpp:
+#ty/source/enemies/SynkerFrill.cpp:
 #   .text: [0x800a6624, 0x800a6960]
 #   .ctors: [0x8023c858, 0x8023c85c]
 #   .data: [0x80250568, 0x802506a0]
@@ -721,7 +723,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f5738, 0x803f5788]
 #   .sbss: [0x803fa060, 0x803fa068]
 
-#Tick.cpp:
+#ty/source/enemies/Tick.cpp:
 #   .text: [0x800a6960, 0x800a8ba8]
 #   .ctors: [0x8023c85c, 0x8023c860]
 #   .rodata: [0x8023d6c8, 0x8023d6e8]
@@ -731,7 +733,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa068, 0x803fa070]
 #   .sdata2: [0x803fd720, 0x803fd7d8]
 
-#TrapdoorSpider.cpp:
+#ty/source/enemies/TrapdoorSpider.cpp:
 #   .text: [0x800a8ba8, 0x800ac378]
 #   .ctors: [0x8023c860, 0x8023c864]
 #   .rodata: [0x8023d6e8, 0x8023d7b0]
@@ -741,7 +743,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa070, 0x803fa088]
 #   .sdata2: [0x803fd7d8, 0x803fd8a0]
 
-#WhiteBat.cpp:
+#ty/source/enemies/WhiteBat.cpp:
 #   .text: [0x800ac378, 0x800ad5b8]
 #   .ctors: [0x8023c864, 0x8023c868]
 #   .data: [0x802512f0, 0x802514f8]
@@ -750,7 +752,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa088, 0x803fa0a0]
 #   .sdata2: [0x803fd8a0, 0x803fd910]
 
-#Wombat.cpp:
+#ty/source/enemies/Wombat.cpp:
 #   .text: [0x800ad5b8, 0x800b0814]
 #   .ctors: [0x8023c868, 0x8023c86c]
 #   .rodata: [0x8023d7b0, 0x8023d7c0]
@@ -760,7 +762,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa0a0, 0x803fa0b0]
 #   .sdata2: [0x803fd910, 0x803fd9f8]
 
-#Yabby.cpp:
+#ty/source/enemies/Yabby.cpp:
 #   .text: [0x800b0814, 0x800b2918]
 #   .ctors: [0x8023c86c, 0x8023c870]
 #   .rodata: [0x8023d7c0, 0x8023d800]
@@ -770,7 +772,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa0b0, 0x803fa0c0]
 #   .sdata2: [0x803fd9f8, 0x803fda80]
 
-#Aurora.cpp:
+#ty/source/friends/Aurora.cpp:
 #   .text: [0x800b2918, 0x800b37bc]
 #   .ctors: [0x8023c870, 0x8023c874]
 #   .data: [0x80252138, 0x802522f8]
@@ -779,7 +781,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa0c0, 0x803fa0d0]
 #   .sdata2: [0x803fda80, 0x803fdaa8]
 
-#AuroraKid.cpp:
+#ty/source/friends/AuroraKid.cpp:
 #   .text: [0x800b37bc, 0x800b51b4]
 #   .ctors: [0x8023c874, 0x8023c878]
 #   .data: [0x802522f8, 0x80252618]
@@ -788,7 +790,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa0d0, 0x803fa0f0]
 #   .sdata2: [0x803fdaa8, 0x803fdb18]
 
-#BunyipElder.cpp:
+#ty/source/friends/BunyipElder.cpp:
 #   .text: [0x800b51b4, 0x800b5a60]
 #   .ctors: [0x8023c878, 0x8023c87c]
 #   .data: [0x80252618, 0x80252880]
@@ -797,7 +799,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803fa0f0, 0x803fa100]
 #   .sdata2: [0x803fdb18, 0x803fdb28]
 
-#C3_MiniGame_Rex_Elle.cpp:
+#ty/source/friends/C3_MiniGame_Rex_Elle.cpp:
 #   .text: [0x800b5a60, 0x800b763c]
 #   .ctors: [0x8023c87c, 0x8023c880]
 #   .data: [0x80252880, 0x80252e10]
@@ -805,7 +807,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f5b78, 0x803f5c08]
 #   .sdata2: [0x803fdb28, 0x803fdb70]
 
-#farlapp.cpp:
+#ty/source/friends/farlapp.cpp:
 #   .text: [0x800b763c, 0x800b8a94]
 #   .ctors: [0x8023c880, 0x8023c884]
 #   .data: [0x80252e10, 0x80252fd0]
@@ -832,7 +834,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa110, 0x803fa118]
 #   .sdata2: [0x803fdc08, 0x803fdc20]
 
-#KenOath.cpp:
+#ty/source/friends/KenOath.cpp:
 #   .text: [0x800baa70, 0x800bb1bc]
 #   .ctors: [0x8023c88c, 0x8023c890]
 #   .data: [0x802534d8, 0x80253648]
@@ -841,7 +843,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa118, 0x803fa120]
 #   .sdata2: [0x803fdc20, 0x803fdc38]
 
-#Lenny.cpp:
+#ty/source/friends/Lenny.cpp:
 #   .text: [0x800bb1bc, 0x800be8e8]
 #   .ctors: [0x8023c890, 0x8023c894]
 #   .rodata: [0x8023d820, 0x8023d840]
@@ -851,7 +853,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa120, 0x803fa138]
 #   .sdata2: [0x803fdc38, 0x803fdcd8]
 
-#maurie.cpp:
+#ty/source/friends/maurie.cpp:
 #   .text: [0x800be8e8, 0x800bfddc]
 #   .ctors: [0x8023c894, 0x8023c898]
 #   .rodata: [0x8023d840, 0x8023d850]
@@ -861,7 +863,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa138, 0x803fa140]
 #   .sdata2: [0x803fdcd8, 0x803fdd28]
 
-#shazza.cpp:
+#ty/source/friends/shazza.cpp:
 #   .text: [0x800bfddc, 0x800c0400]
 #   .ctors: [0x8023c898, 0x8023c89c]
 #   .data: [0x80253e88, 0x80254018]
@@ -870,7 +872,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa140, 0x803fa148]
 #   .sdata2: [0x803fdd28, 0x803fdd30]
 
-#sheila.cpp:
+#ty/source/friends/sheila.cpp:
 #   .text: [0x800c0400, 0x800c0b8c]
 #   .ctors: [0x8023c89c, 0x8023c8a0]
 #   .data: [0x80254018, 0x802541c8]
@@ -895,14 +897,14 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa158, 0x803fa170]
 #   .sdata2: [0x803fdd70, 0x803fddb0]
 
-#FrontEnd_Extras.cpp:
+#ty/source/frontend/FrontEnd_Extras.cpp:
 #   .text: [0x800c2bdc, 0x800c34ec]
 #   .data: [0x802544b0, 0x802544f0]
 #   .bss: [0x802a4340, 0x802a4400]
 #   .sbss: [0x803fa170, 0x803fa178]
 #   .sdata2: [0x803fddb0, 0x803fdde8]
 
-#FrontEnd_Gallery.cpp:
+#ty/source/frontend/FrontEnd_Gallery.cpp:
 #   .text: [0x800c34ec, 0x800c3b34]
 #   .data: [0x802544f0, 0x80254500]
 #   .bss: [0x802a4400, 0x802a44a0]
@@ -916,7 +918,7 @@ ty/source/friends/Friend.cpp:
 #   .bss: [0x802a44a0, 0x802a44d0]
 #   .sdata2: [0x803fde08, 0x803fde28]
 
-#FrontEnd_LoadGame.cpp:
+#ty/source/frontend/FrontEnd_LoadGame.cpp:
 #   .text: [0x800c3f20, 0x800c44f8]
 #   .rodata: [0x8023d880, 0x8023d890]
 #   .data: [0x80254520, 0x80254530]
@@ -975,7 +977,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa1e8, 0x803fa1f0]
 #   .sdata2: [0x803fdfd0, 0x803fdfe8]
 
-#PauseScreen_GameInfo.cpp:
+#ty/source/frontend/PauseScreen_GameInfo.cpp:
 #   .text: [0x800c8ccc, 0x800ca7b4]
 #   .rodata: [0x8023d900, 0x8023d930]
 #   .data: [0x80254810, 0x802549a0]
@@ -1042,7 +1044,7 @@ ty/source/frontend/ProgressBar.cpp:
   .text: [0x800d0490, 0x800d0e60]
   .sdata2: [0x803fe380, 0x803fe3a0]
 
-#StartupScreens.cpp:
+#ty/source/frontend/StartupScreens.cpp:
 #   .text: [0x800d0e60, 0x800d1674]
 #   .data: [0x80255000, 0x80255178]
 #   .bss: [0x802a5fa0, 0x802a6060]
@@ -1872,7 +1874,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa6f0, 0x803fa708]
 #   .sdata2: [0x803ff8d0, 0x803ff8e8]
 
-#anthill.cpp:
+#ty/source/anthill.cpp:
 #   .text: [0x8011cda4, 0x8011d4e4]
 #   .ctors: [0x8023c9fc, 0x8023ca00]
 #   .data: [0x8025ebc8, 0x8025ecb0]
@@ -1898,13 +1900,13 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sdata: [0x803f80a0, 0x803f80a8]
 #   .sdata2: [0x803ff9a0, 0x803ffa90]
 
-#AS_LandActionStates.cpp:
+#ty/source/AS_LandActionStates.cpp:
 #   .text: [0x80125b74, 0x801282ec]
 #   .rodata: [0x8023e1f0, 0x8023e200]
 #   .sbss: [0x803fa718, 0x803fa730]
 #   .sdata2: [0x803ffa90, 0x803ffb58]
 
-#AS_LandStates.cpp:
+#ty/source/AS_LandStates.cpp:
 #   .text: [0x801282ec, 0x8012d184]
 #   .ctors: [0x8023ca08, 0x8023ca0c]
 #   .rodata: [0x8023e200, 0x8023e2f8]
@@ -1913,7 +1915,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa730, 0x803fa748]
 #   .sdata2: [0x803ffb58, 0x803ffc38]
 
-#AS_MiscStates.cpp:
+#ty/source/AS_MiscStates.cpp:
 #   .text: [0x8012d184, 0x8012dbc8]
 #   .ctors: [0x8023ca0c, 0x8023ca10]
 #   .rodata: [0x8023e2f8, 0x8023e308]
@@ -1931,18 +1933,18 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa750, 0x803fa758]
 #   .sdata2: [0x803ffc60, 0x803ffd18]
 
-#AS_UnderWaterStates.cpp:
+#ty/source/AS_UnderWaterStates.cpp:
 #   .text: [0x80131400, 0x80132f3c]
 #   .sdata: [0x803f80c8, 0x803f80d0]
 #   .sbss: [0x803fa758, 0x803fa778]
 #   .sdata2: [0x803ffd18, 0x803ffdd8]
 
-#AS_WaterStates.cpp:
+#ty/source/AS_WaterStates.cpp:
 #   .text: [0x80132f3c, 0x80135498]
 #   .rodata: [0x8023e428, 0x8023e468]
 #   .sdata2: [0x803ffdd8, 0x803ffe80]
 
-#barbedWire.cpp:
+#ty/source/barbedWire.cpp:
 #   .text: [0x80135498, 0x80135a04]
 #   .data: [0x8025f8f8, 0x8025f920]
 #   .bss: [0x802ae7f8, 0x802ae870]
@@ -1983,7 +1985,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .data: [0x80260508, 0x80260610]
 #   .sdata2: [0x804000a0, 0x804000b0]
 
-#BouncingBoulder.cpp:
+#ty/source/BouncingBoulder.cpp:
 #   .text: [0x80143eb8, 0x80147018]
 #   .ctors: [0x8023ca1c, 0x8023ca20]
 #   .rodata: [0x8023e548, 0x8023e628]
@@ -1998,7 +2000,7 @@ ty/source/BoundingRegion.cpp:
    .rodata: [0x8023e628, 0x8023e638]
    .sdata2: [0x80400170, 0x80400178]
 
-#bunyip.cpp:
+#ty/source/bunyip.cpp:
 #   .text: [0x80147464, 0x801485c8]
 #   .ctors: [0x8023ca20, 0x8023ca24]
 #   .rodata: [0x8023e638, 0x8023e648]
@@ -2084,7 +2086,7 @@ ty/source/DDA.cpp:
 #   .rodata: [0x8023e8d8, 0x8023e8e8]
 #   .sdata2: [0x804005b0, 0x804005d0]
 
-#elle.cpp:
+#ty/source/elle.cpp:
 #   .text: [0x8015a26c, 0x8015ac40]
 #   .ctors: [0x8023ca34, 0x8023ca38]
 #   .data: [0x80262300, 0x802624f8]
@@ -2093,7 +2095,7 @@ ty/source/DDA.cpp:
 #   .sbss: [0x803fa8b0, 0x803fa8b8]
 #   .sdata2: [0x804005d0, 0x804005d8]
 
-#emu.cpp:
+#ty/source/emu.cpp:
 #   .text: [0x8015ac40, 0x8015d78c]
 #   .ctors: [0x8023ca38, 0x8023ca3c]
 #   .rodata: [0x8023e8e8, 0x8023e8f8]
@@ -2107,7 +2109,7 @@ ty/source/DDA.cpp:
 #   .text: [0x8015d78c, 0x8015d998]
 #   .sdata2: [0x804006b8, 0x804006e0]
 
-#finishline.cpp:
+#ty/source/finishline.cpp:
 #   .text: [0x8015d998, 0x8015e2fc]
 #   .ctors: [0x8023ca3c, 0x8023ca40]
 #   .rodata: [0x8023e8f8, 0x8023e908]
@@ -2140,7 +2142,7 @@ ty/source/GameObjectManager.cpp:
    .sdata2: [0x80400728, 0x80400730]
    .sbss2: [0x80402770, 0x80402778]
 
-#Gate.cpp:
+#ty/source/Gate.cpp:
 #   .text: [0x8016110c, 0x80162d0c]
 #   .ctors: [0x8023ca44, 0x8023ca48]
 #   .data: [0x80262cb8, 0x80263078]
@@ -2157,7 +2159,7 @@ ty/source/GameObjectManager.cpp:
 #   .sbss: [0x803fa8f8, 0x803fa908]
 #   .sdata2: [0x80400760, 0x804007a0]
 
-#guidebarrel.cpp:
+#ty/source/guidebarrel.cpp:
 #   .text: [0x80163a64, 0x80163eb4]
 #   .ctors: [0x8023ca4c, 0x8023ca50]
 #   .data: [0x80263e08, 0x80263ef0]
@@ -2188,7 +2190,7 @@ ty/source/heatflare.cpp:
 #   .sbss: [0x803fa938, 0x803fa948]
 #   .sdata2: [0x80400808, 0x80400930]
 
-#iceblock.cpp:
+#ty/source/iceblock.cpp:
 #   .text: [0x80167d84, 0x8016afdc]
 #   .rodata: [0x8023e998, 0x8023e9a8]
 #   .data: [0x802640b8, 0x80264130]
@@ -2196,7 +2198,7 @@ ty/source/heatflare.cpp:
 #   .sbss: [0x803fa948, 0x803fa960]
 #   .sdata2: [0x80400930, 0x804009e8]
 
-#jeep.cpp:
+#ty/source/jeep.cpp:
 #   .text: [0x8016afdc, 0x8016e404]
 #   .ctors: [0x8023ca54, 0x8023ca58]
 #   .data: [0x80264130, 0x80264538]
@@ -2209,7 +2211,7 @@ ty/source/Kinematics.cpp:
    .text: [0x8016e404, 0x8016e964]
    .sdata2: [0x80400a98, 0x80400ac0]
 
-#lasso.cpp:
+#ty/source/lasso.cpp:
 #   .text: [0x8016e964, 0x80171dbc]
 #   .ctors: [0x8023ca58, 0x8023ca5c]
 #   .rodata: [0x8023e9a8, 0x8023ea48]
@@ -2242,7 +2244,7 @@ ty/source/LineOfSight.cpp:
 #   .sbss: [0x803fa988, 0x803fa998]
 #   .sdata2: [0x80400bb8, 0x80400c00]
 
-#main.cpp:
+#ty/source/main.cpp:
 #   .text: [0x80176bf4, 0x80179c14]
 #   .data: [0x80265128, 0x80265750]
 #   .bss: [0x802b36a0, 0x802b37a0]
@@ -2259,7 +2261,7 @@ ty/source/Messages.cpp:
    .sdata: [0x803f8b80, 0x803f8bf8]
    .sbss: [0x803fa9b8, 0x803fa9c0]
 
-#MetalSpikes.cpp:
+#ty/source/MetalSpikes.cpp:
 #   .text: [0x80179e44, 0x8017a618]
 #   .ctors: [0x8023ca5c, 0x8023ca60]
 #   .data: [0x80265a20, 0x80265b78]
@@ -2275,12 +2277,12 @@ ty/source/mist.cpp:
    .sbss: [0x803fa9c8, 0x803fa9d0]
    .sdata2: [0x80400c78, 0x80400c88]
 
-#NodeOverride.cpp:
+#ty/source/NodeOverride.cpp:
 #   .text: [0x8017a7b0, 0x8017af58]
 #   .rodata: [0x8023ea48, 0x8023ea58]
 #   .sdata2: [0x80400c88, 0x80400ca8]
 
-#particleEffects.cpp:
+#ty/source/particleEffects.cpp:
 #   .text: [0x8017af58, 0x8017df00]
 #   .rodata: [0x8023ea58, 0x8023ea68]
 #   .data: [0x80265b88, 0x802661d8]
@@ -2294,7 +2296,7 @@ ty/source/mist.cpp:
 #   .sbss: [0x803faa00, 0x803faa08]
 #   .sdata2: [0x80400db8, 0x80400de0]
 
-#particleengine.cpp:
+#ty/source/particleengine.cpp:
 #   .text: [0x8017e24c, 0x80185320]
 #   .rodata: [0x8023ea68, 0x8023eaa8]
 #   .data: [0x802661d8, 0x80266350]
@@ -2303,12 +2305,12 @@ ty/source/mist.cpp:
 #   .sbss: [0x803faa08, 0x803faa10]
 #   .sdata2: [0x80400de0, 0x80400f50]
 
-#Path.cpp:
+#ty/source/Path.cpp:
 #   .text: [0x80185320, 0x801867d4]
 #   .sbss: [0x803faa10, 0x803faa20]
 #   .sdata2: [0x80400f50, 0x80400f70]
 
-#Pontoon.cpp:
+#ty/source/Pontoon.cpp:
 #   .text: [0x801867d4, 0x8018822c]
 #   .ctors: [0x8023ca60, 0x8023ca64]
 #   .rodata: [0x8023eaa8, 0x8023eb18]
@@ -2318,7 +2320,7 @@ ty/source/mist.cpp:
 #   .sbss: [0x803faa20, 0x803faa38]
 #   .sdata2: [0x80400f70, 0x80401008]
 
-#portal.cpp:
+#ty/source/portal.cpp:
 #   .text: [0x8018822c, 0x80189454]
 #   .ctors: [0x8023ca64, 0x8023ca68]
 #   .data: [0x80266728, 0x80266848]
@@ -2347,14 +2349,14 @@ ty/source/RangeCheck.cpp:
 #   .sbss: [0x803faa48, 0x803faa58]
 #   .sdata2: [0x80401078, 0x804010b8]
 
-#Reflection.cpp:
+#ty/source/Reflection.cpp:
 #   .text: [0x8018b10c, 0x8018b6bc]
 #   .data: [0x80266950, 0x80266960]
 #   .bss: [0x802b4a58, 0x802b4a70]
 #   .sbss: [0x803faa58, 0x803faa70]
 #   .sdata2: [0x804010b8, 0x804010f0]
 
-#renderTexture.cpp:
+#ty/source/renderTexture.cpp:
 #   .text: [0x8018b6bc, 0x8018bfcc]
 #   .ctors: [0x8023ca68, 0x8023ca6c]
 #   .data: [0x80266960, 0x80266a40]
@@ -2381,7 +2383,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faa98, 0x803faab0]
 #   .sdata2: [0x80401120, 0x804011a0]
 
-#setup.cpp:
+#ty/source/setup.cpp:
 #   .text: [0x8018eaa4, 0x8018fc38]
 #   .ctors: [0x8023ca74, 0x8023ca78]
 #   .rodata: [0x8023eb28, 0x8023eb48]
@@ -2391,13 +2393,13 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faab0, 0x803faac0]
 #   .sdata2: [0x804011a0, 0x80401208]
 
-#Shadow.cpp:
+#ty/source/Shadow.cpp:
 #   .text: [0x8018fc38, 0x80190c08]
 #   .bss: [0x802b5a80, 0x802b5a90]
 #   .sbss: [0x803faac0, 0x803faac8]
 #   .sdata2: [0x80401208, 0x80401228]
 
-#Shatter.cpp:
+#ty/source/Shatter.cpp:
 #   .text: [0x80190c08, 0x80192c3c]
 #   .rodata: [0x8023eb48, 0x8023eb88]
 #   .bss: [0x802b5a90, 0x802b5aa0]
@@ -2405,7 +2407,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faac8, 0x803faad0]
 #   .sdata2: [0x80401228, 0x80401270]
 
-#shears.cpp:
+#ty/source/shears.cpp:
 #   .text: [0x80192c3c, 0x801935c8]
 #   .data: [0x802672f0, 0x80267330]
 #   .bss: [0x802b5aa0, 0x802b5ac0]
@@ -2413,7 +2415,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faad0, 0x803faae0]
 #   .sdata2: [0x80401270, 0x80401288]
 
-#SignPost.cpp:
+#ty/source/SignPost.cpp:
 #   .text: [0x801935c8, 0x80194a04]
 #   .ctors: [0x8023ca78, 0x8023ca7c]
 #   .rodata: [0x8023eb88, 0x8023eb98]
@@ -2423,7 +2425,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faae0, 0x803faaf8]
 #   .sdata2: [0x80401288, 0x804012b0]
 
-#soundbank.cpp:
+#ty/source/soundbank.cpp:
 #   .text: [0x80194a04, 0x80198b68]
 #   .data: [0x80267680, 0x80268330]
 #   .bss: [0x802b6208, 0x802b6280]
@@ -2431,7 +2433,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faaf8, 0x803fab00]
 #   .sdata2: [0x804012b0, 0x804012c8]
 
-#SpecialPickup.cpp:
+#ty/source/SpecialPickup.cpp:
 #   .text: [0x80198b68, 0x8019a9dc]
 #   .ctors: [0x8023ca7c, 0x8023ca80]
 #   .data: [0x80268330, 0x80268590]
@@ -2440,7 +2442,7 @@ ty/source/Script.cpp:
 #   .sbss: [0x803fab00, 0x803fab18]
 #   .sdata2: [0x804012c8, 0x80401350]
 
-#SpikeyIce.cpp:
+#ty/source/SpikeyIce.cpp:
 #   .text: [0x8019a9dc, 0x8019b040]
 #   .rodata: [0x8023eb98, 0x8023ec18]
 #   .data: [0x80268590, 0x802685a8]
@@ -2454,13 +2456,13 @@ ty/source/Spline.cpp:
   .data: [0x802685a8, 0x80268628]
   .sdata2: [0x80401390, 0x804013d8]
 
-#staticSpikes.cpp:
+#ty/source/staticSpikes.cpp:
 #   .text: [0x8019d70c, 0x8019db4c]
 #   .data: [0x80268628, 0x80268640]
 #   .sbss: [0x803fab28, 0x803fab38]
 #   .sdata2: [0x804013d8, 0x804013e8]
 
-#stopwatch.cpp:
+#ty/source/stopwatch.cpp:
 #   .text: [0x8019db4c, 0x801a0008]
 #   .ctors: [0x8023ca80, 0x8023ca84]
 #   .rodata: [0x8023ec38, 0x8023ec48]
@@ -2470,7 +2472,7 @@ ty/source/Spline.cpp:
 #   .sbss: [0x803fab38, 0x803fab70]
 #   .sdata2: [0x804013e8, 0x80401448]
 
-#target.cpp:
+#ty/source/target.cpp:
 #   .text: [0x801a0008, 0x801a1124]
 #   .ctors: [0x8023ca84, 0x8023ca88]
 #   .data: [0x80268850, 0x80268a38]
@@ -2498,7 +2500,7 @@ ty/source/Torch.cpp:
   .sbss: [0x803fab88, 0x803fab98]
   .sdata2: [0x804014f0, 0x80401550]
 
-#Ty.cpp:
+#ty/source/Ty.cpp:
 #   .text: [0x801a6c44, 0x801b5694]
 #   .ctors: [0x8023ca8c, 0x8023ca90]
 #   .rodata: [0x8023ecc8, 0x8023ef90]
@@ -2508,7 +2510,7 @@ ty/source/Torch.cpp:
 #   .sbss: [0x803fab98, 0x803fabc0]
 #   .sdata2: [0x80401550, 0x804016b0]
 
-#TyAnimTables.cpp:
+#ty/source/TyAnimTables.cpp:
 #   .text: [0x801b5694, 0x801b5a68]
 #   .data: [0x8026af60, 0x8026b180]
 #   .bss: [0x802b87b0, 0x802b8890]
@@ -2524,7 +2526,7 @@ ty/source/Torch.cpp:
 #   .sbss: [0x803fabc8, 0x803fabd0]
 #   .sdata2: [0x804016b8, 0x804016c0]
 
-#TyCollisions.cpp:
+#ty/source/TyCollisions.cpp:
 #   .text: [0x801b6238, 0x801b8038]
 #   .rodata: [0x8023ef90, 0x8023efe0]
 #   .data: [0x8026b2b0, 0x8026b2c0]
@@ -2571,14 +2573,14 @@ ty/source/UserInterface.cpp:
   .text: [0x801be9a4, 0x801bf220]
   .sdata2: [0x804018c8, 0x804018e8]
 
-#wake.cpp:
+#ty/source/wake.cpp:
 #   .text: [0x801bf220, 0x801bf9b0]
 #   .bss: [0x802ba210, 0x802bac18]
 #   .sdata: [0x803f9610, 0x803f9618]
 #   .sbss: [0x803fac28, 0x803fac38]
 #   .sdata2: [0x804018e8, 0x80401908]
 
-#Waterfall.cpp:
+#ty/source/Waterfall.cpp:
 #   .text: [0x801bf9b0, 0x801c06c8]
 #   .rodata: [0x8023f020, 0x8023f050]
 #   .data: [0x8026b6e0, 0x8026b7a0]
@@ -2586,14 +2588,14 @@ ty/source/UserInterface.cpp:
 #   .sbss: [0x803fac38, 0x803fac68]
 #   .sdata2: [0x80401908, 0x80401928]
 
-#WaterfallBase.cpp:
+#ty/source/WaterfallBase.cpp:
 #   .text: [0x801c06c8, 0x801c112c]
 #   .data: [0x8026b7a0, 0x8026b7d8]
 #   .bss: [0x802baf08, 0x802baf80]
 #   .sdata: [0x803f9618, 0x803f9628]
 #   .sdata2: [0x80401928, 0x80401990]
 
-#WaterfallPoint.cpp:
+#ty/source/WaterfallPoint.cpp:
 #   .text: [0x801c112c, 0x801c1578]
 #   .rodata: [0x8023f050, 0x8023f060]
 #   .data: [0x8026b7d8, 0x8026b858]
@@ -2601,14 +2603,14 @@ ty/source/UserInterface.cpp:
 #   .sdata: [0x803f9628, 0x803f9630]
 #   .sdata2: [0x80401990, 0x804019f0]
 
-#WaterfallSpray.cpp:
+#ty/source/WaterfallSpray.cpp:
 #   .text: [0x801c1578, 0x801c1f9c]
 #   .data: [0x8026b858, 0x8026b958]
 #   .bss: [0x802baff8, 0x802bb0e0]
 #   .sdata: [0x803f9630, 0x803f9640]
 #   .sdata2: [0x804019f0, 0x80401a78]
 
-#WaterfallStream.cpp:
+#ty/source/WaterfallStream.cpp:
 #   .text: [0x801c1f9c, 0x801c31f0]
 #   .data: [0x8026b958, 0x8026b9d0]
 #   .sdata2: [0x80401a78, 0x80401ae0]
@@ -2621,7 +2623,7 @@ ty/source/UserInterface.cpp:
 #   .sbss: [0x803fac68, 0x803fac78]
 #   .sdata2: [0x80401ae0, 0x80401b38]
 
-#watertank.cpp:
+#ty/source/watertank.cpp:
 #   .text: [0x801c3aa4, 0x801c4ba4]
 #   .ctors: [0x8023ca94, 0x8023ca98]
 #   .data: [0x8026bab0, 0x8026bce8]
@@ -2634,7 +2636,7 @@ ty/source/UserInterface.cpp:
 #   .data: [0x8026bce8, 0x8026c428]
 #   .sdata: [0x803f96a8, 0x803f96e8]
 
-#windmill.cpp:
+#ty/source/windmill.cpp:
 #   .text: [0x801c4ba4, 0x801c5200]
 #   .data: [0x8026c428, 0x8026c448]
 #   .sdata: [0x803f96e8, 0x803f96f8]
@@ -3587,6 +3589,7 @@ common/gc/DiscErrors.cpp:
   .data: [0x80275a68, 0x802764d8]
   .sdata: [0x803f99e0, 0x803f99e8]
 
+# should be moved to common/gc/?
 common/File.cpp:
    .text: [0x80225994, 0x80226398]
    .rodata: [0x8023fca0, 0x8023fea0]
@@ -3610,6 +3613,7 @@ common/gc/Input_GC.cpp:
   .sbss: [0x803fb3a8, 0x803fb3b0]
   .sdata2: [0x80402480, 0x804024c0]
 
+# should be moved to common/gc/?
 common/Source/Material_GC.cpp:
    .text: [0x8022825c, 0x8022bb50]
    .rodata: [0x8023fec8, 0x8023ffb0]
@@ -3665,6 +3669,7 @@ common/gc/System_GC.cpp:
   .sdata2: [0x80402608, 0x80402648]
   .sbss2: [0x80402778, 0x8040277C]
 
+# should be moved to common/gc/?
 common/Source/Texture.cpp:
    .text: [0x80236008, 0x802368f8]
    .bss: [0x803ef140, 0x803ef150]
