@@ -1,6 +1,7 @@
-# ty1-decomp [![Discord Channel][discord-badge]][discord]
+# ty1-decomp [![Discord Channel][discord-badge]][discord] ![dol progress]
 [discord]: https://discord.gg/hKx3FJJgrV
 [discord-badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
+[dol progress]: https://img.shields.io/endpoint?label=dol&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Fty%2Fus%2FCode%2F%3Fmode%3Dshield%26measure%3Dcode
 
 Decompilation of Ty the Tasmanian Tiger NTSC-U (GTYE69)
 

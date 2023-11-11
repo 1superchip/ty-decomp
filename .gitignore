@@ -13,3 +13,5 @@ disasm.txt
 *.dll
 build.ninja
 order.txt
+cli.py
+cli.ini
