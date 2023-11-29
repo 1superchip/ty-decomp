@@ -232,7 +232,7 @@ int RandomIR(int* pSeed, int min, int max) {
     return min + (curr % range);
 }
 
-int RandomI(int *pSeed) {
+int RandomI(int* pSeed) {
     int curr;
 	// fix?
     curr = *pSeed = *pSeed * 0x343fd + 0x269ec3;

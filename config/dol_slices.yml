@@ -245,7 +245,7 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9d38, 0x803f9d40]
 #   .sdata2: [0x803fbe30, 0x803fbe78]
 
-#ty/source/effects/Explosion.cpp:
+# ty/source/effects/Explosion.cpp:
 #   .text: [0x8003877c, 0x80039c3c]
 #   .data: [0x80243690, 0x80243710]
 #   .bss: [0x8029c638, 0x8029c648]
@@ -3528,19 +3528,19 @@ common/Source/Model.cpp:
    .sbss: [0x803fb2f8, 0x803fb320]
    .sdata2: [0x80402380, 0x80402388]
 
-#common/Source/ParticleSystem.cpp:
-#   .text: [0x80220d94, 0x80222f38]
-#   .rodata: [0x8023fc90, 0x8023fca0]
-#   .data: [0x80274778, 0x802747f0]
-#   .sdata: [0x803f9940, 0x803f9948]
-#   .sbss: [0x803fb320, 0x803fb330]
-#   .sdata2: [0x80402388, 0x804023c0]
+common/Source/ParticleSystem.cpp:
+  .text: [0x80220d94, 0x80222f38]
+  .rodata: [0x8023fc90, 0x8023fca0]
+  .data: [0x80274778, 0x802747f0]
+  .sdata: [0x803f9940, 0x803f9948]
+  .sbss: [0x803fb320, 0x803fb330]
+  .sdata2: [0x80402388, 0x804023c0]
 
-#common/Source/ParticleSystemManager.cpp:
-#   .text: [0x80222f38, 0x80223894]
-#   .bss: [0x802e49a8, 0x802e4a00]
-#   .sbss: [0x803fb330, 0x803fb338]
-#   .sdata2: [0x804023c0, 0x804023d0]
+common/Source/ParticleSystemManager.cpp:
+  .text: [0x80222f38, 0x80223894]
+  .bss: [0x802e49a8, 0x802e4a00]
+  .sbss: [0x803fb330, 0x803fb338]
+  .sdata2: [0x804023c0, 0x804023d0]
 
 common/Source/QuatRotation.cpp:
    .text: [0x80223894, 0x80223b88]

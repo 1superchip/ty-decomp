@@ -43,6 +43,11 @@ struct PtrListDL {
 	inline T* GetNextEntry(void) {
         return *--pMem;
     }
+    inline void Reset(void) {
+        while (*pMem != NULL) {
+            pMem++;
+        }
+    }
 };
 
 // defining this in the struct with "-inline auto" does inline this function but defining it here doesn't auto inline

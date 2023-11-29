@@ -57,6 +57,21 @@ extern GlobalVar gb;
 
 extern "C" char* strstr(char*, char*);
 
+/*
+// Stripped function in the ps2 build
+uint Tools_ColorToABGR(Vector* pColor) {
+    uint r = (uint)(pColor->x * 128.0f);
+    uint g = (uint)(pColor->y * 128.0f);
+    uint b = (uint)(pColor->z * 128.0f);
+    uint a = (uint)(pColor->w * 128.0f);
+    uint abgr = r;
+    abgr |= (g << 0x8);
+    abgr |= (b << 0x10);
+    abgr |= (a << 0x18);
+    return abgr;
+}
+*/
+
 void Tools_ApplyDoppler(int arg0, Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3) {
     float f1 = 300.0f;
     Vector sp8;
