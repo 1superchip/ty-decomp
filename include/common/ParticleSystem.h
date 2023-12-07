@@ -70,17 +70,15 @@ struct ParticleSystemType : SimpleParticleSystemType {
     static void Update(ParticleSystem*);
 };
 
-// I think this is Particle?
-// this must be Particle
 struct Particle {
     float mX;
     float mY;
     float mZ;
     float unkC;
     Vector mColor;
-    float unk20;
-    float unk24;
-    float unk28;
+    float unk20; // xDir
+    float unk24; // yDir
+    float unk28; // zDir
     int mEnvelopeIndex;
     float unk30;
     float unk34;

@@ -252,12 +252,12 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sdata: [0x803f41c0, 0x803f41d0]
 #   .sdata2: [0x803fbe78, 0x803fbf30]
 
-#ty/source/effects/Flame.cpp:
-#   .text: [0x80039c3c, 0x8003a1f8]
-#   .data: [0x80243710, 0x80243768]
-#   .bss: [0x8029c648, 0x8029c6c0]
-#   .sdata: [0x803f41d0, 0x803f41d8]
-#   .sdata2: [0x803fbf30, 0x803fbf58]
+ty/source/effects/Flame.cpp:
+  .text: [0x80039c3c, 0x8003a1f8]
+  .data: [0x80243710, 0x80243768]
+  .bss: [0x8029c648, 0x8029c6c0]
+  .sdata: [0x803f41d0, 0x803f41d8]
+  .sdata2: [0x803fbf30, 0x803fbf58]
 
 #ty/source/effects/GreySmoke.cpp:
 #   .text: [0x8003a1f8, 0x8003a3c8]
