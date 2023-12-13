@@ -230,12 +230,12 @@ ty/source/camera/GameCameraTools.cpp:
 #   .sbss: [0x803f9d28, 0x803f9d30]
 #   .sdata2: [0x803fbdd0, 0x803fbe10]
 
-#ty/source/effects/Bubble.cpp:
-#   .text: [0x800377dc, 0x80037b70]
-#   .bss: [0x8029bf38, 0x8029bfb0]
-#   .sdata: [0x803f41a0, 0x803f41b0]
-#   .sbss: [0x803f9d30, 0x803f9d38]
-#   .sdata2: [0x803fbe10, 0x803fbe30]
+ty/source/effects/Bubble.cpp:
+  .text: [0x800377dc, 0x80037b70]
+  .bss: [0x8029bf38, 0x8029bfb0]
+  .sdata: [0x803f41a0, 0x803f41b0]
+  .sbss: [0x803f9d30, 0x803f9d38]
+  .sdata2: [0x803fbe10, 0x803fbe30]
 
 #ChronorangEffects.cpp:
 #   .text: [0x80037b70, 0x8003877c]

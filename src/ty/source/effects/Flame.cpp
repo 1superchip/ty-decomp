@@ -1,5 +1,4 @@
 #include "ty/effects/Flame.h"
-#include "common/System_GC.h"
 
 struct UnkLevelInfo {
     Model* pModel;
@@ -37,7 +36,7 @@ ParticleEnvelope Flame::envelope[3] = {
 
 extern Material** particleManager; // TyParticleManager pointer
 
-/// @brief Loads resources for the Flame
+/// @brief Loads resources for the Flame Particle
 /// @param  None
 void Flame_LoadResources(void) {
     Flame::type.Init("Flame", particleManager[0x40 / 4], 1.0f, 5.0f, 5.0f, 1);

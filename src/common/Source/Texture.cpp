@@ -25,7 +25,7 @@ int Texture_filterType = 2;
 
 void Texture::InitModule(void) {
     textures.Init(0x200, sizeof(Texture)); // max of 512 textures
-    Texture_Color.x = Texture_Color.y = Texture_Color.z = 0.0f;
+    Texture_Color.SetZero();
     initialised = true;
 }
 
@@ -34,9 +34,9 @@ void Texture::DeinitModule(void) {
     initialised = false;
 }
 
-Texture *Texture::Create(char *pName) {
+Texture* Texture::Create(char* pName) {
     int size;
-    Texture *pTex = Texture::Find(pName);
+    Texture* pTex = Texture::Find(pName);
     if (pTex != NULL) {
         pTex->referenceCount++;
     } else {
@@ -94,13 +94,12 @@ Texture *Texture::Create(char *pName) {
             default:
                 minFilter = 5; // GX_LIN_MIP_LIN
             }
-            // GXInitTexObjLOD(&pTex->texObj, 0.0f, maxLod, -4.0f, minFilter, 1, 1, 0, 0);
             GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter, GX_LINEAR, 0.0f, maxLod, -4.0f, 1, 0, GX_ANISO_1);
             if (Texture_filterType >= 2 && pTex->width > 64) {
                 break;
             }
             int memSize = ((pTex->width * pTex->height) / 2) + 0x20;
-            void *mem = Heap_MemAlloc(memSize); // allocate memory for header + image
+            void* mem = Heap_MemAlloc(memSize); // allocate memory for header + image
             memcpy(mem, texFile, memSize);
             DCStoreRange((uint *)mem, memSize);
             pTex->pFileData = mem;
@@ -123,6 +122,9 @@ void Texture::Destroy(void) {
     textures.Destroy(this);
 }
 
+/// @brief Finds a Texture by name (case-insensitive)
+/// @param pName Name of the texture
+/// @return Pointer to found Texture, NULL if not found
 Texture* Texture::Find(char* pName) {
     Texture** list;
     char* str = Str_CopyString(pName, 0x1f);

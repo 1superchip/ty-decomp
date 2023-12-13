@@ -3,6 +3,7 @@
 
 #include "common/Model.h"
 #include "common/Material.h"
+#include "common/System_GC.h"
 
 struct ParticleSystem;
 struct ParticleSystemManager;
@@ -91,6 +92,13 @@ struct Particle {
     float unk50;
     float unk54;
     float unk58[2];
+
+    void SetUnk58ArrayByIndex(int index, float f1) {
+        unk58[index] = f1;
+    }
+    float GetUnk58ArrayByIndex(int index) {
+        return unk58[index];
+    }
 };
 
 #define MAX_PARTICLES (24)
