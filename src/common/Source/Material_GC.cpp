@@ -993,89 +993,48 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXSetTexCopyDst(0x100, 0x100, GX_TF_RGB565, 1);
     GXCopyTex((void*)&rawCaptureTexData, 0);
     GXLoadTexObj(&rawCaptureTexObj, GX_TEXMAP0);
+
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
-	
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+
+    GXPosition3f32(0.0f, 0.0f, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
     
-    WGPIPE.f = (float)height;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.875f;
+    GXPosition3f32(0.0f, (float)height, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(0.0f, 0.875f);
     
-    WGPIPE.f = (float)width;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 1.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = (float)width;
-    WGPIPE.f = (float)height;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 1.0f;
-    WGPIPE.f = 0.875f;
+    GXPosition3f32((float)width, 0.0f, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(1.0f, 0.0f);
+    
+    GXPosition3f32((float)width, (float)height, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(1.0f, 0.875f);
+
     GXSetTexCopySrc(0, 0, width, height);
     GXSetTexCopyDst(width, height, (GXTexFmt)format, 0);
     GXCopyTex(imgPtr, 1);
-
     GXLoadTexObj(&restorationTexObj, GX_TEXMAP0);
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = (float)height;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 1.0f;
-    WGPIPE.f = (float)width;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 1.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = (float)width;
-    WGPIPE.f = (float)height;
-    WGPIPE.f = 0.0f;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 1.0f;
-    WGPIPE.f = 1.0f;
+
+    GXPosition3f32(0.0f, 0.0f, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
+    
+    GXPosition3f32(0.0f, (float)height, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(0.0f, 1.0f);
+    
+    GXPosition3f32((float)width, 0.0f, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(1.0f, 0.0f);
+    
+    GXPosition3f32((float)width, (float)height, 0.0f);
+    GXColor4u8(255, 255, 255, 255);
+    GXTexCoord2f32(1.0f, 1.0f);
+
     GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
     // Material::UseNone() inlined here?
@@ -1159,8 +1118,8 @@ void Material::Update(void) {
         View::GetCurrent()->unk48.GetRotationPYR(&pyr);
         unk60.data[0][0] = unkB4;
         unk60.data[1][1] = unkB8;
-        unk60.data[3][0] = unkBC + 0.15915494f * pyr.y * unkA0;
-        unk60.data[3][1] = unkC0 + 0.15915494f * pyr.x * unkA4;
+        unk60.data[3][0] = unkBC + (1 / (2 * PI)) * pyr.y * unkA0;
+        unk60.data[3][1] = unkC0 + (1 / (2 * PI)) * pyr.x * unkA4;
     }
 }
 

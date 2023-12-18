@@ -32,7 +32,7 @@ void View::Init(void) {
     SetFogColour(0x808080);
     SetDirectLight(DirectLight::GetDefault());
     unk2E8 = 0;
-    unk29C = 0;
+    unk29C = NULL;
     bDisableZWrite = false;
     unk2B4 = 1.0f;
     unk2B8 = 1.0f;
@@ -61,7 +61,7 @@ void View::Init(float arg1, float arg2, float arg3, float arg4) {
     unk2E8 = 0;
     unk2B4 = 1.0f;
     unk2B8 = 1.0f;
-    unk29C = 0;
+    unk29C = NULL;
     unk288 = false;
     bDisableZWrite = false;
     bOrtho = false;
@@ -267,7 +267,7 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
                     break;
             }
         }
-        GXColor ambColor = (GXColor){0, 0, 0, 0xff};
+        GXColor ambColor = (GXColor){0, 0, 0, 255};
         ambColor.r = 255.0f * pLight->mAmbient.x;
         ambColor.g = 255.0f * pLight->mAmbient.y;
         ambColor.b = 255.0f * pLight->mAmbient.z;
@@ -281,8 +281,8 @@ void View::Use(void) {
     if (unk29C != NULL) {
         unk38 = NULL;
         unk3C = NULL;
-        unk40 = ((int*)unk29C)[8] - 1;
-        unk44 = ((int*)unk29C)[9] - 1;
+        unk40 = unk29C[8] - 1;
+        unk44 = unk29C[9] - 1;
     } else {
         matrix.Multiply(&unk88, &unkC8);
         if (unk288 != false) {
@@ -349,78 +349,46 @@ void View::ClearZBuffer(void) {
     GXSetProjection(proj, GX_ORTHOGRAPHIC);
     GXSetCurrentMtx(3);
     Material::UseNone(-1);
-    GXSetZMode(1, GX_ALWAYS, 1);
-    GXSetAlphaUpdate(0);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    GXSetAlphaUpdate(GX_FALSE);
+
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
+    
     float temp = 0.999999f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.c = 0;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+    
+    GXPosition3f32(0.0f, 0.0f, temp);
+    GXColor4u8(0, 0, 0, 0);
+    GXTexCoord2f32(0.0f, 0.0f);
+    
+    GXPosition3f32(100.0f, 0.0f, temp);
+    GXColor4u8(0, 0, 0, 0);
+    GXTexCoord2f32(0.0f, 0.0f);
+    
+    GXPosition3f32(0.0f, 100.0f, temp);
+    GXColor4u8(0, 0, 0, 0);
+    GXTexCoord2f32(0.0f, 0.0f);
+    
+    GXPosition3f32(100.0f, 100.0f, temp);
+    GXColor4u8(0, 0, 0, 0);
+    GXTexCoord2f32(0.0f, 0.0f);
+
     GXSetProjectionv(projection);
     GXSetCurrentMtx(0);
-    GXSetZMode(1, GX_LEQUAL, 1);
-    GXSetAlphaUpdate(1);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+    GXSetAlphaUpdate(GX_TRUE);
 }
 
 void View::ClearBuffer(int r, int g, int b, int alpha) {
-    float projection[7];
+    float oldProj[7];
     float proj[4][4];
     int dstAlpha;
-    // float proj[6][4];
-    GXGetProjectionv(projection);
-    // proj[1][3] = 0.02f;
-    // proj[2][0] = 0.0f;
-    // proj[2][1] = 0.0f;
-    // proj[2][2] = -1.0f;
-    // proj[2][3] = 0.0f;
-    // proj[3][0] = -0.02f;
-    // proj[3][1] = 0.0f;
-    // proj[3][2] = 1.0f;
-    // proj[3][3] = 0.0f;
-    // proj[4][0] = 0.0f;
-    // proj[4][1] = 1.0f;
-    // proj[4][2] = -1.0f;
-    // proj[4][3] = 0.0f;
-    // proj[5][0] = 0.0f;
-    // proj[5][1] = 0.0f;
-    // proj[5][2] = 1.0f;
+    GXGetProjectionv(oldProj); // save projection
+
+    // set new projection
     proj[0][0] = 0.02f;
     proj[0][1] = 0.0f;
     proj[0][2] = 0.0f;
@@ -439,65 +407,47 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     proj[3][3] = 1.0f;
     GXSetProjection(proj, GX_ORTHOGRAPHIC);
     GXSetCurrentMtx(3);
+
     Material::UseNone(-1);
+
     if (alpha < 0) {
         dstAlpha = 0;
     } else {
-        dstAlpha = (alpha > 0xff) ? 0xff : alpha;
+        dstAlpha = (alpha > 255) ? 255 : alpha;
     }
-    GXSetDstAlpha(1, dstAlpha);
-    GXSetZMode(1, GX_ALWAYS, 1);
+
+    GXSetDstAlpha(GX_TRUE, dstAlpha);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
     float temp = 0.999999f;
 
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = r;
-    WGPIPE.c = g;
-    WGPIPE.c = b;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+    GXPosition3f32(0.0f, 0.0f, temp);
+    GXColor4u8(r, g, b, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
 
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = r;
-    WGPIPE.c = g;
-    WGPIPE.c = b;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+    GXPosition3f32(100.0f, 0.0f, temp);
+    GXColor4u8(r, g, b, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
 
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = r;
-    WGPIPE.c = g;
-    WGPIPE.c = b;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+    GXPosition3f32(0.0f, 100.0f, temp);
+    GXColor4u8(r, g, b, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
 
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = 100.0f;
-    WGPIPE.f = temp;
-    WGPIPE.c = r;
-    WGPIPE.c = g;
-    WGPIPE.c = b;
-    WGPIPE.c = 0xff;
-    WGPIPE.f = 0.0f;
-    WGPIPE.f = 0.0f;
+    GXPosition3f32(100.0f, 100.0f, temp);
+    GXColor4u8(r, g, b, 255);
+    GXTexCoord2f32(0.0f, 0.0f);
     
-    GXSetProjectionv(projection);
+    // Restore projection
+    GXSetProjectionv(oldProj);
     GXSetCurrentMtx(0);
-    GXSetZMode(1, GX_LEQUAL, 1);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 }
 
 void View::SetFogColour(uint colour) {

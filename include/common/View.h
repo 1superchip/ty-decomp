@@ -39,7 +39,7 @@ struct View {
 	float unk28C;
 	float unk290;
 	char unk294[8];
-    uint unk29C;
+    uint* unk29C;
     char unk2A0[12];
     float unk2AC;
     float unk2B0;
