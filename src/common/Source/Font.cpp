@@ -195,7 +195,7 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_NONE);
-    GXSetZMode(1, GX_ALWAYS, 1);
+    GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
     // this gets the color to ABGR (0 - 255) from (0 - 128)
     // color is later read backwards when storing to WGPIPE
     // (color >> 0x18 & 0xFF) -> get highest byte
@@ -273,7 +273,7 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
         }
         text++;
     }
-    GXSetZMode(1, GX_LEQUAL, 1); // reset Z mode
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE); // reset Z mode
     GXSetProjectionv((float*)&projection);
     GXSetCurrentMtx(0);
 }

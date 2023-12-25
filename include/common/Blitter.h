@@ -56,7 +56,7 @@ struct Blitter_Particle {
     float unk20;
     uint unk24;
     float angle;
-    int unk2C;
+    float unk2C;
 	
 	void Draw(int);
 	void DrawFrames(int, float);

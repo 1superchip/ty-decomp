@@ -1,4 +1,8 @@
+#ifndef GAMEDATA_H
+#define GAMEDATA_H
+
 #include "common/Timer.h"
+#include "ty/props/gem.h"
 
 #define Total_Bilbies 5
 #define Total_ThunderEggs 8
@@ -7,7 +11,6 @@
 #define Total_Levels 0x18
 #define Total_Talismans 5
 
-
 enum LevelNumber {
     LN_First = 0,
     TOTAL_LEVEL_MAX = 0x18
@@ -15,7 +18,6 @@ enum LevelNumber {
 enum ZoneNumber {};
 enum BoomerangType {};
 enum GoldenCogType {};
-enum ElementType {};
 enum ThunderEggType {};
 enum TalismanType {};
 enum BilbyType {};
@@ -34,6 +36,8 @@ struct GameDataSettings {
     char unkA;
     char unkB;
 };
+
+extern GameDataSettings* pGameSettings;
 
 struct Attributes {
 	bool bLearntToSwim;
@@ -200,3 +204,5 @@ void GameData_New(void);
 inline int CheckArrayByBitIndex(u8* pArray, int bitIndex) {
 	return pArray[bitIndex >> 3] & (1 << (bitIndex & 7));
 }
+
+#endif // GAMEDATA_H

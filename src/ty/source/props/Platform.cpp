@@ -250,7 +250,7 @@ void Platform::UpdateShadow(void) {
 	}
 	if (unkD0) {
         float mag = 2.0f * GetDesc()->maxMag;
-		float div = 1.0f - (0.6f * Clamp<float>((pModel->matrices[0].data[3][1] - unkB0.y) / 1000.0f, 0.0f, 1.0f));
+		float div = 1.0f - (0.6f * Clamp<float>(0.0f, (pModel->matrices[0].data[3][1] - unkB0.y) / 1000.0f, 1.0f));
 		Tools_DropShadow_Add(mag, &unkB0, &unkC0, unk1C * div);
 	}
 }

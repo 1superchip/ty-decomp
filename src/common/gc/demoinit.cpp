@@ -42,7 +42,7 @@ u32 gGXCycles;
 
 static void RetraceCallback(u32 param_1) {
     if (bNeedAFlip) {
-        GXCopyDisp(pBuffer, 1);
+        GXCopyDisp(pBuffer, GX_TRUE);
         GXFlush();
         bNeedAFlip = false;
     }
@@ -66,7 +66,7 @@ extern "C" void DEMOInit(_GXRenderModeObj* prmodeObj) {
     VIWaitForRetrace();
     VIWaitForRetrace();
     VISetPostRetraceCallback(RetraceCallback);
-    VISetBlack(0);
+    VISetBlack(FALSE);
     VIFlush();
     GXDrawDone();
     char* rawCaptureData = (char*)rawCaptureTexData + 0x130;
@@ -99,10 +99,10 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
                 rmode = &GXMpal480IntDf;
                 break;
             default:
-                OSPanic("demoinit.cpp", 0xed, "DEMOInit: invalid TV format\n");
+                OSPanic("demoinit.cpp", 237, "DEMOInit: invalid TV format\n");
         }
-        rmode->fbWidth = 0x200;
-        GXAdjustForOverscan(rmode, (GXRenderModeObj*)rmodeobj, 0, 0x10);
+        rmode->fbWidth = 512;
+        GXAdjustForOverscan(rmode, (GXRenderModeObj*)rmodeobj, 0, 16);
         rmode = (GXRenderModeObj*)&rmodeobj;
     }
 }
@@ -135,7 +135,7 @@ static void __DEMOInitGX(void) {
         GXSetCopyClear(copyClrColor, 0xffffff);
         GXSetPixelFmt(GX_PF_RGBA6_Z24, GX_ZC_LINEAR);
     }
-    GXCopyDisp(pBuffer, 1);
+    GXCopyDisp(pBuffer, GX_TRUE);
     GXSetDispCopyGamma(GX_GM_1_0);
 }
 

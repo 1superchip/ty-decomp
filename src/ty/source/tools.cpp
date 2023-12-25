@@ -424,7 +424,7 @@ float GetPitch2Points(Vector* pVec, Vector* pVec1) {
     }
     float f1 = ExactMag(dx, dy, dz);
     if (f1) {
-        return (float)acos(Clamp<float>(dy / f1, -1.0f, 1.0f)) - PI2;
+        return (float)acos(Clamp<float>(-1.0f, dy / f1, 1.0f)) - PI2;
     }
     return 0.0f;
 }
@@ -727,7 +727,7 @@ bool Tools_RayToVertCyl(Vector* pRayStart, Vector* pRayEnd, Vector* pCylPos, flo
     float t = tmp.MagSquared();
     t = tmp2.Dot(&tmp) / (t != 0.0f ? t : 1.0f);
     Vector interpolated;
-    interpolated.InterpolateLinear(pRayStart, pRayEnd, Clamp<float>(t, 0.0f, 1.0f));
+    interpolated.InterpolateLinear(pRayStart, pRayEnd, Clamp<float>(0.0f, t, 1.0f));
     if (Dist2D(&interpolated, pCylPos) < Sqr<float>(f1)) {
         return interpolated.y > pCylPos->y && interpolated.y < pCylPos->y + f2;
     }

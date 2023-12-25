@@ -143,10 +143,10 @@ void Vector::ApplyTransMatrix(Vector* pVector, Matrix* pMatrix) {
 /// @param min Minimum value for each component
 /// @param max Maximum value for each component
 void Vector::CClamp(Vector* pColour, float min, float max) {
-    x = Clamp<float>(pColour->x, min, max);
-    y = Clamp<float>(pColour->y, min, max);
-    z = Clamp<float>(pColour->z, min, max);
-    w = Clamp<float>(pColour->w, min, max);
+    x = Clamp<float>(min, pColour->x, max);
+    y = Clamp<float>(min, pColour->y, max);
+    z = Clamp<float>(min, pColour->z, max);
+    w = Clamp<float>(min, pColour->w, max);
 }
 
 extern "C" double fmod(float, double);

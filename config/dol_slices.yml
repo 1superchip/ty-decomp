@@ -1390,15 +1390,15 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa418, 0x803fa420]
 #   .sdata2: [0x803fec78, 0x803fecc0]
 
-#ty/source/props/gem.cpp:
-#   .text: [0x800eff94, 0x800f2dd8]
-#   .ctors: [0x8023c92c, 0x8023c930]
-#   .rodata: [0x8023dd10, 0x8023dd50]
-#   .data: [0x80258720, 0x80258b68]
-#   .bss: [0x802a85b0, 0x802a88c8]
-#   .sdata: [0x803f6cd8, 0x803f6d68]
-#   .sbss: [0x803fa420, 0x803fa448]
-#   .sdata2: [0x803fecc0, 0x803fedb8]
+ty/source/props/gem.cpp:
+  .text: [0x800eff94, 0x800f2dd8]
+  .ctors: [0x8023c92c, 0x8023c930]
+  .rodata: [0x8023dd10, 0x8023dd50]
+  .data: [0x80258720, 0x80258b68]
+  .bss: [0x802a85b0, 0x802a88c8]
+  .sdata: [0x803f6cd8, 0x803f6d68]
+  .sbss: [0x803fa420, 0x803fa448]
+  .sdata2: [0x803fecc0, 0x803fedb8]
 
 #ty/source/props/Generator.cpp:
 #   .text: [0x800f2dd8, 0x800f3408]
@@ -3631,7 +3631,7 @@ common/Source/Material_GC.cpp:
 #   .sdata: [0x803f9af0, 0x803f9b08]
 #   .sbss: [0x803fb3e8, 0x803fb420]
 
-#common/gc/MKShadow_GC.cpp:
+# common/gc/MKShadow_GC.cpp:
 #   .text: [0x8022f1bc, 0x80230890]
 #   .rodata: [0x8023ffd0, 0x80240000] # ?
 #   .data: [0x80296db0, 0x802976a8]

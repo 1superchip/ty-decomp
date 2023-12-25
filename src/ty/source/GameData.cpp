@@ -6,8 +6,6 @@
 #include "common/View.h"
 
 // EXTERNS
-extern int Gem::totalGems;
-extern Gem** Gem::gemPtrList;
 void Hud_SetGems(int);
 extern char VersionNumber[]; // from global.cpp
 void Hud_ShowCogs(void);
@@ -56,7 +54,8 @@ extern "C" void memset(void*, int, int);
 // End EXTERNS
 
 
-static const int GAMEDATA_VERSION = 0x60000 | VersionNumber[0] | VersionNumber[1] << 1 | VersionNumber[2] << 2 | VersionNumber[3] << 3;
+static const int GAMEDATA_VERSION = 0x60000 |
+    VersionNumber[0] | VersionNumber[1] << 1 | VersionNumber[2] << 2 | VersionNumber[3] << 3;
 static SaveData* gameData;
 GameDataSettings* pGameSettings;
 
@@ -282,10 +281,10 @@ void GameData::SetCollectedGems(void) {
 void GameData::GetCollectedGems(void) {
     u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
     memset(pGems, 0, sizeof(pSaveData->levels[pSaveData->levelAB0].gemArray));
-    int totalGems = Min<int>(Gem::totalGems, 300);
+    int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
     for(int i = 0; i < totalGems; i++) {
         Gem* pGem = Gem::gemPtrList[i];
-        if (pGem->state == 5 || pGem->state == 4 || pGem->unkF6b1) {
+        if (pGem->mState == 5 || pGem->mState == 4 || pGem->unkF6b1) {
             pGems[i >> 3] |= 1 << (i & 7);
         }
     }

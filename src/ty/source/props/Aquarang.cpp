@@ -25,7 +25,7 @@ struct GlobalVar {
 
 extern GlobalVar gb;
 
-Material* AquarangProp::pGlow;
+Material* AquarangProp::pGlow = NULL;
 
 void Aquarang_LoadResources(KromeIni* pIni) {
     aquarangPropDesc.Init(&aquarangPropModule, "Prop_0407_AquaRang", "Aquarang", 1, 0);

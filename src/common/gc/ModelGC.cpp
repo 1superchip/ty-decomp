@@ -74,7 +74,7 @@ int Model::Draw(u16* pSubObjs) {
         pAnimation->CalculateMatrices();
         int vertexCount = pTemplate->pModelData->vertexCount;
         r25 = vertexCount * 3;
-        if (bufferOffset + r25 >= 0xffe0) {
+        if (bufferOffset + r25 >= 65504) {
             bufferOffset = 0;
         }
         float* vertexBuf = &vertexBuffer[bufferOffset];
@@ -108,7 +108,7 @@ int Model::Draw(u16* pSubObjs) {
             float tnx = (nx * m00) + (ny * m10) + (nz * m20);
             float tny = (nx * m01) + (ny * m11) + (nz * m21);
             float tnz = (nx * m02) + (ny * m12) + (nz * m22);
-            if (pVerts[i].weight != 0x1000) { // if weight doesn't equal 4096, apply it
+            if (pVerts[i].weight != 4096) { // if weight doesn't equal 4096, apply it
                 float weight = (float)pVerts[i].weight * (1.0f / 4095.99992f);
                 Matrix* pMatrix = &pMatrices[pVerts[i].matrix2];
                 float m00 = pMatrix->data[0][0];
@@ -204,7 +204,7 @@ int Model::Draw(u16* pSubObjs) {
     mat2.Multiply(&mat2, &mat3);
     mat2.Transpose(&mat2);
     GXLoadTexMtxImm(mat2.data, 0x39, GX_MTX2x4);
-    GXColor chanColor = (GXColor){0xFF, 0xFF, 0xFF, 0xFF};
+    GXColor chanColor = (GXColor){255, 255, 255, 255};
     int matrixIdx = 0;
     GXSetChanMatColor(GX_COLOR0A0, chanColor);
     int effectIdx = 0;
@@ -332,7 +332,7 @@ int Model::Draw(u16* pSubObjs) {
                                     float blue = colour.z * pSubObj->alphaLightIntensity * 255.0f;
                                     blue = (blue < 0.0f) ? 0.0f : (blue > 255.0f) ? 255.0f : blue;
 
-                                    GXColor tevColor = (GXColor){0, 0, 0, 0xFF};
+                                    GXColor tevColor = (GXColor){0, 0, 0, 255};
 
                                     tevColor.r = red;
                                     tevColor.g = green;

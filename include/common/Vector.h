@@ -18,9 +18,9 @@ struct Vector {
 	void ClampMagnitude(Vector* pVector, float);
 	void Cross(Vector* pVector1, Vector* pVector2);
 	void Projection(Vector*, Vector*);
-	void InterpolateLinear(Vector*, Vector*, float);
-	void ApplyMatrix(Vector*, Matrix*);
-	void ApplyMatrixW(Vector*, Matrix*);
+	void InterpolateLinear(Vector* pFrom, Vector* pTo, float fraction);
+	void ApplyMatrix(Vector* pVector, Matrix* pMatrix);
+	void ApplyMatrixW(Vector* pVector, Matrix* pMatrix);
 	void ApplyRotMatrix(Vector* pVector, Matrix* pMatrix);
 	void ApplyTransMatrix(Vector*, Matrix*);
 	void CClamp(Vector*, float, float);
@@ -157,7 +157,13 @@ struct Vector {
     float* GetAlpha(void) {
         return &w;
     }
+#if mips
+// PS2 GCC has mips defined
+// Vector structs are aligned to 0x10 in the July 1st build
+} __attribute__((aligned(16)));
+#else
 };
+#endif
 
 
 inline bool CompareVectors(Vector* pVec, Vector* pVec1) {

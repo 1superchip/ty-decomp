@@ -23,7 +23,7 @@ inline T Abs(T x) {
 // may not have been a template
 // this can always be changed later
 template <typename T>
-inline T Clamp(T x, T min, T max) {
+inline T Clamp(T min, T x, T max) {
     return (x < min) ? min : (x > max) ? max : x;
 }
 
@@ -36,6 +36,10 @@ inline T GetSign(T x) {
         return -1.0;
     }
     return 1.0;
+}
+
+inline float SqrXMinHalf(float x) {
+	return Sqr<float>(x - 0.5f);
 }
 
 int RandomIR(int* pSeed, int min, int max); // returns a ranged random number

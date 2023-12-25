@@ -62,7 +62,7 @@ void Bubble::Create(Vector* pPos, float f1, float f2, float f3, float f4) {
         p->SetUnk58ArrayByIndex(1, f3);
 
         if (f4 <= 0.0f) {
-            p->unk24 = Clamp<float>(f1 * 0.3f, 1.0f, 15.0f) + RandomFR(&gb.randSeed, 0.0f, f1 * 0.1f);
+            p->unk24 = Clamp<float>(1.0f, f1 * 0.3f, 15.0f) + RandomFR(&gb.randSeed, 0.0f, f1 * 0.1f);
         } else {
             p->unk24 = f4;
         }

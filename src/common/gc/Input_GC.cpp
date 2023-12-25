@@ -58,10 +58,10 @@ void Input_Update(bool bReadInputs) {
         if (pad[i].err == PAD_ERR_NONE) {
             joyPad[i].mCurrButtonFlags = joyPad[i].pPad->button;
             
-            joyPad[i].mCurrStickX = Clamp<int>((joyPad[i].pPad->stickX * 2), -128, 127) + 128;
-            joyPad[i].mCurrStickY = Clamp<int>(-(joyPad[i].pPad->stickY * 2), -128, 127) + 128;
-            joyPad[i].mCurrSubStickX = Clamp<int>((joyPad[i].pPad->substickX * 2), -128, 127) + 128;
-            joyPad[i].mCurrSubStickY = Clamp<int>(-(joyPad[i].pPad->substickY * 2), -128, 127) + 128;
+            joyPad[i].mCurrStickX = Clamp<int>(-128, (joyPad[i].pPad->stickX * 2), 127) + 128;
+            joyPad[i].mCurrStickY = Clamp<int>(-128, -(joyPad[i].pPad->stickY * 2), 127) + 128;
+            joyPad[i].mCurrSubStickX = Clamp<int>(-128, (joyPad[i].pPad->substickX * 2), 127) + 128;
+            joyPad[i].mCurrSubStickY = Clamp<int>(-128, -(joyPad[i].pPad->substickY * 2), 127) + 128;
             
             if (joyPad[i].mCurrStickX < 0) {
                 joyPad[i].mCurrStickX = 0;
@@ -367,8 +367,8 @@ static void ClampGenericStick(s8* px, s8* py, float radius, float radiusSquared,
     x = (x / length) * radius;
     y = (y / length) * radius;
   }
-    *px = Clamp<float>(x * 1.5f, -128.0f, 127.0f);
-    *py = Clamp<float>(y * 1.5f, -128.0f, 127.0f);
+    *px = Clamp<float>(-128.0f, x * 1.5f, 127.0f);
+    *py = Clamp<float>(-128.0f, y * 1.5f, 127.0f);
 }
 
 static void ClampGenericTrigger(u8* trigger, u8 min, u8 max) {

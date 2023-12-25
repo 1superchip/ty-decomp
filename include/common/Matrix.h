@@ -16,7 +16,7 @@ struct Matrix {
 	void SetRotationPitch(float);
 	void SetRotationYaw(float);
 	void SetRotationRoll(float);
-	void SetRotationPYR(Vector*);
+	void SetRotationPYR(Vector* pAngles);
 	void SetRotationToScale(float);
 	void SetRotationToScaleXYZ(Vector*);
 	void Transpose(Matrix*);
@@ -93,7 +93,13 @@ struct Matrix {
 	void Multiply3x3(Matrix* pMatrix) {
 		Multiply3x3(this, pMatrix);
 	}
+#if mips
+// PS2 GCC has mips defined
+// Matrix structs are aligned to 0x10 in the July 1st build
+} __attribute__((aligned(16)));
+#else
 };
+#endif
 
 
 #endif // COMMON_MATRIX

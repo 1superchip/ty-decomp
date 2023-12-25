@@ -3,7 +3,7 @@
 
 template <typename T>
 struct StructList {
-    T* pStart;
+    T* pStart; // pBlock?
     T* pEnd;
     T* pEnd2;
 
@@ -33,6 +33,25 @@ struct StructList {
             return pEnd;
         }
         return NULL;
+    }
+    T* GetNextEntryWithEntry(T* pCurrEntry) {
+        T* pNext = pCurrEntry + 1;
+        if (pNext >= pEnd2) {
+            pNext = NULL;
+        }
+        return pNext;
+    }
+    void UnknownSetPointer(void) {
+        pEnd = pEnd2;
+    }
+    int GetCount(void) {
+        return (pEnd2 - pEnd);
+    }
+    void CopyEntry(T* p) {
+        if (p != pEnd) {
+            *p = *pEnd;
+        }
+        pEnd++;
     }
 };
 

@@ -13,7 +13,7 @@ extern "C" void memset(void*, int, int);
 extern "C" int ty[0x1178]; // from Ty.cpp
 
 bool DDASession::bInitialised = false;
-bool DDASession::bSessionStarted;
+bool DDASession::bSessionStarted = false;
 bool DDASession::bConvertToReadable = false;
 static int pDDAMenu;
 static int pDDADrawEnabled;
@@ -67,19 +67,15 @@ void DDASession::StartSession(void) {
     currentCheckpoint = NULL;
     memset(this, 0, 0x10);
     unk0 = 0;
-    levelNumber = gb.x[0x6ec / 4];
+    levelNumber = gb.x[0x6ec / 4]; // GetCurrentLevel inline
     Timer_GetSystemTime(&startTime);
     startDay = startTime.day;
     startMonth = startTime.month;
     startHour = startTime.hours;
     startMinutes = startTime.minutes;
     startSeconds = startTime.seconds;
-    while (*unk10.pMem != NULL) {
-        unk10.pMem++;
-    }
-    while (*unk14.pMem != NULL) {
-        unk14.pMem++;
-    }
+    unk10.Reset();
+    unk14.Reset();
 }
 
 void DDASession::EndSession(void) {
@@ -108,6 +104,7 @@ void DDASession::NewCheckpoint(int arg1) {
     if(unk10.IsFull()) {
         return;
     }
+    // Get new checkpoint pointer
     currentCheckpoint = unk10.GetNextEntry();
     currentCheckpoint->unk0 = unk10.GetSize();
     currentCheckpoint->unk4 = 0;

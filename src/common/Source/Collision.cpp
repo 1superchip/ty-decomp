@@ -49,10 +49,10 @@ void Collision_FindSphereDynamicGrid(Vector* pStartVector, Vector* pEndVector,
     endX = (pEndVector->x - Collision_MinX) / Collision_DynGridTileSizeX;
     endZ = (pEndVector->z - Collision_MinZ) / Collision_DynGridTileSizeZ;
 
-    *pStartX = Clamp(startX, 0, 0x1F);
-    *pStartZ = Clamp(startZ, 0, 0x1F);
-    *pLengthX = Clamp(endX, 0, 0x1F) - *pStartX + 1;
-    *pLengthZ = Clamp(endZ, 0, 0x1F) - *pStartZ + 1;
+    *pStartX = Clamp<int>(0, startX, 31);
+    *pStartZ = Clamp<int>(0, startZ, 31);
+    *pLengthX = Clamp<int>(0, endX, 31) - *pStartX + 1;
+    *pLengthZ = Clamp<int>(0, endZ, 31) - *pStartZ + 1;
 }
 
 bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
@@ -173,7 +173,7 @@ void InterpolateVertexColor(Vector* pVec, Vector* pVec1, Vector* pos0, Vector* c
     if (dot1) {
         y = dot / dot1;
     }
-    dot = Clamp<float>(y, 0.0f, 1.0f);
+    dot = Clamp<float>(0.0f, y, 1.0f);
     pVec1->InterpolateLinear(color1, color2, dot);
     Vector midPoint;
     midPoint.InterpolateLinear(pos1, pos2, dot);
@@ -184,7 +184,7 @@ void InterpolateVertexColor(Vector* pVec, Vector* pVec1, Vector* pos0, Vector* c
     if (mag) {
         x = t / mag;
     }
-    pVec1->InterpolateLinear(color0, pVec1, Clamp<float>(x, 0.0f, 1.0f));
+    pVec1->InterpolateLinear(color0, pVec1, Clamp<float>(0.0f, x, 1.0f));
 }
 
 void ConvertRGBA(Vector* pOut, u8* pColors) {

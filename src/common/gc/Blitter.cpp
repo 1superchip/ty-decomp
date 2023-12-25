@@ -291,29 +291,25 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
         WGPIPE.f = pParticle->pos.y + dVar28;
         WGPIPE.f = pParticle->pos.z + dVar25;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = arg1 * pParticle->unk24;
-        WGPIPE.f = 0.0f;
+        GXTexCoord2f32(arg1 * pParticle->unk24, 0.0f);
         
         WGPIPE.f = pParticle->pos.x - dVar27;
         WGPIPE.f = pParticle->pos.y - dVar26;
         WGPIPE.f = pParticle->pos.z - dVar24;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = arg1 * pParticle->unk24;
-        WGPIPE.f = 1.0f;
+        GXTexCoord2f32(arg1 * pParticle->unk24, 1.0f);
         
         WGPIPE.f = pParticle->pos.x + dVar27;
         WGPIPE.f = pParticle->pos.y + dVar26;
         WGPIPE.f = pParticle->pos.z + dVar24;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = arg1 * (pParticle->unk24 + 1);
-        WGPIPE.f = 0.0f;
+        GXTexCoord2f32(arg1 * (pParticle->unk24 + 1), 0.0f);
         
         WGPIPE.f = pParticle->pos.x - dVar29;
         WGPIPE.f = pParticle->pos.y - dVar28;
         WGPIPE.f = pParticle->pos.z - dVar25;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = arg1 * (pParticle->unk24 + 1);
-        WGPIPE.f = 1.0f;
+        GXTexCoord2f32(arg1 * (pParticle->unk24 + 1), 1.0f);
         
         pParticle++;
     }

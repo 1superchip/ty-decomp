@@ -86,7 +86,7 @@ float WobbleTexture::SetUpGrid(Vector* pVec, float f1, float f2, float f3) {
             if (j == 0) {
                 GetWobbleEntry(i, j)->mColor.w = 0.0f;
             }
-            GetWobbleEntry(i, j)->mColor.w *= Clamp<float>(1.0f - GetWobbleEntry(i, j)->unk34, 0.0f, 1.0f);
+            GetWobbleEntry(i, j)->mColor.w *= Clamp<float>(0.0f, 1.0f - GetWobbleEntry(i, j)->unk34, 1.0f);
         }
     }
     return f2;

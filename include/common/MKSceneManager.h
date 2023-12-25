@@ -65,6 +65,9 @@ struct MKProp {
     bool GetDrawFlag(void) {
         return flags & 0x40000000;
     }
+    MKPropDescriptor* GetDesc(void) {
+        return pDescriptor;
+    }
 };
 
 struct SMNode {
