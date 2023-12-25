@@ -108,6 +108,10 @@ static inline void GXTexCoord2f32(f32 s,f32 t)
 	WGPIPE.f = t;
 }
 
+static inline void GXColor1u32(const u32 v) {
+  WGPIPE.i = v;
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -26,9 +26,9 @@ static inline void Vector_ApplyMatrix(Vector* pOut, Vector* pVector, Matrix* pMa
     pOut->z = mz;
 }
 
-static EffectDat effectData[256];
+static EffectDat effectData[256] ATTRIBUTE_ALIGN(32);
 
-int Model::disableTrivialRejection;
+int Model::disableTrivialRejection = 0;
 extern float Model_TrivialRejectTestMinW;
 extern float Model_TrivialRejectTestMaxW;
 
@@ -62,6 +62,7 @@ int Model::Draw(u16* pSubObjs) {
         (currView->farFogPlane - currView->closeFogPlane) * 2.0f + currView->closeFogPlane,
         currView->unk2C0, currView->unk2BC, (GXColor&)color);
     Vertex* pVerts = pTemplate->pModelData->pVertices;
+    
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_INDEX16);
     GXSetVtxDesc(GX_VA_NRM, GX_INDEX16);
@@ -69,6 +70,7 @@ int Model::Draw(u16* pSubObjs) {
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
     GXSetArray(GX_VA_CLR0, (void*)&pVerts->color, sizeof(Vertex));
     GXSetArray(GX_VA_TEX0, (void*)&pVerts->uv, sizeof(Vertex));
+
     if (pAnimation != NULL) {
         static int bufferOffset = 0;
         pAnimation->CalculateMatrices();
@@ -374,8 +376,8 @@ int Model::Draw(u16* pSubObjs) {
 }
 
 // these floats are placed in .sbss after a static function variable in Model::Draw
-float Model_TrivialRejectTestMinW;
-float Model_TrivialRejectTestMaxW;
+float Model_TrivialRejectTestMinW = 0.0f;
+float Model_TrivialRejectTestMaxW = 0.0f;
 
 int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     float corner[2][4];

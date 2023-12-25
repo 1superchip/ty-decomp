@@ -3631,17 +3631,14 @@ common/Source/Material_GC.cpp:
 #   .sdata: [0x803f9af0, 0x803f9b08]
 #   .sbss: [0x803fb3e8, 0x803fb420]
 
-# common/gc/MKShadow_GC.cpp:
-#   .text: [0x8022f1bc, 0x80230890]
-#   .rodata: [0x8023ffd0, 0x80240000] # ?
-#   .data: [0x80296db0, 0x802976a8]
-#   .bss: [0x80389dd0, 0x8038dde0]
-#   .sdata: [0x803f9b08, 0x803f9b10]
-#   .sbss: [0x803fb420, 0x803fb430]
-#   .sdata2: [0x80402538, 0x80402568]
-
-common/gc/MKShadow_GC_rodata.s:
+common/gc/MKShadow_GC.cpp:
+  .text: [0x8022f1bc, 0x80230890]
   .rodata: [0x8023ffd0, 0x80240000]
+  .data: [0x80296db0, 0x802976a8]
+  .bss: [0x80389dd0, 0x8038dde0]
+  .sdata: [0x803f9b08, 0x803f9b10]
+  .sbss: [0x803fb420, 0x803fb430]
+  .sdata2: [0x80402538, 0x80402568]
 
 common/gc/ModelGC.cpp:
    .text: [0x80230890, 0x80232398]

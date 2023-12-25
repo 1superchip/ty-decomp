@@ -20,4 +20,4 @@ symbol_aligns:
   # 0x80271CA0: 32 # ? CardData from CARDUnlock.c
   # 0x802c38e0: 32 # ? __AXStudio from AXSPB.c
   # 0x8026ce20: 32 # ? __AXCompressorTable from AXComp.c
-  #
+  0x8038dde0: 32 # effectData from ModelGC.cpp
