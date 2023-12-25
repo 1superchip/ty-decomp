@@ -39,7 +39,6 @@ extern "C" void Sound_SetSystemAudioMode(int);
 extern "C" int Sound_GetSystemAudioMode(void);
 void SoundBank_SetVolume(float, int);
 View* GameCamera_View(void);
-void System_SetScreenOffset(float, float);
 void Hud_ShowLives(void);
 void Hud_ShowBilbies(void);
 struct TyHealth {
@@ -130,9 +129,9 @@ void GameData::SynchroniseEnterLevel(void) {
     for(int i = 0; i < Total_Bilbies; i++) {
         bool rescued = ((pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 2) && (GetFreeBilbyCount() == 5))
             && !pSaveData->levels[pSaveData->levelAB0].thunderEggs[1];
-            if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
-                Bilby_SetRescued((BilbyType)i, rescued);
-            }
+        if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
+            Bilby_SetRescued((BilbyType)i, rescued);
+        }
     }
 
     if (!pSaveData->levels[pSaveData->levelAB0].thunderEggs[0]) {
@@ -255,7 +254,8 @@ void GameData::CollectGem(bool arg0) {
         numCollectedGems++;
     }
     numChargeBites++;
-    if (numCollectedGems == 300) {
+    if (numCollectedGems == GEMS_MAXOPALS) {
+        // play a sound when all opals have been collected
         SoundBank_Play(0x1bb, NULL, 0);
     }
     Hud_ShowOpals();
@@ -265,10 +265,10 @@ void GameData::CollectGem(bool arg0) {
 void GameData::SetCollectedGems(void) {
     int gemCount = 0;
     u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
-    int totalGems = Min<int>(Gem::totalGems, 300);
+    int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
     for(int i = 0; i < totalGems; i++) {
         if (CheckArrayByBitIndex(pGems, i) && Gem::gemPtrList[i]) {
-            Gem::gemPtrList[i]->unkF6b1 = true;
+            Gem::gemPtrList[i]->mCollected = true;
             Gem::gemPtrList[i]->SetState((GemState)5);
             gemCount++;
         }
@@ -284,7 +284,7 @@ void GameData::GetCollectedGems(void) {
     int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
     for(int i = 0; i < totalGems; i++) {
         Gem* pGem = Gem::gemPtrList[i];
-        if (pGem->mState == 5 || pGem->mState == 4 || pGem->unkF6b1) {
+        if (pGem->mState == 5 || pGem->mState == 4 || pGem->mCollected) {
             pGems[i >> 3] |= 1 << (i & 7);
         }
     }
@@ -296,6 +296,9 @@ int GameData::GetGameCompletePercent(void) {
     return (total > 100) ? 100 : total;
 }
 
+/// @brief Gets the number of cogs collected within a single level
+/// @param level Level number to calculate cog count
+/// @return Total cogs collected in the level of the level parameter
 int GameData::GetGoldenCogCount(LevelNumber level) {
     int count = 0;
     for(int i = 0; i < Total_Cogs; i++) {
@@ -306,6 +309,9 @@ int GameData::GetGoldenCogCount(LevelNumber level) {
     return count;
 }
 
+/// @brief Counts the number of total collected cogs
+/// @param  None
+/// @return Total cogs collected in all levels
 int GameData::GetTotalGoldenCogCount(void) {
     int count = 0;
     for (int i = 0; i < Total_Levels; i++) {
@@ -334,7 +340,7 @@ int GameData::GetCollectedGemCount(LevelNumber level) {
     }
     int count = 0;
     u8* gemArray = pSaveData->levels[level].gemArray;
-    for(int i = 0; i < 300; i++) {
+    for(int i = 0; i < GEMS_MAXOPALS; i++) {
         if (CheckArrayByBitIndex(gemArray, i) != false) {
             count++;
         }
@@ -380,7 +386,7 @@ int GameData::GetHasGalleryImage(int nIndex) {
 int GameData::GetTotalGalleryCount(void) {
     int count = 0;
     u8* galleryArray = pSaveData->galleryImages;
-    for(int i = 0; i < 512; i++) {
+    for(int i = 0; i < TOTAL_GALLERYIMAGES; i++) {
         if (CheckArrayByBitIndex(galleryArray, i)) {
             count++;
         }
@@ -395,6 +401,9 @@ void GameData::CollectCog(GoldenCogType cogType) {
     bIsDirty = true;
 }
 
+/// @brief Counts the number of collected thundereggs of a certain type
+/// @param type Element type of level to consider
+/// @return Number of thundereggs collected
 int GameData::GetThunderEggCount(ElementType type) {
     int count = 0;
     for(int i = 0; i < Total_Levels; i++) {
@@ -409,6 +418,9 @@ int GameData::GetThunderEggCount(ElementType type) {
     return count;
 }
 
+/// @brief Counts the number of collected thundereggs
+/// @param  None
+/// @return Number of thundereggs collected
 int GameData::GetTotalThunderEggCount(void) {
     int count = 0;
     for(int i = 0; i < Total_Levels; i++) {
@@ -523,7 +535,7 @@ int GameData::GetTotalTime(void) {
 }
 
 bool GameData::GetHasBeenTriggered(uint uniqueID) {
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < Total_Triggers; i++) {
         if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == uniqueID) {
             return true;
         }
@@ -532,7 +544,7 @@ bool GameData::GetHasBeenTriggered(uint uniqueID) {
 }
 
 void GameData::SetHasBeenTriggered(uint uniqueID) {
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < Total_Triggers; i++) {
         if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == 0) {
             pSaveData->levels[pSaveData->levelAB0].triggers[i] = uniqueID;
             return;

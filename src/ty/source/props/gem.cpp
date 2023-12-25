@@ -1,6 +1,7 @@
 // Opal object source file
 
 #include "ty/props/gem.h"
+#include "ty/tytypes.h"
 #include "ty/GameData.h"
 #include "ty/DDA.h"
 #include "ty/tools.h"
@@ -87,7 +88,6 @@ static ParticleSystemType gemType[MAX_GEM_ELEMENTS];
 static StructList<GemModelDrawData> modelDraw;
 static StructList<GemPickupData> pickupData;
 static StructList<Blitter_Particle> pickupDraw;
-static Vector gem_cpp_bss_padding[2];
 
 // TODO: Correct data ordering without externs and variables for literals
 extern ElementInfo elementInfo[MAX_GEM_ELEMENTS];
@@ -217,7 +217,7 @@ Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
     pNewGem->Init(&opalDesc);
     pNewGem->pos = *pPos;
     pNewGem->unk94 = pNewGem->pos;
-    pNewGem->unkF6b1 = 0;
+    pNewGem->mCollected = false;
     pNewGem->unk6C = 0;
     pNewGem->unkF6b0 = 0;
     pNewGem->mParticle.pos = pNewGem->pos;
@@ -271,7 +271,7 @@ bool Gem::LoadLine(KromeIniLine* pLine) {
 
 void Gem::LoadDone(void) {
     unk94 = pos;
-    unkF6b1 = false;
+    mCollected = false;
     unk6C = 0;
     unkF6b0 = 0;
     mParticle.pos = pos;
@@ -360,7 +360,7 @@ void Gem::Draw(void) {
     unkB4.CopyRotation(&View::GetCurrent()->unk48);
     elementInfo[gemElement].pModel->matrices[0] = unkB4;
     float draw = Sqr<float>(GetDesc()->maxDrawDist * 0.5f);
-    if (unkF6b1) {
+    if (mCollected) {
         unk1C *= 0.1f;
     }
     elementInfo[gemElement].pModel->colour.Set(1.0f, 1.0f, 1.0f, unk1C);
@@ -584,7 +584,7 @@ void Gem::SetState(GemState newState) {
         case (GemState)2:
             unkF4 = gDisplay.displayFreq * 0.5f;
             mParticle.color.Set(
-                1.0f, 1.0f, 1.0f, unkF6b1 ? 0.15f : 1.0f
+                1.0f, 1.0f, 1.0f, mCollected ? 0.15f : 1.0f
             );
             mParticle.unk20 = 20.0f;
             break;
@@ -595,7 +595,7 @@ void Gem::SetState(GemState newState) {
             unkF4 = gDisplay.displayFreq * 0.5f;
             mParticle.pos = pos;
             mParticle.color.Set(
-                1.0f, 1.0f, 1.0f, unkF6b1 ? 0.15f : 1.0f
+                1.0f, 1.0f, 1.0f, mCollected ? 0.15f : 1.0f
             );
             mParticle.unk20 = 20.0f;
             break;
@@ -607,7 +607,7 @@ extern void SoundBank_Play(int, Vector*, unsigned int);
 void Gem::Collect(void) {
     SetState((GemState)4);
     Gem_PickupParticle_SpawnParticles(&mParticle.pos);
-    gb.mGameData.CollectGem(unkF6b1);
+    gb.mGameData.CollectGem(mCollected);
     dda.StorePickupInfo(Pickup_Gem);
     SoundBank_Play(0xB7, NULL, 0);
 }

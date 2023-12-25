@@ -7,8 +7,8 @@ extern struct GlobalVar {
 } gb;
 Vector* GameCamera_GetPos(void);
 
-static Model* envMist;
-static Material* envMat;
+static Model* envMist = NULL;
+static Material* envMat = NULL;
 
 void Mist_Init(void) {
     if (gb.unk[0x558 / 4] != 0) {

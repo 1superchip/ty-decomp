@@ -95,7 +95,7 @@ struct Gem : GameObject {
 	Matrix unkB4;
 	s16 unkF4;
 	u8 unkF6b0 : 1;
-	bool unkF6b1 : 1;
+	bool mCollected : 1;
 	u8 unkF6b2 : 1;
 	u8 unkF6b3 : 1;
 	u8 unkF6b4 : 1;

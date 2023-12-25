@@ -1,6 +1,6 @@
 global:
-    #0x80298c00: v$localstatic3$GetFrontVector__8RotationFv
-    #0x80298c10: v$localstatic3$GetRotVector__8RotationFv
+    0x80298c00: v$localstatic3$GetFrontVector__8RotationFv
+    0x80298c10: v$localstatic3$GetRotVector__8RotationFv
     0x803f9b80: pCamDesc__14CameraOverride
     0x80298b60: camDescBefore__14CameraOverride
     0x80006424: Direction_Create__14CameraOverrideFPv

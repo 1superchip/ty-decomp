@@ -98,7 +98,6 @@ void Torch::Reset(void) {
     bEmitFire = true;
     unkA8 = 0.0f;
     if (flameRefIndex < 0) {
-        // fix string locally
         flameRefIndex = pModel->GetRefPointIndex("R_Flame");
     }
     mFlameRefIndex = flameRefIndex;

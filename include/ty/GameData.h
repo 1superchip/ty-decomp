@@ -4,12 +4,13 @@
 #include "common/Timer.h"
 #include "ty/props/gem.h"
 
-#define Total_Bilbies 5
-#define Total_ThunderEggs 8
-#define Total_Cogs 10
-#define Total_Triggers 20
-#define Total_Levels 0x18
-#define Total_Talismans 5
+#define Total_Bilbies 		(5)
+#define Total_ThunderEggs	(8)
+#define Total_Cogs			(10)
+#define Total_Triggers 		(20)
+#define Total_Levels 		(0x18)
+#define Total_Talismans 	(5)
+#define TOTAL_GALLERYIMAGES	(512)
 
 enum LevelNumber {
     LN_First = 0,
@@ -85,7 +86,7 @@ struct SaveData {
 	bool bHasPlacedTalisman[Total_Talismans];
 	char unkADA[2];
 	s16 lives;
-	u8 galleryImages[0x40];
+	u8 galleryImages[TOTAL_GALLERYIMAGES / 8];
 	int totalPlayTime;
 };
 
