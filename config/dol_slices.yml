@@ -3426,11 +3426,11 @@ Runtime/Gecko_ExceptionPPC.cpp:
 #THPAudio.c:
 #   .text: [0x80208ea4, 0x802093d4]
 
-#common/Source/Animation.cpp:
-#   .text: [0x802093d4, 0x8020b17c]
-#   .sdata: [0x803f9828, 0x803f9838]
-#   .sbss: [0x803fb1f8, 0x803fb200]
-#   .sdata2: [0x804021f0, 0x80402218]
+common/Source/Animation.cpp:
+  .text: [0x802093d4, 0x8020b17c]
+  .sdata: [0x803f9828, 0x803f9838]
+  .sbss: [0x803fb1f8, 0x803fb200]
+  .sdata2: [0x804021f0, 0x80402218]
 
 common/Source/Camera.cpp:
    .text: [0x8020b17c, 0x8020b2b4]

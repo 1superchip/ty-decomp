@@ -577,7 +577,7 @@ asm void OSDefaultExceptionHandler(register __OSException exception, register OS
 
     stwu    r1,-8(r1)
     b       __OSUnhandledException
-    /* clang-foramt on */
+    /* clang-format on */
 }
 
 void __OSPSInit(void)
