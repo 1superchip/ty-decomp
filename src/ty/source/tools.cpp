@@ -713,11 +713,6 @@ bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1, boo
     return false;
 }
 
-float Dist2D(Vector* pVec, Vector* pVec1) {
-    // might be a Vector method?
-    return (Sqr<float>(pVec->x - pVec1->x) + Sqr<float>(pVec->z - pVec1->z));
-}
-
 bool Tools_RayToVertCyl(Vector* pRayStart, Vector* pRayEnd, Vector* pCylPos, float f1, float f2) {
     // assertions at 0x5CC, 0x5CD, 0x5CE
     Vector tmp;

@@ -1585,13 +1585,13 @@ ty/source/props/Platform.cpp:
 #   .sbss: [0x803fa548, 0x803fa550]
 #   .sdata2: [0x803ff2f0, 0x803ff2f8]
 
-#ty/source/props/Projectile.cpp:
-#   .text: [0x801056e4, 0x8010655c]
-#   .ctors: [0x8023c980, 0x8023c984]
-#   .data: [0x8025b5b0, 0x8025b670]
-#   .sdata: [0x803f7550, 0x803f7580]
-#   .sbss: [0x803fa550, 0x803fa558]
-#   .sdata2: [0x803ff2f8, 0x803ff338]
+ty/source/props/Projectile.cpp:
+  .text: [0x801056e4, 0x8010655c]
+  .ctors: [0x8023c980, 0x8023c984]
+  .data: [0x8025b5b0, 0x8025b670]
+  .sdata: [0x803f7550, 0x803f7580]
+  .sbss: [0x803fa550, 0x803fa558]
+  .sdata2: [0x803ff2f8, 0x803ff338]
 
 #ty/source/props/Props.cpp:
 #   .text: [0x8010655c, 0x80106768]

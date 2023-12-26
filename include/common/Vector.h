@@ -165,6 +165,11 @@ struct Vector {
 };
 #endif
 
+inline float Dist2D(Vector* pVec, Vector* pVec1) {
+    // might be a Vector method?
+    return (Sqr<float>(pVec->x - pVec1->x) + Sqr<float>(pVec->z - pVec1->z));
+}
+
 
 inline bool CompareVectors(Vector* pVec, Vector* pVec1) {
 	if (pVec->x == pVec1->x && pVec->y == pVec1->y && pVec->z == pVec1->z)
