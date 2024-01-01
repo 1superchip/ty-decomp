@@ -17,6 +17,9 @@ symbol_aligns:
   0x803fb140: 32 # Yachuff from THPDec.c
   0x803fb160: 32 # Uachuff from THPDec.c
   0x803fb180: 32 # Vachuff from THPDec.c
+  0x803fb1a0: 32 # Gbase from THPDec.c
+  0x803fb1c0: 32 # Gwid from THPDec.c
+  0x803fb1e0: 32 # Gq from THPDec.c
   # 0x80271CA0: 32 # ? CardData from CARDUnlock.c
   # 0x802c38e0: 32 # ? __AXStudio from AXSPB.c
   # 0x8026ce20: 32 # ? __AXCompressorTable from AXComp.c

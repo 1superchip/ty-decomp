@@ -610,6 +610,9 @@ class CSource(Source):
             self.cc = c.CC_125n # CodeWarrior 1.2.5n
         else:
             self.cc = c.CC # CodeWarrior 1.3.2
+        if "THPDec.c" in path:
+            # THPDec.c was compiled with 1.2.5 not the patched 1.2.5
+            self.cc = c.CC_125
 
         # Find generated includes
         with open(path, encoding="utf-8") as f:

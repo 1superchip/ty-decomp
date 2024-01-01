@@ -3416,12 +3416,12 @@ Runtime/Gecko_ExceptionPPC.cpp:
 #   .bss: [0x802da418, 0x802dbc20]
 #   .sbss: [0x803fb0c0, 0x803fb0e0]
 
-#THPDec.c:
-#   .text: [0x80201964, 0x80208ea4]
-#   .rodata: [0x8023fac0, 0x8023fb50]
-#   .bss: [0x802dbc20, 0x802dbd50]
-#   .sbss: [0x803fb0e0, 0x803fb1f8]
-#   .sdata2: [0x804021d0, 0x804021f0]
+Dolphin/thp/THPDec.c:
+  .text: [0x80201964, 0x80208ea4]
+  .rodata: [0x8023fac0, 0x8023fb50]
+  .bss: [0x802dbc20, 0x802dbd50]
+  .sbss: [0x803fb0e0, 0x803fb1f8]
+  .sdata2: [0x804021d0, 0x804021f0]
 
 #THPAudio.c:
 #   .text: [0x80208ea4, 0x802093d4]
