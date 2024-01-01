@@ -606,14 +606,14 @@ Material* Material::GetMaterialList(void) {
 	return (Material*)materials.pMem;
 }
 
-Material* Material::CreateMpegTarget(char* pName, void* pData, int arg3, int arg4) {
+Material* Material::CreateMpegTarget(char* pName, void* pData, int width, int height) {
     Material* pMat = materials.GetNextEntry();
     pMat->referenceCount = 1;
     pMat->InitFromMatDefs(pName);
     pMat->type = Type_Prelit;
     pMat->blendMode = Blend_Opaque;
     pMat->flags |= (2 | 4);
-    pMat->unk54 = Texture::CreateMpegTarget(pName, pData, arg3, arg4);
+    pMat->unk54 = Texture::CreateMpegTarget(pName, pData, width, height);
     return pMat;
 }
 
@@ -716,16 +716,16 @@ void Material::Use(void) {
         GXSetTevKColor(GX_KCOLOR1, (GXColor){179, 0, 0, 182});
         GXSetTevKColor(GX_KCOLOR2, (GXColor){255, 0, 255, 128});
 		
-        GXInitTexObj(&texObj, pTex->unk30, pTex->width, pTex->height, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(&texObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
+        GXInitTexObj(&texObj, pTex->pYData, pTex->width, pTex->height, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD(&texObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj, GX_TEXMAP0);
         
-        GXInitTexObj(&texObj1, pTex->unk34, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(&texObj1, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
+        GXInitTexObj(&texObj1, pTex->pUData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD(&texObj1, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj1, GX_TEXMAP1);
         
-        GXInitTexObj(&texObj2, pTex->unk38, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(&texObj2, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
+        GXInitTexObj(&texObj2, pTex->pVData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD(&texObj2, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj2, GX_TEXMAP2);
     } else {
         switch (type) {

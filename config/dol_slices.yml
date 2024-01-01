@@ -3697,13 +3697,13 @@ common/gc/THPAudioDecode.c:
 #   .bss: [0x803f2008, 0x803f3380]
 #   .sbss: [0x803fb540, 0x803fb548]
 
-#Video.cpp:
-#   .text: [0x80238de0, 0x80239364]
-#   .data: [0x80297f98, 0x80297fa8]
-#   .bss: [0x803f3380, 0x803f33c0]
-#   .sdata: [0x803f9b68, 0x803f9b70]
-#   .sbss: [0x803fb548, 0x803fb550]
-#   .sdata2: [0x80402670, 0x80402688]
+common/gc/Video.cpp:
+  .text: [0x80238de0, 0x80239364]
+  .data: [0x80297f98, 0x80297fa8]
+  .bss: [0x803f3380, 0x803f33c0]
+  .sdata: [0x803f9b68, 0x803f9b70]
+  .sbss: [0x803fb548, 0x803fb550]
+  .sdata2: [0x80402670, 0x80402688]
 
 common/gc/View_GC.cpp:
    .text: [0x80239364, 0x8023aaa4]

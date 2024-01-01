@@ -24,9 +24,9 @@ struct Texture {
 	int height;
 	int referenceCount;
 	bool bMpegTarget; // only set to true by CreateMpegTarget
-	void* unk30;
-	void* unk34;
-	void* unk38;
+	void* pYData; // Pointer to Y data of Video YUV data
+	void* pUData; // Pointer to U data of Video YUV data
+	void* pVData; // Pointer to V data of Video YUV data
 	void* pFileData;
 	bool bTlut;
 	GXTexObj texObj;
