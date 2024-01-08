@@ -1,28 +1,20 @@
 #include "ty/props/D1_Prop.h"
+#include "ty/global.h"
 #include "ty/GameObjectManager.h"
 
 extern void Credits_Init(void);
 extern void Credits_Deinit(void);
 extern void Credits_Reset(void);
 char* System_GetCommandLineParameter(char*);
-extern struct GlobalVar {
-    bool unk[483 * 4];
-    float unk78C;
-    bool unk1[0x800];
-} gb;
 enum MusicType {};
 void SoundBank_PlayMusic(MusicType, float, float);
 extern "C" void Sound_MusicPause(bool);
 enum PauseScreen_State {};
 void PauseScreen_Init(PauseScreen_State);
-struct GameData {
-    int GetGameCompletePercent(void);
-};
-
 
 static GameObjDesc d1PropDesc;
 static ModuleInfo<D1Prop> d1PropModule;
-static D1Prop* gpD1Prop;
+static D1Prop* gpD1Prop = NULL;
 
 void D1_Prop_LoadResources(KromeIni* pIni) {
 	d1PropDesc.Init(&d1PropModule, "D1Prop", "D1Prop", 1, 2);
@@ -78,20 +70,20 @@ void D1Prop::Message(MKMessage* pMsg) {
             OnCompletion100.Resolve();
             break;
         case 10:
-            if (System_GetCommandLineParameter("-introonly") == NULL && gb.unk1[0x6f4] == false) {
+            if (System_GetCommandLineParameter("-introonly") == NULL && gb.autoLevelSwitch == false) {
                 SoundBank_PlayMusic((MusicType)7, 0.5f, 0.0f);
-                gb.unk[0x6f8] = true;
+                gb.bOnPauseScreen = true;
                 PauseScreen_Init((PauseScreen_State)0x11);
                 Sound_MusicPause(false);
                 bActive = true;
             }
+            break;
     }
 }
 
 void D1PropEndOfCredits(void) {
-    if (gb.unk1[0x6f4] == false) {
-        GameData* data = (GameData*)&gb.unk[0x104];
-        if (data->GetGameCompletePercent() == 100) {
+    if (gb.autoLevelSwitch == false) {
+        if (gb.mGameData.GetGameCompletePercent() == 100) {
             gpD1Prop->OnCompletion100.Send();
         } else {
             gpD1Prop->OnCompletion.Send();

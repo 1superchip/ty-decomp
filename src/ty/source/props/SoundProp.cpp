@@ -2,14 +2,9 @@
 #include "common/StdMath.h"
 #include "ty/props/SoundProp.h"
 #include "ty/GameObjectManager.h"
+#include "common/System_GC.h"
+#include "ty/global.h"
 
-extern struct DisplayStruct {
-    float unk[16];
-} gDisplay;
-extern struct GlobalVar {
-    int unk[483];
-    float unk78C;
-} gb;
 extern int SoundBank_ResolveSoundEventIndex(char*);
 extern "C" int Sound_IsVoicePlaying(int);
 
@@ -85,7 +80,7 @@ void SoundProp::Update(void) {
             }
             break;
         case 2:
-            unk7C.Update(unk84, false, true, this, 0, -1.0f, 0);
+            unk7C.Update(unk84, false, true, this, NULL, -1.0f, 0);
             if (!gameObjFlags.CheckFlags(GameObjFlags_Active)) {
                 unk7C.Stop();
                 unk80 = 1;
@@ -127,6 +122,6 @@ void SoundProp::Message(MKMessage* pMsg) {
 }
 
 void SoundProp::Play(void) {
-    unk7C.Update(unk84, false, true, this, 0, -1.0f, 0);
-    unk88 = RandomIR(&gb.unk[174], minDelay, maxDelay) * (int)gDisplay.unk[2];
+    unk7C.Update(unk84, false, true, this, NULL, -1.0f, 0);
+    unk88 = RandomIR(&gb.mRandSeed, minDelay, maxDelay) * (int)gDisplay.displayFreq;
 }

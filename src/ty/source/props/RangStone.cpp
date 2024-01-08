@@ -1,16 +1,11 @@
 #include "ty/props/RangStone.h"
 #include "ty/GameObjectManager.h"
-#include "ty/GameData.h"
+#include "ty/global.h"
 
 static ModuleInfo<RangStone> RangStoneModuleInfo;
 static StaticPropDescriptor RangStoneDesc;
 
 static char* szRangObj = "A_rang";
-
-extern struct GlobalVar {
-    char unk[0x104];
-    GameData gameData;
-} gb;
 
 void RangStone_LoadResources(KromeIni* pIni) {
     RangStoneDesc.Init(&RangStoneModuleInfo, "prop_0531_RangStone", "RangStone", 1, 0);
@@ -37,7 +32,7 @@ void RangStone::Message(MKMessage* pMsg) {
             OnSuccess.Resolve();
             break;
         case 2:
-            if (gb.gameData.HasBothRangs()) {
+            if (gb.mGameData.HasBothRangs()) {
                 HideRang();
             }
             break;

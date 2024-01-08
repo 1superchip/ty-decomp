@@ -1,29 +1,9 @@
 #include "ty/props/Aquarang.h"
 #include "ty/GameObjectManager.h"
+#include "ty/global.h"
 
 static StaticPropDescriptor aquarangPropDesc;
 static ModuleInfo<AquarangProp> aquarangPropModule;
-
-struct UnkLevelInfo {
-    Model* pModel;
-    char padding0[0x10];
-    char padding1[0x24];
-};
-
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-    char padding1[0x44];
-    UnkLevelInfo levels[8];
-    char padding2[0x50];
-    int nmbrOfGroundModels;
-    char padding3[0xAC];
-    Vector color;
-    char padding4[0x17C];
-    Material* pShadowMat;
-};
-
-extern GlobalVar gb;
 
 Material* AquarangProp::pGlow = NULL;
 
@@ -49,7 +29,7 @@ void AquarangProp::Reset(void) {
     particle.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
     particle.unk20 = 60.0f;
     particle.angle = 0.0f;
-    randAngle = RandomFR(&gb.randSeed, 0.0f, (2 * PI));
+    randAngle = RandomFR(&gb.mRandSeed, 0.0f, (2 * PI));
     yaw = 0.0f;
 
     // ID of object determines which way it spins

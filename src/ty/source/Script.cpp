@@ -2,12 +2,7 @@
 #include "ty/GameObjectManager.h"
 #include "common/System_GC.h"
 #include "common/Str.h"
-#include "ty/GameData.h"
-
-extern struct GlobalVar {
-    char unk[0x104];
-    GameData gameData;
-} gb;
+#include "ty/global.h"
 
 static ModuleInfo<ScriptProp> scriptModule;
 static GameObjDesc scriptPropDesc;
@@ -152,85 +147,85 @@ bool ConditionalScriptProp::CheckConditions(void) {
     bool bConditionMet = false;
     switch (condition) {
         case Conditon_LearntToSwim:
-            if (gb.gameData.CheckLearntToSwim()) {
+            if (gb.mGameData.CheckLearntToSwim()) {
                 bConditionMet = true;
             }
             break;
         case Conditon_HasBothRangs:
-            if (gb.gameData.HasBothRangs()) {
+            if (gb.mGameData.HasBothRangs()) {
                 bConditionMet = true;
             }
             break;
         case 2:
-            if (gb.gameData.CheckCurrentLevelThunderEgg(3)) {
+            if (gb.mGameData.CheckCurrentLevelThunderEgg(3)) {
                 bConditionMet = true;
             }
             break;
         case 3:
 			// Check if the zones have been completed by defeating the zone boss (Conditions 3 - 7)
-            if (gb.gameData.IsZoneCompleted(1)) {
+            if (gb.mGameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
             break;
         case 4:
-            if (gb.gameData.IsZoneCompleted(2)) {
+            if (gb.mGameData.IsZoneCompleted(2)) {
                 bConditionMet = true;
             }
             break;
         case 5:
-            if (gb.gameData.IsZoneCompleted(3)) {
+            if (gb.mGameData.IsZoneCompleted(3)) {
                 bConditionMet = true;
             }
             break;
         case 6:
-            if (gb.gameData.IsZoneCompleted(4)) {
+            if (gb.mGameData.IsZoneCompleted(4)) {
                 bConditionMet = true;
             }
             break;
         case 7:
-            if (gb.gameData.IsZoneCompleted(5)) {
+            if (gb.mGameData.IsZoneCompleted(5)) {
                 bConditionMet = true;
             }
             break;
         case 8:
-            if (gb.gameData.HasLevelBeenEntered(gb.gameData.GetCurrentLevel())) {
+            if (gb.mGameData.HasLevelBeenEntered(gb.mGameData.GetCurrentLevel())) {
                 bConditionMet = true;
             }
             break;
         case Conditon_GameComplete:
 			// Check if the game has been 100% complete (Condition 9)
-            if (gb.gameData.GetGameCompletePercent() == 100) {
+            if (gb.mGameData.GetGameCompletePercent() == 100) {
                 bConditionMet = true;
             }
             break;
         case 10:
-            if (gb.gameData.HasBoomerang(9)) {
+            if (gb.mGameData.HasBoomerang(9)) {
                 bConditionMet = true;
             }
             break;
         case 11:
 			// check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
-            if (gb.gameData.GetLevelEnterCount(7) && !gb.gameData.IsZoneCompleted(1)) {
+            if (gb.mGameData.GetLevelEnterCount(7) && !gb.mGameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
             break;
         case 12:
-            if (gb.gameData.GetLevelEnterCount(0x13) && !gb.gameData.IsZoneCompleted(2)) {
+            if (gb.mGameData.GetLevelEnterCount(0x13) && !gb.mGameData.IsZoneCompleted(2)) {
                 bConditionMet = true;
             }
             break;
         case 13:
-            if (gb.gameData.GetLevelEnterCount(15) && !gb.gameData.IsZoneCompleted(3)) {
+            if (gb.mGameData.GetLevelEnterCount(15) && !gb.mGameData.IsZoneCompleted(3)) {
                 bConditionMet = true;
             }
             break;
         case 14:
-            if (gb.gameData.GetLevelEnterCount(0x17) && !gb.gameData.IsZoneCompleted(5)) {
+            if (gb.mGameData.GetLevelEnterCount(0x17) && !gb.mGameData.IsZoneCompleted(5)) {
                 bConditionMet = true;
             }
             break;
         case 15:
-            if (gb.gameData.CheckZone_Unk0(5)) {
+            if (gb.mGameData.CheckZone_Unk0(5)) {
                 bConditionMet = true;
             }
             break;

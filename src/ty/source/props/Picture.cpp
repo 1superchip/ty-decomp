@@ -1,13 +1,6 @@
 #include "ty/props/Picture.h"
 #include "ty/GameObjectManager.h"
-#include "ty/GameData.h"
-
-extern struct GlobalVar {
-    char padding[0x104];
-    GameData gameData;
-    char padding1[0x180];
-    int randSeed;
-} gb;
+#include "ty/global.h"
 
 extern void SoundBank_Play(int, Vector*, uint);
 extern View* GameCamera_View(void);
@@ -57,7 +50,7 @@ void Picture::Init(GameObjDesc* pDesc) {
     mQuadraticTime = -1.0f;
     mFrameNumber = -1;
     unk74 = 0.0f;
-    angle = RandomFR(&gb.randSeed, 0.0f, 2.0f * PI);
+    angle = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
 }
 
 bool Picture::LoadLine(KromeIniLine* pLine) {
@@ -67,7 +60,7 @@ bool Picture::LoadLine(KromeIniLine* pLine) {
 void Picture::LoadDone(void) {
     StaticProp::LoadDone();
     if (mFrameNumber >= 0) {
-        bShow = gb.gameData.GetHasGalleryImage(mFrameNumber);
+        bShow = gb.mGameData.GetHasGalleryImage(mFrameNumber);
     }
     unk68 = StaticProp::GetPos()->y;
     pos = *StaticProp::GetPos();
@@ -78,13 +71,13 @@ void Picture::Reset(void) {
     pModel->matrices[0].SetIdentity();
     pModel->matrices[0].SetTranslation(&pos);
     if (mFrameNumber >= 0) {
-        bShow = gb.gameData.GetHasGalleryImage(mFrameNumber);
+        bShow = gb.mGameData.GetHasGalleryImage(mFrameNumber);
     }
     bInitialised = unk80;
     unk83 = false;
     mQuadraticTime = -1.0f;
     unk74 = 0.0f;
-    angle = RandomFR(&gb.randSeed, 0.0f, 2 * PI);
+    angle = RandomFR(&gb.mRandSeed, 0.0f, 2 * PI);
 }
 
 void Picture::Update(void) {
@@ -109,7 +102,7 @@ void Picture::Update(void) {
         if (distToHero < 5000.0f) {
             bShow = true;
             if (mFrameNumber > -1) {
-                gb.gameData.SetHasGalleryImage(mFrameNumber);
+                gb.mGameData.SetHasGalleryImage(mFrameNumber);
                 SoundBank_Play(0xB7, NULL, 0);
             }
             return;
@@ -120,7 +113,7 @@ void Picture::Update(void) {
         if (unk74 > 50.0f) {
             bShow = true;
             if (mFrameNumber > -1) {
-                gb.gameData.SetHasGalleryImage(mFrameNumber);
+                gb.mGameData.SetHasGalleryImage(mFrameNumber);
                 SoundBank_Play(0xB7, NULL, 0);
             }
             return;

@@ -1,24 +1,5 @@
 #include "ty/effects/Bubble.h"
-
-struct UnkLevelInfo {
-    Model* pModel;
-    char padding0[0x10];
-    char padding1[0x24];
-};
-
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-    char padding1[0x44];
-    UnkLevelInfo levels[8];
-    char padding2[0x50];
-    int nmbrOfGroundModels;
-    char padding3[0xAC];
-    Vector color;
-    char padding4[0x17C];
-    Material* pShadowMat;
-};
-extern GlobalVar gb;
+#include "ty/global.h"
 
 ParticleSystemType Bubble::bubbleType;
 
@@ -55,14 +36,14 @@ void Bubble::Create(Vector* pPos, float f1, float f2, float f3, float f4) {
         p->mY = pPos->y;
         p->mZ = pPos->z;
         p->unk30 = f1;
-        p->unkC = RandomFR(&gb.randSeed, 0.0f, 1.0f);
+        p->unkC = RandomFR(&gb.mRandSeed, 0.0f, 1.0f);
         p->unk4C = 1.0f;
         p->unk48 = 0.0f;
         p->SetUnk58ArrayByIndex(0, f2 - f1);
         p->SetUnk58ArrayByIndex(1, f3);
 
         if (f4 <= 0.0f) {
-            p->unk24 = Clamp<float>(1.0f, f1 * 0.3f, 15.0f) + RandomFR(&gb.randSeed, 0.0f, f1 * 0.1f);
+            p->unk24 = Clamp<float>(1.0f, f1 * 0.3f, 15.0f) + RandomFR(&gb.mRandSeed, 0.0f, f1 * 0.1f);
         } else {
             p->unk24 = f4;
         }

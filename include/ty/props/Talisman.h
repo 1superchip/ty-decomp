@@ -2,6 +2,7 @@
 #define TALISMAN_H
 
 #include "ty/props/StaticProp.h"
+#include "common/ParticleSystem.h"
 
 void Talisman_LoadResources(KromeIni* pIni);
 
@@ -11,11 +12,6 @@ void Talisman_LoadResources(KromeIni* pIni);
 struct TalismanInfo {
     char* pModelName; // Model name
     char* pDescrName; // Descriptor name
-};
-
-struct ParticleSystem {
-    char padding0[0x34];
-    float scale;
 };
 
 struct Talisman : StaticProp {

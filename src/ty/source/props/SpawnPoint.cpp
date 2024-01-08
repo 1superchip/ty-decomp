@@ -1,11 +1,6 @@
 #include "ty/props/SpawnPoint.h"
 #include "ty/GameObjectManager.h"
-#include "ty/GameData.h"
-
-extern struct GlobalVar {
-    char unk[0x104];
-    GameData gameData;
-} gb;
+#include "ty/global.h"
 
 extern struct Ty {
     char padding[0xa58];
@@ -50,7 +45,7 @@ void SpawnPoint::LoadDone(void) {
 void SpawnPoint::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case 1:
-            if (fromLevel == gb.gameData.pSaveData->levelAB4) {
+            if (fromLevel == gb.mGameData.pSaveData->levelAB4) {
                 ty.spawnPos = tySpawnPos;
                 ty.spawnRot = tySpawnRot;
             }

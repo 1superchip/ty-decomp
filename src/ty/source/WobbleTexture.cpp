@@ -1,5 +1,6 @@
 
 #include "ty/WobbleTexture.h"
+#include "ty/global.h"
 #include "ty/tools.h"
 #include "common/Heap.h"
 #include "common/StdMath.h"
@@ -14,19 +15,14 @@ static const Vector WobbleTexture_Cpp_RodataPadding2 = {};
 static const Vector WobbleTexture_Cpp_RodataPadding3 = {};
 static const Vector WobbleTexture_Cpp_RodataPadding4 = {};
 
-extern struct GlobalVar {
-    int unk[483];
-    float unk78C;
-} gb;
-
 void WobbleTexture::Init(int _width, int _height) {
     mWidth = _width;
     mHeight = _height;
     mpEntries = (WobbleEntry*)Heap_MemAlloc((mWidth * mHeight) * sizeof(WobbleEntry));
     for(int i = 0; i < _width; i++) {
         for(int j = 0; j < _height; j++) {
-            GetWobbleEntry(i, j)->unk48 = RandomFR((int*)&gb.unk[174], -0.5f, 0.5f);
-            GetWobbleEntry(i, j)->unk4C = RandomFR((int*)&gb.unk[174], -0.5f, 0.5f);
+            GetWobbleEntry(i, j)->unk48 = RandomFR(&gb.mRandSeed, -0.5f, 0.5f);
+            GetWobbleEntry(i, j)->unk4C = RandomFR(&gb.mRandSeed, -0.5f, 0.5f);
         }
     }
     mpTriStrips = (Blitter_TriStrip*)Heap_MemAlloc((mHeight * 2) * sizeof(Blitter_TriStrip));

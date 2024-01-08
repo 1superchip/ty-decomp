@@ -1,5 +1,6 @@
 #include "ty/Torch.h"
 #include "ty/GameObjectManager.h"
+#include "ty/global.h"
 
 static StaticPropDescriptor torchDesc;
 static ModuleInfo<Torch> torchModule;
@@ -227,13 +228,6 @@ void Torch::SetState(TorchState newState, int alwaysSetState) {
     }
 }
 
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-};
-
-extern GlobalVar gb;
-
 void Particle_Fire_Create(ParticleSystem**, Vector*, float, bool);
 
 /// @brief Creates Fire Particles around the Torch Flame
@@ -246,9 +240,9 @@ void Torch::EmitFire(void) {
             Vector sp8;
             unkA8 -= 1.0f;
             sp8.Set(
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.x - 5.0f),
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.y - 5.0f),
-                ((RandomI(&gb.randSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.z - 5.0f)
+                ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.x - 5.0f),
+                ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.y - 5.0f),
+                ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.z - 5.0f)
             );
             Particle_Fire_Create(&mpParticleSys0, &sp8, mDefaultScale.x, true);
         }
@@ -272,9 +266,9 @@ void Torch::UpdateShadow(void) {
     if (mFlamePos.IsInsideSphere(&ty.unk338, 500.0f)) {
         // DebugInfo_Sphere("-tomLowe", &mFlamePos, 500.0f, 1, 0);
         Vector particlePos = mFlamePos;
-        particlePos.x += RandomFR(&gb.randSeed, -4.0f, 4.0f);
-        particlePos.y += RandomFR(&gb.randSeed, -4.0f, 4.0f);
-        particlePos.z += RandomFR(&gb.randSeed, -4.0f, 4.0f);
+        particlePos.x += RandomFR(&gb.mRandSeed, -4.0f, 4.0f);
+        particlePos.y += RandomFR(&gb.mRandSeed, -4.0f, 4.0f);
+        particlePos.z += RandomFR(&gb.mRandSeed, -4.0f, 4.0f);
         float mag = Sqr<float>(Max<float>(ApproxMag(&mFlamePos, &ty.unk338), 10.0f));
         ty.AddShadowLight(&particlePos, (Sqr<float>(500.0f) / mag) - 1.0f);
     }

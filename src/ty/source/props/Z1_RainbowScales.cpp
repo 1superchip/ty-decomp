@@ -1,11 +1,6 @@
 #include "ty/props/Z1_RainbowScales.h"
-#include "ty/GameData.h"
+#include "ty/global.h"
 #include "ty/GameObjectManager.h"
-
-extern struct GlobalVar {
-    char unk[0x104];
-    GameData gameData;
-} gb;
 
 static GameObjDesc rsObjectiveObjectiveDesc;
 static ModuleInfo<RainbowScaleObjective> rsObjectiveModule;
@@ -33,7 +28,7 @@ void RainbowScaleObjective::Update(void) {
     if (!bActive) {
         return;
     }
-    if (gb.gameData.GetLevelCollectedGemCount() == 1 && !bStarted) {
+    if (gb.mGameData.GetLevelCollectedGemCount() == 1 && !bStarted) {
         // if the first Rainbow Scale has been collected
         // and this objective hasn't been started
         // send the OnStart message and set this Objective to active
@@ -42,7 +37,7 @@ void RainbowScaleObjective::Update(void) {
         bActive = true;
         bStarted = true;
     }
-    if (gb.gameData.GetLevelCollectedGemCount() == unk66) {
+    if (gb.mGameData.GetLevelCollectedGemCount() == unk66) {
         OnSuccess.Send();
         bComplete = true;
         bActive = false;

@@ -2,24 +2,12 @@
 
 #include "ty/props/gem.h"
 #include "ty/tytypes.h"
-#include "ty/GameData.h"
+#include "ty/global.h"
 #include "ty/DDA.h"
 #include "ty/tools.h"
 #include "ty/GameObjectManager.h"
 
 // EXTERNS
-
-struct GlobalVar {
-    char padding0[0x104];
-    GameData mGameData;
-    char padding1[(0x2B8 - sizeof(GameData)) - 0x104];
-    int randSeed;
-    char padding2[0x704 - 0x2BC];
-    uint unk704;
-    char padding[0x754 - 0x708];
-    uint logicGameCount;
-};
-extern GlobalVar gb;
 
 struct OpalMagnetData {
     bool IsActive(void);
@@ -382,7 +370,7 @@ void Gem::PostDraw(void* pObj) {
 }
 
 void Gem::Reset(void) {
-    yOffsetAngle = RandomFR(&gb.randSeed, 0.0f, 2 * PI);
+    yOffsetAngle = RandomFR(&gb.mRandSeed, 0.0f, 2 * PI);
     bHideAll = false;
     if (unkF6b0) {
         SetState((GemState)0);
@@ -489,7 +477,7 @@ void Gem::SpawnStatic(void) {
     Vector spC;
     spC.Sub(&unk94, &pos);
     float mag = spC.Magnitude();
-    unk84[0] = RandomFR(&gb.randSeed, 0.2f, 0.4f);
+    unk84[0] = RandomFR(&gb.mRandSeed, 0.2f, 0.4f);
     unk84[0] = unk84[0] / sqrtf(mag);
     unk84[1] = mag * 0.8f;
     if (unk84[1] < 200.0f) {
@@ -678,23 +666,23 @@ void Gem_ParticleSystem_Update(void) {
                 p->unk28 = 7.5f;
                 p->unk50 = 6.0f;
                 ((char*)&p->unk58)[1] = 1;
-                ((char*)&p->unk58)[0] = RandomIR(&gb.randSeed, 1, 3);
+                ((char*)&p->unk58)[0] = RandomIR(&gb.mRandSeed, 1, 3);
                 p->unk3C = 0.0f;
-                p->mAngle = RandomFR(&gb.randSeed, 0.0f, PI);
+                p->mAngle = RandomFR(&gb.mRandSeed, 0.0f, PI);
             }
             break;
         case ELEMENT_ICE:
         case ELEMENT_EARTH:
             p = pSystem->CreateParticle();
             if (p) {
-                p->mX = RandomFR(&gb.randSeed, -10.0f, 10.0f);
-                p->mY = RandomFR(&gb.randSeed, -5.0f, 10.0f);
-                p->mZ = RandomFR(&gb.randSeed, 0.0f, 10.0f);
+                p->mX = RandomFR(&gb.mRandSeed, -10.0f, 10.0f);
+                p->mY = RandomFR(&gb.mRandSeed, -5.0f, 10.0f);
+                p->mZ = RandomFR(&gb.mRandSeed, 0.0f, 10.0f);
                 p->unk20 = 0.0f;
-                p->unk24 = RandomFR(&gb.randSeed, -10.0f, -5.0f);
+                p->unk24 = RandomFR(&gb.mRandSeed, -10.0f, -5.0f);
                 p->unk28 = 0.0f;
                 p->unk3C = 0.0f;
-                p->mAngle = RandomFR(&gb.randSeed, -PI, PI);
+                p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
             }
             break;
     }
@@ -781,8 +769,8 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
             break;
         }
         pPickupData->unk0 = xDir;
-        pPickupData->unk0.Scale(RandomFR(&gb.randSeed, -1.8f, 1.8f));
-        pPickupData->unk0.y = RandomFR(&gb.randSeed, 1.7f, 2.0f);
+        pPickupData->unk0.Scale(RandomFR(&gb.mRandSeed, -1.8f, 1.8f));
+        pPickupData->unk0.y = RandomFR(&gb.mRandSeed, 1.7f, 2.0f);
         pPickupData->unk0.Add(&zDir);
         pPickupData->unk10 = 0.5f;
         pBlitterParticle->pos = *pVector;
@@ -798,8 +786,8 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         pModelData->unk0.w = 1.0f;
         pModelData->unk28 = 0.0f;
         for(int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
-            pModelData->unk180_array[i][1] = RandomFR(&gb.randSeed, 0.0f, 2.0f * PI);
-            pModelData->unk180_array[i][0] = RandomFR(&gb.randSeed, 5.0f, 15.0f);
+            pModelData->unk180_array[i][1] = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
+            pModelData->unk180_array[i][0] = RandomFR(&gb.mRandSeed, 5.0f, 15.0f);
             pModelData->imgs[i].unk40.x = 1.0f;
             pModelData->imgs[i].unk40.y = 1.0f;
             pModelData->imgs[i].unk40.z = 1.0f;

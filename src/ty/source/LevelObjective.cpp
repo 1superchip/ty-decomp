@@ -1,28 +1,8 @@
 #include "ty/LevelObjective.h"
 #include "ty/GameObjectManager.h"
+#include "ty/global.h"
 
-struct UnkLevelInfo {
-    Model* pModel;
-    char padding0[0x10];
-    char padding1[0x24];
-};
-
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-    char padding1[0x44];
-    UnkLevelInfo levels[8];
-    char padding2[0x50];
-    int nmbrOfGroundModels;
-    char padding3[0xAC];
-    Vector color;
-    char padding4[0x17C];
-    Material* pShadowMat;
-};
-
-extern GlobalVar gb;
-
-LevelObjective* LevelObjective::pCurObjective;
+LevelObjective* LevelObjective::pCurObjective = NULL;
 
 void LevelObjective::Init(GameObjDesc* pDesc) {
     GameObject::Init(pDesc);
@@ -125,7 +105,7 @@ void LevelObjective::Increment(void) {
     OnIncrement.Send();
     Hud_ShowSpecialPickups();
     // inline here to get the level id
-    switch (*(int*)&gb.padding4[0x11C]) {
+    switch (((int*)&gb.padding_0x2E0)[0x103]) {
         case 4:
             SoundBank_Play(0x22C, NULL, 0);
             break;
@@ -185,7 +165,7 @@ bool LevelObjective::GetStatus(short* r3, short* r4, Material** ppOutMat, bool r
     if (!pCurObjective || pCurObjective->bComplete) {
         return false;
     }
-    if (!r6 && *(u8*)&gb.padding4[0x128] && pCurObjective->unk68 == pCurObjective->unk66) {
+    if (!r6 && gb.bOnPauseScreen && pCurObjective->unk68 == pCurObjective->unk66) {
         return false;
     }
     if (r3) {

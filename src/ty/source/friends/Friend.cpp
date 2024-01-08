@@ -1,6 +1,7 @@
 #include "ty/friends/friend.h"
 #include "ty/GameObjectManager.h"
 #include "ty/tools.h"
+#include "ty/global.h"
 
 extern Material* pShockMaterial;
 
@@ -80,12 +81,6 @@ void Friend::LoadDone(void) {
     }
 }
 
-struct GlobalVar {
-    char padding[0x704];
-    uint unk704;
-};
-extern GlobalVar gb;
-
 /// @brief Draws a Friend object
 /// @param  None
 void Friend::Draw(void) {
@@ -93,7 +88,7 @@ void Friend::Draw(void) {
     if (bFlashSkeleton) {
         SetDefaultMaterial_UseNone(pShockMaterial);
     }
-    if ((mFlags & FSF_Visible) && !(*(bool*)&gb.padding[0xfe]) && gb.unk704 == 0) {
+    if ((mFlags & FSF_Visible) && !gb.unkFE && gb.unk704 == 0) {
         mLodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
     }
     // If bFlashSkeleton is true, set the default material to NULL
@@ -257,7 +252,7 @@ void Friend::Update(void) {
     if (mFlashTimer != 0) {
         mFlashTimer--;
         if (mFlashTimer % 2) {
-            if (RandomIR((int*)&gb.padding[0x2b8], 0, 2) != 0) {
+            if (RandomIR(&gb.mRandSeed, 0, 2) != 0) {
                 bFlashSkeleton = true;
             } else {
                 bFlashSkeleton = false;

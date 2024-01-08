@@ -1,24 +1,5 @@
 #include "ty/effects/Flame.h"
-
-struct UnkLevelInfo {
-    Model* pModel;
-    char padding0[0x10];
-    char padding1[0x24];
-};
-
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-    char padding1[0x44];
-    UnkLevelInfo levels[8];
-    char padding2[0x50];
-    int nmbrOfGroundModels;
-    char padding3[0xAC];
-    Vector color;
-    char padding4[0x17C];
-    Material* pShadowMat;
-};
-extern GlobalVar gb;
+#include "ty/global.h"
 
 ParticleSystemType Flame::type;
 
@@ -73,9 +54,9 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
     Particle* p = mpSystem->CreateParticle();
     if (p) {
         Vector rand;
-        rand.x = RandomFR(&gb.randSeed, -0.1f, 0.1f);
-        rand.y = RandomFR(&gb.randSeed, -0.1f, 0.1f);
-        rand.z = RandomFR(&gb.randSeed, -0.1f, 0.1f);
+        rand.x = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+        rand.y = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+        rand.z = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
         Vector dir = *pDir;
         dir.Normalise();
         float dx = dir.x;
@@ -96,7 +77,7 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
         } else {
             p->mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        p->mAngle = RandomFR(&gb.randSeed, -PI, PI);
+        p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
         p->unk48 = _table_sinf(p->mAngle);
         p->unk4C = _table_cosf(p->mAngle);
         p->unk58[0] = unk4;

@@ -2,12 +2,7 @@
 #include "ty/DDA.h"
 #include "common/Heap.h"
 #include "common/Timer.h"
-
-// from a different file
-extern "C" union {
-u8 y[0xe84];
-u32 x[0x6f0];
-} gb;
+#include "ty/global.h"
 
 extern "C" void memset(void*, int, int);
 extern "C" int ty[0x1178]; // from Ty.cpp
@@ -67,7 +62,7 @@ void DDASession::StartSession(void) {
     currentCheckpoint = NULL;
     memset(this, 0, 0x10);
     unk0 = 0;
-    levelNumber = gb.x[0x6ec / 4]; // GetCurrentLevel inline
+    levelNumber = ((int*)&gb.padding_0x2E0)[0x103]; // GetCurrentLevel inline
     Timer_GetSystemTime(&startTime);
     startDay = startTime.day;
     startMonth = startTime.month;
@@ -302,7 +297,7 @@ void DDASession::SaveCurrentSession(void) {
     if (bSaveEnabled == false) {
         return;
     }
-    if (gb.y[0xe84] == false) {
+    if (gb.autoLevelSwitch == false) {
         return;
     }
 }

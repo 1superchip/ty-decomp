@@ -2,20 +2,8 @@
 
 #include "ty/props/Projectile.h"
 #include "ty/Kinematics.h"
-#include "ty/GameData.h"
+#include "ty/global.h"
 #include "ty/GameObjectManager.h"
-
-struct GlobalVar {
-    char padding0[0x104];
-    GameData mGameData;
-    char padding1[(0x2B8 - sizeof(GameData)) - 0x104];
-    int randSeed;
-    char padding2[0x704 - 0x2BC];
-    uint unk704;
-    char padding[0x754 - 0x708];
-    uint logicGameCount;
-};
-extern GlobalVar gb;
 
 
 struct TyFSM {
@@ -169,9 +157,9 @@ void Projectile::Fire(Vector* pVec) {
     SetState((ProjectileState)2);
     unk70 = GetDesc()->unk84;
     mRot.Set(
-        RandomFR(&gb.randSeed, -0.3f, 0.3f),
-        RandomFR(&gb.randSeed, -0.2f, 0.2f),
-        RandomFR(&gb.randSeed, -0.2f, 0.2f)
+        RandomFR(&gb.mRandSeed, -0.3f, 0.3f),
+        RandomFR(&gb.mRandSeed, -0.2f, 0.2f),
+        RandomFR(&gb.mRandSeed, -0.2f, 0.2f)
     );
     mRot.w = 0.0f;
     unk74 = false;
