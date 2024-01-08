@@ -755,7 +755,7 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
 void Font::RenderChars(Font::TextCharStrip* pCharStrips, int count) {
     Blitter_TriStrip strip[4];
     for (int i = 0; i < count; i++) {
-        for(int triIndex = 0; triIndex < 4; triIndex++) {
+        for(int triIndex = 0; triIndex < ARRAY_SIZE(strip); triIndex++) {
             CharStripVert* pCharVert = &pCharStrips[i].verts[triIndex];
             strip[triIndex].pos.Set(pCharVert->x, pCharVert->y, pCharVert->z);
             float a = (pCharVert->color) & 0xFF;
@@ -766,11 +766,12 @@ void Font::RenderChars(Font::TextCharStrip* pCharStrips, int count) {
                 a * (1.0f / 128.0f),
                 b * (1.0f / 128.0f),
                 g * (1.0f / 128.0f),
-                r * (1.0f / 128.0f));
+                r * (1.0f / 128.0f)
+            );
             strip[triIndex].uv.x = pCharVert->u;
             strip[triIndex].uv.y = pCharVert->v;
         }
-        strip[0].Draw(4, 1.0f);
+        strip[0].Draw(ARRAY_SIZE(strip), 1.0f);
     }
 }
 

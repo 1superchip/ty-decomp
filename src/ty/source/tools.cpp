@@ -971,7 +971,7 @@ inline void ShadowInfo::Draw(void) {
     triStrips[3].uv.x = 1.0f;
     triStrips[3].uv.y = 0.0f;
     
-    triStrips[0].Draw(sizeof(triStrips) / sizeof(Blitter_TriStrip), 1.0f);
+    triStrips[0].Draw(ARRAY_SIZE(triStrips), 1.0f);
 }
 
 void Tools_DropShadow_Draw(void) {
@@ -991,9 +991,12 @@ void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL 
         float x, float y, float z, float f5, float f6, float f7, float angle, bool uvSetting) {
     Vector vec = {x, y, z};
     Matrix sp18;
+    
     if (!Range_IsVisible(&vec)) return;
     if (Range_WhichZone(&vec, NULL) >= 2) return;
+
     pMat->Use();
+
     sp18.SetIdentity();
     sp18.Row2()->Set(_table_cosf(angle), 0.0f, _table_sinf(angle));
     sp18.Row1()->Set(f5, f6, f7);
@@ -1001,7 +1004,9 @@ void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL 
     sp18.Row0()->Normalise();
     sp18.Row2()->Cross(sp18.Row1(), sp18.Row0());
     sp18.Row3()->Set(x, y, z);
+
     View::GetCurrent()->SetLocalToWorldMatrix(&sp18);
+
     Blitter_TriStrip triStrips[4];
     triStrips[0].pos.Set(-f1 / 2.0f, 0.0f, f1 / 2.0f);
     triStrips[1].pos.Set(f1 / 2.0f, 0.0f, f1 / 2.0f);
@@ -1042,12 +1047,16 @@ void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL 
         triStrips[3].uv.y = 0.0f;
     }
 
-    triStrips[0].Draw(sizeof(triStrips) / sizeof(Blitter_TriStrip), 1.0f);
+    triStrips[0].Draw(ARRAY_SIZE(triStrips), 1.0f);
 }
 
 
 bool LoadLevel_LoadVector(KromeIniLine*, char*, Vector*);
 
+/// @brief Loads data from a KromeIniLine for WayPointLoadInfo
+/// @param pLine Line to load from
+/// @param bLoadPos Whether to test for the "pos" key or not
+/// @return 
 bool WayPointLoadInfo::LoadLine(KromeIniLine* pLine, bool bLoadPos) {
     if (stricmp(pLine->pFieldName, "waypoints") == 0) {
         return true;
@@ -1072,15 +1081,11 @@ void Tools_WayPoints::Init(void) {
 }
 
 bool Tools_WayPoints::Load(WayPointLoadInfo* pLoadInfo, Tools_WayPoints::LoadMode loadMode) {
-    Init();
-    while (unk104 < 16 && unk104 < pLoadInfo->unk0) {
+    Init(); // may not be inlined here?
+    while (unk104 < MAX_WAYPOINTS && unk104 < pLoadInfo->unk0) {
         vecs[unk104] = pLoadInfo->vecs[unk104];
-        if (!loadMode && unk104) {
-            float f1 = vecs[unk104].y - vecs[unk104 - 1].y;
-            if (f1 < 0.0f) {
-                f1 = -f1;
-            }
-            if (f1 > 1.0f) {
+        if (loadMode == 0 && unk104) {
+            if (Abs<float>(vecs[unk104].y - vecs[unk104 - 1].y) > 1.0f) {
                 vecs[unk104].y = vecs[unk104 - 1].y;
             }
         }
@@ -1092,13 +1097,18 @@ bool Tools_WayPoints::Load(WayPointLoadInfo* pLoadInfo, Tools_WayPoints::LoadMod
 bool Tools_WayPoints::LoadLine(KromeIniLine* pLine, Tools_WayPoints::LoadMode loadMode) {
     vecs[unk104].w = 1.0f;
     if (LoadLevel_LoadVector(pLine, "pos", &vecs[unk104]) || LoadLevel_LoadVector(pLine, "waypoint", &vecs[unk104])) {
-        if (!loadMode && unk104 > 0) {
+        if (loadMode == 0 && unk104 > 0) {
             vecs[unk104].y = vecs[unk104 - 1].y;
         }
         unk104++;
         return true;
     }
     return false;
+}
+
+// Unused, stripped function
+void Tools_WayPoints::Reset(void) {
+    unk100 = 0;
 }
 
 // returns the node index of the model's animation if it exists otherwise returns -1
@@ -1149,7 +1159,7 @@ Vector* Tools_GetRefPointPos(Model* pModel, char* pRefName) {
 void Tools_ApplyFrictionAndGravity(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1) {
     Vector sp18 = *pVec1;
     Vector sp8;
-    if (pVec->MagSquared() > 0.0625f) {
+    if (pVec->MagSquared() > (1.0f / 16.0f)) {
         f1 = f1 / 2.0f;
     }
     sp8.Scale(pVec2, -pVec1->Dot(pVec2));
@@ -1181,12 +1191,15 @@ Vector* Tools_RandomNormal(Vector* pOut) {
 
 float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnRate) {
     float angleDiff = NormaliseAngle(maxAngle) - NormaliseAngle(currentAngle);
+
     if (angleDiff > PI) {
         angleDiff -= (2 * PI);
     } else if (angleDiff < -PI) {
         angleDiff = (2 * PI) + angleDiff;
     }
+
     float finalAngle;
+
     if (Abs<float>(angleDiff) <= maxTurnRate) {
         finalAngle = maxAngle;
     } else if (angleDiff > PI || angleDiff < 0.0f) {
@@ -1202,6 +1215,7 @@ float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnRate) {
         // if greater than 2PI, subtract 2PI to get in a range of [0, 2PI)
         finalAngle -= (2 * PI);
     }
+
     return finalAngle;
 }
 
@@ -1401,7 +1415,7 @@ bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* 
 */
 
 // should this be defined here?
-static PadKey padKeyMap[16] = {
+static PadKey padKeyMap[NUM_PADKEYS] = {
     {0x400, 0x7F}, {0x100, 0x80},
     {0x10, 0x81}, {0x20, 0x82},
     {0x40, 0x83}, {0x80, 0x84},

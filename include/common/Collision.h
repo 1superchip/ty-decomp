@@ -14,6 +14,17 @@ enum CollisionMode {
     COLLISION_MODE_POLY      = 2, // Ground?
 };
 
+#define ID_WALL         (0x1)       // regular walls we can collide with
+#define ID_ICE          (0x8)       // will give ty inertia. For ice and oil
+#define ID_SAND         (0x10)      // sandy floor
+#define ID_QUICKSAND    (0x80)      // quicksand
+#define ID_WATER_BLUE   (0x400)     // Blue water
+#define ID_SNOW         (0x800)     // snow
+#define ID_WOOD         (0x1000)    // bridge
+#define ID_WATER_SLIDE  (0x20000)   // material ID for the water slide
+#define ID_GRASS_THICK  (0x80000)   // Dense grass pattern
+#define ID_ROCK         (0x100000)  // Rock ground
+
 struct CollisionNode
 {
     CollisionNode* pPrev; // may actually be the next node pointer?

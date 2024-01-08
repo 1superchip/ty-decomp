@@ -764,7 +764,6 @@ void Gem_PickupParticle_LoadResources(void) {
     pickupDraw.Init(75);
 }
 
-extern "C" void Gem_PickupParticle_SpawnParticles__FP6Vector(void) {}
 void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
     Vector xDir;
     xDir = *pHero->pModel->matrices[0].Row0();
@@ -798,7 +797,7 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         pModelData->unk0 = *pVector;
         pModelData->unk0.w = 1.0f;
         pModelData->unk28 = 0.0f;
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
             pModelData->unk180_array[i][1] = RandomFR(&gb.randSeed, 0.0f, 2.0f * PI);
             pModelData->unk180_array[i][0] = RandomFR(&gb.randSeed, 5.0f, 15.0f);
             pModelData->imgs[i].unk40.x = 1.0f;
@@ -843,7 +842,7 @@ void Gem_PickupParticle_Update(void) {
             if (pModelData->unk28 < 0.1f) {
                 pModelData->unk28 += 0.002f;
             }
-            for(int i = 0; i < 5; i++) {
+            for(int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
                 if (pGameSettings->unk5 == 1) {
                     pModelData->imgs[i].startX = (pModelData->unk14 - 11.0f) + 
                         (pModelData->unk180_array[i][0] * _table_sinf(pModelData->unk180_array[i][1])) + 60.0f;
@@ -921,7 +920,7 @@ void Gem_PickupParticle_Draw(void) {
         Gem_DrawModel(&pModelData->unk0, &scale, gemElement);
         View::GetCurrent()->SetLocalToWorldMatrix(NULL);
         elementInfo[gemElement].pParticleMaterial->Use();
-        pModelData->imgs[0].Draw(5);
+        pModelData->imgs[0].Draw(NUM_GEMMODELDATA_IMAGES);
 
         pModelData = modelDraw.GetNextEntryWithEntry(pModelData);
     }

@@ -374,7 +374,7 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
             strip[2].pos.Set(pos.x - f19, pos.y - f18, pos.z - f17);
             strip[3].pos.Set(pos.x - f22, pos.y - f21, pos.z - f20);
             
-            strip[0].Draw(4, 1.0f);
+            strip[0].Draw(ARRAY_SIZE(strip), 1.0f);
         }
         numParticles--;
     }

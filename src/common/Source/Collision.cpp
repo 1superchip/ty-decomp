@@ -1,25 +1,30 @@
 #include "common/Collision.h"
 
 CollisionResult lastCollision;
+
 static bool bCollisionInit = false;
 static bool bFound = false;
-int collisionHeapSize;
-void* pCollisionHeap;
-int collisionHeapIndex;
-static int collisionPolysAdded;
+int collisionHeapSize = 0;
+void* pCollisionHeap = NULL;
+int collisionHeapIndex = 0;
+static int collisionPolysAdded = 0;
+
 static PtrListDL<DynamicItem> dynamicModels;
-bool Collision_BInteriorPoint;
-static Item** Collision_Grid;
-static int Collision_MinX;
-static int Collision_MaxX;
-static int Collision_MinZ;
-static int Collision_MaxZ;
-static int Collision_TilesAcross;
-static int Collision_TilesDown;
-static int Collision_TileWidth;
-static int Collision_TileHeight;
-static float Collision_DynGridTileSizeX;
-static float Collision_DynGridTileSizeZ;
+
+bool Collision_BInteriorPoint = false;
+static Item** Collision_Grid = NULL;
+
+static int Collision_MinX = 0;
+static int Collision_MaxX = 0;
+static int Collision_MinZ = 0;
+static int Collision_MaxZ = 0;
+static int Collision_TilesAcross = 0;
+static int Collision_TilesDown = 0;
+static int Collision_TileWidth = 0;
+static int Collision_TileHeight = 0;
+static float Collision_DynGridTileSizeX = 0;
+static float Collision_DynGridTileSizeZ = 0;
+
 static CollisionNode dynGrid[1024];
 
 #define EPSILON 1e-05f
@@ -53,6 +58,11 @@ void Collision_FindSphereDynamicGrid(Vector* pStartVector, Vector* pEndVector,
     *pStartZ = Clamp<int>(0, startZ, 31);
     *pLengthX = Clamp<int>(0, endX, 31) - *pStartX + 1;
     *pLengthZ = Clamp<int>(0, endZ, 31) - *pStartZ + 1;
+}
+
+int CalcNumDynamicLinks(float vecMag) {
+    int div = vecMag / Min<float>(Collision_DynGridTileSizeX, Collision_DynGridTileSizeZ);
+    return Sqr<int>(div + 2);
 }
 
 bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
@@ -332,9 +342,7 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
     if (d <= pRay->radius) {
         pos.Scale(arg6, d);
         min = 0.0f;
-        pos.x += pRay->mStart.x;
-        pos.y += pRay->mStart.y;
-        pos.z += pRay->mStart.z;
+        pos.Add(&pRay->mStart);
     } else {
         Vector tmp;
         tmp.Scale(arg6, pRay->radius);
@@ -351,12 +359,8 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
         if (t <= 0.0f || t > pRay->mLength) {
             return false;
         }
-        pos.x = (min * pRay->mDir.x);
-        pos.y = (min * pRay->mDir.y);
-        pos.z = (min * pRay->mDir.z);
-        pos.x += tmp.x;
-        pos.y += tmp.y;
-        pos.z += tmp.z;
+        pos.Scale(&pRay->mDir, min);
+        pos.Add(&tmp);
     }
     if (!PointInPoly(&pos, &pRay->mStart, pVectors, indices, numVerts)) {
 		// point isn't in the polygon
@@ -506,14 +510,14 @@ static void StoreSphereResult(Item* pItem, Vector* pVec, CollisionResult* pResul
 
 // pCr is a pointer to an array of CollisionResults of length maxCollisions (maxCollisions - 1)?
 // returns the number of collisions that occurs
-int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, int flags, int maxCollisions) {
+int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int flags, int maxCollisions) {
     int minx;
     int minz;
     int maxx;
     int maxz;
     int numCollisions = 0;
     FindGridBoundariesSphere(pPos, radius, &minx, &minz, &maxx, &maxz);
-    Item *pItem;
+    Item* pItem;
 
     for (int j = minz; j <= maxz; j++) {
         for (int i = minx; i <= maxx; i++) {
@@ -521,11 +525,11 @@ int Collision_SphereCollide(Vector *pPos, float radius, CollisionResult *pCr, in
 
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL || pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                    !(pItem->pTriangle->flags & flags)) {
-                    CollisionVertex *pVerts = pItem->collisionThing->verts;
-                    Vector *triVert0 = (Vector *)&pItem->collisionThing->verts[0];
-                    Vector *triVert1 = (Vector *)&pItem->collisionThing->verts[1];
-                    Vector *triVert2 = (Vector *)&pItem->collisionThing->verts[2];
+                    (pItem->pTriangle->flags & flags) == 0) {
+                    CollisionVertex* pVerts = pItem->collisionThing->verts;
+                    Vector* triVert0 = (Vector*)&pItem->collisionThing->verts[0];
+                    Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
+                    Vector* triVert2 = (Vector*)&pItem->collisionThing->verts[2];
                     float fVar19 =
                         SubDot(pPos, (Vector *)&pItem->collisionThing->verts[0], &pItem->collisionThing->normal);
                     float fVar0 = fVar19 < 0.0f ? -fVar19 : fVar19; // abs
@@ -678,7 +682,7 @@ bool CheckItemSphereRay(Item* pItem, Vector* pVec, Vector* pVec1) {
         pItem->collisionThing->verts[2].pos[2] < pVec->z) || (pThing->verts[0].pos[2] > pVec1->z &&
         pItem->collisionThing->verts[1].pos[2] > pVec1->z && pThing->verts[2].pos[2] > pVec1->z)))) {
         ret = true;
-        }
+    }
     return ret;
 }
 
@@ -688,7 +692,7 @@ void SwapPtrs(Vector** p0, Vector** p1) {
     *p1 = tmp;
 }
 
-static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, CollisionResult* pCr, int flags) {
+static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, CollisionResult* pCr, int flags) {
     int minx;
     int minz;
     int maxx;
@@ -701,7 +705,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, C
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL ||
                     pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                    !(pItem->pTriangle->flags & flags)) {
+                    (pItem->pTriangle->flags & flags) == 0) {
                     bool b0 = CheckTrianglePoint((float*)pVec1, pItem);
                     bool b1 = CheckTrianglePoint((float*)pVec0, pItem);
                     if (b1 != b0) {
@@ -717,7 +721,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, C
                             CheckPoint(pVec1, pVec0, p3, p2) &&
                             CheckPoint(pVec1, pVec0, p1, p3)) {
 							// ray is intersecting the polygon
-                            float d = surfaceNormal.Dot(pVec2);
+                            float d = surfaceNormal.Dot(pDir);
                             if (d < 0.0f) {
                                 Vector newRayNormal;
                                 newRayNormal.Sub(pVec0, p1);
@@ -725,7 +729,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pVec2, C
 								// finalPos may be called "a"?
                                 Vector finalPos;
                                 float scale = -surfaceNormal.Dot(&newRayNormal) / d;
-                                finalPos.Scale(pVec2, scale);
+                                finalPos.Scale(pDir, scale);
                                 finalPos.Add(pVec0);
                                 lastCollision.pos = finalPos;
                                 lastCollision.normal = surfaceNormal;
@@ -777,7 +781,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                         if (!CheckItemSphereRay(pItem, &pRay->mMinPos, &pRay->mMaxPos) && 
                             (pItem->pTriangle->pCollisionInfo == NULL ||
                             pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                            !(pItem->pTriangle->flags & flags)) {
+                            (pItem->pTriangle->flags & flags) == 0) {
                             Vector* p1 = (Vector*)&pItem->collisionThing->verts[0].pos;
                             Vector* p3 = (Vector*)&pItem->collisionThing->verts[1].pos;
                             Vector* p2 = (Vector*)&pItem->collisionThing->verts[2].pos;
@@ -942,7 +946,7 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
                 pTriData->verts[i].color[0] = r * 255.0f;
                 pTriData->verts[i].color[1] = g * 255.0f;
                 pTriData->verts[i].color[2] = b * 255.0f;
-                pTriData->verts[i].color[3] = 0xff;
+                pTriData->verts[i].color[3] = 255;
             }
             item.pTriangle = pTri;
             item.collisionThing = pTriData;
@@ -1089,94 +1093,83 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
         newStart.z < pVolume->v1.z + pVolume->v2.z) {
         return false;
     }
+
     float div = 1.0f;
     if (diff.x) {
         float f8 = div / diff.x;
-        int r6 = 0;
         for(int i = 0; i < 2; i++) {
-            float f6 = !r6 ? pVolume->v1.x : pVolume->v1.x + pVolume->v2.x;
-            float f9 = f8 * (f6 - newStart.x);
+            float volumeX = i == 0 ? pVolume->v1.x : pVolume->v1.x + pVolume->v2.x;
+            float f9 = f8 * (volumeX - newStart.x);
             if (f9 >= 0.0f && f9 < div) {
                 float py = newStart.y + (f9 * diff.y);
                 float pz = newStart.z + (f9 * diff.z);
                 // if y and z are in bounds
                 if (py >= pVolume->v1.y && py < pVolume->v1.y + pVolume->v2.y &&
                     pz >= pVolume->v1.z && pz < pVolume->v1.z + pVolume->v2.z) {
+                    
                     div = f9;
                     bFound = true;
-                    lastCollision.pos.x = f6;
-                    lastCollision.pos.y = py;
-                    lastCollision.pos.z = pz;
-                    lastCollision.normal.x = r6 == 0 ? -1.0f : 1.0f;
-                    lastCollision.normal.y = 0.0f;
-                    lastCollision.normal.z = 0.0f;
+                    lastCollision.pos.Set(volumeX, py, pz);
+                    lastCollision.normal.Set(i == 0 ? -1.0f : 1.0f, 0.0f, 0.0f);
+
                     if (pCr) {
                         pCr->pos = lastCollision.pos;
                         pCr->normal = lastCollision.normal;
                     }
                 }
             }
-            r6++;
         }
     }
 
     if (diff.y) {
         float f8 = 1.0f / diff.y;
-        int r6 = 0;
         for(int i = 0; i < 2; i++) {
-            float f6 = !r6 ? pVolume->v1.y : pVolume->v1.y + pVolume->v2.y;
-            float f9 = f8 * (f6 - newStart.y);
+            float volumeY = i == 0 ? pVolume->v1.y : pVolume->v1.y + pVolume->v2.y;
+            float f9 = f8 * (volumeY - newStart.y);
             if (f9 >= 0.0f && f9 < div) {
                 float px = newStart.x + (f9 * diff.x);
                 float pz = newStart.z + (f9 * diff.z);
                 // if x and z are in bounds
                 if (px >= pVolume->v1.x && px < pVolume->v1.x + pVolume->v2.x &&
                     pz >= pVolume->v1.z && pz < pVolume->v1.z + pVolume->v2.z) {
+                    
                     div = f9;
                     bFound = true;
-                    lastCollision.pos.x = px;
-                    lastCollision.pos.y = f6;
-                    lastCollision.pos.z = pz;
-                    lastCollision.normal.x = 0.0f;
-                    lastCollision.normal.y = r6 == 0 ? -1.0f : 1.0f;
-                    lastCollision.normal.z = 0.0f;
+                    lastCollision.pos.Set(px, volumeY, pz);
+                    lastCollision.normal.Set(0.0f, i == 0 ? -1.0f : 1.0f, 0.0f);
+
                     if (pCr) {
                         pCr->pos = lastCollision.pos;
                         pCr->normal = lastCollision.normal;
                     }
                 }
             }
-            r6++;
         }
     }
 
     if (diff.z) {
         float f8 = 1.0f / diff.z;
-        int r6 = 0;
         for(int i = 0; i < 2; i++) {
-            float f6 = r6 == 0 ? pVolume->v1.z : pVolume->v1.z + pVolume->v2.z;
-            float f9 = f8 * (f6 - newStart.z);
+            float volumeZ = i == 0 ? pVolume->v1.z : pVolume->v1.z + pVolume->v2.z;
+            float f9 = f8 * (volumeZ - newStart.z);
             if (f9 >= 0.0f && f9 < div) {
                 float px = newStart.x + (f9 * diff.x);
                 float py = newStart.y + (f9 * diff.y);
                 // if x and y are in bounds
                 if (px >= pVolume->v1.x && px < pVolume->v1.x + pVolume->v2.x &&
                     py >= pVolume->v1.y && py < pVolume->v1.y + pVolume->v2.y) {
+                    
                     div = f9;
                     bFound = true;
-                    lastCollision.pos.x = px;
-                    lastCollision.pos.y = py;
-                    lastCollision.pos.z = f6;
-                    lastCollision.normal.x = 0.0f;
-                    lastCollision.normal.y = 0.0f;
-                    lastCollision.normal.z = r6 == 0 ? -1.0f : 1.0f;
+                    lastCollision.pos.Set(px, py, volumeZ);
+                    lastCollision.normal.Set(0.0f, 0.0f, i == 0 ? -1.0f : 1.0f);
+
                     if (pCr) {
                         pCr->pos = lastCollision.pos;
                         pCr->normal = lastCollision.normal;
                     }
                 }
             }
-            r6++;
         }
     }
 
@@ -1213,7 +1206,7 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
     return collide;
 }
 
-bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, CollisionMode mode, int r7) {
+bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, CollisionMode mode, int flags) {
     bFound = false;
     if (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_DYNAMIC) {
 		// Dynamic_Collides()
@@ -1258,15 +1251,15 @@ bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, Coll
     }
     if (!bFound && (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_POLY)) {
         // Stack_Collides()
-        Vector vec;
-        vec.Sub(vec2, vec1);
-        return Collision_PolyCollide(vec1, vec2, &vec, pCr, r7);
+        Vector dir;
+        dir.Sub(vec2, vec1);
+        return Collision_PolyCollide(vec1, vec2, &dir, pCr, flags);
     }
     return bFound;
 }
 
 bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadius,
-    CollisionResult* pCr, CollisionMode pMode, int arg3) {
+    CollisionResult* pCr, CollisionMode pMode, int flags) {
     // create SphereRay
     SphereRay ray;
     bFound = false;
@@ -1292,7 +1285,7 @@ bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadiu
         }
     }
     if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_POLY) {
-        Collision_PolySweepSphereCollide(&ray, pCr, arg3);
+        Collision_PolySweepSphereCollide(&ray, pCr, flags);
         // if a collision is found and the collision result parameter isn't NULL
         // normalise the result's normal field
         if (bFound && pCr != NULL) {
@@ -1336,9 +1329,7 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
     vec.ApplyRotMatrix(&pVolume->v2, &pModel->matrices[0]);
     float mag = vec.Magnitude();
     nextModel->unk8 = mag;
-    int gridMag = mag / Min<float>(Collision_DynGridTileSizeX, Collision_DynGridTileSizeZ);
-    int size = Sqr<int>(gridMag + 2);
-	nextModel->unk10.Init(size, sizeof(CollisionNode));
+	nextModel->unk10.Init(CalcNumDynamicLinks(mag), sizeof(CollisionNode));
 	
     nextModel->unk44 = -1;
     nextModel->unk48 = -1;

@@ -3,8 +3,10 @@
 
 #include "common/Blitter.h"
 
+#define NUM_QUADTRISTRIP_TRIS (4)
+
 struct QuadTriStrip {
-    Blitter_TriStrip mTris[4];
+    Blitter_TriStrip mTris[NUM_QUADTRISTRIP_TRIS];
     Vector mPos;
     float unkD0;
     float unkD4;
@@ -47,11 +49,11 @@ struct QuadTriStrip {
             mTris[3].uv.y = pUVs[1].w;
         }
         if (pColors == NULL) {
-            for(i = 0; i < 4; i++) {
+            for(i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
                 mTris[i].color.Set(1.0f, 1.0f, 1.0f, 1.0f);
             }
         } else {
-            for(i = 0; i < 4; i++) {
+            for(i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
                 mTris[i].color = pColors[i];
             }
         }
@@ -69,7 +71,7 @@ struct QuadTriStrip {
             mTris[2].pos.Set(pNewPos->x, pNewPos->y - unkD4, pNewPos->z);
             mTris[3].pos.Set(pNewPos->x + (unkD0 * 2.0f), pNewPos->y - unkD4, pNewPos->z);
         }
-        mTris[0].Draw(4, 1.0f);
+        mTris[0].Draw(NUM_QUADTRISTRIP_TRIS, 1.0f);
     }
 };
 

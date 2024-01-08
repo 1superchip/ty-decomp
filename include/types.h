@@ -45,4 +45,7 @@ struct MTX34
 #define NULL 0
 #endif
 
+// Array size define
+#define ARRAY_SIZE(o) (sizeof((o)) / sizeof(*(o)))
+
 #endif // !TYPES_H

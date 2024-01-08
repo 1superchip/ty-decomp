@@ -3377,10 +3377,10 @@ Runtime/Gecko_ExceptionPPC.cpp:
 #mslsupp.c:
 #   .text: [0x801fe3c8, 0x801fe540]
 
-# Dolphin/dtk.c:
-#   .text: [0x801fe540, 0x801fedd0]
-#   .bss: [0x802da2f8, 0x802da418]
-#   .sbss: [0x803fb080, 0x803fb0b0]
+Dolphin/dtk.c:
+  .text: [0x801fe540, 0x801fedd0]
+  .bss: [0x802da2f8, 0x802da418]
+  .sbss: [0x803fb080, 0x803fb0b0]
 
 #axart.c:
 #   .text: [0x801fedd0, 0x801ff054]

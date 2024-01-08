@@ -7,6 +7,12 @@ struct TyCollisionInfo {
     bool bEnabled;
 };
 
+struct ColObjDescriptorSubStruct {
+    float unk0;
+    float unk4;
+    int unk8;
+};
+
 struct ColObjDescriptor {
     float radius;
     float yOffset;
@@ -15,15 +21,7 @@ struct ColObjDescriptor {
     int numResolveIterations; // Number of iterations to execute when resolving collisions
     char unk14;
     int ignoreMatID;
-    float unk1C;
-    float unk20;
-    int unk24;
-    float unk28;
-    float unk2C;
-    int unk30;
-    float unk34;
-    float unk38;
-    int unk3C;
+    ColObjDescriptorSubStruct unk1C[3];
     int unk40;
 };
 

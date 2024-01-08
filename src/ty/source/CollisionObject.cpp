@@ -114,18 +114,17 @@ ContextInfo* CollisionObject::StoreResult(CollisionResult* pCr, Vector* pVec) {
     ContextInfo* pCtxInfo = &contexts[1];
     Vector* pUp = &upVector;
     float upDot = pUp->Dot(&pCr->normal);
-    float* pf = &pColObjDesc->unk28;
-    if (upDot > pColObjDesc->unk1C) {
+    ColObjDescriptorSubStruct* pf = &pColObjDesc->unk1C[1];
+    if (upDot > pColObjDesc->unk1C[0].unk0) {
         pCtxInfo = &contexts[0];
-        pf = &pColObjDesc->unk1C;
-    }
-    else if (upDot < pColObjDesc->unk34) {
+        pf = &pColObjDesc->unk1C[0];
+    } else if (upDot < pColObjDesc->unk1C[2].unk0) {
         pCtxInfo = &contexts[2];
-        pf = &pColObjDesc->unk34;
+        pf = &pColObjDesc->unk1C[2];
     }
     pCtxInfo->velocitySetting = pColObjDesc->velocityCalculation;
-    if (pVec->Dot(&pCr->normal) < pf[1]) {
-        pCtxInfo->velocitySetting = (int)((int*)pf)[2];
+    if (pVec->Dot(&pCr->normal) < pf->unk4) {
+        pCtxInfo->velocitySetting = pf->unk8;
     }
     pCtxInfo->CopyResult(pCr);
     return pCtxInfo;

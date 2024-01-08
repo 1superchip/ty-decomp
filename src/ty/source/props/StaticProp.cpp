@@ -48,7 +48,7 @@ StaticPropLoadInfo StaticProp::loadInfo = {
 
 static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
 
-bool StaticFXProp::bTempVisible;
+bool StaticFXProp::bTempVisible = false;
 
 static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
     Matrix mat;

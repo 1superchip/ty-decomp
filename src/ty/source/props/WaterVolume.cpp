@@ -17,8 +17,16 @@ struct CritterField2LoadInfo {
     void LoadDone(Matrix*);
 };
 
-CritterField2LoadInfo wvLoadInfo = {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f};
-BoundingVolume waterBoundingVolume = { {-0.5f, -0.5f, -0.5f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f} };
+CritterField2LoadInfo wvLoadInfo = {
+    {0.0f, 0.0f, 0.0f, 1.0f},
+    {0.0f, 0.0f, 0.0f, 0.0f}, 
+    {1.0f, 1.0f, 1.0f, 1.0f}, 
+    0.0f
+};
+BoundingVolume waterBoundingVolume = {
+    {-0.5f, -0.5f, -0.5f, 1.0f},
+    {1.0f, 1.0f, 1.0f, 1.0f}
+};
 
 void WaterVolume_LoadResources(KromeIni* pIni) {
     waterVolumeDesc.Init((ModuleInfoBase*)&waterVolumeModule, "WaterVolume", "WaterVolume", 0, 0);

@@ -137,14 +137,51 @@ struct WayPointLoadInfo {
     bool LoadLine(KromeIniLine*, bool);
 };
 
+#define MAX_WAYPOINTS (16)
+
 struct Tools_WayPoints {
-    Vector vecs[16];
+    Vector vecs[MAX_WAYPOINTS];
     int unk100;
     int unk104;
+
     enum LoadMode {};
+    
     void Init(void);
-    bool Load(WayPointLoadInfo*, LoadMode);
-    bool LoadLine(KromeIniLine*, LoadMode);
+    void Reset(void);
+    bool Load(WayPointLoadInfo* pLoadInfo, LoadMode loadMode);
+    bool LoadLine(KromeIniLine* pLine, LoadMode loadMode);
+
+    int GetIndex(int num) {
+        if (num < 0) {
+            // if less than 0, return the last index
+            return unk104 - 1;
+        }
+        if (num >= unk104) {
+            // if greater than or equal to unk104, return 0
+            return 0;
+        }
+        return num;
+    }
+
+    void Subtract1Index(void) {
+        unk100 = GetIndex(unk100 - 1);
+    }
+
+    void Add1Index(void) {
+        unk100 = GetIndex(unk100 + 1);
+    }
+
+    Vector* GetPrev(void) {
+        return &vecs[GetIndex(unk100 - 1)];
+    }
+
+    Vector* GetNext(void) {
+        return &vecs[GetIndex(unk100 + 1)];
+    }
+
+    Vector* GetCurrent(void) {
+        return &vecs[unk100];
+    }
 };
 
 int Tools_GetAnimationNode(Model*, char*);

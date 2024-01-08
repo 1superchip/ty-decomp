@@ -42,10 +42,7 @@ struct GemPickupData {
 	float unk10;
 };
 
-struct GemModelDrawDataSubStruct {
-	float unkData[0x11];
-};
-
+#define NUM_GEMMODELDATA_IMAGES (5)
 struct GemModelDrawData {
 	Vector unk0;
 	bool unk10;
@@ -55,7 +52,7 @@ struct GemModelDrawData {
 	float unk20;
 	float unk24;
 	float unk28; // some transform point value
-	Blitter_Image imgs[5];
+	Blitter_Image imgs[NUM_GEMMODELDATA_IMAGES];
 	float unk180_array[5][2];
 };
 
