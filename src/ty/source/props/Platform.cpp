@@ -132,11 +132,8 @@ void Platform::Message(MKMessage* pMsg) {
 		case MKMSG_UpdateAttachment:
 			BeginUpdate();
 			PlatformMoveMsg* updateMsg = (PlatformMoveMsg*)pMsg;
-			pModel->matrices[0].Row3()->Copy(updateMsg->trans);
-			Vector* rotUpdate = updateMsg->rot;
-			mCurrRot.x += rotUpdate->x;
-			mCurrRot.y += rotUpdate->y;
-			mCurrRot.z += rotUpdate->z;
+			GetPos()->Copy(updateMsg->trans);
+			mCurrRot.Add(updateMsg->rot);
 			EndUpdate();
 			break;
 		case MKMSG_AttachObject:
@@ -144,6 +141,7 @@ void Platform::Message(MKMessage* pMsg) {
 			break;
 		case MKMSG_DetachObject:
 			Detach(reinterpret_cast<MKMessage_GOBJ*>(pMsg)->pObj);
+			break;
 	}
 	GameObject::Message(pMsg);
 }
@@ -206,10 +204,10 @@ void Platform::UpdateRotationMatrix(void) {
 	Matrix tmpMat;
 	pModel->matrices[0].SetRotationPitch(mCurrRot.x);
 	tmpMat.SetRotationRoll(mCurrRot.z);
-	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
+	pModel->matrices[0].Multiply3x3(&tmpMat);
 	tmpMat.SetRotationYaw(mCurrRot.y);
-	pModel->matrices[0].Multiply3x3(&pModel->matrices[0], &tmpMat);
-	pModel->matrices[0].Scale(&pModel->matrices[0], &scale);
+	pModel->matrices[0].Multiply3x3(&tmpMat);
+	pModel->matrices[0].Scale(&scale);
 }
 
 void Platform::UpdateAttached(void) {
@@ -232,9 +230,18 @@ void Platform::UpdateAttached(void) {
 }
 
 void Platform::UpdateShadow(void) {
-	Vector start = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y - 10.0f,
-		pModel->matrices[0].Row3()->z, 0.0f};
-	Vector end = {start.x, start.y - GetDesc()->maxShadowHeight, start.z, 0.0f};
+	Vector start = {
+		pModel->matrices[0].Row3()->x, 
+		pModel->matrices[0].Row3()->y - 10.0f,
+		pModel->matrices[0].Row3()->z, 
+		0.0f
+	};
+	Vector end = {
+		start.x, 
+		start.y - GetDesc()->maxShadowHeight,
+		start.z, 
+		0.0f
+	};
 	if (CompareVectors(&start, &unkA0) == false) {
 		unkD0 = false;
 		CollisionResult cr;

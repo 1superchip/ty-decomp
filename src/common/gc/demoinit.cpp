@@ -100,6 +100,7 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
                 break;
             default:
                 OSPanic("demoinit.cpp", 237, "DEMOInit: invalid TV format\n");
+                break;
         }
         rmode->fbWidth = 512;
         GXAdjustForOverscan(rmode, (GXRenderModeObj*)rmodeobj, 0, 16);

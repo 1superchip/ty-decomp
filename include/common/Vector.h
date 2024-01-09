@@ -123,6 +123,9 @@ struct Vector {
 	void ApplyRotMatrix(Matrix* pMatrix) {
 		ApplyRotMatrix(this, pMatrix);
 	}
+	void NormaliseRot(void) {
+		NormaliseRot(this);
+	}
     inline bool Equals(Vector* pOther) {
         return x == pOther->x && y == pOther->y && z == pOther->z;
     }

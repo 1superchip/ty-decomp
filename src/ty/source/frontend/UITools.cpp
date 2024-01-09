@@ -342,7 +342,7 @@ void UIButtonPrompt::Draw(int numPrompts) {
         f28 += ((strWidth[i] * f31) + f29) * 0.5f;
         matrix.Row3()->x = f28;
         gFERes.pFont0->DrawString(promptStr[i], strWidth[i], gFERes.pFont0->GetHeight(),
-            &matrix, 5, 0x80808080, 0, 0);
+            &matrix, 5, 0x80808080, NULL, NULL);
         f28 += ((strWidth[i] * f31) + f29) * 0.5f;
     }
     View::GetCurrent()->OrthoEnd();

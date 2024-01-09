@@ -56,6 +56,7 @@ void RainbowScaleObjective::Message(MKMessage* pMessage) {
                 unk66++;
                 itr.UpdatePointers();
             }
+            break;
     }
     LevelObjective::Message(pMessage);
 }

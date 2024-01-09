@@ -41,6 +41,7 @@ void RangStone::Message(MKMessage* pMsg) {
                 HideRang();
                 OnSuccess.Send();
             }
+            break;
     }
     GameObject::Message(pMsg);
 }

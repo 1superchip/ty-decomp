@@ -147,6 +147,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                 break;
                             default:
                                 materialIni.Warning(Str_Printf("Bad blend type %d", blend));
+                                break;
                             }
                         } else {
                             pLine->AsString(0, &pBlend);
@@ -193,6 +194,7 @@ char *Material::InitFromMatDefs(char *pName) {
                                 break;
                             default:
                                 materialIni.Warning(Str_Printf("Bad filter type %d", tmp));
+                                break;
                             }
                         } else {
                             char *pType;
@@ -857,6 +859,7 @@ void Material::Use(void) {
                 GXLoadTexMtxImm(mat24.data, 0x1e, GX_MTX2x4);
                 GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
                 pTex->Use();
+                break;
         }
         switch (blendMode) {
             case Blend_Opaque:
@@ -869,6 +872,7 @@ void Material::Use(void) {
                 break;
             case Blend_Subtractive:
                 GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
+                break;
         }
         int uVar8 = flags & 0x10;
         int uVar6 = flags & 0x8;

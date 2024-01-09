@@ -26,5 +26,6 @@ void DDACheckpoint::Message(MKMessage* pMsg) {
             break;
         default:
             GameObject::Message(pMsg);
+            break;
     }
 }

@@ -236,6 +236,7 @@ bool Input_WasButtonPressed(InputDevices deviceID, int button, InputDevices* pFo
                 (joyPad[deviceID].mPrevButtonFlags & ButtonMasks[button]) == 0) {
                 return true;
             }
+            break;
     }
     return false;
 }

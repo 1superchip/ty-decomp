@@ -30,7 +30,7 @@ void Collapsible::LoadDone(void) {
     scale = StaticProp::loadInfo.defaultScale;
     defaultRot = StaticProp::loadInfo.defaultRot;
     // Set the default translation to the translation of the model
-    defaultTrans = *pModel->matrices[0].Row3();
+    defaultTrans = *GetPos();
 }
 
 void Collapsible::Update(void) {
@@ -51,7 +51,7 @@ void Collapsible::Update(void) {
             }
         }
         if (((ty.unk845 != false || unk) && (int *)ty.unk884 == (int *)&collisionInfo) != false) {
-            unk5C = 0x1e;
+            unk5C = 30;
             state = 1;
         }
         break;
@@ -77,7 +77,7 @@ void Collapsible::Update(void) {
             }
             shatter->pModel->matrices[0] = pModel->matrices[0];
             shatter->Fall();
-            unk5C = 0x1e;
+            unk5C = 30;
             state = 2;
         } else {
             float f = 15.0f * ((float)(unk5C - 30) / 30.0f);
@@ -105,27 +105,28 @@ void Collapsible::Update(void) {
         }
         break;
     case 3:
-        if (++unk5C >= 0x294) {
+        if (++unk5C >= 660) {
             unk5C = 0;
             Matrix scaleMatrix;
             scaleMatrix.SetTranslation(&defaultTrans);
             scaleMatrix.SetRotationPYR(&defaultRot);
-            scaleMatrix.Scale(&scaleMatrix, &scale);
+            scaleMatrix.Scale(&scale);
             pModel->matrices[0].Scale(&scaleMatrix, 0.01f);
             state = 4;
         }
         break;
     case 4:
-        if (++unk5C >= 0x1E) {
+        if (++unk5C >= 30) {
             Reset();
         } else {
             Matrix scaleMatrix;
             scaleMatrix.SetTranslation(&defaultTrans);
             scaleMatrix.SetRotationPYR(&defaultRot);
-            scaleMatrix.Scale(&scaleMatrix, &scale);
+            scaleMatrix.Scale(&scale);
             float angle = 3.9826f * ((float)unk5C / 30.0f);
             pModel->matrices[0].Scale(&scaleMatrix, 0.6f * (1.0f - _table_cosf(angle)));
         }
         pModel->SetLocalToWorldDirty();
+        break;
     }
 }

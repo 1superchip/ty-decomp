@@ -850,7 +850,7 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
 		float width, float height, int tilesAcross, int tilesDown) {
     bCollisionInit = true;
     collisionHeapIndex = 0;
-    collisionHeapSize = (heapSize + 0x1f) & ~0x1f; // round up to 32 bytes
+    collisionHeapSize = (heapSize + (0x20 - 1)) & ~(0x20 - 1); // round up to 32 bytes
     pCollisionHeap = Heap_MemAlloc(heapSize);
     dynamicModels.Init(768, sizeof(DynamicItem));
     
@@ -978,38 +978,22 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     v2.Add(&pVolume->v1, &pVolume->v2);
     if (pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart) >
         Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) return false;
-    // "corners"?
-    Vector vecs[8] = {{}, {}, {}, {}, {}, {}, {}, {}};
-    vecs[0].x = v1.x;
-    vecs[0].y = v1.y;
-    vecs[0].z = v1.z;
-    vecs[1].x = v1.x;
-    vecs[1].y = v1.y;
-    vecs[1].z = v2.z;
-    vecs[2].x = v2.x;
-    vecs[2].y = v1.y;
-    vecs[2].z = v2.z;
-    vecs[3].x = v2.x;
-    vecs[3].y = v1.y;
-    vecs[3].z = v1.z;
-    vecs[4].x = v1.x;
-    vecs[4].y = v2.y;
-    vecs[4].z = v1.z;
-    vecs[5].x = v1.x;
-    vecs[5].y = v2.y;
-    vecs[5].z = v2.z;
-    vecs[6].x = v2.x;
-    vecs[6].y = v2.y;
-    vecs[6].z = v2.z;
-    vecs[7].x = v2.x;
-    vecs[7].y = v2.y;
-    vecs[7].z = v1.z;
+    Vector corners[8] = {
+        {v1.x, v1.y, v1.z},
+        {v1.x, v1.y, v2.z}, 
+        {v2.x, v1.y, v2.z}, 
+        {v2.x, v1.y, v1.z}, 
+        {v1.x, v2.y, v1.z}, 
+        {v1.x, v2.y, v2.z}, 
+        {v2.x, v2.y, v2.z}, 
+        {v2.x, v2.y, v1.z}, 
+    };
     for(int i = 0; i < 8; i++) {
-        vecs[i].ApplyMatrix(&vecs[i], pDynItem->GetMatrix());
+        corners[i].ApplyMatrix(pDynItem->GetMatrix());
     }
     // might not be the best way to format this?
     // originally named "quads"?
-    int indices[6][4] = {
+    int quads[6][4] = {
         {4, 5, 6, 7}, 
         {3, 2, 1, 0},
         {6, 2, 3, 7},
@@ -1018,24 +1002,26 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
         {7, 3, 0, 4}
     };
     // "normals"?
-    Vector vecs2[6];
-    vecs2[0].Sub(&vecs[4], &vecs[0]);
-    vecs2[0].Normalise(&vecs2[0]);
+    Vector normals[6];
+    normals[0].Sub(&corners[4], &corners[0]);
+    normals[0].Normalise();
     
-    vecs2[1].Scale(&vecs2[0], -1.0f);
-    vecs2[2].Sub(&vecs[3], &vecs[0]);
-    vecs2[2].Normalise(&vecs2[2]);
+    normals[1].Inverse(&normals[0]);
+    normals[2].Sub(&corners[3], &corners[0]);
+    normals[2].Normalise();
     
-    vecs2[3].Scale(&vecs2[2], -1.0f);
-    vecs2[4].Sub(&vecs[1], &vecs[0]);
-    vecs2[4].Normalise(&vecs2[4]);
+    normals[3].Inverse(&normals[2]);
+    normals[4].Sub(&corners[1], &corners[0]);
+    normals[4].Normalise();
 
-    vecs2[5].Scale(&vecs2[4], -1.0f);
+    normals[5].Inverse(&normals[4]);
     
     for(int i = 0; i < 3; i++) {
-        int dotTest = vecs2[i * 2].Dot(&pRay->mDir) > 0.0f ? 1 : 0;
-        if (CheckPoint(&pRay->mStart, &vecs[indices[(dotTest + 2*i)][0]], &vecs[indices[(dotTest + 2*i)][1]], &vecs[indices[(dotTest + 2*i)][2]]) &&
-                    SweepSphereToPoly(pRay, vecs, &indices[(dotTest + 2*i)][0], 4, &vecs2[(dotTest + 2*i)], &vecs2[(1 - dotTest) + 2*i], &lastCollision)) {
+        int dotTest = normals[i * 2].Dot(&pRay->mDir) > 0.0f ? 1 : 0;
+        if (CheckPoint(&pRay->mStart, &corners[quads[(dotTest + 2*i)][0]], 
+                &corners[quads[(dotTest + 2*i)][1]], &corners[quads[(dotTest + 2*i)][2]]) &&
+                SweepSphereToPoly(pRay, corners, &quads[(dotTest + 2*i)][0], 4, &normals[(dotTest + 2*i)], &normals[(1 - dotTest) + 2*i], &lastCollision)
+            ) {
             lastCollision.pInfo = pDynItem->pInfo;
             lastCollision.pModel = pDynItem->pModel;
             lastCollision.collisionFlags = pDynItem->pModel->GetSubObjectMaterial(0, 0)->collisionFlags;

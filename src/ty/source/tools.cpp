@@ -1585,6 +1585,7 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
             break;
         case 3:
             unkC = unk18;
+            break;
     }
     return nextState;
 }

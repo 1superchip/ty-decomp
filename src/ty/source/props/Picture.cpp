@@ -142,14 +142,9 @@ void Picture::Update(void) {
 void Draw_AddPostDrawElement(void*, void (*drawFunc)(void*), float, bool);
 
 void Picture::Draw(void) {
-    // if (bInitialised) {
-    //     if (!bShow || pModel->matrices[0].Row0()->MagSquared() < 0.01f) {
-    //         return;
-    //     }
-    //     Draw_AddPostDrawElement((void*)this, Picture::PostDraw, distSquared, GetDrawFlag());
-    // }
-    // if (!bInitialised || !(!bShow || !(pModel->matrices[0].Row0()->MagSquared() < 0.01f))) return;
-    if (!bInitialised || (bShow && (pModel->matrices[0].Row0()->MagSquared() < 0.01f))) return;
+    if (!bInitialised || (bShow && pModel->matrices[0].Row0()->MagSquared() < 0.01f)) {
+        return;
+    }
     Draw_AddPostDrawElement((void*)this, Picture::PostDraw, distSquared, GetDrawFlag());
 }
 

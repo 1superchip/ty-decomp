@@ -74,7 +74,8 @@ float WobbleTexture::SetUpGrid(Vector* pVec, float f1, float f2, float f3) {
             GetWobbleEntry(i, j)->mPos.Set(
                 ((f1 * i) / (mWidth - 1.0f)) + spB4.x,
                 spB4.y - ((f2 * j) / (mHeight - 1.0f)),
-                spB4.z);
+                spB4.z
+            );
             GetWobbleEntry(i, j)->mPos.Scale(_DC);
             GetWobbleEntry(i, j)->unk30 = i / (mWidth - 1.0f);
             GetWobbleEntry(i, j)->unk34 = ((_84 * j) / (mHeight - 1.0f)) + _80;

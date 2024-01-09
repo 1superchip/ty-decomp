@@ -84,6 +84,7 @@ void LevelObjective::Message(MKMessage* pMsg) {
             OnIncrement.Resolve();
             OnStart.Resolve();
             OnAbort.Resolve();
+            break;
     }
     GameObject::Message(pMsg);
 }

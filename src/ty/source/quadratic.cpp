@@ -22,11 +22,9 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
     }
 
     if (f1 <= 1.0f) {
-        float f2 = 0.05f;
         closestDist = 100000000.0f;
-        float t = f1 - f2;
 
-        while (t <= f2 + f1) {
+        for (float t = f1 - 0.05f; t <= f1 + 0.05f; t += 0.01f) {
             if (!(t < 0.0f) && !(t > 1.0f)) {
                 Update(t);
                 distSq = pPoint->DistSq(&pos);
@@ -35,8 +33,8 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
                     f1 = t;
                 }
             }
-            t += 0.01f;
         }
+        
         return f1;
     }
     return 0.0f;

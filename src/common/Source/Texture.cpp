@@ -88,15 +88,16 @@ Texture* Texture::Create(char* pName) {
             float maxLod = (float)i - 3.0f;
             int minFilter;
             switch (Texture_filterType) {
-            case 0:
-            case 1:
-                minFilter = 1; // GX_Linear
-                break;
-            case 2:
-                minFilter = 5; // GX_LIN_MIP_LIN
-                break;
-            default:
-                minFilter = 5; // GX_LIN_MIP_LIN
+                case 0:
+                case 1:
+                    minFilter = 1; // GX_Linear
+                    break;
+                case 2:
+                    minFilter = 5; // GX_LIN_MIP_LIN
+                    break;
+                default:
+                    minFilter = 5; // GX_LIN_MIP_LIN
+                    break;
             }
             GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter,
                 GX_LINEAR, 0.0f, maxLod, -4.0f, GX_TRUE, GX_FALSE, GX_ANISO_1);
@@ -111,6 +112,7 @@ Texture* Texture::Create(char* pName) {
             GXInitTexObj(&pTex->texObj, (void *)((int)mem + 0x20), pTex->width, pTex->height,
                 GX_TF_CMPR, GX_REPEAT, GX_REPEAT, GX_FALSE);
             Heap_MemFree(texFile);
+            break;
         }
         pTex->referenceCount = 1;
     }

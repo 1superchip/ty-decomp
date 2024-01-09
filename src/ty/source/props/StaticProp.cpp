@@ -139,7 +139,7 @@ bool StaticProp::LoadLine(KromeIniLine* pLine) {
 
 void StaticProp::LoadDone(void) {
     CollisionResult cr;
-    pModel->matrices[0].SetTranslation(pModel->matrices[0].Row3());
+    pModel->matrices[0].SetTranslation(GetPos());
     pModel->matrices[0].SetRotationPYR(&loadInfo.defaultRot);
     pModel->matrices[0].Scale(&loadInfo.defaultScale);
     pModel->SetLocalToWorldDirty();
@@ -156,7 +156,7 @@ void StaticProp::LoadDone(void) {
     }
     if (collide != false) {
         int index = -1;
-        if (GetDesc()->bDynamic != false) {
+        if (GetDesc()->bDynamic) {
 			// dynamic collision
             if (pModel->SubObjectExists(GetDesc()->subObjectName, &index)) {
                 Collision_AddDynamicSubobject(pModel, index, &collisionInfo);
@@ -210,7 +210,8 @@ void StaticFXProp::LoadDone(void) {
     end.x += unk58.x;
     end.y += unk58.y;
     end.z += unk58.z;
-    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, -0x401) && (GetDesc()->effectFlags & FX_WaterRipple)) {
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, -0x401)
+            && (GetDesc()->effectFlags & FX_WaterRipple)) {
 		// if collision against water occurs and this prop has Water Ripple effects
 		// set collides with water and the position of the collision
         bCollidesWithWater = true;
@@ -250,8 +251,8 @@ void StaticFXProp::Draw(void) {
 }
 
 void StaticFXProp::UpdateShake(void) {
-    Vector tyPos = ty.pos;
-    tyPos.y += gb.unk78C;
+    Vector tyShakePos = ty.pos;
+    tyShakePos.y += gb.unk78C;
     if (gb.unk78C != 0.0f) {
         bool unk = false;
         if (ty.unk844 != false) {
@@ -266,25 +267,23 @@ void StaticFXProp::UpdateShake(void) {
             }
         }
         if (((ty.unk845 != false || unk) && (int*)ty.unk884 == (int*)&collisionInfo) == false) {
-            if (PointInBoundingBox(pModel, &tyPos, 1.2f) == false) {
+            if (PointInBoundingBox(pModel, &tyShakePos, 1.2f) == false) {
                 return;
             }
         }
-        float unkFloat = (gb.unk78C < 0.0f) ? -gb.unk78C : gb.unk78C;
-        if (unkFloat > 0.1f) {
-            Vector vecPos = unk58;
-            vecPos.y += gb.unk78C;
-            pModel->SetPosition(&vecPos);
+        if (Abs<float>(gb.unk78C) > 0.1f) {
+            Vector tmp = unk58;
+            tmp.y += gb.unk78C;
+            pModel->SetPosition(&tmp);
             pModel->SetLocalToWorldDirty();
             if (b1 == false) {
-                float rand = RandomFR((int*)&gb.unk[174], -30.0f, 30.0f);
-                vecPos.x = RandomFR((int*)&gb.unk[174], -30.0f, 30.0f);
-                vecPos.y = -5.0f;
-                vecPos.x = vecPos.x + ty.pos.x;
-                vecPos.z = rand;
-                vecPos.y = -5.0f + ty.pos.y;
-                vecPos.z = vecPos.z + ty.pos.z;
-                particleManager->SpawnBridgeChunk(&vecPos, pModel);
+                tmp.Set(
+                    RandomFR((int*)&gb.unk[174], -30.0f, 30.0f),
+                    -5.0f,
+                    RandomFR((int*)&gb.unk[174], -30.0f, 30.0f)
+                );
+                tmp.Add(&ty.pos);
+                particleManager->SpawnBridgeChunk(&tmp, pModel);
                 b1 = true;
             }
         } else {
@@ -308,40 +307,33 @@ void StaticFXProp::UpdateWaterRipple(void) {
 void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
     if (lodManager.TestLOD(particleFlags) && ((uint)gb.unk[469] > (uint)unk9C)) {
-        Vector vecPos = unk58;
-        Vector offset = {0.0f, -10.0f, 0.0f, 0.0f};
-        vecPos.y += RandomIR((int*)&gb.unk[174], 700, 800);
-        vecPos.x += RandomIR((int*)&gb.unk[174], -1200, 1200);
-        vecPos.z += RandomIR((int*)&gb.unk[174], -1200, 1200);
-        particleManager->SpawnLeafGrassDust(&vecPos, &offset, true);
+        Vector temp = unk58;
+        Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
+        temp.y += RandomIR((int*)&gb.unk[174], 700, 800);
+        temp.x += RandomIR((int*)&gb.unk[174], -1200, 1200);
+        temp.z += RandomIR((int*)&gb.unk[174], -1200, 1200);
+        particleManager->SpawnLeafGrassDust(&temp, &vel, true);
         unk9C = gb.unk[469] + RandomIR((int*)&gb.unk[174], 800, 1200);
     }
 }
 
 void StaticFXProp::UpdateRotate(void) {
-    StaticFXPropDesc* pDesc = GetDesc();
-    autoRotation.x += pDesc->autoRotate.x;
-    autoRotation.y += pDesc->autoRotate.y;
-    autoRotation.z += pDesc->autoRotate.z;
-    autoRotation.NormaliseRot(&autoRotation);
+    autoRotation.Add(&GetDesc()->autoRotate);
+    autoRotation.NormaliseRot();
     if (rotateSubObjIndex < 0) {
         Vector modelRot = mDefaultRot;
-        modelRot.x += autoRotation.x;
-        modelRot.y += autoRotation.y;
-        modelRot.z += autoRotation.z;
+        modelRot.Add(&autoRotation);
         pModel->matrices[0].SetRotationPYR(&modelRot);
         pModel->SetLocalToWorldDirty();
     } else {
         Matrix* subObjMatrix = &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(rotateSubObjIndex)];
         Vector* subObjectOrigin = pModel->GetSubObjectOrigin(rotateSubObjIndex);
         Vector origin;
-        origin.x = -1.0f * subObjectOrigin->x;
-        origin.y = -1.0f * subObjectOrigin->y;
-        origin.z = -1.0f * subObjectOrigin->z;
+        origin.Inverse(subObjectOrigin);
         subObjMatrix->SetIdentity();
-        subObjMatrix->Translate(subObjMatrix, &origin);
-        subObjMatrix->RotatePYR(subObjMatrix, &autoRotation);
-        subObjMatrix->Translate(subObjMatrix, subObjectOrigin);
+        subObjMatrix->Translate(&origin);
+        subObjMatrix->RotatePYR(&autoRotation);
+        subObjMatrix->Translate(subObjectOrigin);
     }
 }
 
@@ -355,6 +347,7 @@ void StaticFXProp::Message(MKMessage* pMsg) {
             break;
         default:
             GameObject::Message(pMsg);
+            break;
     }
 }
 

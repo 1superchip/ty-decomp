@@ -49,6 +49,7 @@ void SpawnPoint::Message(MKMessage* pMsg) {
                 ty.spawnPos = tySpawnPos;
                 ty.spawnRot = tySpawnRot;
             }
+            break;
     }
     GameObject::Message(pMsg);
 }

@@ -116,6 +116,7 @@ void SoundProp::Message(MKMessage* pMsg) {
             break;
         case 11:
             gameObjFlags.Clear(GameObjFlags_Active);
+            break;
     }
     gameObjFlags.Message(pMsg);
     GameObject::Message(pMsg);

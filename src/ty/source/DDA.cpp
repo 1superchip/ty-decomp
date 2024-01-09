@@ -204,6 +204,7 @@ void DDASession::StorePickupInfo(DDAPickupType pickupType) {
             break;
         case Pickup_Bibly:
             currentCheckpoint->bilbies++;
+            break;
     }
 }
 
@@ -224,6 +225,7 @@ void DDASession::StoreEnemyDeathInfo(DDAEnemyDamageCause enemyDamageCause) {
             break;
         default:
             currentCheckpoint->unk1E++;
+            break;
     }
 }
 

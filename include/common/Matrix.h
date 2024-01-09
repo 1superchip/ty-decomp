@@ -93,6 +93,9 @@ struct Matrix {
 	void Multiply3x3(Matrix* pMatrix) {
 		Multiply3x3(this, pMatrix);
 	}
+	void RotatePYR(Vector* pAngles) {
+		RotatePYR(this, pAngles);
+	}
 #if mips
 // PS2 GCC has mips defined
 // Matrix structs are aligned to 0x10 in the July 1st build

@@ -136,6 +136,7 @@ void* File_Seek(int fd, int offset, int seekType) {
         case 2:
 			// unk34 is a field in DVDFileInfo
             gcFiles[fd].unk48 = gcFiles[fd].unk34 + offset; // seek from end of the file
+            break;
         default:
             break;
     }

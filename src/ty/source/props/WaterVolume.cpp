@@ -56,9 +56,11 @@ void WaterVolume::LoadDone(void) {
 
     mInvMtx.Inverse(&mWorldMtx);
 
+    // Corner 1 (origin corner)
     Vector c1 = waterBoundingVolume.v1;
     c1.ApplyMatrix(&mWorldMtx);
 
+    // Corner 2
     Vector c2;
     c2.Add(&waterBoundingVolume.v1, &waterBoundingVolume.v2);
     c2.ApplyMatrix(&mWorldMtx);
