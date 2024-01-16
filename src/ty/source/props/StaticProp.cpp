@@ -1,6 +1,7 @@
 #include "types.h"
 #include "ty/GameObjectManager.h"
 #include "ty/props/StaticProp.h"
+#include "ty/global.h"
 #include "common/StdMath.h"
 #include "common/Str.h"
 
@@ -26,10 +27,6 @@ extern struct Ty {
     int unk884;
 } ty;
 
-extern struct GlobalVar {
-    int unk[483];
-    float unk78C;
-} gb;
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
@@ -278,9 +275,9 @@ void StaticFXProp::UpdateShake(void) {
             pModel->SetLocalToWorldDirty();
             if (b1 == false) {
                 tmp.Set(
-                    RandomFR((int*)&gb.unk[174], -30.0f, 30.0f),
+                    RandomFR(&gb.mRandSeed, -30.0f, 30.0f),
                     -5.0f,
-                    RandomFR((int*)&gb.unk[174], -30.0f, 30.0f)
+                    RandomFR(&gb.mRandSeed, -30.0f, 30.0f)
                 );
                 tmp.Add(&ty.pos);
                 particleManager->SpawnBridgeChunk(&tmp, pModel);
@@ -294,26 +291,26 @@ void StaticFXProp::UpdateShake(void) {
 }
 
 void StaticFXProp::UpdateWaterRipple(void) {
-    if (ty.pos.DistSq(&unk58) < 640000.0f && bCollidesWithWater && ((uint)gb.unk[469] > (uint)unk9C)) {
-        unk9C = gb.unk[469] + RandomIR((int*)&gb.unk[174], 60, 180);
+    if (ty.pos.DistSq(&unk58) < 640000.0f && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
+        unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
         Vector ripplePosition = {0.0f, 5.0f, 0.0f, 0.0f};
         ripplePosition.x += waterCollisionPos.x;
         ripplePosition.y += waterCollisionPos.y;
         ripplePosition.z += waterCollisionPos.z;
-        particleManager->SpawnWaterRipple(&ripplePosition, RandomFR((int*)&gb.unk[174], 80.0f, 120.0f));
+        particleManager->SpawnWaterRipple(&ripplePosition, RandomFR(&gb.mRandSeed, 80.0f, 120.0f));
     }
 }
 
 void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
-    if (lodManager.TestLOD(particleFlags) && ((uint)gb.unk[469] > (uint)unk9C)) {
+    if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > (uint)unk9C)) {
         Vector temp = unk58;
         Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
-        temp.y += RandomIR((int*)&gb.unk[174], 700, 800);
-        temp.x += RandomIR((int*)&gb.unk[174], -1200, 1200);
-        temp.z += RandomIR((int*)&gb.unk[174], -1200, 1200);
+        temp.y += RandomIR(&gb.mRandSeed, 700, 800);
+        temp.x += RandomIR(&gb.mRandSeed, -1200, 1200);
+        temp.z += RandomIR(&gb.mRandSeed, -1200, 1200);
         particleManager->SpawnLeafGrassDust(&temp, &vel, true);
-        unk9C = gb.unk[469] + RandomIR((int*)&gb.unk[174], 800, 1200);
+        unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 800, 1200);
     }
 }
 
