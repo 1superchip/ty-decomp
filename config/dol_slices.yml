@@ -1964,7 +1964,7 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa788, 0x803fa798]
 #   .sdata2: [0x803ffeb0, 0x803fff28]
 
-#ty/source/boomerang.cpp:
+# ty/source/boomerang.cpp:
 #   .text: [0x80137fc8, 0x80140484]
 #   .ctors: [0x8023ca14, 0x8023ca18]
 #   .rodata: [0x8023e4c8, 0x8023e528]
@@ -2150,14 +2150,14 @@ ty/source/GameObjectManager.cpp:
 #   .sbss: [0x803fa8f0, 0x803fa8f8]
 #   .sdata2: [0x80400730, 0x80400760]
 
-#ty/source/global.cpp:
-#   .text: [0x80162d0c, 0x80163a64]
-#   .ctors: [0x8023ca48, 0x8023ca4c]
-#   .data: [0x80263078, 0x80263e08]
-#   .bss: [0x802b1ae8, 0x802b2980]
-#   .sdata: [0x803f87a8, 0x803f88c8]
-#   .sbss: [0x803fa8f8, 0x803fa908]
-#   .sdata2: [0x80400760, 0x804007a0]
+ty/source/global.cpp:
+  .text: [0x80162d0c, 0x80163a64]
+  .ctors: [0x8023ca48, 0x8023ca4c]
+  .data: [0x80263078, 0x80263e08]
+  .bss: [0x802b1ae8, 0x802b2980]
+  .sdata: [0x803f87a8, 0x803f88c8]
+  .sbss: [0x803fa8f8, 0x803fa908]
+  .sdata2: [0x80400760, 0x804007a0]
 
 #ty/source/guidebarrel.cpp:
 #   .text: [0x80163a64, 0x80163eb4]

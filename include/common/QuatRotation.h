@@ -30,6 +30,10 @@ struct QuatRotation {
 	void Scale(float scalar) {
 		Scale(this, scalar);
 	}
+    void SetIdentity(void) {
+        quat.x = quat.y = quat.z = 0.0f;
+        quat.w = 1.0f;
+    }
 };
 
 #endif // COMMON_QUATROTATION

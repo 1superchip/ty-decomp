@@ -1,5 +1,6 @@
 #include "types.h"
 #include "ty/RangeCheck.h"
+#include "ty/global.h"
 #include "ty/tools.h"
 #include "common/Str.h"
 #include "common/Heap.h"
@@ -24,11 +25,6 @@ extern struct Ty {
     int junk[0xa48 / 4];
     int state;
 } ty;
-
-extern struct GlobalVar {
-    char padding[0x660];
-    float zones[8];
-} gb;
 
 static int nextAvailableLODEntryIndex;
 static LODEntry* lodEntryPool;
@@ -59,7 +55,7 @@ int Range_WhichZone(Vector* point, float* arg1) {
     }
     int zoneId = 0;
     for(; zoneId < 8; zoneId++) {
-        float zone = gb.zones[zoneId];
+        float zone = gb.level.lodRanges[zoneId];
         if (dist < zone) {
             if (arg1 == NULL) {
                 return zoneId;

@@ -1,38 +1,35 @@
 #include "types.h"
 #include "common/QuatRotation.h"
-#include "common/StdMath.h" // _table_sinf
+#include "common/StdMath.h"
 
 void QuatRotation::ConvertRotation(AxisRotation* pRotation) {
-    float wRot = 0.5f * pRotation->unk10;
-    float sin = _table_sinf(wRot);
+    float rot = pRotation->unk10;
+    float sin = _table_sinf(rot * 0.5f);
     quat.x = sin * pRotation->rot.x;
     quat.y = sin * pRotation->rot.y;
     quat.z = sin * pRotation->rot.z;
-    quat.w = _table_cosf(wRot);
+    quat.w = _table_cosf(rot * 0.5f);
 }
 
 void QuatRotation::ConvertNormal(Vector* pNormal, float r) {
-    float wRot = 0.5f * r;
-    float sin = _table_sinf(wRot);
+    float sin = _table_sinf(r * 0.5f);
     quat.x = sin * pNormal->x;
     quat.y = sin * pNormal->y;
     quat.z = sin * pNormal->z;
-    quat.w = _table_cosf(wRot);
+    quat.w = _table_cosf(r * 0.5f);
 }
 
 void QuatRotation::ConvertVector(Vector* pVector) {
     float vecMag = pVector->Magnitude();
     if (vecMag > 0.000001f) {
-        float sin = vecMag * 0.5f;
-        float norm = _table_sinf(sin) / vecMag;
+        float norm = _table_sinf(vecMag * 0.5f) / vecMag;
         quat.x = norm * pVector->x;
         quat.y = norm * pVector->y;
         quat.z = norm * pVector->z;
-        quat.w = _table_cosf(sin);
-        return;
+        quat.w = _table_cosf(vecMag * 0.5f);
+    } else {
+        SetIdentity();
     }
-    quat.SetZero();
-    quat.w = 1.0f;
 }
 
 void QuatRotation::Multiply(QuatRotation *pQuaternion1, QuatRotation *pQuaternion2) {

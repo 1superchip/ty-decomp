@@ -78,6 +78,9 @@ struct CollisionInfo {
     void Disable(void) {
         bEnabled = false;
     }
+    bool TestFlags(uint testFlags) {
+        return (flags & testFlags) != 0;
+    }
 };
 
 struct CollisionTriangle {

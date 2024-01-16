@@ -17,11 +17,11 @@ enum LevelNumber {
     TOTAL_LEVEL_MAX = 0x18
 };
 enum ZoneNumber {};
-enum BoomerangType {};
 enum GoldenCogType {};
 enum ThunderEggType {};
 enum TalismanType {};
 enum BilbyType {};
+enum BoomerangType {};
 
 struct GameDataSettings {
     u8 musicVolume;
@@ -30,7 +30,7 @@ struct GameDataSettings {
     s8 unk3;
     s8 unk4;
     u8 unk5;
-    char unk6;
+    bool unk6;
     char unk7;
     u8 controlConfig;
     char unk9;
@@ -186,7 +186,7 @@ struct GameData {
     bool HasLevelBeenEntered(int level) {
         return pSaveData->levels[level].nmbrOfTimesEntered <= 1;
     }
-    bool HasBoomerang(int index) {
+    bool HasBoomerang(BoomerangType index) {
         return pSaveData->tyAttributes.bHasRangs[index];
     }
     bool GetLevelEnterCount(int level) {

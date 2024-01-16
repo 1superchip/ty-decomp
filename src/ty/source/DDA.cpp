@@ -62,7 +62,7 @@ void DDASession::StartSession(void) {
     currentCheckpoint = NULL;
     memset(this, 0, 0x10);
     unk0 = 0;
-    levelNumber = ((int*)&gb.padding_0x2E0)[0x103]; // GetCurrentLevel inline
+    levelNumber = gb.level.GetCurrentLevel();
     Timer_GetSystemTime(&startTime);
     startDay = startTime.day;
     startMonth = startTime.month;

@@ -105,8 +105,7 @@ extern void SoundBank_Play(int, Vector*, uint);
 void LevelObjective::Increment(void) {
     OnIncrement.Send();
     Hud_ShowSpecialPickups();
-    // inline here to get the level id
-    switch (((int*)&gb.padding_0x2E0)[0x103]) {
+    switch (gb.level.GetCurrentLevel()) {
         case 4:
             SoundBank_Play(0x22C, NULL, 0);
             break;

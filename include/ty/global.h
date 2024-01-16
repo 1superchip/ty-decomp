@@ -1,26 +1,195 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+
+#include "common/Input.h"
 #include "common/Material.h"
 #include "ty/GameData.h"
 #include "ty/DataVal.h"
 #include "common/DirectLight.h"
-#include "ty/ImmediateFSM.h"
+#include "common/Font.h"
 
+enum GameSubState {
+    GSS_NONE        = -1,
+    GSS_InGame      = 0,
+    GSS_BushPig     = 2,
+    GSS_MiniGame_A2 = 12,
+    GSS_MiniGame_B1 = 13,
+    GSS_MiniGame_B3 = 14,
+    GSS_MiniGame_C2 = 15,
+    GSS_MiniGame_C3 = 16,
+    GSS_MiniGame_D1 = 17, // no code but the name of this state exists
+    GSS_MiniGame_E4 = 18,
+};
+
+// does this use ImmediateFSM<T>?
 struct GameSubStateFSM {
-    ImmediateFSM<GameSubStateFSM> fsm;
+
+    typedef void(GameSubStateFSM::*InitFunc)(void);
+    typedef void(GameSubStateFSM::*DeinitFunc)(void);
+    typedef void(GameSubStateFSM::*UpdateFunc)(void);
+    typedef void(GameSubStateFSM::*DrawFunc)(void);
+    typedef void(GameSubStateFSM::*StateFunc5)(void);
+
+    struct State {
+        InitFunc    Init; // Init
+        DeinitFunc  Deinit; // Deinit?
+        UpdateFunc  Update; // Update
+        DrawFunc    Draw; // Draw
+        StateFunc5  func5; // Unused
+    };
+
+    // figure out proper names
+    GameSubState prevState;
+    int newState;
+    int mPrevPrevState;
+    State* pStates;
+    int unk10;
 
     static bool bInitialised;
+
+    void Init(State* pFSMStates, GameSubState state) {
+        pStates = pFSMStates;
+        prevState = state;
+        mPrevPrevState = -1;
+        newState = -1;
+        if (pStates[prevState].Init) {
+            (this->*pStates[prevState].Init)();
+        }
+    }
+
+    // This is CallStateDeinit?
+    inline void CallStateDeinit(void) {
+        if (prevState != GSS_NONE) {
+            if (pStates[prevState].Deinit) {
+                (this->*pStates[prevState].Deinit)();
+            }
+        }
+        prevState = GSS_NONE;
+    }
+
+    void Init(GameSubState newState);
+    void Deinit(void);
+
+    void InGameUpdate(void);
+    void InGameDraw(void);
+
+    void BushPig_Update(void);
+    void BushPig_Draw(void);
+
+    void MiniGame_A2_Init(void);
+    void MiniGame_A2_Deinit(void);
+    void MiniGame_A2_Update(void);
+    void MiniGame_A2_Draw(void);
+
+    void MiniGame_B1_Init(void);
+    void MiniGame_B1_Deinit(void);
+    void MiniGame_B1_Update(void);
+    void MiniGame_B1_Draw(void);
+
+    void MiniGame_B3_Init(void);
+    void MiniGame_B3_Deinit(void);
+    void MiniGame_B3_Update(void);
+    void MiniGame_B3_Draw(void);
+
+    void MiniGame_C2_Init(void);
+    void MiniGame_C2_Deinit(void);
+    void MiniGame_C2_Update(void);
+    void MiniGame_C2_Draw(void);
+
+    void MiniGame_C3_Init(void);
+    void MiniGame_C3_Deinit(void);
+    void MiniGame_C3_Update(void);
+    void MiniGame_C3_Draw(void);
+
+    void MiniGame_E4_Init(void);
+    void MiniGame_E4_Deinit(void);
+    void MiniGame_E4_Update(void);
+    void MiniGame_E4_Draw(void);
 };
+
+void VibrateJoystick(float, float, float, char, float);
+void VibrateUpdate(void);
+void VibrateReset(void);
+void LoadManuallyScrollingTextures(void);
+void ManuallyScrollTextures(void);
+void FreeManuallyScrollingTexturePointers(void);
 
 struct JoyPad {
-    char padding[0x78];
+    char padding0x0[0x74];
+    InputDevices mInputDeviceID;
 };
 
-enum GameState {};
+enum GameState {
+    STATE_NONE = 0,
+};
 
 struct LogicState {
     int unk0;
+    int unk4;
+    GameState nextGameState;
+    int unkC;
+
+    void Init(GameState);
+    void Set(GameState);
+    void Update(void);
+    bool DebugState(GameState);
+
+    int GetUnk0(void) {
+        return unk0;
+    }
+};
+
+enum LevelNumber;
+enum ElementType;
+
+struct LevelData {
+    char name[0x20];
+    char padding_0x20[0x230 - 0x20];
+    int nmbrOfLayers;
+    int bEnvCubeLocked;
+    Model* pEnvCube;
+    Model* pEnvCubeWater;
+    int collisionTilesAcross;
+    int collisionTilesDown;
+    char waterMaterial[0x20];
+    float fog[4];
+    int bDisplayMist;
+    int bDrawLensFlare;
+    float waterFog[4];
+    float maxDepth;
+    float fogPlane_0;
+    float fogPlane_1;
+    float fogPlane;
+    float waterFogPlane;
+    float waterFarPlane;
+    float envRotate;
+    float envYRot;
+    Vector quarterLight;
+    Vector lightDir;
+    Vector halfLight;
+    float alphaLightMapColor[4];
+    Vector mLights[3];
+    Vector mLightColors[3];
+    Vector ambientLight;
+    Vector worldMin;
+    Vector worldMax;
+    float lodRanges[8];
+    int collisionHeapSize[24]; // Collision heap size array for each level
+    int levelNr;
+    int newLevelNumber;
+    int nmbrOfLoadLevels;
+    int levelNumber;
+    int lastLevelIdx;
+    bool bBossEnabled;
+
+    void Init(void);
+    ElementType GetElementType(void);
+    ElementType GetElementType(LevelNumber);
+
+    int GetCurrentLevel(void) {
+        return levelNumber;
+    }
 };
 
 struct GlobalVar {
@@ -33,7 +202,9 @@ struct GlobalVar {
     bool b3DSound;
     bool unkFE;
     int unk100;
+    // Game savedata structure
     GameData mGameData;
+    // Game config structure
     DataVal mDataVal;
     bool devLevelWarp;
     bool disableFrontend;
@@ -50,38 +221,85 @@ struct GlobalVar {
     bool unk2B2;
     bool unk2B3;
     bool enableBoss;
+    // Global random number seed
     int mRandSeed;
     LogicState mLogicState;
-    int lastLogicState;
-    GameState gameState;
-    int unk2C8;
     GameSubStateFSM mGameFsm;
-    int unk2DC;
-    char padding_0x2E0[0x6F8 - 0x2E0];
+    LevelData level;
     bool bOnPauseScreen;
-    bool boot_controllerStatusTest;
-    char padding_0x6FA[0x6];
+    bool unk6F9;
+    char padding6FA[6];
     bool unk700;
+    bool bE3;
     uint unk704;
     char dialogNameBuf[32];
-    Vector tyPos;
+    Vector tyPos; // ty jump pos?
     Vector glideJumpPos;
-    float tyPosY;
+    float tyYPos;
     Material* pShadowMat;
-    Material* pOverlayMat;
+    Material* pBlackSquareMat;
     uint logicGameCount;
-    char padding[0xD94 - 0x758];
+    Material* pSmokeTex;
+    Material* pZ1Mat_B;
+    Material* pWaterfallMat;
+    Material* pTyZ1Mat;
+    Material* pTyZ1MatB;
+    Material* pTyA1Mat;
+    Material* pTyA1OverlayMat;
+    Material* pWaterfallOverlay;
+    Material* unk778;
+    Material* unk77C;
+    Material* unk780;
+    Material* unk784;
+    Material* unk788;
+    float unk78C;
+    Font* pGlobalFont;
+    bool unk794;
+    // Refpoint position of sun object in level model used for lensflare (unused)
+    Vector sunOrigin;
+    float sunMagnitude;
+    bool unk7AC;
+    bool unk7AD;
+    bool unk7AE;
+    char padding[0xD94 - 0x7AF];
     DirectLight mDirectLight;
     bool autoLevelSwitch;
     bool unkE85;
     bool introOnly;
     int unkE88;
     int unkE8C;
+    int unkE90;
     bool unkE94;
     bool fastDialogs;
+
+    void ResetLight(void);
 };
 
 extern GlobalVar gb;
 
+extern const char VersionNumber[];
+
+extern const float FOV;
+extern const float PaddleDepth;
+
+inline bool TestColInfoFlag(CollisionResult* pCr, uint testFlags) {
+    if (pCr->pInfo) {
+        return pCr->pInfo->TestFlags(testFlags);
+    }
+    return false;
+}
+
+#define NUM_DIALOGPLAYER_ACTORS (68)
+
+// Dialog Player Actor Info Structure
+struct dpActorInfoStruct {
+    char* pName;
+    Model* pModel;
+    int unk8;
+    int unkC;
+    int unk10;
+};
+
+#define DIALOG_ACTORINFO_MACRO(name, field3, field4) {name, NULL, NULL, field3, field4}
 
 #endif // GLOBAL_H

@@ -199,7 +199,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case 10:
-            if (gb.mGameData.HasBoomerang(9)) {
+            if (gb.mGameData.HasBoomerang((BoomerangType)9)) {
                 bConditionMet = true;
             }
             break;

@@ -119,6 +119,11 @@ struct Material {
         return unk54;
     }
 
+    void SetMatrixX(float xVal) {
+        flags |= 0x2000;
+        unk60.data[3][0] = xVal;
+    }
+
 	static Material* pCurrMat[2];
     static int frameCounter;
 	static int updateEnabled;
