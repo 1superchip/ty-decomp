@@ -28,7 +28,7 @@ inline void PtrList<T>::Init(int count) {
 	if (count == 0) {
 		pPointers = (T**)&gEmptyPtrList[1];
 	} else {
-		pPointers = (T**)Heap_MemAlloc((count + 2) * 4);
+		pPointers = (T**)Heap_MemAlloc((count + 2) * sizeof(T*));
         *pPointers = NULL;
         int i = 0;
         for (i; i < count; i++) {

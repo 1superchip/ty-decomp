@@ -75,7 +75,7 @@ struct Material {
 	static Material* CreateFromRawData(char*, void*, int, int, int);
 	static Material* CreateRenderTarget(char*, int, int, int);
 	static Material* CreateMpegTarget(char* pName, void* pData, int width, int height);
-	static Material* GetMaterialList(void);
+	static Material** GetMaterialList(void);
 	void SetTextureAlias(Material*);
 	void SetTextureAlias(Texture*);
 	void Use(void);

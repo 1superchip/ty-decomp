@@ -7,6 +7,8 @@
 #include "common/KromeIni.h"
 #include "common/Model.h"
 
+#define NUM_TERRAIN_MODELS (12)
+
 #define MKPROP_TypeMask 3
 #define MKPROP_Static 0
 #define MKPROP_Dynamic 1

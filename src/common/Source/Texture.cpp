@@ -41,7 +41,7 @@ Texture* Texture::Create(char* pName) {
         pTex->referenceCount++;
     } else {
         pTex = textures.GetNextEntry();
-        strcpy(pTex->name, Str_CopyString(pName, 0x1f));
+        strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
         pTex->bMpegTarget = false;
         TexFile* texFile = (TexFile*)FileSys_Load(Str_Printf("%s.gtx", pName), &size, NULL, -1);
         DCStoreRange((uint *)texFile, size);
@@ -159,7 +159,7 @@ Texture* Texture::CreateRenderTarget(char* pName, int arg2, int arg3, int arg4) 
 
 Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int width, int height) {
     Texture* pTex = textures.GetNextEntry();
-    strcpy(pTex->name, Str_CopyString(pName, 0x1f));
+    strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
     pTex->bMpegTarget = false;
     pTex->pFileData = pRawData;
     pTex->width = width;
@@ -190,7 +190,7 @@ Texture* Texture::CreateMpegTarget(char* pName, void* arg2, int width, int heigh
     } else {
         pTex = textures.GetNextEntry();
         pTex->pFileData = NULL;
-        strcpy(pTex->name, Str_CopyString(pName, 0x1f));
+        strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
         pTex->width = width;
         pTex->height = height;
         pTex->referenceCount = 1;

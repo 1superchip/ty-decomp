@@ -68,15 +68,16 @@ GXColor Material_MixedColor = {0xff, 0xff, 0xff, 0xff};
 // extra 16 bytes to match rodata length
 const Vector MaterialGC_rodata_hack = {};
 
-// (0x82000 | 0x102000 | 0x42000 | 0x12000 | 0x22000) = 0x1f2000
+// (0x100000 | 0x80000 | 0x40000 | 0x20000 | 0x10000 | 0x2000) = 0x1f2000
 
-char *Material::InitFromMatDefs(char *pName) {
-    char *zwrite;
-    char *pTextureName;
-    char *pOverlayName;
+char* Material::InitFromMatDefs(char* pName) {
+    char* zwrite;
+    char* pTextureName;
+    char* pOverlayName;
     int blend;
-    char *pBlend;
-    char textureName[0x20];
+    char* pBlend;
+    char textureName[sizeof(name)];
+
     texture_filterType = gMKDefaults.materialTextureFilterType;
     type = gMKDefaults.materialType;
     flags = gMKDefaults.materialFlags;
@@ -104,7 +105,7 @@ char *Material::InitFromMatDefs(char *pName) {
     indirectWaterVec.x = 25.0f;
     indirectWaterVec.y = 50.0f;
 
-    strcpy(name, Str_CopyString(pName, 0x1f));
+    strcpy(name, Str_CopyString(pName, sizeof(name) - 1));
     pTextureName = NULL;
     KromeIniLine *pLine = materialIni.GotoLine(name, NULL);
     if (pLine != NULL) {
@@ -460,7 +461,7 @@ char *Material::InitFromMatDefs(char *pName) {
         pOverlayMat = Material::Create(pOverlayName);
     }
     if (pTextureName != NULL) {
-        return Str_CopyString(textureName, 0x20);
+        return Str_CopyString(textureName, sizeof(textureName));
     }
     return name;
 }
@@ -604,8 +605,8 @@ void Material::SetTextureAlias(Texture* pTexAlias) {
     flags |= 0x1000;
 }
 
-Material* Material::GetMaterialList(void) {
-	return (Material*)materials.pMem;
+Material** Material::GetMaterialList(void) {
+	return (Material**)materials.pMem;
 }
 
 Material* Material::CreateMpegTarget(char* pName, void* pData, int width, int height) {

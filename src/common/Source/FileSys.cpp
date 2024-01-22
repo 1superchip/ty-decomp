@@ -279,7 +279,7 @@ static int LanguageSortCompare(const void* arg0, const void* arg1) {
 }
 
 void FileSys_OutputFileOrder(void) {
-    RkvFileEntry** sortedEntries = (RkvFileEntry**)Heap_MemAlloc(data.nmbrOfEntries * 4);
+    RkvFileEntry** sortedEntries = (RkvFileEntry**)Heap_MemAlloc(data.nmbrOfEntries * sizeof(RkvFileEntry*));
     char* stringBuf = (char*)Heap_MemAlloc(0x2200);
     int openFd;
     int bufferIndex;

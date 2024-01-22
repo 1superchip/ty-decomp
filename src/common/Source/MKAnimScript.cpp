@@ -101,7 +101,13 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
         }
         pLine = ini.GetNextLine();
     }
-    int templateSectionSize = sizeof(MKAnimTemplateSection) + (badAnimCount * sizeof(MKAnim)) + (animRangeCount * sizeof(AnimRange)) + (animEventCount * sizeof(AnimEvent)) + stringSize;
+
+    int templateSectionSize = sizeof(MKAnimTemplateSection) 
+        + (badAnimCount * sizeof(MKAnim)) 
+        + (animRangeCount * sizeof(AnimRange)) 
+        + (animEventCount * sizeof(AnimEvent)) 
+        + stringSize;
+    
     MKAnimTemplateSection* pTemplateSection = (MKAnimTemplateSection*)Heap_MemAlloc(templateSectionSize);
     pTemplate->pSection = pTemplateSection;
     memset((void*)pTemplate->pSection, 0, templateSectionSize);
@@ -154,7 +160,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
 									// fallthrough
                                 case 2:
                                     unk2_local = 1;
-									// fallthrough
+                                    break;
                             }
                             pRanges->startFrame = startFrame;
                             pRanges->endFrame = endFrame;
@@ -181,7 +187,8 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                                     case 1:
                                         endEventFrame = startEventFrame;
 										// fallthrough
-                                    case 2: break;
+                                    case 2:
+                                        break;
                                 }
                                 if (startEventFrame != -1) {
                                     int i = 0;
@@ -498,11 +505,8 @@ char* MKAnimScript::GetEvent(int eventIdx) {
 }
 
 bool MKAnimScript::HasLooped(void) {
-    bool bLooped = false;
-    if (currAnim != NULL && (unkC == (float)currAnim->pAnimRanges[0].startFrame) && (currAnim->pAnimRanges[currAnim->nmbrOfRanges - 1].endFrame == unk1A)) {
-        bLooped = true;
-    }
-    return bLooped;
+    return currAnim && (unkC == (float)currAnim->pAnimRanges[0].startFrame) &&
+        (currAnim->pAnimRanges[currAnim->nmbrOfRanges - 1].endFrame == unk1A);
 }
 
 int MKAnimScript::UpdatesUntilFinished(void) {

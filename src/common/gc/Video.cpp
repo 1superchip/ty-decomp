@@ -89,6 +89,7 @@ bool Video_Update(Video* pVideo) {
                 Heap_MemFree(currentVideo.pMem);
                 currentVideo.pMem = NULL;
             }
+            break;
     }
     return false;
 }

@@ -33,16 +33,15 @@ Font* Font::Create(char* pName, char* pCharMap, float, float aspectRatio, float)
 /// @return Pointer to Font structure
 Font* Font::Create(char* pName) {
     int size;
-    Font* retFont;
-    retFont = Find(pName);
+    Font* retFont = Find(pName);
     if (retFont != NULL) {
         retFont->referenceCount++;
     } else {
         retFont = fontList.GetNextEntry();
-        void *fontFile = FileSys_Load(Str_Printf("%s.gfn", pName), 0, 0, -1);
+        void* fontFile = FileSys_Load(Str_Printf("%s.gfn", pName), NULL, NULL, -1);
         *((int*)fontFile + 10) = (int)fontFile + *((int*)fontFile + 10);
         *(FontData*)retFont = *(FontData*)fontFile; // not a struct copy?
-        retFont->pChars = (FontCharData*)Heap_MemAlloc(0x2000);
+        retFont->pChars = (FontCharData*)Heap_MemAlloc(sizeof(FontCharData) * 256);
         memcpy((void*)retFont->pChars, (void*)*((int*)fontFile + 10), sizeof(FontCharData) * 256);
         Heap_MemFree(fontFile);
         strcpy(retFont->name, pName);
@@ -489,6 +488,8 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
     return copy;
 }
 
+#define MAX_TEXT_SEGMENTS (100)
+
 void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos,
         FontJustify justify, uint color, int flags) {
     float xPos = pPos->x;
@@ -514,13 +515,13 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
         image.Draw(1);
     }
     int r24 = (u8)((flags & 2));
-    TextSegmentInfo info[100];
+    TextSegmentInfo info[MAX_TEXT_SEGMENTS];
     int r29;
     while (true) {
         char* text = pText;
         // r29 = 0;
         float max = 0.0f;
-        for (r29 = 0; *text != '\0' && r29 < 100; r29++) {
+        for (r29 = 0; *text != '\0' && r29 < MAX_TEXT_SEGMENTS; r29++) {
             if (!GetTextSegment(&text, zPos / xScale, &info[r29])) {
                 break;
             }
@@ -622,13 +623,13 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
 
 void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
         float f3, float f4, FontJustify justify, uint color, int flags) {
-    TextSegmentInfo segs[100];
+    TextSegmentInfo segs[MAX_TEXT_SEGMENTS];
     int r29;
     int r24 = (u8)((flags & 2));
     while (true) {
         char* pTemp = pText;
         float max = 0.0f;
-        for (r29 = 0; *pTemp != '\0' && r29 < 100; r29++) {
+        for (r29 = 0; *pTemp != '\0' && r29 < MAX_TEXT_SEGMENTS; r29++) {
             if (!GetTextSegment(&pTemp, f3 / f1, &segs[r29])) {
                 break;
             }

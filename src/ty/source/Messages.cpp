@@ -44,7 +44,7 @@ bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
         }
         pCurrentEM = NULL;
     }
-    if (stricmp(pLine->pFieldName, (char *)str) == 0) {
+    if (stricmp(pLine->pFieldName, (char*)str) == 0) {
         pCurrentEM = this;
         return true;
     }

@@ -133,7 +133,7 @@ static void __DEMOInitGX(void) {
         GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
     } else {
         GXColor copyClrColor = {0, 0, 0, 127};
-        GXSetCopyClear(copyClrColor, 0xffffff);
+        GXSetCopyClear(copyClrColor, 0x00FFFFFF);
         GXSetPixelFmt(GX_PF_RGBA6_Z24, GX_ZC_LINEAR);
     }
     GXCopyDisp(pBuffer, GX_TRUE);

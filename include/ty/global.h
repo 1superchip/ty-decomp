@@ -140,12 +140,25 @@ struct LogicState {
     }
 };
 
-enum LevelNumber;
 enum ElementType;
 
-struct LevelData {
+struct LevelInfo {
+    char* levelId;
+    ElementType elementType;
+    ZoneNumber zone;
+    TalismanType talismanType;
+    bool bShowGameInfo;
+    bool bShowGemCount;
+};
+
+struct LevelLayer {
     char name[0x20];
-    char padding_0x20[0x230 - 0x20];
+    Model* pModel;
+    char padding24[0x38 - 0x24];
+};
+
+struct LevelData {
+    LevelLayer layers[10];
     int nmbrOfLayers;
     int bEnvCubeLocked;
     Model* pEnvCube;
@@ -176,7 +189,7 @@ struct LevelData {
     Vector worldMax;
     float lodRanges[8];
     int collisionHeapSize[24]; // Collision heap size array for each level
-    int levelNr;
+    LevelNumber unk400;
     int newLevelNumber;
     int nmbrOfLoadLevels;
     int levelNumber;
@@ -184,13 +197,30 @@ struct LevelData {
     bool bBossEnabled;
 
     void Init(void);
+    void Deinit(void);
     ElementType GetElementType(void);
-    ElementType GetElementType(LevelNumber);
+    ElementType GetElementType(LevelNumber levelNr);
+    TalismanType GetTalismanType(LevelNumber levelNr);
+    char* GetName(char* pName);
+    char* GetName(LevelNumber levelNr);
+    char* GetID(void);
+    char* GetID(LevelNumber levelNr);
+    LevelNumber GetLevelNumber(char* pName);
+    LevelNumber GetZoneFirstLevelNumber(ZoneNumber);
+    void EnableBoss(bool);
+    bool IsBossEnabled(void);
+    bool ShowGameInfo(LevelNumber levelNr);
+    bool ShowGemCount(LevelNumber levelNr);
 
     int GetCurrentLevel(void) {
         return levelNumber;
     }
+    void ChangeLevel(LevelNumber newLevel) {
+
+    }
 };
+
+struct DialogPlayer;
 
 struct GlobalVar {
     Material* pTensionMat;
@@ -211,7 +241,7 @@ struct GlobalVar {
     bool debug;
     bool disableTriggers;
     bool disableLensFlare;
-    int mNumChargeBits;
+    int mNumChargeBites;
     bool whackyness;
     bool infinitePie;
     bool fastLoad;
@@ -231,7 +261,7 @@ struct GlobalVar {
     char padding6FA[6];
     bool unk700;
     bool bE3;
-    uint unk704;
+    DialogPlayer* pDialogPlayer;
     char dialogNameBuf[32];
     Vector tyPos; // ty jump pos?
     Vector glideJumpPos;
@@ -266,8 +296,8 @@ struct GlobalVar {
     bool autoLevelSwitch;
     bool unkE85;
     bool introOnly;
-    int unkE88;
-    int unkE8C;
+    int unkE88; // levelWaitTimer?
+    int unkE8C; // some level counter
     int unkE90;
     bool unkE94;
     bool fastDialogs;

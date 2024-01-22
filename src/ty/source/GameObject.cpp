@@ -166,7 +166,7 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
     maxDrawDist = 6000.0f;
     maxScissorDist = 1000.0f;
     drawLayer = 1;
-    strncpy(descrName, pDescrName, 0x20);
+    strncpy(descrName, pDescrName, sizeof(descrName));
     Tools_StripExtension(modelName, pMdlName);
     pName = descrName;
     pNext = NULL;

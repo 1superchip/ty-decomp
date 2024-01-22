@@ -75,7 +75,7 @@ void DDASession::StartSession(void) {
 
 void DDASession::EndSession(void) {
     TimerInfo endTime;
-    if (currentCheckpoint != false) {
+    if (currentCheckpoint) {
         EndCheckpoint();
     }
     Timer_GetSystemTime(&endTime);
@@ -150,7 +150,7 @@ void DDASession::StoreDeathInfo(void) {
         return;
     }
     pInfo = unk14.GetNextEntry();
-    pInfo->unk0 = *(int*)currentCheckpoint;
+    pInfo->unk0 = currentCheckpoint->unk0;
 
     pInfo->deathPosX = (int)pHero[0x40 / 4];
     pInfo->deathPosY = (int)pHero[0x44 / 4];

@@ -161,7 +161,7 @@ void GameSubStateFSM::Deinit(void) {
 }
 
 void VibrateJoystick(float f1, float f2, float f3, char flags, float f4) {
-    if (pGameSettings->unk6 && gb.unk704 == 0) {
+    if (pGameSettings->unk6 && gb.pDialogPlayer == NULL) {
         MKRumble_Play(gb.mJoyPad1.mInputDeviceID, f1, f2, f3, flags, f4);
     }
 }

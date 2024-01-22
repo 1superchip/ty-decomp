@@ -13,8 +13,8 @@ static SMTree staticPropTree[4];
 static MKProp staticPropArray[4];
 static MKProp dynamicPropArray[4];
 static MKProp globalPropArray[4];
-Model* pTerrainModel[12];
-float terrainDrawDist[12];
+Model* pTerrainModel[NUM_TERRAIN_MODELS];
+float terrainDrawDist[NUM_TERRAIN_MODELS];
 
 static int occlusionObjects;
 MKPropDescriptor* MKPropDescriptor::pDrawListDescs;
@@ -28,7 +28,7 @@ void MKSceneManager::DeinitModule(void) {
 }
 
 void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
-    for(int i = 0; i < 12; i++) {
+    for(int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         pTerrainModel[i] = NULL;
     }
     for(int i = 0; i < 4; i++) {
@@ -59,7 +59,7 @@ void MKSceneManager::Deinit(void) {
     for(int i = 0; i < 4; i++) {
         staticPropTree[i].Deinit();
     }
-    for(int i = 0; i < 12; i++) {
+    for(int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         trees[i].Deinit();
     }
 }
@@ -369,7 +369,7 @@ void MKSceneManager::MakeTerrainTree(void) {
     SMNode* pNode;
     ModelData *pData;
     SubObject *pSubObject;
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         if (pTerrainModel[i] != NULL && pTerrainModel[i]->GetNmbrOfSubObjects() > 1) {
             trees[i].Init(pTerrainModel[i]->pTemplate->pModelData->nmbrOfSubObjects);
             pNode = &trees[i].pNodes[0];
@@ -648,7 +648,9 @@ void MKSceneManager::UpdateProps(void) {
             if (data != NULL) {
                 Vector *pLTWTrans = data->pLocalToWorld->Row3();
                 Vector *pActivePoint = &activePoint;
-                float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + Sqr<float>(pLTWTrans->y - pActivePoint->y) + Sqr<float>(pLTWTrans->z - pActivePoint->z);
+                float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + 
+                    Sqr<float>(pLTWTrans->y - pActivePoint->y) + 
+                    Sqr<float>(pLTWTrans->z - pActivePoint->z);
                 data->distSquared = dist; // set distSquared to the distance of the prop from the active point
                 if (data->distSquared < Sqr<float>(data->pDescriptor->maxUpdateDist)) {
                     // if the dist is less than the prop's max update distance squared, update the prop

@@ -874,7 +874,7 @@ void Gem_PickupParticle_Update(void) {
 void GameCamera_Use(bool);
 
 void Gem_PickupParticle_Draw(void) {
-    if (gb.unk704) {
+    if (gb.pDialogPlayer) {
         return;
     }
     GameCamera_Use(true);

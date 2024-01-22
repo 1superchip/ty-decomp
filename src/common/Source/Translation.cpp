@@ -14,8 +14,8 @@ extern "C" u8 OSGetLanguage(void);
 
 static TranslationLanguage gCurrentLanguage = Language_NotSet;
 
-static int gNmbrOfStrings;
-static char* gpTranslationBuffer;
+static int gNmbrOfStrings = 0;
+static char* gpTranslationBuffer = NULL;
 
 // this is the Language string used by the stripped DebugOptions code
 static char* pDOLanguage;
@@ -106,17 +106,22 @@ TranslationLanguage Translation_GetDefaultLanguage(void) {
 }
 
 void Translation_SetLanguage(TranslationLanguage language) {
+    
     gNmbrOfStrings = 0;
     Translation_Platform platformId = Platform_NotSet;
     Translation_Platform currentPlatform = Platform_GCN;
     gCurrentLanguage = language;
+
     FileSys_Load(gLanguageInfo[language].fileName, NULL, gpTranslationBuffer, -1);
+
     gpTranslationBuffer[gLanguageInfo[language].size] = '\0';
+
     for (int idx = 0; idx < gLanguageInfo[language].size; idx++) {
         if (gpTranslationBuffer[idx] == '\r') {
             gpTranslationBuffer[idx] = '\n';
         }
     }
+
     char *translationBuffer = gpTranslationBuffer;
     goto start;
     while (translationBuffer < (gpTranslationBuffer + gLanguageInfo[language].size)) {
@@ -132,11 +137,13 @@ void Translation_SetLanguage(TranslationLanguage language) {
             }
         } else {
             gpEnumTagArray[gNmbrOfStrings] = translationBuffer;
+
             while (translationBuffer[0] > ' ') {
                 translationBuffer++;
             }
-            *translationBuffer = '\0';
-            translationBuffer++;
+
+            *translationBuffer++ = '\0';
+
             if (*gpEnumTagArray[gNmbrOfStrings] == '[') {
                 if (strcmpi(gpEnumTagArray[gNmbrOfStrings], "[]") == 0) {
                     platformId = Platform_NotSet;
@@ -154,7 +161,7 @@ void Translation_SetLanguage(TranslationLanguage language) {
                 // not set or GCN
                 // load strings for set platform
                 if (platformId == Platform_NotSet || platformId == currentPlatform) {
-                    char *found = Str_FindChar(gpEnumTagArray[gNmbrOfStrings], '=');
+                    char* found = Str_FindChar(gpEnumTagArray[gNmbrOfStrings], '=');
                     if (found != NULL) {
                         int value = atoi(found + 1);
                         while (gNmbrOfStrings < value) {
@@ -185,8 +192,7 @@ void Translation_SetLanguage(TranslationLanguage language) {
                             if (*buffer != ' ' && *buffer != '\t') {
                                 break;
                             }
-                            *buffer = '\0';
-                            buffer--;
+                            *buffer-- = '\0';
                         }
                     }
                 }

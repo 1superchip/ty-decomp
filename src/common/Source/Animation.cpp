@@ -73,7 +73,7 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
         FileSys_Exists(Str_Printf("%s.anm", animName), &size);
         pAnimTemplate = (AnimationTemplate*)Heap_MemAlloc(sizeof(AnimationTemplate));
         memset((void*)pAnimTemplate, 0, 8);
-        strncpy(pAnimTemplate->name, animName, 31);
+        strncpy(pAnimTemplate->name, animName, sizeof(pAnimTemplate->name) - 1);
         pAnimTemplate->pAnimData = (AnimationData*)FileSys_Load(Str_Printf("%s.anm", animName), &size, NULL, -1);
         Animation_UnpackTemplate(pAnimTemplate->pAnimData);
         pAnimTemplate->referenceCount = 1;
@@ -87,8 +87,7 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
     memset((void*)&pAnim->frames, 0, pAnimTemplate->pAnimData->nmbrOfNodes * sizeof(Animation::FrameInstance));
     for(int i = 0; i < pAnimTemplate->pAnimData->nmbrOfNodes; i++) {
         pAnim->frames[i].pOrigin = &pAnimTemplate->pAnimData->pNodes[i].origin;
-		float x = 1.0f;
-        pAnim->frames[i].rotation.Set(0.0f, 0.0f, 0.0f, x);
+        pAnim->frames[i].rotation.Set(0.0f, 0.0f, 0.0f, 1.0f);
         pAnim->frames[i].b0 = 0;
         pAnim->frames[i].b1 = 0;
         pAnim->frames[i].b2 = 0;

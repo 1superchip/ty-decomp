@@ -1,4 +1,5 @@
 #include "types.h"
+#include "ty/global.h"
 #include "ty/GameData.h"
 #include "common/Heap.h"
 #include "common/StdMath.h"
@@ -7,18 +8,7 @@
 
 // EXTERNS
 void Hud_SetGems(int);
-extern char VersionNumber[]; // from global.cpp
 void Hud_ShowCogs(void);
-struct LevelData {
-    int unk0;
-    TalismanType GetTalismanType(LevelNumber);
-    ElementType GetElementType(LevelNumber);
-};
-extern struct GlobalVar {
-    bool unk0[0x2e0];
-    LevelData levelData;
-    bool unk[0x702];
-} gb;
 struct SpecialPickupStruct {
     int unk0[2];
     void SetTransparent(bool);
@@ -51,7 +41,6 @@ extern struct Ty {
 } ty;
 extern "C" void memset(void*, int, int);
 // End EXTERNS
-
 
 static const int GAMEDATA_VERSION = 0x60000 |
     VersionNumber[0] | VersionNumber[1] << 1 | VersionNumber[2] << 2 | VersionNumber[3] << 3;
@@ -100,7 +89,7 @@ void GameData::Init(void) {
 
 void GameData::SynchroniseEnterLevel(void) {
     numChargeBites = 0;
-    numChargeBites = *(int*)&gb.unk0[0x2a8] * 100;
+    numChargeBites = gb.mNumChargeBites * 100;
     for(int i = 0; i < Total_ThunderEggs; i++) {
         SpecialPickupStruct* pEgg = GetThunderEgg((ThunderEggType)i);
         if (pSaveData->levels[pSaveData->levelAB0].thunderEggs[i] && pEgg) {
@@ -183,7 +172,7 @@ void GameData::SetDirty(bool dirty) {
 }
 
 void GameData::SetCurrentLevel(LevelNumber level) {
-    if (pSaveData != NULL) {
+    if (pSaveData) {
         pSaveData->levelAB4 = pSaveData->levelAB0;
         pSaveData->levelAB0 = level;
         pSaveData->levels[pSaveData->levelAB0].nmbrOfTimesEntered++;
@@ -191,7 +180,7 @@ void GameData::SetCurrentLevel(LevelNumber level) {
 }
 
 void GameData::SetCurrentZone(ZoneNumber zone) {
-    if (pSaveData != NULL) {
+    if (pSaveData) {
         pSaveData->currentZone = zone;
     }
 }
@@ -213,7 +202,7 @@ void GameData::SetBothRangs(bool bHasBothRangs) {
 
 void GameData::SetHasExtraHealth(bool bExtraHealth) {
     pSaveData->tyAttributes.bHasExtraHealth = bExtraHealth;
-    if (bExtraHealth != false) {
+    if (bExtraHealth) {
         ty.health.SetNumSymbols(2);
     } else {
         ty.health.SetNumSymbols(1);
@@ -229,9 +218,9 @@ void GameData::SetHasRang(BoomerangType type, bool hasRang) {
 void GameData::SetBossDefeated(ZoneNumber zone, bool bossDefeated) {
     pSaveData->zoneInfo[zone].bZoneCompleted = bossDefeated;
     SetDataDirty(true);
-    TalismanType index = gb.levelData.GetTalismanType((LevelNumber)pSaveData->levelAB0);
+    TalismanType index = gb.level.GetTalismanType((LevelNumber)pSaveData->levelAB0);
     SetHasTalisman(index, true);
-    index = gb.levelData.GetTalismanType((LevelNumber)pSaveData->levelAB0);
+    index = gb.level.GetTalismanType((LevelNumber)pSaveData->levelAB0);
     SetHasPlacedTalisman(index, true);
 }
 
@@ -407,7 +396,7 @@ void GameData::CollectCog(GoldenCogType cogType) {
 int GameData::GetThunderEggCount(ElementType type) {
     int count = 0;
     for(int i = 0; i < Total_Levels; i++) {
-        if (gb.levelData.GetElementType((LevelNumber)i) == type) {
+        if (gb.level.GetElementType((LevelNumber)i) == type) {
             for(int j = 0; j < Total_ThunderEggs; j++) {
                 if (pSaveData->levels[i].thunderEggs[j]) {
                     count++;
@@ -486,7 +475,7 @@ void GameData::AddLife(void) {
 }
 
 void GameData::LoseLife(void) {
-    if (!gb.unk[0x41d]) {
+    if (!gb.bE3) {
         pSaveData->lives--;
         if (pSaveData->lives > 99) {
             pSaveData->lives = 99;
@@ -525,7 +514,7 @@ void GameData::StopTime(void) {
 int GameData::GetTotalTime(void) {
     TimerInfo timeDiff;
     TimerInfo currTime;
-    if (!gb.unk[0x414]) {
+    if (!gb.bOnPauseScreen) {
         Timer_GetSystemTime(&currTime);
         Timer_GetDifference(&timeDiff, &time, &currTime);
         pSaveData->totalPlayTime += Timer_GetDHMSInSeconds(&timeDiff);

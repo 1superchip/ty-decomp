@@ -70,7 +70,7 @@ void Projectile::Update(void) {
     if (mState != (ProjectileState)2) {
         return;
     }
-    if (unk70 > 1 && gb.unk704 == 0) {
+    if (unk70 > 1 && gb.pDialogPlayer == NULL) {
         unk70--;
         unk5C = *GetPos();
         AddSpin();

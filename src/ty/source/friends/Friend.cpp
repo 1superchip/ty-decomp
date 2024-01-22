@@ -88,7 +88,7 @@ void Friend::Draw(void) {
     if (bFlashSkeleton) {
         SetDefaultMaterial_UseNone(pShockMaterial);
     }
-    if ((mFlags & FSF_Visible) && !gb.unkFE && gb.unk704 == 0) {
+    if ((mFlags & FSF_Visible) && !gb.unkFE && gb.pDialogPlayer == NULL) {
         mLodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
     }
     // If bFlashSkeleton is true, set the default material to NULL
@@ -226,7 +226,7 @@ void Friend::Reset(void) {
     end.y -= 1000.0f;
     mFlashTimer = 0;
     bFlashSkeleton = false;
-    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0x400)) {
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
         mPos.y = cr.pos.y;
         pModel->colour = Tools_GroundColor(&cr);
         mCollisionNormal = cr.normal;
@@ -241,7 +241,7 @@ void Friend::Reset(void) {
 }
 
 void Friend::Update(void) {
-    if (gb.unk704 != 0 || !(mFlags & FSF_Active)) {
+    if (gb.pDialogPlayer || !(mFlags & FSF_Active)) {
         return;
     }
     PreUpdate();

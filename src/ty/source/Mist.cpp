@@ -1,17 +1,14 @@
 #include "ty/Mist.h"
+#include "ty/global.h"
 #include "common/Model.h"
-#include "common/Material.h"
 
-extern struct GlobalVar {
-	int unk[0x558 / 4];
-} gb;
 Vector* GameCamera_GetPos(void);
 
 static Model* envMist = NULL;
 static Material* envMat = NULL;
 
 void Mist_Init(void) {
-    if (gb.unk[0x558 / 4] != 0) {
+    if (gb.level.bDisplayMist) {
         if (envMist == NULL) {
             envMist = Model::Create("env_mist", NULL);
             envMist->renderType = 3;
@@ -36,7 +33,7 @@ void Mist_Deinit(void) {
 void Mist_Update(void) {
     Vector trans;
     Vector scale;
-    if (gb.unk[0x558 / 4] != 0) {
+    if (gb.level.bDisplayMist) {
         envMist->matrices[0].SetIdentity();
         trans = *GameCamera_GetPos();
         trans.y = 0.0f;
@@ -47,7 +44,7 @@ void Mist_Update(void) {
 }
 
 void Mist_Draw(void) {
-    if (gb.unk[0x558 / 4] != 0) {
+    if (gb.level.bDisplayMist) {
 		envMist->Draw(NULL);
 	}
 }

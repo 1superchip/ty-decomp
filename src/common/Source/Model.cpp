@@ -81,7 +81,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         FileSys_Exists(fileName, &size);
         pModelTemplate = (ModelTemplate*)Heap_MemAlloc(sizeof(ModelTemplate));
         memset(pModelTemplate, 0, sizeof(ModelTemplate));
-        strncpy(pModelTemplate->name, meshName, 31);
+        strncpy(pModelTemplate->name, meshName, sizeof(pModelTemplate->name) - 1);
         fileName = Str_Printf("%s%s", meshName, ".gmd");
         pModelTemplate->pModelData = (ModelData*)FileSys_Load(fileName, &size, NULL, -1);
         pModelTemplate->templateDataSize = size;
@@ -90,7 +90,9 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         pModelTemplate->referenceCount = 1;
         modelTemplates.AddEntry(pModelTemplate);
     }
-    int modelSize = (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) + sizeof(Model) + (pModelTemplate->pModelData->nmbrOfMatrices * 4);
+    
+    int modelSize = (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) +
+        sizeof(Model) + (pModelTemplate->pModelData->nmbrOfMatrices * sizeof(Matrix*));
     pModel = (Model*)Heap_MemAlloc(pModelTemplate->pModelData->nmbrOfSubObjects + modelSize);
     pModel = modelInstances.AddEntry(pModel);
     pModel->pTemplate = pModelTemplate;

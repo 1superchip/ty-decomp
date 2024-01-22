@@ -14,7 +14,7 @@ void Timer_GetSystemTime(TimerInfo* pTimerInfo) {
     pTimerInfo->year = calendarTime.year;
 };
 
-int Timer_GetDHMSInSeconds(TimerInfo *pTimerInfo) {
+int Timer_GetDHMSInSeconds(TimerInfo* pTimerInfo) {
     int ret = pTimerInfo->day * DAYS_TO_SECONDS;
     ret += pTimerInfo->hours * HOURS_TO_SECONDS;
     ret += pTimerInfo->minutes * MINUTES_TO_SECONDS;
@@ -22,7 +22,7 @@ int Timer_GetDHMSInSeconds(TimerInfo *pTimerInfo) {
     return ret;
 }
 
-inline void Timer_SetDHMSInSeconds(struct TimerInfo *pTimerInfo, int time) {
+inline void Timer_SetDHMSInSeconds(TimerInfo* pTimerInfo, int time) {
     pTimerInfo->seconds = time % 60;
     time /= 60;
     pTimerInfo->minutes = time % 60;
@@ -31,7 +31,7 @@ inline void Timer_SetDHMSInSeconds(struct TimerInfo *pTimerInfo, int time) {
     pTimerInfo->day =  time / 24;
 }
 
-void Timer_GetDifference(TimerInfo *pTimeDiff, TimerInfo *param_2, TimerInfo *param_3) {
+void Timer_GetDifference(TimerInfo* pTimeDiff, TimerInfo* param_2, TimerInfo* param_3) {
 	int time = Timer_GetDHMSInSeconds(param_2);
 	int time2 = Timer_GetDHMSInSeconds(param_3);
     

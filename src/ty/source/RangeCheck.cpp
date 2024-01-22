@@ -257,7 +257,7 @@ LODEntry* LODDescriptor::GetEntryFromString(char *name) {
         pEntries = &lodEntryPool[nextAvailableLODEntryIndex++];
         nmbrOfEntries = 1;
         pFoundEntry = pEntries;
-        strncpy(pFoundEntry->name, name, 0x20);
+        strncpy(pFoundEntry->name, name, sizeof(pFoundEntry->name));
     } else {
         for (int i = 0; i < nmbrOfEntries; i++) {
             if (stricmp(pEntries[i].name, name) == 0) {
@@ -273,7 +273,7 @@ LODEntry* LODDescriptor::GetEntryFromString(char *name) {
             memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
             LODEntry* temp = &lodEntryPool[nextAvailableLODEntryIndex++];
             pFoundEntry = temp;
-            strncpy(temp->name, name, 0x20);
+            strncpy(temp->name, name, sizeof(temp->name));
             nmbrOfEntries++;
         }
     }

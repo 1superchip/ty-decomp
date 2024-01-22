@@ -153,8 +153,8 @@ void GameObjectManager::RemoveObject(GameObject* pObj) {
 
 void GameObjectManager::UpdateModules(void) {
     ModuleInfoBase* pInfo = ModuleInfoBase::pList;
-    while (pInfo != NULL) {
-        if (pInfo->pData->bUpdate != false) {
+    while (pInfo) {
+        if (pInfo->pData->bUpdate) {
             pInfo->pData->pUpdateModule();
         }
         pInfo = pInfo->pData->pNext;
@@ -163,8 +163,8 @@ void GameObjectManager::UpdateModules(void) {
 
 void GameObjectManager::DrawModules(void) {
     ModuleInfoBase* pInfo = ModuleInfoBase::pList;
-    while (pInfo != NULL) {
-        if (pInfo->pData->bUpdate != false) {
+    while (pInfo) {
+        if (pInfo->pData->bUpdate) {
             pInfo->pData->pDrawModule();
         }
         pInfo = pInfo->pData->pNext;
@@ -240,7 +240,7 @@ DescriptorIterator GameObjectManager::Begin(void) {
 
 int GameObjectManager::CountEntities(KromeIni* pIni, KromeIniLine* pIniLine) {
     int count = 0;
-    KromeIniLine *pLine = pIni->GetLineWithLine(pIniLine);
+    KromeIniLine* pLine = pIni->GetLineWithLine(pIniLine);
     // iterate until line is NULL or section is not NULL
     // a new section means a new object type in this case
     while (pLine != NULL && pLine->section == NULL) {
