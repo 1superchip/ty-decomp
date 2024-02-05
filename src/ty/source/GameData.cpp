@@ -226,12 +226,12 @@ void GameData::SetBossDefeated(ZoneNumber zone, bool bossDefeated) {
 
 void GameData::SetZoneUnlocked(ZoneNumber zone, bool unlocked) {
     pSaveData->zoneInfo[zone].bUnlocked = unlocked;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::SetZoneTalismanLocated(ZoneNumber zone, bool bLocated) {
     pSaveData->zoneInfo[zone].unk2 = bLocated;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::ReceiveOpalLifeup(void) {

@@ -416,7 +416,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
         dstAlpha = (alpha > 255) ? 255 : alpha;
     }
 
-    GXSetDstAlpha(GX_TRUE, dstAlpha);
+    GXSetDstAlpha(GX_ENABLE, dstAlpha);
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
 
     GXClearVtxDesc();

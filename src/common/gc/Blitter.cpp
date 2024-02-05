@@ -363,7 +363,7 @@ void Blitter_Image::Draw(int count) {
 }
 
 void Blitter_UntexturedImage::Draw(int count) {
-    u8 red;
+    u8 alpha;
 	Blitter_UntexturedImage* pImage = this;
     float projection[7];
 	
@@ -382,23 +382,23 @@ void Blitter_UntexturedImage::Draw(int count) {
         float posY = pImage->pos.y;
         float posZ = pImage->pos.z;
         float posW = pImage->pos.w;
-        int alpha = pImage->color[3];
-        red = (pImage->color[0] * 255) >> 7;
-        u8 blue = pImage->color[2];
-        u8 green = pImage->color[1];
+        int red = pImage->color[3];
+        alpha = (pImage->color[0] * 255) >> 7;
+        u8 green = pImage->color[2];
+        u8 blue = pImage->color[1];
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
         GXPosition3f32(posX, posY, pImage->unk10);
-        GXColor4u8(alpha, blue, green, red);
+        GXColor4u8(red, green, blue, alpha);
 
         GXPosition3f32(posX, posW, pImage->unk10);
-        GXColor4u8(alpha, blue, green, red);
+        GXColor4u8(red, green, blue, alpha);
 
         GXPosition3f32(posZ, posY, pImage->unk10);
-        GXColor4u8(alpha, blue, green, red);
+        GXColor4u8(red, green, blue, alpha);
 
         GXPosition3f32(posZ, posW, pImage->unk10);
-        GXColor4u8(alpha, blue, green, red);
+        GXColor4u8(red, green, blue, alpha);
         pImage++;
     }
 

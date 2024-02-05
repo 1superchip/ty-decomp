@@ -65,10 +65,10 @@ void LevelObjective::Message(MKMessage* pMsg) {
         case 2:
             Reset();
             break;
-        case 10:
+        case MKMSG_ACTIVATE:
             Activate();
             break;
-        case 11:
+        case MKMSG_DEACTIVATE:
             Deactivate();
             break;
         case 0x16:

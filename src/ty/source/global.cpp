@@ -205,8 +205,11 @@ void LogicState::Set(GameState newState) {
 }
 
 void LogicState::Update(void) {
+    // set previous state?
     gb.mLogicState.unk4 = gb.mLogicState.unk0;
+    // set new/current from the next
     gb.mLogicState.unk0 = gb.mLogicState.nextGameState;
+    // set next state to NONE
     gb.mLogicState.nextGameState = STATE_NONE;
 }
 

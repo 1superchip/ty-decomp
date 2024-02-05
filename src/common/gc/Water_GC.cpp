@@ -12,7 +12,7 @@ GXTexObj waterIndTexObj;
 bool bWaterUpdate = true;
 
 void Water_InitModule(void) {
-    GXInitTexObj(&waterIndTexObj, waterIndTexData, 0x10, 0x10, 6, GX_REPEAT, GX_REPEAT, 0);
+    GXInitTexObj(&waterIndTexObj, waterIndTexData, 16, 16, 6, GX_REPEAT, GX_REPEAT, 0);
     GXInitTexObjLOD(&waterIndTexObj, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
 }
 

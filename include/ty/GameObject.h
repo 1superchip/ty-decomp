@@ -24,6 +24,18 @@ struct GameObject;
 #define MKMSG_AttachObject 4
 #define MKMSG_DetachObject 5
 
+// Activate/Deactivate message ids
+#define MKMSG_ACTIVATE      (10)
+#define MKMSG_DEACTIVATE    (11)
+
+// Enable/Disable message ids
+#define MKMSG_ENABLE        (12)
+#define MKMSG_DISABLE       (13)
+
+// Visibility message ids
+#define MKMSG_SHOW      (14) // Should set the visibility to true
+#define MKMSG_HIDE      (15) // Should set the visibility to false
+
 struct MKMessage_GOBJ : MKMessage {
 	GameObject* pObj;
 };

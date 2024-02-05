@@ -254,13 +254,13 @@ void MKAnimScript::Init(char* pFilename) {
         pTemplate = mkAnimScriptTemplates.GetNextEntry();
         int size;
         char* fileName = Str_Printf("%s.gas", pFilename);
-        if (FileSys_Exists(fileName, &size) != false) {
-            pTemplate->pSection = (MKAnimTemplateSection *)FileSys_Load(fileName, 0, 0, -1);
+        if (FileSys_Exists(fileName, &size)) {
+            pTemplate->pSection = (MKAnimTemplateSection*)FileSys_Load(fileName, NULL, NULL, -1);
             pTemplate->templateSize = size;
             pTemplate->UnpackTemplate();
         } else {
             fileName = Str_Printf("%s.bad", pFilename);
-            if (FileSys_Exists(fileName, &size) != false) {
+            if (FileSys_Exists(fileName, &size)) {
                 ParseBadFile(fileName, pTemplate);
             } else {
                 return;
@@ -397,11 +397,11 @@ void MKAnimScript::Animate(void) {
     if (unk14) {
         float tempC = unkC;
         float fVar1 = tempC + (unk14 * advanceAmount);
-        AnimRange *pRange = &currAnim->pAnimRanges[unk1E];
-        MKAnim *pAnim = currAnim;
+        AnimRange* pRange = &currAnim->pAnimRanges[unk1E];
+        MKAnim* pAnim = currAnim;
         if (fVar1 < ((float)pRange->startFrame) || fVar1 > ((float)pRange->endFrame)) {
             if (unk14 > 0.0f && (unk1E + 1 < pAnim->nmbrOfRanges)) {
-                AnimRange *pRange = &currAnim->pAnimRanges[++unk1E];
+                AnimRange* pRange = &currAnim->pAnimRanges[++unk1E];
                 float fVar5;
                 fVar1 = (float)pRange->startFrame;
                 if (pRange->unk4 != 0) {
@@ -412,7 +412,7 @@ void MKAnimScript::Animate(void) {
                 unk14 = fVar5;
             } else {
                 if (unk14 < 0.0f && unk1E != NULL) {
-                    AnimRange *pRange = &currAnim->pAnimRanges[--unk1E];
+                    AnimRange* pRange = &currAnim->pAnimRanges[--unk1E];
                     fVar1 = (float)pRange->startFrame;
                     float fVar5;
                     if (pRange->unk4 != 0) {
@@ -429,7 +429,7 @@ void MKAnimScript::Animate(void) {
                         break;
                     case CycleType_Loop:
                         unk1E = 0;
-                        AnimRange *pRange = &currAnim->pAnimRanges[0];
+                        AnimRange* pRange = &currAnim->pAnimRanges[0];
                         fVar1 = (float)pRange->startFrame;
                         int unk2 = currAnim->pAnimRanges[0].unk4;
                         float fVar5;

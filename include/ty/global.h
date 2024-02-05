@@ -173,7 +173,7 @@ struct LevelData {
     float maxDepth;
     float fogPlane_0;
     float fogPlane_1;
-    float fogPlane;
+    float farPlane;
     float waterFogPlane;
     float waterFarPlane;
     float envRotate;
@@ -218,6 +218,7 @@ struct LevelData {
     void ChangeLevel(LevelNumber newLevel) {
 
     }
+    void InitDefaults(void);
 };
 
 struct DialogPlayer;
@@ -291,6 +292,8 @@ struct GlobalVar {
     bool unk7AC;
     bool unk7AD;
     bool unk7AE;
+    // seems to contain unused fields such as
+    // a few Material pointers, a View struct, and an ObjectiveFinder struct
     char padding[0xD94 - 0x7AF];
     DirectLight mDirectLight;
     bool autoLevelSwitch;
@@ -318,6 +321,16 @@ inline bool TestColInfoFlag(CollisionResult* pCr, uint testFlags) {
     }
     return false;
 }
+
+void DeinitializeLevel(void);
+void Setup_PreloadLevel(void);
+void Setup_LoadLevel(void);
+void Setup_PostLoadLevel(void);
+void PreInitializeLevel(void);
+void InitializeLevel(void);
+void InitializeGame(void);
+void LogMaterialUsage(void);
+void Setup_GetGrassForLevel(void);
 
 #define NUM_DIALOGPLAYER_ACTORS (68)
 

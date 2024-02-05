@@ -29,8 +29,8 @@ struct PtrListDL {
     }
 	void* GetEnd(void) {
         T** ptr = pMem;
-        while (*ptr != 0) {
-			ptr++;
+        while (*ptr != NULL) {
+            ptr++;
         }
         return (void*)ptr;
     }

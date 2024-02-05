@@ -69,7 +69,7 @@ void D1Prop::Message(MKMessage* pMsg) {
             OnCompletion.Resolve();
             OnCompletion100.Resolve();
             break;
-        case 10:
+        case MKMSG_ACTIVATE:
             if (System_GetCommandLineParameter("-introonly") == NULL && gb.autoLevelSwitch == false) {
                 SoundBank_PlayMusic((MusicType)7, 0.5f, 0.0f);
                 gb.bOnPauseScreen = true;

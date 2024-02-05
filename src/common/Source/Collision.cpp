@@ -467,25 +467,28 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
 }
 
 void FindGridBoundaries(Vector* pMin, Vector* pMax, int* minX, int* minZ, int* maxX, int* maxZ) {
-    int local_24 = (Min<float>(pMin->x, pMax->x) - Collision_MinX) / Collision_TileWidth;
-    int local_28 = (Min<float>(pMin->z, pMax->z) - Collision_MinZ) / Collision_TileHeight;
-    int local_2C = (Max<float>(pMin->x, pMax->x) - Collision_MinX) / Collision_TileWidth;
-    int local_30 = (Max<float>(pMin->z, pMax->z) - Collision_MinZ) / Collision_TileHeight;
-    *minX = Max<int>(local_24, 0);
-    *minZ = Max<int>(local_28, 0);
-    *maxX = Min<int>(local_2C, Collision_TilesAcross - 1);
-    *maxZ = Min<int>(local_30, Collision_TilesDown - 1);
+    // Find the minimum and maximum tiles
+    int startX = (Min<float>(pMin->x, pMax->x) - Collision_MinX) / Collision_TileWidth;
+    int startZ = (Min<float>(pMin->z, pMax->z) - Collision_MinZ) / Collision_TileHeight;
+
+    int endX = (Max<float>(pMin->x, pMax->x) - Collision_MinX) / Collision_TileWidth;
+    int endZ = (Max<float>(pMin->z, pMax->z) - Collision_MinZ) / Collision_TileHeight;
+
+    *minX = Max<int>(startX, 0);
+    *minZ = Max<int>(startZ, 0);
+    *maxX = Min<int>(endX, Collision_TilesAcross - 1);
+    *maxZ = Min<int>(endZ, Collision_TilesDown - 1);
 }
 
 void FindGridBoundariesSphere(Vector* pPos, float radius, int* minX, int* minZ, int* maxX, int* maxZ) {
-    int local_24 = ((pPos->x - radius) - Collision_MinX) / Collision_TileWidth;
-    int local_28 = ((pPos->z - radius) - Collision_MinZ) / Collision_TileHeight;
-    int local_2C = ((pPos->x + radius) - Collision_MinX) / Collision_TileWidth;
-    int local_30 = ((pPos->z + radius) - Collision_MinZ) / Collision_TileHeight;
-    *minX = Max<int>(local_24, 0);
-    *minZ = Max<int>(local_28, 0);
-    *maxX = Min<int>(local_2C, Collision_TilesAcross - 1);
-    *maxZ = Min<int>(local_30, Collision_TilesDown - 1);
+    int startX = ((pPos->x - radius) - Collision_MinX) / Collision_TileWidth;
+    int startZ = ((pPos->z - radius) - Collision_MinZ) / Collision_TileHeight;
+    int endX = ((pPos->x + radius) - Collision_MinX) / Collision_TileWidth;
+    int endZ = ((pPos->z + radius) - Collision_MinZ) / Collision_TileHeight;
+    *minX = Max<int>(startX, 0);
+    *minZ = Max<int>(startZ, 0);
+    *maxX = Min<int>(endX, Collision_TilesAcross - 1);
+    *maxZ = Min<int>(endZ, Collision_TilesDown - 1);
 }
 
 void Collision_InitModule(void) {}
@@ -515,8 +518,11 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
     int minz;
     int maxx;
     int maxz;
+
     int numCollisions = 0;
+    
     FindGridBoundariesSphere(pPos, radius, &minx, &minz, &maxx, &maxz);
+
     Item* pItem;
 
     for (int j = minz; j <= maxz; j++) {
@@ -531,8 +537,8 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
                     Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
                     Vector* triVert2 = (Vector*)&pItem->collisionThing->verts[2];
                     float fVar19 =
-                        SubDot(pPos, (Vector *)&pItem->collisionThing->verts[0], &pItem->collisionThing->normal);
-                    float fVar0 = fVar19 < 0.0f ? -fVar19 : fVar19; // abs
+                        SubDot(pPos, (Vector*)&pItem->collisionThing->verts[0], &pItem->collisionThing->normal);
+                    float fVar0 = Abs<float>(fVar19);
                     if (!(fVar0 > radius)) {
                         Vector v1;
                         Vector v2;
@@ -723,15 +729,17 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
 							// ray is intersecting the polygon
                             float d = surfaceNormal.Dot(pDir);
                             if (d < 0.0f) {
-                                Vector newRayNormal;
-                                newRayNormal.Sub(pVec0, p1);
+                                Vector a;
+                                a.Sub(pVec0, p1);
 								// finalPos is the intersection point of the ray and polygon
 								// finalPos may be called "a"?
-                                Vector finalPos;
-                                float scale = -surfaceNormal.Dot(&newRayNormal) / d;
-                                finalPos.Scale(pDir, scale);
-                                finalPos.Add(pVec0);
-                                lastCollision.pos = finalPos;
+                                Vector newRayNormal;
+                                float scale = -surfaceNormal.Dot(&a) / d;
+                                newRayNormal.Scale(pDir, scale);
+                                newRayNormal.Add(pVec0);
+
+                                // set fields of the collision result
+                                lastCollision.pos = newRayNormal;
                                 lastCollision.normal = surfaceNormal;
                                 GetVertexColorFromPoly(&lastCollision.color, &lastCollision.pos, pItem);
                                 lastCollision.collisionFlags = pItem->pTriangle->flags;
@@ -739,6 +747,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
                                 lastCollision.pModel = NULL;
                                 lastCollision.pInfo = pItem->pTriangle->pCollisionInfo;
                                 lastCollision.unk40 = scale;
+
                                 if (pCr) {
 									// if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
@@ -824,14 +833,14 @@ static void Collision_AddItem(Item* pItem) {
     Vector* pVert1 = (Vector*)&pItem->collisionThing->verts[1].pos;
     Vector* pVert2 = (Vector*)&pItem->collisionThing->verts[2].pos;
     // find minimum/maximum X/Z point of the triangle
-    int local_24 = (Min<float>(pVert0->x, Min<float>(pVert1->x, pVert2->x)) - Collision_MinX) / Collision_TileWidth;
-    int local_28 = (Min<float>(pVert0->z, Min<float>(pVert1->z, pVert2->z)) - Collision_MinZ) / Collision_TileHeight;
-    int local_2C = (Max<float>(pVert0->x, Max<float>(pVert1->x, pVert2->x)) - Collision_MinX) / Collision_TileWidth;
-    int local_30 = (Max<float>(pVert0->z, Max<float>(pVert1->z, pVert2->z)) - Collision_MinZ) / Collision_TileHeight;
-    if (local_24 >= 0 && local_2C < Collision_TilesAcross &&
-        local_28 >= 0 && local_30 < Collision_TilesDown) {
-        for(int j = local_28; j <= local_30; j++) {
-            for(int i = local_24; i <= local_2C; i++) {
+    int startX = (Min<float>(pVert0->x, Min<float>(pVert1->x, pVert2->x)) - Collision_MinX) / Collision_TileWidth;
+    int startZ = (Min<float>(pVert0->z, Min<float>(pVert1->z, pVert2->z)) - Collision_MinZ) / Collision_TileHeight;
+    int endX = (Max<float>(pVert0->x, Max<float>(pVert1->x, pVert2->x)) - Collision_MinX) / Collision_TileWidth;
+    int endZ = (Max<float>(pVert0->z, Max<float>(pVert1->z, pVert2->z)) - Collision_MinZ) / Collision_TileHeight;
+    if (startX >= 0 && endX < Collision_TilesAcross &&
+        startZ >= 0 && endZ < Collision_TilesDown) {
+        for(int j = startZ; j <= endZ; j++) {
+            for(int i = startX; i <= endX; i++) {
                 int idx = j * Collision_TilesAcross + i;
                 pItem->next = Collision_Grid[idx];
                 Collision_Grid[idx] = (Item*)CollisionHeap_Update(sizeof(Item), 0);
@@ -887,20 +896,24 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
 // May be placed elsewhere in the file
 /* Unused Function */
 void Collision_Init(int heapSize, Model* pModel, int arg2, int arg3) {
-    arg2 = Max<int>(0x40, arg2);
-    arg3 = Max<int>(0x40, arg3);
-    Vector sp0;
-    Vector sp10;
-    sp10 = pModel->pTemplate->pModelData->volume.v1;
-    sp0.Add(&sp10, &pModel->pTemplate->pModelData->volume.v2);
-    sp10.ApplyMatrix(&pModel->matrices[0]);
-    sp0.ApplyMatrix(&pModel->matrices[0]);
-    float minx = Min<float>(sp10.x, sp0.x);
-    float miny = Min<float>(sp10.y, sp0.y);
-    float minz = Min<float>(sp10.z, sp0.z);
-    float maxx = Max<float>(sp10.x, sp0.x);
-    float maxy = Max<float>(sp10.y, sp0.y);
-    float maxz = Max<float>(sp10.z, sp0.z);
+    Vector vb;
+    Vector va;
+
+    arg2 = Max<int>(64, arg2);
+    arg3 = Max<int>(64, arg3);
+
+    va = pModel->pTemplate->pModelData->volume.v1;
+
+    vb.Add(&va, &pModel->pTemplate->pModelData->volume.v2);
+
+    va.ApplyMatrix(&pModel->matrices[0]);
+    vb.ApplyMatrix(&pModel->matrices[0]);
+
+    float minx = Min<float>(va.x, vb.x);
+    float miny = Min<float>(va.y, vb.y);
+    float minz = Min<float>(va.z, vb.z);
+    float maxx = Max<float>(va.x, vb.x);
+    float maxz = Max<float>(va.z, vb.z);
     Collision_Init(heapSize, minx - 1.0f, miny - 1.0f, minz - 1.0f, (maxx - minx) + 2.0f, (maxz - minz) + 2.0f, arg2, arg3);
 }
 
@@ -978,6 +991,7 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     v2.Add(&pVolume->v1, &pVolume->v2);
     if (pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart) >
         Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) return false;
+
     Vector corners[8] = {
         {v1.x, v1.y, v1.z},
         {v1.x, v1.y, v2.z}, 
@@ -988,11 +1002,11 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
         {v2.x, v2.y, v2.z}, 
         {v2.x, v2.y, v1.z}, 
     };
+
     for(int i = 0; i < 8; i++) {
         corners[i].ApplyMatrix(pDynItem->GetMatrix());
     }
-    // might not be the best way to format this?
-    // originally named "quads"?
+
     int quads[6][4] = {
         {4, 5, 6, 7}, 
         {3, 2, 1, 0},
@@ -1001,7 +1015,7 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
         {5, 1, 2, 6},
         {7, 3, 0, 4}
     };
-    // "normals"?
+
     Vector normals[6];
     normals[0].Sub(&corners[4], &corners[0]);
     normals[0].Normalise();
@@ -1192,23 +1206,25 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
     return collide;
 }
 
-bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, CollisionMode mode, int flags) {
+bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, CollisionMode mode, int flags) {
     bFound = false;
+    
+    // Check dynamic collisions if the mode includes dynamic collisions
     if (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_DYNAMIC) {
 		// Dynamic_Collides()
-        Vector diff;
-        diff.Sub(vec1, vec2);
-        float mag = diff.Magnitude();
+        Vector dist;
+        dist.Sub(pStart, pEnd);
+        float mag = dist.Magnitude();
         Vector min = {
-            Min<float>(vec1->x, vec2->x),
-            Min<float>(vec1->y, vec2->y),
-            Min<float>(vec1->z, vec2->z),
+            Min<float>(pStart->x, pEnd->x),
+            Min<float>(pStart->y, pEnd->y),
+            Min<float>(pStart->z, pEnd->z),
             1.0f
         };
         Vector max = {
-            Max<float>(vec1->x, vec2->x),
-            Max<float>(vec1->y, vec2->y),
-            Max<float>(vec1->z, vec2->z),
+            Max<float>(pStart->x, pEnd->x),
+            Max<float>(pStart->y, pEnd->y),
+            Max<float>(pStart->z, pEnd->z),
             1.0f
         };
         int overlapX;
@@ -1224,7 +1240,7 @@ bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, Coll
                     DynamicItem* currItem = (DynamicItem*)currNode->PTR_0x8;
                     // potentially fix CollisionNode fields
                     if (currItem->pInfo == NULL || currItem->pInfo->bEnabled) {
-                        bool collideItem = Collision_RayCollideDynamicItem(vec1, vec2, pCr, currItem, mag);
+                        bool collideItem = Collision_RayCollideDynamicItem(pStart, pEnd, pCr, currItem, mag);
                         if (!collideItem) {
                             collideItem = bFound;
                         } 
@@ -1235,12 +1251,16 @@ bool Collision_RayCollide(Vector* vec1, Vector* vec2, CollisionResult* pCr, Coll
             }
         }
     }
+
+    // Check for collisions with polygons if a collision wasn't found and
+    // the mode includes polygon checks
     if (!bFound && (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_POLY)) {
         // Stack_Collides()
-        Vector dir;
-        dir.Sub(vec2, vec1);
-        return Collision_PolyCollide(vec1, vec2, &dir, pCr, flags);
+        Vector rayNormal;
+        rayNormal.Sub(pEnd, pStart);
+        return Collision_PolyCollide(pStart, pEnd, &rayNormal, pCr, flags);
     }
+
     return bFound;
 }
 

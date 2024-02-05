@@ -6,7 +6,13 @@ static GameObjDesc rsObjectiveObjectiveDesc;
 static ModuleInfo<RainbowScaleObjective> rsObjectiveModule;
 
 void Z1RainbowScaleObjective_LoadResources(KromeIni* pIni) {
-    rsObjectiveObjectiveDesc.Init(&rsObjectiveModule, "RainbowScaleObjective", "RainbowScaleObjective", 0x201, 0);
+    rsObjectiveObjectiveDesc.Init(
+        &rsObjectiveModule,
+        "RainbowScaleObjective",
+        "RainbowScaleObjective", 
+        0x200 | 0x1, 
+        0
+    );
     objectManager.AddDescriptor(&rsObjectiveObjectiveDesc);
 }
 

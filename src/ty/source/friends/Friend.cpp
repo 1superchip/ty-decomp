@@ -123,7 +123,7 @@ void Friend::Message(MKMessage* pMsg) {
             mPlatformRider.Resolve();
             mPlatformRider.Attach(this);
             break;
-        case 3:
+        case MKMSG_UpdateAttachment:
             PlatformMoveMsg* pMoveMsg = (PlatformMoveMsg*)pMsg;
             mPos = *pMoveMsg->trans;
             mRot.y += pMoveMsg->rot->y;
@@ -150,24 +150,24 @@ void Friend::Message(MKMessage* pMsg) {
                 }
             }
             break;
-        case 10:
+        case MKMSG_ACTIVATE:
             mFlags |= FSF_Active;
             break;
-        case 11:
+        case MKMSG_DEACTIVATE:
             mFlags &= ~FSF_Active;
             break;
-        case 14:
+        case MKMSG_SHOW:
             mFlags |= FSF_Visible;
             mCollisionInfo.Enable();
             break;
-        case 15:
+        case MKMSG_HIDE:
             mFlags &= ~FSF_Visible;
             mCollisionInfo.Disable();
             break;
-        case 12:
+        case MKMSG_ENABLE:
             mFlags |= FSF_Enabled;
             break;
-        case 13:
+        case MKMSG_DISABLE:
             mFlags &= ~FSF_Enabled;
             break;
         default:
@@ -261,7 +261,6 @@ void Friend::Update(void) {
     } else {
         bFlashSkeleton = false;
     }
-
 }
 
 struct TyFSM {

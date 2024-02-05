@@ -13,8 +13,8 @@ void AnimatingProp_LoadResources(KromeIni* pIni) {
     LoadAnimPropDescriptors<AnimatingPropDesc>(pIni, "AnimatingProps", &animPropDescDefault);
 }
 
-void AnimatingPropDesc::Init(ModuleInfoBase* pModuleBase, char *param_2, char *param_3, int param_4, int param_5,
-        Tools_AnimEntry* pAnimEntry, int animEntryCount, Tools_AnimEvent *pAnimEvent, int animEventCount, bool param_10, u16 _defaultGameObjFlags) {
+void AnimatingPropDesc::Init(ModuleInfoBase* pModuleBase, char* param_2, char* param_3, int param_4, int param_5,
+        Tools_AnimEntry* pAnimEntry, int animEntryCount, Tools_AnimEvent* pAnimEvent, int animEventCount, bool param_10, u16 _defaultGameObjFlags) {
     StaticPropDescriptor::Init(pModuleBase, param_2, param_3, param_4, param_5);
     defaultGameObjFlags = _defaultGameObjFlags;
     soundEventIndex = -1;
@@ -131,22 +131,22 @@ void AnimatingProp::Message(MKMessage* pMsg) {
     collisionInfo.bEnabled = gameObjFlags.CheckFlags(GameObjFlags_Enabled) &&
         gameObjFlags.CheckFlags(GameObjFlags_Visible);
     switch (pMsg->unk0) {
-        case 10:
+        case MKMSG_ACTIVATE:
             Activate(true);
             break;
-        case 11:
+        case MKMSG_DEACTIVATE:
             Activate(false);
             break;
-        case 12:
+        case MKMSG_ENABLE:
             Enable(true);
             break;
-        case 13:
+        case MKMSG_DISABLE:
             Enable(false);
             break;
-        case 14:
+        case MKMSG_SHOW:
             Show(true);
             break;
-        case 15:
+        case MKMSG_HIDE:
             Show(false);
             break;
     }

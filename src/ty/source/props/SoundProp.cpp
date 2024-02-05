@@ -110,11 +110,11 @@ void SoundProp::Message(MKMessage* pMsg) {
         case 2:
             Reset();
             break;
-        case 10:
+        case MKMSG_ACTIVATE:
             unk80 = 1;
             gameObjFlags.Set(GameObjFlags_Active);
             break;
-        case 11:
+        case MKMSG_DEACTIVATE:
             gameObjFlags.Clear(GameObjFlags_Active);
             break;
     }

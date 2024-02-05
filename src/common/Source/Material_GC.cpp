@@ -107,7 +107,7 @@ char* Material::InitFromMatDefs(char* pName) {
 
     strcpy(name, Str_CopyString(pName, sizeof(name) - 1));
     pTextureName = NULL;
-    KromeIniLine *pLine = materialIni.GotoLine(name, NULL);
+    KromeIniLine* pLine = materialIni.GotoLine(name, NULL);
     if (pLine != NULL) {
         do {
             pLine = materialIni.GetCurrentLine();
@@ -198,7 +198,7 @@ char* Material::InitFromMatDefs(char* pName) {
                                 break;
                             }
                         } else {
-                            char *pType;
+                            char* pType;
                             pLine->AsString(0, &pType);
                             materialIni.Warning(Str_Printf("Unknown filter type %s", pType));
                         }
@@ -207,7 +207,7 @@ char* Material::InitFromMatDefs(char* pName) {
                     if (pLine->elementCount == 0) {
                         materialIni.Warning("Missing type value!");
                     } else {
-                        char *pType;
+                        char* pType;
                         pLine->AsString(0, &pType);
                         if (stricmp(pType, "decal") == 0) {
                             type = Type_Decal;
@@ -289,7 +289,7 @@ char* Material::InitFromMatDefs(char* pName) {
                     ConditionallySetRemoveFlags(0x2, clampU);
                     ConditionallySetRemoveFlags(0x4, clampV);
                 } else if (stricmp(pLine->pFieldName, "effect") == 0) {
-                    char *pEffect;
+                    char* pEffect;
                     if (pLine->AsString(0, &pEffect) != false) { // first field of line is the name as a string
                         pLine->AsInt(1, &effect);                // second field of line is an int
                         if (stricmp(pEffect, "grass") == 0) {
@@ -666,9 +666,9 @@ void Material::Use(void) {
     }
     GXSetTevDirect(GX_TEVSTAGE0);
     if (gRenderState.alpha < 0 || gRenderState.alpha > 255) {
-        GXSetDstAlpha(1, 127);
+        GXSetDstAlpha(GX_ENABLE, 127);
     } else {
-        GXSetDstAlpha(1, gRenderState.alpha);
+        GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
     if (pTex->bMpegTarget != false) {
 		// setup GX for video
@@ -753,7 +753,7 @@ void Material::Use(void) {
                 multMat.data[3][2] = 0.0f;
                 multMat.data[3][3] = 1.0f;
                 multMat.Transpose(&multMat);
-                GXLoadTexMtxImm(multMat.data, 0x1e, GX_MTX2x4);
+                GXLoadTexMtxImm(multMat.data, GX_TEXMTX0, GX_MTX2x4);
                 GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, 0x1e, GX_FALSE, 0x7d);
                 numTexGens = 1;
                 pTex->Use();
@@ -792,7 +792,7 @@ void Material::Use(void) {
                     ident.data[0][2] = uOffset;
                     ident.data[1][2] = vOffset;
                     ident.data[2][2] = 1.0f;
-                    GXLoadTexMtxImm(ortho.data, 0x1e, GX_MTX3x4);
+                    GXLoadTexMtxImm(ortho.data, GX_TEXMTX0, GX_MTX3x4);
                     GXLoadTexMtxImm(ident.data, 0x40, GX_MTX3x4);
                     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0x1e, GX_FALSE, 0x40);
                 } else {
@@ -805,7 +805,7 @@ void Material::Use(void) {
                     texMat.data[1][1] = unk60.data[1][1];
                     texMat.data[1][2] = unk60.data[2][1];
                     texMat.data[1][3] = unk60.data[3][1];
-                    GXLoadTexMtxImm(texMat.data, 0x1e, GX_MTX2x4);
+                    GXLoadTexMtxImm(texMat.data, GX_TEXMTX0, GX_MTX2x4);
                     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
                 }
                 if (unkCD != false) {
@@ -829,14 +829,14 @@ void Material::Use(void) {
                     ident.data[0][2] = uOffset;
                     ident.data[1][2] = vOffset;
                     ident.data[2][2] = 1.0f;
-                    GXLoadTexMtxImm(texMtx.data, 0x21, GX_MTX3x4);
+                    GXLoadTexMtxImm(texMtx.data, GX_TEXMTX1, GX_MTX3x4);
                     GXLoadTexMtxImm(ident.data, 0x40, GX_MTX3x4);
                     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, 0x21, GX_FALSE, 0x40);
                 } else {
                     Mtx24 mtx = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
                     mtx.data[0][0] = indirectWaterVec.x;
                     mtx.data[1][1] = indirectWaterVec.y;
-                    GXLoadTexMtxImm(mtx.data, 0x21, GX_MTX2x4);
+                    GXLoadTexMtxImm(mtx.data, GX_TEXMTX1, GX_MTX2x4);
                     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, 0x21, GX_FALSE, 0x7d);
                 }
                 Mtx23 mat23 = {0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f};
@@ -857,7 +857,7 @@ void Material::Use(void) {
                 mat24.data[1][1] = unk60.data[1][1];
                 mat24.data[1][2] = unk60.data[2][1];
                 mat24.data[1][3] = unk60.data[3][1];
-                GXLoadTexMtxImm(mat24.data, 0x1e, GX_MTX2x4);
+                GXLoadTexMtxImm(mat24.data, GX_TEXMTX0, GX_MTX2x4);
                 GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
                 pTex->Use();
                 break;
@@ -904,11 +904,11 @@ void Material::UseNone(int arg0) {
     GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
     GXSetZCompLoc(1);
     GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 255);
-    GXSetColorUpdate(GX_TRUE);
+    GXSetColorUpdate(GX_ENABLE);
     if (gRenderState.alpha < 0 || gRenderState.alpha > 255) {
-        GXSetDstAlpha(GX_TRUE, 127);
+        GXSetDstAlpha(GX_ENABLE, 127);
     } else {
-        GXSetDstAlpha(GX_TRUE, gRenderState.alpha);
+        GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);
@@ -970,11 +970,11 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
     GXSetZCompLoc(1);
     GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 255);
-    GXSetColorUpdate(GX_TRUE);
+    GXSetColorUpdate(GX_ENABLE);
     if (gRenderState.alpha < 0 || gRenderState.alpha > 255) {
-        GXSetDstAlpha(GX_TRUE, 127);
+        GXSetDstAlpha(GX_ENABLE, 127);
     } else {
-        GXSetDstAlpha(GX_TRUE, gRenderState.alpha);
+        GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);
@@ -988,9 +988,9 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ONE, GX_LO_AND);
-    GXSetDstAlpha(GX_TRUE, 255);
+    GXSetDstAlpha(GX_ENABLE, 255);
     Mtx24 texMat = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
-    GXLoadTexMtxImm(texMat.data, 0x1e, GX_MTX2x4);
+    GXLoadTexMtxImm(texMat.data, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
     GXSetTexCopySrc(0, 0, 128, 128);
     GXSetTexCopyDst(128, 128, GX_TF_RGB565, GX_FALSE);
@@ -1051,11 +1051,11 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
     GXSetZCompLoc(1);
     GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_ALWAYS, 255);
-    GXSetColorUpdate(GX_TRUE);
+    GXSetColorUpdate(GX_ENABLE);
     if (gRenderState.alpha < 0 || gRenderState.alpha > 255) {
-        GXSetDstAlpha(GX_TRUE, 127);
+        GXSetDstAlpha(GX_ENABLE, 127);
     } else {
-        GXSetDstAlpha(GX_TRUE, gRenderState.alpha);
+        GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);

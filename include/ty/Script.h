@@ -14,10 +14,10 @@ struct ScriptProp : GameObject {
 	
 	float Delay;
 	float unk40;
-	bool unk44;
+	bool bActive;
 	bool bDelayEachMessage;
 	bool bEnabled;
-	bool unk47;
+	bool bDefaultEnabled; // Default Enable/Disable setting used when prop is reset
 	char currentMessageIndex;
 	EventMessage messages[MessageCount];
 	// size 0x9C

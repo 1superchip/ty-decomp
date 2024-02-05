@@ -28,7 +28,7 @@ static Vector* tempMem;
 static Vector* pCurrMem = tempMem;
 
 void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* trans, Vector* rot, Vector* def, Matrix* mat) {
-    pMsg->unk0 = 3;
+    pMsg->unk0 = MKMSG_UpdateAttachment;
     pMsg->trans = trans;
     pMsg->rot = rot;
     pMsg->vec = def;
@@ -80,7 +80,7 @@ void Platform::Init(GameObjDesc* pDesc) {
 	GetDesc()->maxMag = pModel->GetModelVolume()->v1.Magnitude();
 	numAttached = 0;
 	mCurrRot.Set(0.0f, 0.0f, 0.0f);
-	attachments.Init(0x20);
+	attachments.Init(32);
 	rider.Init();
 	unkB0.SetZero();
 	unkC0.SetZero();

@@ -64,22 +64,22 @@ struct CommonGameObjFlagsComponent {
     }
     void Message(MKMessage* pMsg) {
         switch (pMsg->unk0) {
-            case 10:
+            case MKMSG_ACTIVATE:
                 Set(GameObjFlags_Active);
                 break;
-            case 11:
+            case MKMSG_DEACTIVATE:
                 Clear(GameObjFlags_Active);
                 break;
-            case 14:
+            case MKMSG_SHOW:
                 Set(GameObjFlags_Visible);
                 break;
-            case 15:
+            case MKMSG_HIDE:
                 Clear(GameObjFlags_Visible);
                 break;
-            case 12:
+            case MKMSG_ENABLE:
                 Set(GameObjFlags_Enabled);
                 break;
-            case 13:
+            case MKMSG_DISABLE:
                 Clear(GameObjFlags_Enabled);
                 break;
         }

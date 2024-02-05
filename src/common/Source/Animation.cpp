@@ -327,13 +327,13 @@ void Animation::CalculateNodeMatrix(int index) {
         r28->data[3][2] = (-oX * sX * M02) + (-oY * sY * M12) + (-oZ * sZ * M22) + oZ;
         r28->data[3][3] = 1.0f;
         
-        if (!(0.0f == pFrame->position.x && 0.0f == pFrame->position.y && 0.0f == pFrame->position.z))
+        if (pFrame->position.x != 0.0f || pFrame->position.y != 0.0f || pFrame->position.z != 0.0f)
         {
             if (pNode->parent != -1)
             {
                 Vector vec;
                 Vector* op1 = pFrame->pOrigin;
-                Vector *parentOrigin = frames[pNode->parent].pOrigin;
+                Vector* parentOrigin = frames[pNode->parent].pOrigin;
                 vec.x = op1->x - parentOrigin->x;
                 vec.y = op1->y - parentOrigin->y;
                 vec.z = op1->z - parentOrigin->z;
@@ -532,7 +532,7 @@ void Fixup<AnimationData::Node>(AnimationData::Node*& data, int baseAddress) {
 template <>\
 __declspec(weak) void ByteReverse(type& start)\
 {\
-    char *buffer = (char*)(&start);\
+    char* buffer = (char*)(&start);\
     int size = sizeof(type);\
     \
     for(int i = 0; i < size / 2; i++) {\

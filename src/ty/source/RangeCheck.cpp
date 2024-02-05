@@ -27,7 +27,7 @@ extern struct Ty {
 } ty;
 
 static int nextAvailableLODEntryIndex;
-static LODEntry* lodEntryPool;
+static LODEntry* lodEntryPool = NULL;
 
 static Vector cameraPos;
 static Vector cameraVector; // camera direction
@@ -107,6 +107,15 @@ void Range_Update(void) {
     cameraVector = *GameCamera_GetDir();
 }
 
+LODEntry* LODEntry_GetNextEntryFromPool(void) {
+    if (lodEntryPool == NULL) {
+        lodEntryPool = (LODEntry *)Heap_MemAlloc(maxLODEntries * sizeof(LODEntry));
+        nextAvailableLODEntryIndex = 0;
+    }
+    memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
+    return &lodEntryPool[nextAvailableLODEntryIndex++];
+}
+
 void LODEntry::Init(Model* pModel) {
     subObjectIndex = pModel->GetSubObjectIndex(name);
 }
@@ -131,15 +140,6 @@ void LODDescriptor::Init(KromeIni* pIni, char* arg1) {
         Tools_StripExtension(section, (char const*)arg1);
         KromeIniLine* pLine = pIni->GotoLine(section, NULL);
         ParseIni(pIni, pLine);
-    }
-}
-
-inline void Save(int x, int* p) {
-    if (x < 0) {
-        *p = 0;
-    }
-    else if (x >= 8) {
-        *p = 7;
     }
 }
 
@@ -175,14 +175,18 @@ void LODDescriptor::ParseIni(KromeIni* pIni, KromeIniLine* pLine) {
                 }
             } else {
                 if (stricmp(pLine->pFieldName, "lod") == 0) {
-                    int lod = 0;
-                    if (pLine->AsInt(0, &lod) != false) {
-                        if ((lod < 0) || (8 <= lod)) {
+                    int newLodIndex = 0;
+                    if (pLine->AsInt(0, &newLodIndex) != false) {
+                        if ((newLodIndex < 0) || (newLodIndex >= 8)) {
                             Warn(pIni, Str_Printf("LODDescriptor::ParseIni: LOD index out of range (%d)", warning));
-                            Save(lod, &lod);
+                            if (newLodIndex < 0) {
+                                newLodIndex = 0;
+                            } else if (newLodIndex >= 8) {
+                                newLodIndex = 7;
+                            }
                         }
-                        ReplicateLODData(0 > warning ? 0 : warning, lod);
-                        warning = lod;
+                        ReplicateLODData(Max<int>(0, warning), newLodIndex);
+                        warning = newLodIndex;
                     }
                     if (warning + 1 > invisibleZone) {
                         invisibleZone = warning + 1;
@@ -242,19 +246,14 @@ void LODDescriptor::ParseIni(KromeIni* pIni, KromeIniLine* pLine) {
         }
         pLine = pIni->GetNextLine();
     }
-    ReplicateLODData(0 > warning ? 0 : warning, 8);
+    ReplicateLODData(Max<int>(0, warning), 8);
     invisibleZone = 8;
 }
 
-LODEntry* LODDescriptor::GetEntryFromString(char *name) {
-    LODEntry *pFoundEntry = NULL;
+LODEntry* LODDescriptor::GetEntryFromString(char* name) {
+    LODEntry* pFoundEntry = NULL;
     if (pEntries == NULL) {
-        if (lodEntryPool == NULL) {
-            lodEntryPool = (LODEntry *)Heap_MemAlloc(maxLODEntries * sizeof(LODEntry));
-            nextAvailableLODEntryIndex = 0;
-        }
-        memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
-        pEntries = &lodEntryPool[nextAvailableLODEntryIndex++];
+        pEntries = LODEntry_GetNextEntryFromPool();
         nmbrOfEntries = 1;
         pFoundEntry = pEntries;
         strncpy(pFoundEntry->name, name, sizeof(pFoundEntry->name));
@@ -266,14 +265,8 @@ LODEntry* LODDescriptor::GetEntryFromString(char *name) {
             }
         }
         if (pFoundEntry == NULL) {
-            if (lodEntryPool == NULL) {
-                lodEntryPool = (LODEntry *)Heap_MemAlloc(maxLODEntries * sizeof(LODEntry));
-                nextAvailableLODEntryIndex = 0;
-            }
-            memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
-            LODEntry* temp = &lodEntryPool[nextAvailableLODEntryIndex++];
-            pFoundEntry = temp;
-            strncpy(temp->name, name, sizeof(temp->name));
+            pFoundEntry = LODEntry_GetNextEntryFromPool();
+            strncpy(pFoundEntry->name, name, sizeof(pFoundEntry->name));
             nmbrOfEntries++;
         }
     }
@@ -281,34 +274,42 @@ LODEntry* LODDescriptor::GetEntryFromString(char *name) {
 }
 
 void LODManager::Init(Model* pModel, int arg1, LODDescriptor* d) {
+    int i;
+
     pDescriptor = d;
     subobjectEnableFlags = arg1;
     pDescriptor->ResolveSubObjects(pModel);
-    int i = 0;
-    for(; i < pModel->GetNmbrOfSubObjects(); i++) {
+    
+    for(i = 0; i < pModel->GetNmbrOfSubObjects(); i++) {
         if (strnicmp((char const*)pModel->GetSubObjectName(i), "f_", 2) == 0) {
             pModel->EnableSubObject(i, 0);
         }
     }
-    i = 0;
-    while(i < pDescriptor->nmbrOfEntries) {
-        pModel->EnableSubObject(pDescriptor->pEntries[i].subObjectIndex, pDescriptor->pEntries[i].CheckFlags(1 << subobjectEnableFlags));
-        i++;
+
+    for(i = 0; i < pDescriptor->nmbrOfEntries; i++) {
+        pModel->EnableSubObject(
+            pDescriptor->pEntries[i].subObjectIndex, 
+            pDescriptor->pEntries[i].CheckFlags(1 << subobjectEnableFlags)
+        );
     }
 }
 
-void LODManager::InternalUpdate(Model *pModel, int arg1, float arg2) {
+void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
+
     if (arg1 != subobjectEnableFlags) {
         subobjectEnableFlags = arg1;
         int shift = 1 << subobjectEnableFlags;
+
         for (int i = 0; i < pDescriptor->nmbrOfEntries; i++) {
             pModel->EnableSubObject(pDescriptor->pEntries[i].subObjectIndex, pDescriptor->pEntries[i].CheckFlags(shift));
         }
+
         if (pDescriptor->flags & LODFlags_Scissor) {
             int descScissorFlags = pDescriptor->scissorFlags;
             pModel->flags.bits.b3 = TestLOD(descScissorFlags);
         }
     }
+
     if (pDescriptor->flags & LODFlags_CameraFade) {
         if (subobjectEnableFlags == pDescriptor->invisibleZone - 1) {
             pModel->colour.w = arg2;
@@ -321,15 +322,13 @@ void LODManager::InternalUpdate(Model *pModel, int arg1, float arg2) {
             center.y += pDescriptor->height / 2.0f;
             GameCamera_GetVectors(&source, &target, NULL);
             if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != 0x2d) {
-                pModel->colour.w = (pDescriptor->minalpha > pModel->colour.w - 0.05625f) ? pDescriptor->minalpha : pModel->colour.w - 0.05625f;
+                pModel->colour.w = Max<float>(pDescriptor->minalpha, pModel->colour.w - 0.05625f);
                 return;
             }
-            float alpha = pModel->colour.w + 0.05625f;
-            pModel->colour.w = (1.0f < alpha) ? 1.0f : alpha;
+            pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
             return;
         }
-        float alpha = pModel->colour.w + 0.05625f;
-        pModel->colour.w = (1.0f < alpha) ? 1.0f : alpha;
+        pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
         return;
     }
     if (pDescriptor->flags & LODFlags_Alpha) {

@@ -85,12 +85,12 @@ void Talisman::Draw(void) {
 
 void Talisman::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 10:
-        case 14:
+        case MKMSG_ACTIVATE:
+        case MKMSG_SHOW:
             bCurrentVisible = true;
             break;
-        case 11:
-        case 15:
+        case MKMSG_DEACTIVATE:
+        case MKMSG_HIDE:
             bCurrentVisible = false;
             break;
     }

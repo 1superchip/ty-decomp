@@ -21,8 +21,8 @@ struct GameObjectManager {
 	void UpdateModules(void);
 	void DrawModules(void);
 	void SendMessage(MKMessage*, uint, Vector*, float, bool);
-	void SendMessageToAll(MKMessage*, int);
-	GameObject* GetObjectFromID(uint);
+	void SendMessageToAll(MKMessage* pMsg, int mask);
+	GameObject* GetObjectFromID(uint id);
 	void AddDescriptor(GameObjDesc*);
 	GameObjDesc* FindDescriptor(char*);
 	int GetObjectsInRange(GameObject** pObjects, int, Vector* pPt, float radius, int);

@@ -325,14 +325,14 @@ void MKShadow_RenderStretchBlurEffect(MKShadow* pShadow, Vector* pVec, Vector* p
 
 void MKShadow_EndScene(void) {
     Material::UseNone(-1);
-    GXSetColorUpdate(GX_FALSE);
+    GXSetColorUpdate(GX_DISABLE);
     GXSetBlendMode(GX_BM_LOGIC, GX_BL_ZERO, GX_BL_DSTALPHA, GX_LO_AND);
-    GXSetDstAlpha(GX_FALSE, 127);
+    GXSetDstAlpha(GX_DISABLE, 127);
     GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
     MKShadow_ApplyAlphaTint(128);
-    GXSetColorUpdate(GX_TRUE);
+    GXSetColorUpdate(GX_ENABLE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ZERO, GX_BL_INVDSTALPHA, GX_LO_XOR);
-    GXSetDstAlpha(GX_TRUE, 127);
+    GXSetDstAlpha(GX_ENABLE, 127);
     GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
     MKShadow_ApplyAlphaTint(255);
     Material::UseNone(-1);
@@ -489,17 +489,17 @@ static void MKShadow_ApplyAlphaTint(u8 color) {
 
 static void MKShadow_VolumeRenderStage1(void) {
     GXSetCullMode(GX_CULL_FRONT);
-    GXSetColorUpdate(GX_FALSE);
+    GXSetColorUpdate(GX_DISABLE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_XOR);
-    GXSetDstAlpha(GX_FALSE, 127);
+    GXSetDstAlpha(GX_DISABLE, 127);
     GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 }
 
 static void MKShadow_VolumeRenderStage2(void) {
     GXSetCullMode(GX_CULL_BACK);
-    GXSetColorUpdate(GX_FALSE);
+    GXSetColorUpdate(GX_DISABLE);
     GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ONE, GX_BL_ONE, GX_LO_XOR);
-    GXSetDstAlpha(GX_FALSE, 127);
+    GXSetDstAlpha(GX_DISABLE, 127);
     GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 }
 

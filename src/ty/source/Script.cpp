@@ -37,9 +37,9 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
 	GameObject::Init(pDesc);
 	Delay = 0.0f;
 	unk40 = 0.0f;
-	unk44 = false;
+	bActive = false;
 	bEnabled = true;
-	unk47 = true;
+	bDefaultEnabled = true;
 	bDelayEachMessage = false;
 	currentMessageIndex = 0;
 	for (int i = 0; i < MessageCount; i++) {
@@ -48,7 +48,7 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
 }
 
 void ScriptProp::Update(void) {
-	if (unk44) {
+	if (bActive) {
 		unk40 -= gDisplay.updateFreq;
 		if (!(unk40 <= 0.0f)) {
 			return;
@@ -56,27 +56,27 @@ void ScriptProp::Update(void) {
 		if (bDelayEachMessage) {
 			messages[currentMessageIndex++].Send();
 			if (currentMessageIndex == MessageCount) {
-				unk44 = false;
+				bActive = false;
 				return;
 			}
 			unk40 = Delay;
 			return;
 		}
 		Execute();
-		unk44 = false;
+		bActive = false;
 	}
 }
 
 void ScriptProp::Reset(void) {
-	unk44 = false;
-	bEnabled = unk47;
+	bActive = false;
+	bEnabled = bDefaultEnabled;
 	unk40 = 0.0f;
 	currentMessageIndex = 0;
 }
 
 void ScriptProp::Message(MKMessage* pMsg) {
 	switch (pMsg->unk0) {
-		case 10:
+		case MKMSG_ACTIVATE:
 			if (!bEnabled) {
 				return;
 			}
@@ -84,17 +84,17 @@ void ScriptProp::Message(MKMessage* pMsg) {
 				Execute();
 				return;
 			}
-			unk44 = true;
+			bActive = true;
 			unk40 = Delay;
 			currentMessageIndex = 0;
 			return;
-		case 11:
-			unk44 = false;
+		case MKMSG_DEACTIVATE:
+			bActive = false;
 			return;
-        case 12:
+        case MKMSG_ENABLE:
 			bEnabled = true;
 			break;
-		case 13:
+		case MKMSG_DISABLE:
 			bEnabled = false;
 			break;
 		case MKMSG_Resolve:

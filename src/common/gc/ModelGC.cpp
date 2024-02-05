@@ -322,7 +322,14 @@ int Model::Draw(u16* pSubObjs) {
                             }
                             if (gRenderState.fillState != 2) {
                                 pMat->Use();
-                                GXSetChanCtrl(GX_COLOR0A0, (r15 == false ? 1 : 0), GX_SRC_REG, GX_SRC_VTX, 7, GX_DF_CLAMP, GX_AF_NONE);
+                                GXSetChanCtrl(
+                                    GX_COLOR0A0,
+                                    (r15 == false ? 1 : 0), 
+                                    GX_SRC_REG, GX_SRC_VTX, 
+                                    GX_LIGHT0 | GX_LIGHT1 | GX_LIGHT2, 
+                                    GX_DF_CLAMP, 
+                                    GX_AF_NONE
+                                );
                                 if (renderType == 7) {
                                     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
                                     GXSetNumTevStages(2);
@@ -362,7 +369,7 @@ int Model::Draw(u16* pSubObjs) {
             }
         }
     }
-    GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     *(int*)&Material_MixedColor = -1;
     if (effectIdx != 0) {
         while (effectIdx-- > 0) {
@@ -462,7 +469,7 @@ ModelExplorer_GC* Model::Explore(int* pVertCount, int* pTriangleCount, int* pStr
                 for(int stripIdx = 0; stripIdx < pObjMaterial->nmbrOfStrips; stripIdx++) {
 					// code does not check primitive
 					// not designed to support anything but triangle strips within display lists
-                    DisplayList *pDL = (DisplayList*)pStrip;
+                    DisplayList* pDL = (DisplayList*)pStrip;
                     u16 num = pDL->vertexCount;
                     triangleCount += num - 1;
                     ++pStrip += (num * 8) + 1;
