@@ -16,8 +16,8 @@ static MKProp globalPropArray[4];
 Model* pTerrainModel[NUM_TERRAIN_MODELS];
 float terrainDrawDist[NUM_TERRAIN_MODELS];
 
-static int occlusionObjects;
-MKPropDescriptor* MKPropDescriptor::pDrawListDescs;
+static int occlusionObjects = 0;
+MKPropDescriptor* MKPropDescriptor::pDrawListDescs = NULL;
 
 void MKSceneManager::InitModule(void) {
 	return;
@@ -71,7 +71,6 @@ void MKSceneManager::AddTerrainModel(Model* terrainModel, int layer, float drawD
 
 static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
     Vector vecs[8];
-    Vector* pVec = &vecs[1];
     MKPropDescriptor* pDesc = pProp->pDescriptor;
     
     vecs[0].x = pDesc->pVolume->v1.x;
@@ -133,8 +132,10 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
 
     Vector min;
     min.Set(vecs[0].x, vecs[0].y, vecs[0].z);
+    
     Vector max;
     max.Set(vecs[0].x, vecs[0].y, vecs[0].z);
+
     for(int i = 1; i < 8; i++) {
         min.x = Min<float>(min.x, vecs[i].x);
         max.x = Max<float>(max.x, vecs[i].x);
@@ -143,6 +144,7 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
         min.z = Min<float>(min.z, vecs[i].z);
         max.z = Max<float>(max.z, vecs[i].z);
     }
+
     pVolume->v1.x = min.x;
     pVolume->v1.y = min.y;
     pVolume->v1.z = min.z;
@@ -330,15 +332,14 @@ void SMNode_ComputeVolume(SMNode* pThis, SMNode* pNode1, SMNode* pNode2) {
 inline void SMTree::LinkUpRow(int firstLeaf, int leafCount, int firstParent) {
     SMNode* pParent = &pNodes[firstParent];
     SMNode* node = &pNodes[firstLeaf];
-    int i = 0;
-    while (i < leafCount) {
+
+    for (int i = 0; i < leafCount; i += 2) {
         pParent->unk20[0] = node;
         pParent->unk20[1] = node + 1;
         SMNode_ComputeVolume(pParent, node, node + 1);
         pParent->drawDist = Max<float>(node->drawDist, (node + 1)->drawDist);
         node += 2;
         pParent++;
-        i += 2;
     }
 }
 
@@ -367,8 +368,8 @@ void SMTree::LinkUp(void) {
 void MKSceneManager::MakeTerrainTree(void) {
     int index;
     SMNode* pNode;
-    ModelData *pData;
-    SubObject *pSubObject;
+    ModelData* pData;
+    SubObject* pSubObject;
     for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         if (pTerrainModel[i] != NULL && pTerrainModel[i]->GetNmbrOfSubObjects() > 1) {
             trees[i].Init(pTerrainModel[i]->pTemplate->pModelData->nmbrOfSubObjects);
@@ -459,7 +460,7 @@ void MKSceneManager::DrawTerrain(int arg1) {
     }
 }
 
-void MKSceneManager::DrawRecursiveTerrain(SMNode *node, int arg2) {
+void MKSceneManager::DrawRecursiveTerrain(SMNode* node, int arg2) {
     s16 test = 0;
     if (!(arg2 & 1)) {
         test = Model_TrivialRejectTest(&node->volume, &View::GetCurrent()->unk1C8);
@@ -487,15 +488,17 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode *node, int arg2) {
 
 static void SMDrawProp(void* pData, int arg1, float distSq, float arg3);
 
-void MKSceneManager::DrawRecursiveProps(SMNode *node, int arg2) {
+void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
     s16 test = 0;
     float distSq = 0.0f;
-    MKProp *data = (MKProp *)node->pData;
+    MKProp* data = (MKProp*)node->pData;
     float fVar19 = 0.0f;
     if (node->pData != NULL) {
-        Vector *pLTWTrans = data->pLocalToWorld->Row3();
-        Vector *pViewTrans = View::GetCurrent()->unk48.Row3();
-        distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + Sqr<float>(pLTWTrans->y - pViewTrans->y) + Sqr<float>(pLTWTrans->z - pViewTrans->z);
+        Vector* pLTWTrans = data->pLocalToWorld->Row3();
+        Vector* pViewTrans = View::GetCurrent()->unk48.Row3();
+        distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + 
+            Sqr<float>(pLTWTrans->y - pViewTrans->y) + 
+            Sqr<float>(pLTWTrans->z - pViewTrans->z);
         fVar19 = Sqr<float>(Max<float>(updateDistMult, data->pDescriptor->maxDrawDist * updateDrawMult));
         if (distSq >= fVar19) {
             return;
@@ -585,7 +588,9 @@ void MKSceneManager::DrawDynamicProps(int arg1) {
         if (rejectResult != 0) {
             Vector *pLTWTrans = next->pLocalToWorld->Row3();
             Vector *pViewTrans = View::GetCurrent()->unk48.Row3();
-            distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + Sqr<float>(pLTWTrans->y - pViewTrans->y) + Sqr<float>(pLTWTrans->z - pViewTrans->z);
+            distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + 
+                Sqr<float>(pLTWTrans->y - pViewTrans->y) + 
+                Sqr<float>(pLTWTrans->z - pViewTrans->z);
             fVar19 = Sqr<float>(Max<float>(updateDistMult, pDesc->maxDrawDist * updateDrawMult));
             if (distSq < fVar19) {
                 SMDrawProp((int*)next, rejectResult, distSq, fVar19);
@@ -659,11 +664,13 @@ void MKSceneManager::UpdateProps(void) {
             }
             idx++;
         }
-        MKProp *dynamicProp = dynamicPropArray[i].pNext;
+        MKProp* dynamicProp = dynamicPropArray[i].pNext;
         while (dynamicProp != &dynamicPropArray[i]) {
-            Vector *pLTWTrans = dynamicProp->pLocalToWorld->Row3();
-            Vector *pActivePoint = &activePoint;
-            float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + Sqr<float>(pLTWTrans->y - pActivePoint->y) + Sqr<float>(pLTWTrans->z - pActivePoint->z);
+            Vector* pLTWTrans = dynamicProp->pLocalToWorld->Row3();
+            Vector* pActivePoint = &activePoint;
+            float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + 
+                Sqr<float>(pLTWTrans->y - pActivePoint->y) + 
+                Sqr<float>(pLTWTrans->z - pActivePoint->z);
             dynamicProp->distSquared = dist;
             if (dynamicProp->distSquared < dynamicProp->pDescriptor->maxUpdateDist * dynamicProp->pDescriptor->maxUpdateDist) {
                 // if the dist is less than the prop's max update distance, update the prop
@@ -674,18 +681,18 @@ void MKSceneManager::UpdateProps(void) {
                 dynamicProp = dynamicProp->pNext;
             }
         }
-        MKProp *pGlobalProp = globalPropArray[i].pNext;
+        MKProp* pGlobalProp = globalPropArray[i].pNext;
         while (pGlobalProp != &globalPropArray[i]) {
             prop1BC = pGlobalProp->pNext;
             UpdateProp(pGlobalProp, &message);
             pGlobalProp = prop1BC;
         }
     }
-    int propIndex = 1 - propIdx;
-    propIdx = propIndex;
-    MKProp *lastProp = &props[propIdx];
+    
+    propIdx = 1 - propIdx;
+    MKProp* lastProp = &props[propIdx];
     message.unk0 = -4;
-    MKProp *pUpdateProp = lastProp->pNextUpdated;
+    MKProp* pUpdateProp = lastProp->pNextUpdated;
     while (pUpdateProp != lastProp) {
         MKProp *nextProp = pUpdateProp->pNextUpdated;
         pUpdateProp->pNextUpdated->pPrevUpdated = pUpdateProp->pPrevUpdated;
@@ -701,7 +708,9 @@ void SendMessageToProp(MKProp* pProp, MKMessage* pMessage, uint mask, Vector* pP
     if (mask == 0 || mask & pProp->pDescriptor->searchMask) {
         if (pPos != NULL) {
             Vector *pLTWTrans = pProp->pLocalToWorld->Row3();
-            float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + Sqr<float>(pLTWTrans->y - pPos->y) + Sqr<float>(pLTWTrans->z - pPos->z);
+            float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + 
+                Sqr<float>(pLTWTrans->y - pPos->y) + 
+                Sqr<float>(pLTWTrans->z - pPos->z);
             if (distSq < Sqr<float>(radius)) {
                 pProp->Message(pMessage);
             }
@@ -796,18 +805,30 @@ void MKSceneManager::RemoveProp(MKProp* pProp) {
     }
 }
 
-int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTestPt, float radius, int searchMask, int param_7, bool bIncludeStatic) {
+/// @brief Searchs and returns props in a range of a certain point
+/// @param ppProps Pointer to memory to store found props
+/// @param maxCount Total number of props to store
+/// @param pTestPt Center point 
+/// @param radius Radius around center point
+/// @param searchMask Prop Search Mask Filter (Pass -1 to search all)
+/// @param targetPropArrayIndex Prop Array Filter (Pass -1 to search all)
+/// @param bIncludeStatic Unused
+/// @return Number of props found in total
+int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTestPt, float radius, 
+        int searchMask, int targetPropArrayIndex, bool bIncludeStatic) {
     int ret = 0;
-    int iVar7 = 0;
+    int currPropArray = 0;
     MKProp** props;
     MKProp* prop;
-    for (int i = 0; i < 4; i++, iVar7++) {
-        if (param_7 == -1 || param_7 == iVar7) {
+    for (int i = 0; i < 4; i++, currPropArray++) {
+        if (targetPropArrayIndex == -1 || targetPropArrayIndex == currPropArray) {
             props = ppProps;
             for (prop = dynamicPropArray[i].pNext; prop != &dynamicPropArray[i] && ret < maxCount; prop = prop->pNext) {
                 if (searchMask == -1 || prop->pDescriptor->searchMask & searchMask) {
                     Vector *pLTWTrans = prop->pLocalToWorld->Row3();
-                    float distSq = Sqr<float>(pLTWTrans->x - pTestPt->x) + Sqr<float>(pLTWTrans->y - pTestPt->y) + Sqr<float>(pLTWTrans->z - pTestPt->z);
+                    float distSq = Sqr<float>(pLTWTrans->x - pTestPt->x) +
+                        Sqr<float>(pLTWTrans->y - pTestPt->y) + 
+                        Sqr<float>(pLTWTrans->z - pTestPt->z);
                     if (distSq < radius * radius) {
                         props[ret] = prop;
                         ret++;

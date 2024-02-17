@@ -207,9 +207,9 @@ GameObjDesc* GameObjectManager::FindDescriptor(char* name) {
 }
 
 // Returns the number of objects in range and places the GameObject pointers in ppObjects
-int GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int maxCount, Vector* pPt, float radius, int param_5) {
-    param_5 = (param_5 != 0) ? param_5 : -1;
-    return gSceneManager.GetPropsInRange((MKProp**)ppObjects, maxCount, pPt, radius, param_5, -1, false);
+int GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int maxCount, Vector* pPt, float radius, int searchMask) {
+    searchMask = (searchMask != 0) ? searchMask : -1;
+    return gSceneManager.GetPropsInRange((MKProp**)ppObjects, maxCount, pPt, radius, searchMask, -1, false);
 }
 
 #define MAX_SEARCH_GOBJS (0x400)

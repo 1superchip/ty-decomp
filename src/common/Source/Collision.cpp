@@ -1264,12 +1264,12 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
     return bFound;
 }
 
-bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadius,
+bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
     CollisionResult* pCr, CollisionMode pMode, int flags) {
     // create SphereRay
     SphereRay ray;
     bFound = false;
-    ray.Create(pVec, pVec1, sphereRadius);
+    ray.Create(pStart, pEnd, sphereRadius);
     if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_DYNAMIC) {
         int startX;
         int startZ;

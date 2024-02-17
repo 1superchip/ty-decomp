@@ -306,7 +306,7 @@ void MKAnimScript::Init(MKAnimScript* pOther) {
         int size;
         char* fileName = Str_Printf("%s.gas", otherName);
         if (FileSys_Exists(fileName, &size) != false) {
-            pTemplate->pSection = (MKAnimTemplateSection *)FileSys_Load(fileName, 0, 0, -1);
+            pTemplate->pSection = (MKAnimTemplateSection *)FileSys_Load(fileName, NULL, NULL, -1);
             pTemplate->templateSize = size;
             pTemplate->UnpackTemplate();
         } else {

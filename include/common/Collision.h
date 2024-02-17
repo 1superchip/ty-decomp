@@ -195,7 +195,7 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
 bool Collision_SweepSphereCollideDynamicModel(SphereRay*, CollisionResult*, DynamicItem*);
 bool Collision_RayCollideDynamicModel(Vector*, Vector*, CollisionResult*, Model*, int);
 bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
-bool Collision_SweepSphereCollide(Vector* pVec, Vector* pVec1, float sphereRadius,
-    CollisionResult* pCr, CollisionMode pMode, int arg3);
+bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
+    CollisionResult* pCr, CollisionMode pMode, int flags);
 
 #endif // COMMON_COLLISION

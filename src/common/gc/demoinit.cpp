@@ -31,7 +31,9 @@ static void __DEMOInitGX(void);
 
 /// @brief XFB
 static char pBuffer[0x84000] ATTRIBUTE_ALIGN(32);
-static char rmodeobj[60];
+
+/// @brief Render Mode Object
+static GXRenderModeObj rmodeobj;
 
 static void* DefaultFifo;
 static GXFifoObj* DefaultFifoObj;
@@ -69,12 +71,15 @@ extern "C" void DEMOInit(_GXRenderModeObj* prmodeObj) {
     VISetBlack(FALSE);
     VIFlush();
     GXDrawDone();
+    
     char* rawCaptureData = (char*)rawCaptureTexData + 0x130;
     for(int y = TEXDATA_STARTY; y < TEXDATA_STARTY + TEXDATA_HEIGHT; y++) {
         for(u32 x = TEXDATA_STARTX; x < TEXDATA_STARTX + TEXDATA_WIDTH; x++) {
             u16 pixel = rawCaptureTexData[*(u8*)((int)rawCaptureData ^ 3) ^ 1];
-            u32 finalPixel = (0xFF000000 | ((pixel << 19) & 0xF80000)) | 
-                ((pixel >> 5) << 11) & 0xF800 | (((pixel >> 10) << 3) & 0xF8);
+            u32 finalPixel = 0xFF000000 |
+                ((pixel << 19) & 0x00F80000) |
+                (((pixel >> 5) << 11) & 0x0000F800) |
+                (((pixel >> 10) << 3) & 0x000000F8);
             GXPokeARGB(x, y, finalPixel);
             rawCaptureData++;
         }
@@ -103,8 +108,8 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
                 break;
         }
         rmode->fbWidth = 512;
-        GXAdjustForOverscan(rmode, (GXRenderModeObj*)rmodeobj, 0, 16);
-        rmode = (GXRenderModeObj*)&rmodeobj;
+        GXAdjustForOverscan(rmode, &rmodeobj, 0, 16);
+        rmode = &rmodeobj;
     }
 }
 
@@ -118,7 +123,7 @@ static void __DEMOInitMem(void) {
     arenaLo = (void *)ALIGN_UP((int)arenaLo, 32);
     OSSetCurrentHeap(OSCreateHeap(arenaLo, (void*)((int)hi & ~(32 - 1))));
     OSSetArenaLo((void*)((int)hi & ~(32 - 1)));
-    memset(pBuffer,0,sizeof(pBuffer));
+    memset(pBuffer, 0, sizeof(pBuffer));
     DCStoreRange(pBuffer, sizeof(pBuffer));
 }
 

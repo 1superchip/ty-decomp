@@ -6,7 +6,7 @@ void LineOfSightObject::Init(u8 defaultFlags, float param_2, float param_3, floa
         float _radius, float param_6, float _fovRatio, float param_8) {
     flags = defaultFlags;
     unk4 = 0;
-    unk8 = 0.0f;
+    length = 0.0f;
     unkC = 0.0f;
     startPos.SetZero();
     targetPos.SetZero();
@@ -26,17 +26,17 @@ void LineOfSightObject::Reset(Vector* pStartPos, Vector* pTargetPos, Vector* pRo
     startPos.Copy(pStartPos);
     rotation.Copy(pRotation);
     targetPos.Copy(pTargetPos);
-    unk8 = ApproxMag(&targetPos, &startPos);
+    length = ApproxMag(&targetPos, &startPos);
     horizDir.Sub(&targetPos, &startPos);
     horizDir.y = 0.0f; // horizontal direction
-    horizDir.Scale(1.0f / unk8);
+    horizDir.Scale(1.0f / length);
     if (!(flags & 1)) {
-        unk64 = (int)(unk8 / maxRayMag);
+        unk64 = (int)(length / maxRayMag);
         unk64++;
-        unkC = unk8 / (float)unk64;
+        unkC = length / (float)unk64;
     }
     if (!(flags & 2)) {
-        unk1C = (targetPos.y - startPos.y) / unk8;
+        normalizedYDir = (targetPos.y - startPos.y) / length;
     }
 }
 
@@ -52,7 +52,7 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
     flags &= ~0x4;
     flags &= ~0x8;
     flags &= ~0x10;
-    if (unk8 > unk70) {
+    if (length > unk70) {
         unk4 = 0;
         return true;
     }
@@ -66,7 +66,7 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
         flags |= 0x10;
         return true;
     }
-    if (unk8 <= unk6C) {
+    if (length <= unk6C) {
         unk4 = 0;
         flags |= 4;
         return true;
@@ -96,9 +96,7 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
     if (unk4 == unk64 && sweepResult) {
         float maxRadius = 2.0f * radius;
         if (ApproxMag(&targetPos, &cr.pos) <= maxRadius) {
-            Vector testPos;
-            testPos.Scale(&cr.normal, maxRadius);
-            end.Copy(&testPos);
+            end.Scale(&cr.normal, maxRadius);
             start.Add(&end);
             end.Add(&cr.pos);
             end.y = start.y;
@@ -119,5 +117,5 @@ bool LineOfSightObject::Update(Vector* pStartPos, Vector* pTargetPos, Vector* pR
 }
 
 bool LineOfSightObject::OutsideGOV(void) {
-    return (!(flags & 2) && Abs<float>(unk1C) > unk74);
+    return (!(flags & 2) && Abs<float>(normalizedYDir) > unk74);
 }

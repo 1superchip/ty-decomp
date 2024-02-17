@@ -41,8 +41,8 @@ void FileSys_Update(void) {
 	return;
 }
 
-static int EntryCompare(void* arg0, void* arg1) {
-	return stricmp((char*)arg0, (char*)arg1);
+static int EntryCompare(void* pEntry0, void* pEntry1) {
+	return stricmp(((RkvFileEntry*)pEntry0)->name, ((RkvFileEntry*)pEntry1)->name);
 }
 
 void RkvTOC::Init(char* pName) {
@@ -60,21 +60,27 @@ void RkvTOC::Init(char* pName) {
 
     if (rkvFd >= 0) {
         // alloc and read header
-        void *pBuf = Heap_MemAlloc(0x20);
-        File_Seek(rkvFd, -0x20, 2);
-        File_Read(rkvFd, pBuf, 0x20, 0x20);
-        nmbrOfEntries = *(int *)((int)pBuf + 0x18);
-        nmbrOfDirectories = *(int *)((int)pBuf + 0x1C);
+        RKVHeader* pHeader = (RKVHeader*)Heap_MemAlloc(sizeof(RKVHeader));
+        File_Seek(rkvFd, -0x20, SEEK_END); // Header is last 32 bytes of the rkv file
+        File_Read(rkvFd, pHeader, sizeof(RKVHeader), 0x20);
+        nmbrOfEntries = pHeader->nmbrOfEntries;
+        nmbrOfDirectories = pHeader->nmbrOfDirectories;
+
+        // Flip endian of fields
         ByteReverse<int>(nmbrOfEntries);
         ByteReverse<int>(nmbrOfDirectories);
-        Heap_MemFree(pBuf);
+
+        // Free header
+        Heap_MemFree(pHeader);
+
 		int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + nmbrOfDirectories * sizeof(DirectoryEntry);
         File_Seek(rkvFd, fileLength - (fileSize + 8), 0);
         pFileEntries = (RkvFileEntry *)Heap_MemAlloc(fileSize);
 
-        pDirectoryEntries = (DirectoryEntry*)((int)pFileEntries + nmbrOfEntries * sizeof(RkvFileEntry));
+        pDirectoryEntries = (DirectoryEntry*)((char*)pFileEntries + nmbrOfEntries * sizeof(RkvFileEntry));
         File_Read(rkvFd, (void *)pFileEntries, fileSize, fileSize);
 
+        // Correct endianness of all fields in all file entries
         for (int entryIndex = 0; entryIndex < nmbrOfEntries; entryIndex++) {
             ByteReverse<int>(pFileEntries[entryIndex].directoryIndex);
             ByteReverse<int>(pFileEntries[entryIndex].length);
@@ -98,7 +104,11 @@ void RkvTOC::Init(char* pName) {
 RkvFileEntry* RkvTOC::GetEntry(char* pFileName) {
     RkvFileEntry* pEntry = NULL;
     if (rkvFd >= 0) {
-        pEntry = (RkvFileEntry *)Util_BinarySearch((void *)pFileName, (void *)pFileEntries, nmbrOfEntries, sizeof(RkvFileEntry), EntryCompare);
+        pEntry = (RkvFileEntry*)Util_BinarySearch(
+            (void*)pFileName, (void*)pFileEntries, 
+            nmbrOfEntries, sizeof(RkvFileEntry), 
+            EntryCompare
+        );
         if (pEntry != NULL && pEntry->offset < 0) {
             pEntry = NULL;
         }
@@ -114,25 +124,41 @@ int RkvTOC::GetAsyncHandle(void) {
 	return unk54;
 }
 
+/// @brief Sets the new Load Intercept handler
+/// @param loadInterceptFunc New Intercept handler function
+/// @return Old intercept handler function
 void* FileSys_SetLoadInterceptHandler(void* loadInterceptFunc(char*, int*, void*, int*)) {
     void* oldHandler = pLoadInterceptHandler;
     pLoadInterceptHandler = loadInterceptFunc;
     return oldHandler;
 }
 
+/// @brief Checks if a file exists in either rkv or not
+/// @param pFilename Name of the file
+/// @param pOutLen Optional pointer to store the file length (NULL if not needed)
+/// @return True if the entry is found, otherwises false
 bool FileSys_Exists(char* pFilename, int* pOutLen) {
+
     if (pExistInterceptHandler != NULL) {
+        // check the exists intercept handler if it isn't NULL
         if (pExistInterceptHandler(pFilename, pOutLen, 0) != false) {
             return true;
         }
     }
+
+    // first check the patch rkv
     RkvFileEntry* pEntry = patch.GetEntry(pFilename);
     if (pEntry == NULL) {
+        // if the patch rkv doesn't contain the file, load it from the regular rkv
         pEntry = data.GetEntry(pFilename);
     }
+
     if (pEntry != NULL && pOutLen != NULL) {
+        // if the entry isn't null and pOutLen isn't NULL
+        // store the file's length to pOutLen
         *pOutLen = pEntry->length;
     }
+
     return pEntry != NULL;
 }
 
@@ -140,75 +166,71 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     if (pEntry->unk3C != 0) {
         return;
     }
+    
     pEntry->unk3C = fileOrderId++;
+
     if (System_GetCommandLineParameter("-languageOrder") == 0) {
         return;
     }
-    char* namePtr;
+
     char* pLang = strstr(pEntry->name, ".ENGLISH");
     char* entryLanguage = pLang;
-    if (pLang != 0) {
+    char* namePtr;
+
+    if (pLang != NULL) {
 		// if ".ENGLISH" is found in filename, run this block
-        namePtr = (char*)((int)entryLanguage - (int)pEntry); // width specifier
-        s16 index = 0;
-        RkvTOC* toc = &data;
-        while (index < 4) {
-            switch (index) {
-            case 0:
-                entryLanguage = Str_Printf("%.*s.FRENCH", namePtr, pEntry);
-                break;
-            case 1:
-                entryLanguage = Str_Printf("%.*s.SPANISH", namePtr, pEntry);
-                break;
-            case 2:
-                entryLanguage = Str_Printf("%.*s.GERMAN", namePtr, pEntry);
-                break;
-            case 3:
-                entryLanguage = Str_Printf("%.*s.ITALIAN", namePtr, pEntry);
-                break;
-            default:
-                break;
+        int nameLen = entryLanguage - pEntry->name; // width specifier
+        for (s16 i = 0; i < 4; i++) {
+            switch (i) {
+                case 0:
+                    entryLanguage = Str_Printf("%.*s.FRENCH", nameLen, pEntry->name);
+                    break;
+                case 1:
+                    entryLanguage = Str_Printf("%.*s.SPANISH", nameLen, pEntry->name);
+                    break;
+                case 2:
+                    entryLanguage = Str_Printf("%.*s.GERMAN", nameLen, pEntry->name);
+                    break;
+                case 3:
+                    entryLanguage = Str_Printf("%.*s.ITALIAN", nameLen, pEntry->name);
+                    break;
             }
-            RkvFileEntry *pFoundEntry = toc->GetEntry(entryLanguage);
+            RkvFileEntry* pFoundEntry = data.GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
                 pFoundEntry->unk3C = fileOrderId++;
-                pFoundEntry->unk3E = index + 2;
+                pFoundEntry->unk3E = i + 2;
             }
-            index++;
         }
     }
-    pLang = strstr((char *)pEntry, "EN.");
+
+    pLang = strstr(pEntry->name, "EN.");
     entryLanguage = pLang;
-    namePtr = entryLanguage + 3;
-    if (pLang != 0) {
-        char *languageStringPtr = (char *)((int)entryLanguage - (int)pEntry);
-        s16 index = 0;
-        RkvTOC *toc = &data;
-        while (index < 4) {
-            switch (index) {
-            case 0:
-                entryLanguage = Str_Printf("%.*sFR.%s", languageStringPtr, pEntry, namePtr);
-                break;
-            case 1:
-                entryLanguage = Str_Printf("%.*sES.%s", languageStringPtr, pEntry, namePtr);
-                break;
-            case 2:
-                entryLanguage = Str_Printf("%.*sDE.%s", languageStringPtr, pEntry, namePtr);
-                break;
-            case 3:
-                entryLanguage = Str_Printf("%.*sIT.%s", languageStringPtr, pEntry, namePtr);
-                break;
-            default:
-                break;
+    namePtr = entryLanguage + (sizeof("EN.") - 1);
+
+    if (pLang != NULL) {
+        int nameLen = entryLanguage - pEntry->name;
+        for (s16 i = 0; i < 4; i++) {
+            switch (i) {
+                case 0:
+                    entryLanguage = Str_Printf("%.*sFR.%s", nameLen, pEntry, namePtr);
+                    break;
+                case 1:
+                    entryLanguage = Str_Printf("%.*sES.%s", nameLen, pEntry, namePtr);
+                    break;
+                case 2:
+                    entryLanguage = Str_Printf("%.*sDE.%s", nameLen, pEntry, namePtr);
+                    break;
+                case 3:
+                    entryLanguage = Str_Printf("%.*sIT.%s", nameLen, pEntry, namePtr);
+                    break;
             }
-            RkvFileEntry *pFoundEntry = toc->GetEntry(entryLanguage);
+            RkvFileEntry *pFoundEntry = data.GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
                 pFoundEntry->unk3C = fileOrderId++;
-                pFoundEntry->unk3E = index + 2;
+                pFoundEntry->unk3E = i + 2;
             }
-            index++;
         }
     }
 }

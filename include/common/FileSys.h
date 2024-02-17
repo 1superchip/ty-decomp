@@ -1,6 +1,12 @@
 #ifndef COMMON_FILESYS
 #define COMMON_FILESYS
 
+struct RKVHeader {
+    char padding[0x18];
+    int nmbrOfEntries;
+    int nmbrOfDirectories;
+};
+
 struct DirectoryEntry {
 	char name[0x100];
 };

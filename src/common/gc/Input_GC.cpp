@@ -246,25 +246,25 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
     deviceID = CHAN_0; // Only ever vibrate channel 0
     switch (deviceID) {
         case CHAN_0:
-            padChan = 0;
+            padChan = PAD_CHAN0;
             break;
         case CHAN_1:
-            padChan = 1;
+            padChan = PAD_CHAN1;
             break;
         case CHAN_2:
-            padChan = 2;
+            padChan = PAD_CHAN2;
             break;
         case CHAN_3:
-            padChan = 3;
+            padChan = PAD_CHAN3;
             break;
         default:
-            padChan = 0;
+            padChan = PAD_CHAN0;
             break;
     }
     if (r4 != 0) {
-        PADControlMotor(padChan, 1);
+        PADControlMotor(padChan, PAD_MOTOR_RUMBLE);
     } else {
-        PADControlMotor(padChan, 2);
+        PADControlMotor(padChan, PAD_MOTOR_STOP_HARD);
     }
 }
 
@@ -302,7 +302,7 @@ bool Input_IsKeyMappingEnabled(void) {
 }
 
 void Input_StopAllVibration(void) {
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < PAD_CHANMAX; i++) {
         PADControlMotor(i, PAD_MOTOR_STOP_HARD);
     }
 }

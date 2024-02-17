@@ -483,6 +483,7 @@ void System_CheckZRequests(void) {
                     } 
                 }
             }
+            break;
         }
         ppRequests++;
     }
@@ -548,7 +549,7 @@ extern "C" int main(int argc, char* argv[]) {
 
     // Initiate XFONT
     GXRenderModeObj* pRModeObj = DEMOGetRenderModeObj();
-    XFONTInit(0x180, ((u16)ALIGN_UP((u16)pRModeObj->fbWidth, 16) * pRModeObj->xfbHeight) * 2);
+    XFONTInit(0x180, ((u16)ALIGN_UP((u16)pRModeObj->fbWidth, 16) * pRModeObj->xfbHeight) * sizeof(u16));
     XFONTSetFrameBuffer(DEMOGetCurrentBuffer());
     XFONTSetFgColor(0);
     zCheckRequests.Init(4, sizeof(ZCheckRequest));
@@ -571,7 +572,7 @@ extern "C" int main(int argc, char* argv[]) {
     GXSetCullMode(GX_CULL_NONE);
     GXSetAlphaUpdate(true);
     GXSetCurrentMtx(GX_PNMTX0);
-    GXSetDstAlpha(true, 127);
+    GXSetDstAlpha(GX_ENABLE, 127);
     GXPokeZMode(0, 7, 1);
     GXPokeBlendMode(1, 1, 0, 15);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, false, 0x7d);
@@ -592,7 +593,7 @@ extern "C" int main(int argc, char* argv[]) {
     GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 
     GXSetNumChans(1);
-    GXSetChanCtrl(GX_COLOR0A0, false, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(GX_COLOR0A0, (GXColor){0, 0, 0, 0});
     GXSetNumTevStages(1);
     GXSetNumTexGens(1);
@@ -649,7 +650,7 @@ void System_DoReset(bool r3, bool r4, bool bDeinitSounds) {
     if (bDeinitSounds) {
         Sound_DeinitModule();
     }
-    PADRecalibrate(0xF0000000);
+    PADRecalibrate(PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT);
     if (r3) {
         OSResetSystem(1, 0, r4);
     } else {
@@ -657,7 +658,6 @@ void System_DoReset(bool r3, bool r4, bool bDeinitSounds) {
     }
 }
 
-extern "C" int DVDGetDriveStatus(void);
 extern void Sound_SysResumeVoices(void);
 extern void Sound_SysPauseVoices(void);
 
@@ -690,7 +690,7 @@ void System_IdleFunction(void* r3) {
                     timeDiscClosed = OSGetTime();
                 }
                 break;
-            case 4:
+            case DVD_STATE_NO_DISK:
                 DiscErr_SetError(1);
                 Sound_SysPauseVoices();
                 if (!bMainThreadSuspened) {
@@ -698,7 +698,7 @@ void System_IdleFunction(void* r3) {
                     bMainThreadSuspened = true;
                 }
                 break;
-            case 5:
+            case DVD_STATE_COVER_OPEN:
                 DiscErr_SetError(2);
                 if (!bMainThreadSuspened) {
                     Sound_SysPauseVoices();
@@ -709,7 +709,7 @@ void System_IdleFunction(void* r3) {
                 timeDiscClosed = OSGetTime();
                 bDiscJustClosed = true;
                 break;
-            case 6:
+            case DVD_STATE_WRONG_DISK:
                 DiscErr_SetError(4);
                 Sound_SysPauseVoices();
                 if (!bMainThreadSuspened) {
@@ -718,7 +718,7 @@ void System_IdleFunction(void* r3) {
                 }
                 break;
             case 11:
-                DiscErr_SetError(3);
+                DiscErr_SetError(3); // "Disk could not be read"
                 Sound_SysPauseVoices();
                 if (!bMainThreadSuspened) {
                     OSSuspendThread(pMainThread);

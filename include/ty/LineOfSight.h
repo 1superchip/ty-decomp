@@ -9,12 +9,12 @@ extern float ApproxMag(Vector*, Vector*); // should be in Tools.h?
 struct LineOfSightObject {
     u8 flags;
     int unk4; // this needs to be set manually by the caller of Update to reset?
-    float unk8;
+    float length; // Length of direction vector (target - source).length()
     float unkC;
     float radius;
     float unk14;
-    float fovRatio;
-    float unk1C;
+    float fovRatio; // Must be within [-1.0f, 1.0f]
+    float normalizedYDir; // (target.y - source.y) / length(target - source)
     float unk20;
     Vector startPos;
     Vector rotation;

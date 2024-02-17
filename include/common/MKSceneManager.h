@@ -136,7 +136,11 @@ struct MKSceneManager {
 	void SetActivePoint(Vector*);
 	void UpdateProp(MKProp*, MKMessage*);
 	void RemoveProp(MKProp*);
-	int GetPropsInRange(MKProp**, int, Vector*, float, int, int, bool);
+	int GetPropsInRange(
+		MKProp** ppProps, int maxCount, 
+		Vector* pTestPt, float radius, 
+		int searchMask, int param_7, bool bIncludeStatic
+	);
 };
 
 extern MKSceneManager gSceneManager;
