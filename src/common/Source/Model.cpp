@@ -4,7 +4,6 @@
 #include "common/Heap.h"
 #include "common/FileSys.h"
 #include "common/Str.h"
-#include "common/PtrList.h"
 #include "common/Animation.h"
 
 bool moduleInitialised = false;
@@ -251,10 +250,10 @@ Vector* Model::GetRefPointOrigin(int refPointIndex) {
 void Model::GetRefPointWorldPosition(int refPointIndex, Vector* pOut) {
     *pOut = pTemplate->pModelData->pRefPoints[refPointIndex].position;
     if ((int)pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 == 0) {
-        pOut->ApplyMatrix(pOut, pMatrices);
+        pOut->ApplyMatrix(pMatrices);
         return;
     }
-    pOut->ApplyMatrix(pOut, pAnimation->GetNodeMatrix(pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 - 1));
+    pOut->ApplyMatrix(pAnimation->GetNodeMatrix(pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 - 1));
 }
 
 // optional parameter pSubObjectIdx

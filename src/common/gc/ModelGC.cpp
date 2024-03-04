@@ -46,7 +46,7 @@ int Model::Draw(u16* pSubObjs) {
     int r25;
     Matrix localMat;
     if (pSubObjs || flags.bits.b5 || disableTrivialRejection) {
-        ret = true;
+        ret = 1;
     } else {
         mat0.Multiply4x4(&matrices[0], &currView->unk1C8);
         ret = Model_TrivialRejectTest(&pTemplate->pModelData->volume, &mat0);

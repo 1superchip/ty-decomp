@@ -17,8 +17,11 @@ char* System_GetCommandLineParameter(char*);
 static RkvTOC data;
 static RkvTOC patch;
 
-static void* (*pLoadInterceptHandler)(char*, int*, void*, int*);
-static u8 (*pExistInterceptHandler)(char*, int*, int);
+typedef void* (*LoadInterceptFunc)(char* pFilename, int* pOutLen, void* pMemoryAllocated, int*);
+typedef bool (*ExistInterceptFunc)(char* pFilename, int* pOutLen, int);
+
+static LoadInterceptFunc pLoadInterceptHandler;
+static ExistInterceptFunc pExistInterceptHandler;
 static s16 fileOrderId;
 
 // for RkvTOC
@@ -74,11 +77,12 @@ void RkvTOC::Init(char* pName) {
         Heap_MemFree(pHeader);
 
 		int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + nmbrOfDirectories * sizeof(DirectoryEntry);
-        File_Seek(rkvFd, fileLength - (fileSize + 8), 0);
+        File_Seek(rkvFd, fileLength - (fileSize + 8), SEEK_SET);
         pFileEntries = (RkvFileEntry *)Heap_MemAlloc(fileSize);
 
+        // directory entries are right after the file entries
         pDirectoryEntries = (DirectoryEntry*)((char*)pFileEntries + nmbrOfEntries * sizeof(RkvFileEntry));
-        File_Read(rkvFd, (void *)pFileEntries, fileSize, fileSize);
+        File_Read(rkvFd, (void*)pFileEntries, fileSize, fileSize);
 
         // Correct endianness of all fields in all file entries
         for (int entryIndex = 0; entryIndex < nmbrOfEntries; entryIndex++) {
@@ -125,23 +129,23 @@ int RkvTOC::GetAsyncHandle(void) {
 }
 
 /// @brief Sets the new Load Intercept handler
-/// @param loadInterceptFunc New Intercept handler function
+/// @param newLoadHandler New Intercept handler function
 /// @return Old intercept handler function
-void* FileSys_SetLoadInterceptHandler(void* loadInterceptFunc(char*, int*, void*, int*)) {
+void* FileSys_SetLoadInterceptHandler(LoadInterceptFunc newLoadHandler) {
     void* oldHandler = pLoadInterceptHandler;
-    pLoadInterceptHandler = loadInterceptFunc;
+    pLoadInterceptHandler = newLoadHandler;
     return oldHandler;
 }
 
 /// @brief Checks if a file exists in either rkv or not
 /// @param pFilename Name of the file
 /// @param pOutLen Optional pointer to store the file length (NULL if not needed)
-/// @return True if the entry is found, otherwises false
+/// @return True if the entry is found, otherwise false
 bool FileSys_Exists(char* pFilename, int* pOutLen) {
 
     if (pExistInterceptHandler != NULL) {
         // check the exists intercept handler if it isn't NULL
-        if (pExistInterceptHandler(pFilename, pOutLen, 0) != false) {
+        if (pExistInterceptHandler(pFilename, pOutLen, 0)) {
             return true;
         }
     }
@@ -235,8 +239,15 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     }
 }
 
+/// @brief Loads and returns the filedata of pFilename
+/// @param pFilename Name of file to load and read
+/// @param pOutLen Optional pointer to store file length to
+/// @param pMemoryAllocated Optional pointer of already allocated memory. If NULL, memory will be allocated
+/// @param spaceAllocated Optional parameter for space allocated. If less than 0, size in file entry is used
+/// @return Pointer to file in memory, NULL if error
 void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int spaceAllocated) {
     int foundFd = -1;
+
     RkvFileEntry *pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry) {
         foundFd = patch.rkvFd;
@@ -246,6 +257,8 @@ void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int sp
             foundFd = data.rkvFd;
         }
     }
+
+    // Check if there is a Load Intercept Handler
     if (pLoadInterceptHandler != NULL) {
         int unkArg = 0;
         void* pFileData = pLoadInterceptHandler(pFilename, pOutLen, pMemoryAllocated, &unkArg);
@@ -253,27 +266,33 @@ void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int sp
             return pFileData;
         }
     }
+
     if (pFoundEntry != NULL) {
         if (pOutLen != NULL) {
+            // If pOutLen isn't NULL, store the length of the file to it
             *pOutLen = pFoundEntry->length;
         }
+
         if (pMemoryAllocated == NULL) {
 			// if memory isn't already allocated, allocate the memory
             spaceAllocated = pFoundEntry->length + 1;
             pMemoryAllocated = Heap_MemAlloc(spaceAllocated);
             *((char *)pMemoryAllocated + pFoundEntry->length) = 0;
         } else if (spaceAllocated < 0) {
+            // If spaceAllocated is less than 0, use the length in the file entry
             spaceAllocated = pFoundEntry->length;
         }
+
         if (pFoundEntry->length != 0) {
-            File_Seek(foundFd, pFoundEntry->offset, 0); // seek to beginning of file data
+            File_Seek(foundFd, pFoundEntry->offset, SEEK_SET); // seek to beginning of file data
             File_Read(foundFd, pMemoryAllocated, pFoundEntry->length, spaceAllocated);
         }
+
         FileSys_SetOrder(pFoundEntry);
         return pMemoryAllocated;
     }
 
-    return 0;
+    return NULL;
 }
 
 int FileSys_Save(char* name, bool arg1, void* pData, int dataLen) {
@@ -393,7 +412,7 @@ int FileSys_Open(char* pFilename, int* pOutLen, bool arg2) {
         if (pOutLen != NULL) {
             *pOutLen = pFoundEntry->length;
         }
-        File_Seek(foundFd, pFoundEntry->offset, 0);
+        File_Seek(foundFd, pFoundEntry->offset, SEEK_SET);
     }
     return foundFd;
 }

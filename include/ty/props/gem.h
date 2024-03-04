@@ -8,6 +8,8 @@
 #include "common/KromeIni.h"
 #include "common/Matrix.h"
 
+extern bool bDrawCheatLines;
+
 struct GemParticleSysInfo {
 	float unk0;
 	float unk4;

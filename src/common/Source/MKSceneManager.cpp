@@ -127,7 +127,7 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
     vecs[7].z = vecs[2].z + pDesc->pVolume->v2.z;
     
     for(int i = 0; i < 8; i++) {
-        vecs[i].ApplyMatrix(&vecs[i], pProp->pLocalToWorld);
+        vecs[i].ApplyMatrix(pProp->pLocalToWorld);
     }
 
     Vector min;

@@ -2,6 +2,7 @@
 #define COMMON_MODEL
 
 #include "types.h"
+#include "common/PtrList.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
 #include "common/Material.h"
@@ -238,11 +239,13 @@ void Model_UnpackTemplate(ModelTemplate*);
 int Model_TrivialRejectTest(BoundingVolume*, Matrix*);
 
 struct EffectDat {
-    void* pStripData;
-    int maxOffset;
-    int matEffect;
-    float minW;
-    float maxW;
+	void* pStripData;
+	int maxOffset;
+	int matEffect;
+	float minW;
+	float maxW;
 };
+
+extern PtrList<Model> modelInstances;
 
 #endif // COMMON_MODEL

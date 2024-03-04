@@ -21,6 +21,14 @@ struct PtrList {
 	T** GetPointers(void) {
 		return pPointers;
 	}
+
+    int GetCount(void) {
+        T** p = pPointers;
+        while (*p) {
+            p++;
+        }
+        return (p - pPointers);
+    }
 };
 
 template <typename T>
