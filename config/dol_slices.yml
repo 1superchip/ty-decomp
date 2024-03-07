@@ -2383,15 +2383,15 @@ ty/source/Script.cpp:
 #   .sbss: [0x803faa98, 0x803faab0]
 #   .sdata2: [0x80401120, 0x804011a0]
 
-#ty/source/setup.cpp:
-#   .text: [0x8018eaa4, 0x8018fc38]
-#   .ctors: [0x8023ca74, 0x8023ca78]
-#   .rodata: [0x8023eb28, 0x8023eb48]
-#   .data: [0x80266f00, 0x802672f0]
-#   .bss: [0x802b58b0, 0x802b5a80]
-#   .sdata: [0x803f8fd0, 0x803f90e0]
-#   .sbss: [0x803faab0, 0x803faac0]
-#   .sdata2: [0x804011a0, 0x80401208]
+ty/source/setup.cpp:
+  .text: [0x8018eaa4, 0x8018fc38]
+  .ctors: [0x8023ca74, 0x8023ca78]
+  .rodata: [0x8023eb28, 0x8023eb48]
+  .data: [0x80266f00, 0x802672f0]
+  .bss: [0x802b58b0, 0x802b5a80]
+  .sdata: [0x803f8fd0, 0x803f90e0]
+  .sbss: [0x803faab0, 0x803faac0]
+  .sdata2: [0x804011a0, 0x80401208]
 
 #ty/source/Shadow.cpp:
 #   .text: [0x8018fc38, 0x80190c08]

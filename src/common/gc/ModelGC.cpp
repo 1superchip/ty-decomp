@@ -411,12 +411,14 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     float m10 = pMatrix->data[1][0];
     float m20 = pMatrix->data[2][0];
     float m30 = pMatrix->data[3][0];
+
     float m01 = pMatrix->data[0][1];
     float m11 = pMatrix->data[1][1];
     float m21 = pMatrix->data[2][1];
     float m31 = pMatrix->data[3][1];
+    
     for (i = 0; i < 8; i++) {
-        float tx = corner[i & 1][0];
+        float tx = corner[(i >> 0) & 1][0];
         float ty = corner[(i >> 1) & 1][1];
         float tz = corner[(i >> 2) & 1][2];
 
@@ -503,14 +505,18 @@ void ModelExplorer_GC::PrimeMaterial(void) {
 
 void ModelExplorer_GC::PrimeStrip(void) {
     vertexCount = pStripData->vertexCount;
+
     currentVertex = 0;
+    
     vertexIndices = &pStripData->vertexIndex;
     normalIndices = &pStripData->normalIndex;
     colorIndices = &pStripData->colorIndex;
     uvIndices = &pStripData->uvIndex;
+
     BuildVertex(0);
     BuildVertex(1);
     BuildVertex(2);
+
     unk8 = 0;
     triangleCount = vertexCount - 2; // triangle strip
     unk10 = 0;
@@ -518,16 +524,20 @@ void ModelExplorer_GC::PrimeStrip(void) {
 
 void ModelExplorer_GC::BuildVertex(int vtxIndex) {
     Vertex* pVertices = pModel->pTemplate->pModelData->pVertices;
+
     vertices[vtxIndex].pos.x = pVertices[*vertexIndices].pos[0];
     vertices[vtxIndex].pos.y = pVertices[*vertexIndices].pos[1];
     vertices[vtxIndex].pos.z = pVertices[*vertexIndices].pos[2];
+
     vertices[vtxIndex].normal[0] = pVertices[*normalIndices].normal[2] / 64.0f; // bug? should use normal[0]?
     vertices[vtxIndex].normal[1] = pVertices[*normalIndices].normal[1] / 64.0f;
     vertices[vtxIndex].normal[2] = pVertices[*normalIndices].normal[2] / 64.0f;
+
     vertices[vtxIndex].color.x = pVertices[*colorIndices].color[0] / 255.0f;
     vertices[vtxIndex].color.y = pVertices[*colorIndices].color[1] / 255.0f;
     vertices[vtxIndex].color.z = pVertices[*colorIndices].color[2] / 255.0f;
     vertices[vtxIndex].color.w = pVertices[*colorIndices].color[3] / 255.0f;
+
     vertices[vtxIndex].uv[0] = pVertices[*uvIndices].uv[0];
     vertices[vtxIndex].uv[1] = pVertices[*uvIndices].uv[1];
 
@@ -542,6 +552,7 @@ void ModelExplorer_GC::BuildVertex(int vtxIndex) {
         vertices[vtxIndex].weights[0] = (float)pVertices[*vertexIndices].weight / 4096.0f;
         vertices[vtxIndex].weights[1] = 1.0f - vertices[vtxIndex].weights[0];
     }
+
     vertexIndices += 4;
     normalIndices += 4;
     uvIndices += 4;

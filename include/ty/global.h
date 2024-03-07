@@ -39,33 +39,47 @@ struct GameSubStateFSM {
         StateFunc5  func5; // Unused
     };
 
-    // figure out proper names
-    GameSubState prevState;
-    int newState;
-    int mPrevPrevState;
+    GameSubState mCurrState;
+    int mNewState; // rename?
+    int mPrevPrevState; // rename?
     State* pStates;
-    int unk10;
+    int unk10; // rename?
 
     static bool bInitialised;
 
     void Init(State* pFSMStates, GameSubState state) {
         pStates = pFSMStates;
-        prevState = state;
+        mCurrState = state;
         mPrevPrevState = -1;
-        newState = -1;
-        if (pStates[prevState].Init) {
-            (this->*pStates[prevState].Init)();
+        mNewState = -1;
+        if (pStates[mCurrState].Init) {
+            (this->*pStates[mCurrState].Init)();
         }
     }
 
     // This is CallStateDeinit?
     inline void CallStateDeinit(void) {
-        if (prevState != GSS_NONE) {
-            if (pStates[prevState].Deinit) {
-                (this->*pStates[prevState].Deinit)();
+        if (mCurrState != GSS_NONE) {
+            if (pStates[mCurrState].Deinit) {
+                (this->*pStates[mCurrState].Deinit)();
             }
         }
-        prevState = GSS_NONE;
+        mCurrState = GSS_NONE;
+    }
+
+    GameSubState GetState(void) {
+        return mCurrState;
+    }
+
+    void ChangeStateInternal(int nextState, bool bAlwaysChange) {
+        if (bAlwaysChange || (mCurrState != nextState)) {
+            mNewState = nextState;
+        }
+    }
+    
+    void ChangeState(int nextState) {
+        unk10 = GetState();
+        ChangeStateInternal(nextState, false);
     }
 
     void Init(GameSubState newState);
@@ -209,6 +223,7 @@ struct LevelData {
     LevelNumber GetZoneFirstLevelNumber(ZoneNumber);
     void EnableBoss(bool);
     bool IsBossEnabled(void);
+    ZoneNumber GetZone(LevelNumber levelNr);
     bool ShowGameInfo(LevelNumber levelNr);
     bool ShowGemCount(LevelNumber levelNr);
 
@@ -330,7 +345,7 @@ void PreInitializeLevel(void);
 void InitializeLevel(void);
 void InitializeGame(void);
 void LogMaterialUsage(void);
-void Setup_GetGrassForLevel(void);
+char** Setup_GetGrassForLevel(void);
 
 #define NUM_DIALOGPLAYER_ACTORS (68)
 

@@ -359,8 +359,9 @@ char* Model::GetName(void){
 
 void Model::SetAlphaLightIntensity(int subObjectIndex, float intensity) {
     if (subObjectIndex == -1) {
+        // set intensity for all subobjects if index is -1
         for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
-            pTemplate->pModelData->pSubObjects[i].alphaLightIntensity = intensity; // set intensity for all subobjects if index is -1
+            pTemplate->pModelData->pSubObjects[i].alphaLightIntensity = intensity;
         }
         return;
     }

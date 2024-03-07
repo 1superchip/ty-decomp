@@ -140,25 +140,25 @@ struct Model {
 	Matrix matrices[1]; // Model has at least 1 matrix in it, more are allocated
 	static int disableTrivialRejection;
 	
-	static Model* Create(char*, char*);
+	static Model* Create(char* pMeshName, char* pAnimName);
 	void Destroy(void);
 	static void Purge(void);
 	void SetPosition(Vector* pPos);
-	void SetRotation(Vector*);
-	void SetAnimation(Animation*);
+	void SetRotation(Vector* pRot);
+	void SetAnimation(Animation* pAnim);
 	void SetLocalToWorldDirty(void);
 	bool IsSubObjectEnabled(int);
 	void EnableSubObject(int subObjectIndex, bool);
-	void EnableOnlySubObject(int, bool);
-	void SetInverseScaleValue(int, float);
-	bool RefPointExists(char*, int*);
-	int GetRefPointIndex(char*);
-	Vector* GetRefPointOrigin(int);
+	void EnableOnlySubObject(int subObjectIndex, bool);
+	void SetInverseScaleValue(int idx, float);
+	bool RefPointExists(char* pRefPointName, int* pRefPointIdx);
+	int GetRefPointIndex(char* pRefPointName);
+	Vector* GetRefPointOrigin(int refPointIndex);
 	void GetRefPointWorldPosition(int refPointIndex, Vector* pOut);
-	bool SubObjectExists(char*, int*);
-	int GetSubObjectIndex(char*);
-	int GetSubObjectMatrixIndex(int);
-	Vector* GetSubObjectOrigin(int);
+	bool SubObjectExists(char* pSubObjectName, int* pSubObjectIdx);
+	int GetSubObjectIndex(char* pSubObjectName);
+	int GetSubObjectMatrixIndex(int subObjectIndex);
+	Vector* GetSubObjectOrigin(int subObjectIndex);
 	static void List(void);
 	void GetCentre(Vector* pCentre);
 	int GetNmbrOfMatrices(void);
@@ -171,19 +171,19 @@ struct Model {
 		return GetBoundingVolume(-1);
 	}
 	char* GetName(void);
-	void SetAlphaLightIntensity(int, float);
+	void SetAlphaLightIntensity(int subObjectIndex, float intensity);
 	void SetRenderTypeOverride(int);
-	Material* GetSubObjectMaterial(int, int);
+	Material* GetSubObjectMaterial(int subObjectIndex, int materialIndex);
 	Animation* GetAnimation(void) {
 		return pAnimation;
 	}
 	
-	int Draw(u16*);
+	int Draw(u16* pSubObjs);
     ModelExplorer_GC* Explore(int* pVertexCount, int* pTriangleCount, int* pStripCount);
-    bool ExploreNextFace(ModelExplorer*);
-    bool ExploreNextMaterial(ModelExplorer*);
-    bool ExploreNextSubObject(ModelExplorer*);
-	void ExploreClose(ModelExplorer*);
+    bool ExploreNextFace(ModelExplorer* pExplorer);
+    bool ExploreNextMaterial(ModelExplorer* pExplorer);
+    bool ExploreNextSubObject(ModelExplorer* pExplorer);
+	void ExploreClose(ModelExplorer* pExplorer);
 };
 
 struct ModelExplorerVertex {
@@ -235,8 +235,8 @@ struct ModelExplorer_GC {
     void BuildVertex(int);
 };
 
-void Model_UnpackTemplate(ModelTemplate*);
-int Model_TrivialRejectTest(BoundingVolume*, Matrix*);
+void Model_UnpackTemplate(ModelTemplate* pTemplate);
+int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix);
 
 struct EffectDat {
 	void* pStripData;
