@@ -1,6 +1,11 @@
 #ifndef COMMON_FILESYS
 #define COMMON_FILESYS
 
+#include "types.h"
+
+typedef void* (*LoadInterceptFunc)(char* pFilename, int* pOutLen, void* pMemoryAllocated, int*);
+typedef bool (*ExistInterceptFunc)(char* pFilename, int* pOutLen, int);
+
 struct RKVHeader {
     char padding[0x18];
     int nmbrOfEntries;
@@ -54,13 +59,13 @@ void FileSys_Update(void);
 
 static int EntryCompare(void*, void*);
 
-void* FileSys_SetLoadInterceptHandler(void* (*)(char*, int*, void*, int*));
+LoadInterceptFunc FileSys_SetLoadInterceptHandler(LoadInterceptFunc newLoadHandler);
 bool FileSys_Exists(char* pFilename, int* pOutLen);
 static void FileSys_SetOrder(RkvFileEntry*);
 void* FileSys_Load(char* pFileName, int* pOutLen, void* pMemoryAllocated, int spaceAllocated);
 int FileSys_Save(char*, bool, void*, int);
 void FileSys_OutputFileOrder(void);
-int FileSys_Open(char* pFilename, int* pOutLen, bool arg2);
+int FileSys_Open(char* pFilename, int* pOutLen, bool bUseAsyncHandle);
 void FileSys_Close(int fd);
 int FileSys_GetOffset(char* pFilename);
 

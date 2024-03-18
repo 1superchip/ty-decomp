@@ -17,9 +17,6 @@ char* System_GetCommandLineParameter(char*);
 static RkvTOC data;
 static RkvTOC patch;
 
-typedef void* (*LoadInterceptFunc)(char* pFilename, int* pOutLen, void* pMemoryAllocated, int*);
-typedef bool (*ExistInterceptFunc)(char* pFilename, int* pOutLen, int);
-
 static LoadInterceptFunc pLoadInterceptHandler;
 static ExistInterceptFunc pExistInterceptHandler;
 static s16 fileOrderId;
@@ -131,8 +128,8 @@ int RkvTOC::GetAsyncHandle(void) {
 /// @brief Sets the new Load Intercept handler
 /// @param newLoadHandler New Intercept handler function
 /// @return Old intercept handler function
-void* FileSys_SetLoadInterceptHandler(LoadInterceptFunc newLoadHandler) {
-    void* oldHandler = pLoadInterceptHandler;
+LoadInterceptFunc FileSys_SetLoadInterceptHandler(LoadInterceptFunc newLoadHandler) {
+    LoadInterceptFunc oldHandler = pLoadInterceptHandler;
     pLoadInterceptHandler = newLoadHandler;
     return oldHandler;
 }
@@ -386,13 +383,13 @@ void FileSys_OutputFileOrder(void) {
 /// @brief Opens a file within an RKV
 /// @param pFilename Filename
 /// @param pOutLen Optional pointer to place file length
-/// @param arg2 
+/// @param bUseAsyncHandle Use the async handle
 /// @return Fd of file, possibly -1
-int FileSys_Open(char* pFilename, int* pOutLen, bool arg2) {
+int FileSys_Open(char* pFilename, int* pOutLen, bool bUseAsyncHandle) {
     int foundFd = -1;
     RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry != NULL) {
-        if (arg2) {
+        if (bUseAsyncHandle) {
 			foundFd = patch.GetAsyncHandle();
         } else {
             foundFd = File_Open(patch.name, 0);
@@ -401,7 +398,7 @@ int FileSys_Open(char* pFilename, int* pOutLen, bool arg2) {
         pFoundEntry = data.GetEntry(pFilename);
         if (pFoundEntry != NULL) {
             FileSys_SetOrder(pFoundEntry);
-            if (arg2) {
+            if (bUseAsyncHandle) {
 				foundFd = data.GetAsyncHandle();
             } else {
                 foundFd = File_Open(data.name, 0);
@@ -422,11 +419,9 @@ void FileSys_Close(int fd) {
         if (data.unk54 == fd) {
             data.unk58 = true;
             return;
-        } else {
-            if (patch.unk54 == fd) {
-                patch.unk58 = true;
-                return;
-            }
+        } else if (patch.unk54 == fd) {
+            patch.unk58 = true;
+            return;
         }
         File_Close(fd);
     }

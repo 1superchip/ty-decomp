@@ -3490,13 +3490,13 @@ common/Source/MKAnimScript.cpp:
    .sbss: [0x803fb288, 0x803fb290]
    .sdata2: [0x804022f0, 0x80402300]
 
-#common/Source/MKPackage.cpp:
-#   .text: [0x8021a4fc, 0x8021b680]
-#   .data: [0x802743d8, 0x80274428]
-#   .bss: [0x802df308, 0x802e3348]
-#   .sdata: [0x803f98f0, 0x803f9910]
-#   .sbss: [0x803fb290, 0x803fb2e0]
-#   .sdata2: [0x80402300, 0x80402310]
+common/Source/MKPackage.cpp:
+  .text: [0x8021a4fc, 0x8021b680]
+  .data: [0x802743d8, 0x80274428]
+  .bss: [0x802df308, 0x802e3348]
+  .sdata: [0x803f98f0, 0x803f9910]
+  .sbss: [0x803fb290, 0x803fb2e0]
+  .sdata2: [0x80402300, 0x80402310]
 
 common/Source/MKParticleGen.cpp:
   .text: [0x8021b680, 0x8021ccdc]
