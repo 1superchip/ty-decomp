@@ -84,19 +84,19 @@ int File_Read(int fd, void* buf, int size, int arg3) {
         entry->unk54 = alignedSize + 0x40;
         entry->unk44 = Heap_MemAlloc(entry->unk54);
         entry->unk40 = entry->unk44;
-	}
+    }
 
-	if (gcFiles[fd].callback == NULL) {
-		int readLength = DVDReadPrio(&entry->fileInfo, entry->unk44, alignedSize, entry->streamOffset, 2);
-		entry->streamOffset += readLength;
-		if (entry->unk54 > 0) {
-			memmove(buf, entry->unk44, arg3);
-			Heap_MemFree(entry->unk44);
-			entry->unk44 = 0;
-			entry->unk54 = 0;
-		}
-		return readLength;
-	}
+    if (gcFiles[fd].callback == NULL) {
+        int readLength = DVDReadPrio(&entry->fileInfo, entry->unk44, alignedSize, entry->streamOffset, 2);
+        entry->streamOffset += readLength;
+        if (entry->unk54 > 0) {
+            memmove(buf, entry->unk44, arg3);
+            Heap_MemFree(entry->unk44);
+            entry->unk44 = 0;
+            entry->unk54 = 0;
+        }
+        return readLength;
+    }
 
     entry->unk4C = arg3;
     if (entry->unk54 == 0) {
@@ -157,7 +157,7 @@ int File_Length(char* filename) {
 }
 
 char* File_FileServerFilename(char* pFilename) {
-	return pFilename;
+    return pFilename;
 }
 
 int File_IsBusy(int fd) {
@@ -211,9 +211,9 @@ bool File_IsAnyBusy(void) {
 }
 
 char* File_FileServerOutputFilename(char* name) {
-	return name;
+    return name;
 }
 
 int File_Write(int fd, void* pData, int len) {
-	return 0;
+    return 0;
 }

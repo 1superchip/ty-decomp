@@ -351,7 +351,7 @@ char* Material::InitFromMatDefs(char* pName) {
                             float amb;
                             pLine->AsFloat(0, &amb);
                             if (amb > 0.0f) {
-								// if ambient light is greater than 0.0f, the material is prelit
+                                // if ambient light is greater than 0.0f, the material is prelit
                                 type = Type_Prelit;
                             }
                         } else if (stricmp(pLine->pFieldName, "aref") == 0) {
@@ -671,7 +671,7 @@ void Material::Use(void) {
         GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
     if (pTex->bMpegTarget != false) {
-		// setup GX for video
+        // setup GX for video
 		
         GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_CLEAR);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 255);
@@ -886,7 +886,7 @@ void Material::Use(void) {
             zCompSetting = true;
         }
         GXSetZCompLoc(zCompSetting == false ? 1 : 0);
-		// (currentMixedColor & 0xff) masks the alpha
+        // (currentMixedColor & 0xff) masks the alpha
         int r = unk5C * (currentMixedColor & 0xff);
         GXSetAlphaCompare(GX_GREATER, r, GX_AOP_AND, GX_ALWAYS, 255);
     }
@@ -1152,3 +1152,4 @@ void Material::UpdateCounter(void) {
         frameCounter++;
     }
 }
+

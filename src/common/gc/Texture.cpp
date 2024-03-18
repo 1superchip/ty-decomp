@@ -6,11 +6,11 @@
 #include "common/FileSys.h"
 
 extern "C" {
-	void memcpy(void*, void*, int);
-	void strcpy(char*, char*);
-	void DCStoreRange(uint*, int);
-	void memset(void*, int, int);
-	int stricmp(char*, char*);
+    void memcpy(void*, void*, int);
+    void strcpy(char*, char*);
+    void DCStoreRange(uint*, int);
+    void memset(void*, int, int);
+    int stricmp(char*, char*);
 };
 
 
@@ -50,14 +50,14 @@ Texture* Texture::Create(char* pName) {
         pTex->height = texFile->height;
         switch (texFile->fmt) {
         case 0:
-			// RGB5A3
+            // RGB5A3
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
             GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height,
                 GX_TF_RGB5A3, GX_REPEAT, GX_REPEAT, GX_FALSE);
             break;
         case 1:
-			// Indexed
+            // Indexed
             pTex->bTlut = true;
             memset((void *)&pTex->tlutObj, 0, sizeof(GXTlutObj));
             if (Texture_bColourKey != false) {
@@ -74,7 +74,7 @@ Texture* Texture::Create(char* pName) {
                 GX_TF_C8, GX_REPEAT, GX_REPEAT, GX_FALSE, 0);
             break;
         case 2:
-			// CMPR
+            // CMPR
             pTex->bTlut = false;
             memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
             GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height,

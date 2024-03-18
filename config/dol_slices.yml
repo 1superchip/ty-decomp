@@ -3589,8 +3589,7 @@ common/gc/DiscErrors.cpp:
   .data: [0x80275a68, 0x802764d8]
   .sdata: [0x803f99e0, 0x803f99e8]
 
-# should be moved to common/gc/?
-common/File.cpp:
+common/gc/File.cpp:
    .text: [0x80225994, 0x80226398]
    .rodata: [0x8023fca0, 0x8023fea0]
    .data: [0x802764d8, 0x802764e8]
@@ -3614,7 +3613,7 @@ common/gc/Input_GC.cpp:
   .sdata2: [0x80402480, 0x804024c0]
 
 # should be moved to common/gc/?
-common/Source/Material_GC.cpp:
+common/gc/Material_GC.cpp:
    .text: [0x8022825c, 0x8022bb50]
    .rodata: [0x8023fec8, 0x8023ffb0]
    .data: [0x80276a80, 0x80296d58]
@@ -3667,7 +3666,7 @@ common/gc/System_GC.cpp:
   .sbss2: [0x80402778, 0x8040277C]
 
 # should be moved to common/gc/?
-common/Source/Texture.cpp:
+common/gc/Texture.cpp:
    .text: [0x80236008, 0x802368f8]
    .bss: [0x803ef140, 0x803ef150]
    .sdata: [0x803f9b50, 0x803f9b60]
