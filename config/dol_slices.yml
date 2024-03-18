@@ -3612,7 +3612,6 @@ common/gc/Input_GC.cpp:
   .sbss: [0x803fb3a8, 0x803fb3b0]
   .sdata2: [0x80402480, 0x804024c0]
 
-# should be moved to common/gc/?
 common/gc/Material_GC.cpp:
    .text: [0x8022825c, 0x8022bb50]
    .rodata: [0x8023fec8, 0x8023ffb0]
@@ -3665,7 +3664,6 @@ common/gc/System_GC.cpp:
   .sdata2: [0x80402608, 0x80402648]
   .sbss2: [0x80402778, 0x8040277C]
 
-# should be moved to common/gc/?
 common/gc/Texture.cpp:
    .text: [0x80236008, 0x802368f8]
    .bss: [0x803ef140, 0x803ef150]

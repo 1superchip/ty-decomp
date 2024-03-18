@@ -467,7 +467,7 @@ char* Material::InitFromMatDefs(char* pName) {
 }
 
 Material* Material::Create(char* pName) {
-    Material* pFoundMat = Find(pName);
+    Material* pFoundMat = Material::Find(pName);
     if (pFoundMat != NULL) {
         pFoundMat->referenceCount++;
     } else {
@@ -480,8 +480,7 @@ Material* Material::Create(char* pName) {
         if (!FileSys_Exists(Str_Printf("%s.tga", textureName), NULL) && 
             !FileSys_Exists(Str_Printf("%s.gtx", textureName), NULL)) {
             // if neither texture file exists, use the texture from the debug font material
-            Material* debugFontMat = (Material*)(((int*)gpDebugFont)[11]);
-            pFoundMat->unk54 = debugFontMat->unk58 != NULL ? debugFontMat->unk58 : debugFontMat->unk54;
+            pFoundMat->unk54 = gpDebugFont->pFontMaterial->GetTexture();
             pFoundMat->unk54->referenceCount++;
         } else {
             pFoundMat->unk54 = Texture::Create(textureName);
@@ -545,18 +544,23 @@ Material* Material::Find(char* pName) {
 // Initialises material list and initiates texobjs from this file
 #pragma pool_data off
 void Material::InitModule(void) {
+
 	materials.Init(gMKDefaults.materialCount, sizeof(Material));
+
     if (FileSys_Exists("global.mad", NULL) != false) {
         materialIni.Init("global.mad");
     } else {
         materialIni.Init(NULL);
     }
-    pCurrMat[1] = NULL;
-    pCurrMat[0] = NULL;
+
+    pCurrMat[0] = pCurrMat[1] = NULL;
     pPCMatChanges = NULL;
+
     frameCounter = 0;
     updateEnabled = 1;
+
     CreateFromRawData("capture", (void*)&captureTexData, 2, 128, 128); // GX_TF_RGB565
+    
     GXInitTexObj(&restorationTexObj, (void*)&restorationTexData, 128, 128, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
     GXInitTexObjLOD(&restorationTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
     GXInitTexObj(&rawCaptureTexObj, (void*)&rawCaptureTexData, 256, 256, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
