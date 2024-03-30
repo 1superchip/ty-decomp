@@ -24,3 +24,5 @@ section_defs:
       - name: .sbss
       - name: .sbss2
         nobits: true
+
+label_prefix: ".L"
