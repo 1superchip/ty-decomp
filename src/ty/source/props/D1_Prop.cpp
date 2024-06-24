@@ -17,50 +17,50 @@ static ModuleInfo<D1Prop> d1PropModule;
 static D1Prop* gpD1Prop = NULL;
 
 void D1_Prop_LoadResources(KromeIni* pIni) {
-	d1PropDesc.Init(&d1PropModule, "D1Prop", "D1Prop", 1, 2);
-	d1PropDesc.Load(pIni);
-	objectManager.AddDescriptor(&d1PropDesc);
+    d1PropDesc.Init(&d1PropModule, "D1Prop", "D1Prop", 1, 2);
+    d1PropDesc.Load(pIni);
+    objectManager.AddDescriptor(&d1PropDesc);
 }
 
 void D1Prop::Init(GameObjDesc* pDesc) {
-	GameObject::Init(pDesc);
-	bActive = false;
-	unk3D = false;
-	Credits_Init();
-	OnCompletion.Init();
-	OnCompletion100.Init();
-	gpD1Prop = this;
+    GameObject::Init(pDesc);
+    bActive = false;
+    unk3D = false;
+    Credits_Init();
+    OnCompletion.Init();
+    OnCompletion100.Init();
+    gpD1Prop = this;
 }
 
 bool D1Prop::LoadLine(KromeIniLine* pLine) {
     return GameObject::LoadLine(pLine) || OnCompletion.LoadLine(pLine, "OnCompletion") ||
-		OnCompletion100.LoadLine(pLine, "OnCompletion100");
+        OnCompletion100.LoadLine(pLine, "OnCompletion100");
 }
 
 void D1Prop::LoadDone(void) {
-	GameObject::LoadDone();
-	objectManager.AddObject(this, NULL, NULL);
+    GameObject::LoadDone();
+    objectManager.AddObject(this, NULL, NULL);
 }
 
 void D1Prop::Deinit(void) {
-	Credits_Deinit();
-	GameObject::Deinit();
-	gpD1Prop = NULL;
+    Credits_Deinit();
+    GameObject::Deinit();
+    gpD1Prop = NULL;
 }
 
 void D1Prop::Reset(void) {
-	GameObject::Reset();
-	Credits_Reset();
-	bActive = false;
-	unk3D = false;
+    GameObject::Reset();
+    Credits_Reset();
+    bActive = false;
+    unk3D = false;
 }
 
 void D1Prop::Update(void) {
-	if (bActive) return;
+    if (bActive) return;
 }
 
 void D1Prop::Draw(void) {
-	return;
+    return;
 }
 
 void D1Prop::Message(MKMessage* pMsg) {

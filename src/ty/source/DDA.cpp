@@ -27,7 +27,7 @@ void DDASession::Init(void) {
     pDDADrawCameraEnabled = 0;
     pDDASaveEnabled = 0;
     pDDAConvertToReadable = 0;
-	// 38 entries total
+    // 38 entries total
     unk10.Init(38, sizeof(DDAUnk18));
     unk14.Init(38, sizeof(DDAUnk14));
     dbgMsgTimer = 0;
@@ -37,22 +37,22 @@ void DDASession::Init(void) {
 }
 
 void DDASession::Update(void) {
-	if (bConvertToReadable != false) {
+    if (bConvertToReadable != false) {
         ConvertStatsToReadable();
         bConvertToReadable = false;
-	}
+    }
     DrawDebugMessage();
     DrawDebugStats();
 }
 
 void DDASession::DrawDebugMessage(void) {
-	if (dbgMsgTimer > 0) {
+    if (dbgMsgTimer > 0) {
         dbgMsgTimer--;
     }
 }
 
 void DDASession::DrawDebugStats(void) {
-	return;
+    return;
 }
 
 //https://decomp.me/scratch/wpnTU
@@ -292,7 +292,7 @@ int DDASession::DeathCount(void) {
 }
 
 void DDASession::LoadStatsInfo(void) {
-	return;
+    return;
 }
 
 void DDASession::SaveCurrentSession(void) {
@@ -305,5 +305,5 @@ void DDASession::SaveCurrentSession(void) {
 }
 
 void DDASession::ConvertStatsToReadable(void) {
-	return;
+    return;
 }

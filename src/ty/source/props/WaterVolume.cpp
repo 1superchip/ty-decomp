@@ -13,7 +13,7 @@ struct CritterField2LoadInfo {
     float unk;
 
     void Init(float);
-	bool LoadLine(KromeIniLine*);
+    bool LoadLine(KromeIniLine*);
     void LoadDone(Matrix*);
 };
 
@@ -83,7 +83,7 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
         // initial check to see if the point y position is less than the maximum y and
         // greater than the minimum y of the current WaterVolume
         if (point->y < volume->mMaxY && point->y > volume->mMinY) {
-			// applying waterVolumeMatrix to transformedPoint gets the original point
+            // applying waterVolumeMatrix to transformedPoint gets the original point
             transformedPoint.ApplyMatrix(point, &volume->mInvMtx);
             if (BoundingVolume_CheckPoint(&waterBoundingVolume, &transformedPoint) != false) {
                 closest = Max<float>(closest, volume->mMaxY);

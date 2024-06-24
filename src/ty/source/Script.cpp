@@ -10,10 +10,10 @@ static ModuleInfo<ConditionalScriptProp> conditionalScriptModule;
 static GameObjDesc conditionalScriptDesc;
 
 void Script_LoadResources(KromeIni* pIni) {
-	scriptPropDesc.Init(&scriptModule, "Script", "Script", 8, 0);
-	objectManager.AddDescriptor(&scriptPropDesc);
-	conditionalScriptDesc.Init(&conditionalScriptModule, "ConditionalScript", "ConditionalScript", 8, 0);
-	objectManager.AddDescriptor(&conditionalScriptDesc);
+    scriptPropDesc.Init(&scriptModule, "Script", "Script", 8, 0);
+    objectManager.AddDescriptor(&scriptPropDesc);
+    conditionalScriptDesc.Init(&conditionalScriptModule, "ConditionalScript", "ConditionalScript", 8, 0);
+    objectManager.AddDescriptor(&conditionalScriptDesc);
 }
 
 bool ScriptProp::LoadLine(KromeIniLine* pLine) {
@@ -29,101 +29,101 @@ bool ScriptProp::LoadLine(KromeIniLine* pLine) {
 }
 
 void ScriptProp::LoadDone(void) {
-	GameObject::LoadDone();
-	objectManager.AddObject(this, NULL, NULL);
+    GameObject::LoadDone();
+    objectManager.AddObject(this, NULL, NULL);
 }
 
 void ScriptProp::Init(GameObjDesc* pDesc) {
-	GameObject::Init(pDesc);
-	Delay = 0.0f;
-	unk40 = 0.0f;
-	bActive = false;
-	bEnabled = true;
-	bDefaultEnabled = true;
-	bDelayEachMessage = false;
-	currentMessageIndex = 0;
-	for (int i = 0; i < MessageCount; i++) {
-		messages[i].Init();
-	}
+    GameObject::Init(pDesc);
+    Delay = 0.0f;
+    unk40 = 0.0f;
+    bActive = false;
+    bEnabled = true;
+    bDefaultEnabled = true;
+    bDelayEachMessage = false;
+    currentMessageIndex = 0;
+    for (int i = 0; i < MessageCount; i++) {
+        messages[i].Init();
+    }
 }
 
 void ScriptProp::Update(void) {
-	if (bActive) {
-		unk40 -= gDisplay.updateFreq;
-		if (!(unk40 <= 0.0f)) {
-			return;
-		}
-		if (bDelayEachMessage) {
-			messages[currentMessageIndex++].Send();
-			if (currentMessageIndex == MessageCount) {
-				bActive = false;
-				return;
-			}
-			unk40 = Delay;
-			return;
-		}
-		Execute();
-		bActive = false;
-	}
+    if (bActive) {
+        unk40 -= gDisplay.updateFreq;
+        if (!(unk40 <= 0.0f)) {
+            return;
+        }
+        if (bDelayEachMessage) {
+            messages[currentMessageIndex++].Send();
+            if (currentMessageIndex == MessageCount) {
+                bActive = false;
+                return;
+            }
+            unk40 = Delay;
+            return;
+        }
+        Execute();
+        bActive = false;
+    }
 }
 
 void ScriptProp::Reset(void) {
-	bActive = false;
-	bEnabled = bDefaultEnabled;
-	unk40 = 0.0f;
-	currentMessageIndex = 0;
+    bActive = false;
+    bEnabled = bDefaultEnabled;
+    unk40 = 0.0f;
+    currentMessageIndex = 0;
 }
 
 void ScriptProp::Message(MKMessage* pMsg) {
-	switch (pMsg->unk0) {
-		case MKMSG_ACTIVATE:
-			if (!bEnabled) {
-				return;
-			}
-			if (Delay <= 0.0f) {
-				Execute();
-				return;
-			}
-			bActive = true;
-			unk40 = Delay;
-			currentMessageIndex = 0;
-			return;
-		case MKMSG_DEACTIVATE:
-			bActive = false;
-			return;
+    switch (pMsg->unk0) {
+        case MKMSG_ACTIVATE:
+            if (!bEnabled) {
+                return;
+            }
+            if (Delay <= 0.0f) {
+                Execute();
+                return;
+            }
+            bActive = true;
+            unk40 = Delay;
+            currentMessageIndex = 0;
+            return;
+        case MKMSG_DEACTIVATE:
+            bActive = false;
+            return;
         case MKMSG_ENABLE:
-			bEnabled = true;
-			break;
-		case MKMSG_DISABLE:
-			bEnabled = false;
-			break;
-		case MKMSG_Resolve:
-			for (int i = 0; i < MessageCount; i++) {
-				messages[i].Resolve();
-			}
-			break;
-	}
-	GameObject::Message(pMsg);
+            bEnabled = true;
+            break;
+        case MKMSG_DISABLE:
+            bEnabled = false;
+            break;
+        case MKMSG_Resolve:
+            for (int i = 0; i < MessageCount; i++) {
+                messages[i].Resolve();
+            }
+            break;
+    }
+    GameObject::Message(pMsg);
 }
 
 void ScriptProp::Execute(void) {
-	for (int i = 0; i < MessageCount; i++) {
-		messages[i].Send();
-	}
+    for (int i = 0; i < MessageCount; i++) {
+        messages[i].Send();
+    }
 }
 
 void ConditionalScriptProp::Init(GameObjDesc* pDesc) {
-	ScriptProp::Init(pDesc);
-	condition = 0;
-	bExecuteOnStart = true;
-	bNegative = false;
+    ScriptProp::Init(pDesc);
+    condition = 0;
+    bExecuteOnStart = true;
+    bNegative = false;
 }
 
 bool ConditionalScriptProp::LoadLine(KromeIniLine* pLine) {
-	return LoadLevel_LoadInt(pLine, "condition", &condition) ||
-		LoadLevel_LoadBool(pLine, "bExecuteOnStart", &bExecuteOnStart) ||
-		LoadLevel_LoadBool(pLine, "bNegative", &bNegative) ||
-		ScriptProp::LoadLine(pLine);
+    return LoadLevel_LoadInt(pLine, "condition", &condition) ||
+        LoadLevel_LoadBool(pLine, "bExecuteOnStart", &bExecuteOnStart) ||
+        LoadLevel_LoadBool(pLine, "bNegative", &bNegative) ||
+        ScriptProp::LoadLine(pLine);
 }
 
 void ConditionalScriptProp::Message(MKMessage* pMsg) {
@@ -162,7 +162,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case 3:
-			// Check if the zones have been completed by defeating the zone boss (Conditions 3 - 7)
+            // Check if the zones have been completed by defeating the zone boss (Conditions 3 - 7)
             if (gb.mGameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
@@ -193,7 +193,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case Conditon_GameComplete:
-			// Check if the game has been 100% complete (Condition 9)
+            // Check if the game has been 100% complete (Condition 9)
             if (gb.mGameData.GetGameCompletePercent() == 100) {
                 bConditionMet = true;
             }
@@ -204,7 +204,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             }
             break;
         case 11:
-			// check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
+            // check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
             if (gb.mGameData.GetLevelEnterCount(7) && !gb.mGameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
@@ -231,7 +231,7 @@ bool ConditionalScriptProp::CheckConditions(void) {
             break;
         case Conditon_DefaultTrue:
             bConditionMet = true;
-			break;
+            break;
         case 17:
         case 18:
             break;

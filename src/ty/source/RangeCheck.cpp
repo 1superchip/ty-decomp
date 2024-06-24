@@ -36,10 +36,10 @@ static int heroState = 0x23;
 static int maxLODEntries = 0x400;
 
 void LOD_Deinit(void) {
-	if (lodEntryPool != NULL) {
-		Heap_MemFree(lodEntryPool);
-	}
-	lodEntryPool = NULL;
+    if (lodEntryPool != NULL) {
+        Heap_MemFree(lodEntryPool);
+    }
+    lodEntryPool = NULL;
 }
 
 int Range_WhichZone(Vector* point, float* arg1) {

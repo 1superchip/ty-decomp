@@ -2,7 +2,7 @@
 #include "ty/Quadratic.h"
 
 float OrderFloatQuadratic(float x) {
-	return 4.0f * x;
+    return 4.0f * x;
 }
 
 float Quadratic::GetClosestTime(Vector *pPoint) {
@@ -41,11 +41,11 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
 }
 
 void Quadratic::Init(void) {
-	pos.Set(0.0f, 0.0f, 0.0f);
-	pos.w = 1.0f;
-	coeffsZ = pos;
-	coeffsY = coeffsZ;
-	coeffsX = coeffsY;
+    pos.Set(0.0f, 0.0f, 0.0f);
+    pos.w = 1.0f;
+    coeffsZ = pos;
+    coeffsY = coeffsZ;
+    coeffsX = coeffsY;
 }
 
 // calculate equation coefficients from 3 points

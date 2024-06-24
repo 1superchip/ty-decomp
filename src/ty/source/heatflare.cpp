@@ -8,7 +8,7 @@ static bool bHeatFlares = false;
 static bool bScreenGrabbed = false;
 
 void HeatFlare_LoadResources(void) {
-	pCaptureMaterial = Material::Create("capture");
+    pCaptureMaterial = Material::Create("capture");
 }
 
 void HeatFlare_Init(void) {
@@ -56,13 +56,13 @@ void HeatFlare_On(void* pVoidHeatFlare, int a1) {
 */
 
 void HeatFlare_Update(void) {
-	bScreenGrabbed = false;
+    bScreenGrabbed = false;
 }
 
 void HeatFlare_Draw(void) {
-	if (bHeatFlares) return;
+    if (bHeatFlares) return;
 }
 
 void HeatFlare_Unlock(void) {
-	return;
+    return;
 }

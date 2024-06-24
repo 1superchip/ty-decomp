@@ -52,8 +52,8 @@ bool LevelObjective::LoadLine(KromeIniLine* pLine) {
 }
 
 void LevelObjective::LoadDone(void) {
-	objectManager.AddObject(this, NULL, NULL);
-	GameObject::LoadDone();
+    objectManager.AddObject(this, NULL, NULL);
+    GameObject::LoadDone();
     unk84 = true;
     if (pMatName && *pMatName != '\0') {
         pMaterial = Material::Create(pMatName);

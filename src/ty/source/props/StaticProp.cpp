@@ -35,7 +35,7 @@ ModuleInfo<StaticProp> staticPropModuleInfo;
 ModuleInfo<StaticFXProp> staticFXPropModuleInfo;
 
 static float OrderStaticPropFloats(void) {
-	return 1.0f;
+    return 1.0f;
 }
 
 StaticPropLoadInfo StaticProp::loadInfo = {
@@ -124,7 +124,7 @@ void StaticProp::Init(GameObjDesc* pDesc) {
 }
 
 void StaticProp::Deinit(void) {
-	GameObject::Deinit();
+    GameObject::Deinit();
 }
 
 bool StaticProp::LoadLine(KromeIniLine* pLine) {
@@ -154,7 +154,7 @@ void StaticProp::LoadDone(void) {
     if (collide != false) {
         int index = -1;
         if (GetDesc()->bDynamic) {
-			// dynamic collision
+            // dynamic collision
             if (pModel->SubObjectExists(GetDesc()->subObjectName, &index)) {
                 Collision_AddDynamicSubobject(pModel, index, &collisionInfo);
                 pModel->EnableSubObject(index, false);
@@ -179,7 +179,7 @@ void StaticProp::Draw(void) {
 
 void StaticFXProp::Init(GameObjDesc* pDesc) {
     StaticProp::Init(pDesc);
-	// does not collide with water by default
+    // does not collide with water by default
     bCollidesWithWater = false;
     unk9C = 10;
     bVisible = true;
@@ -189,7 +189,7 @@ void StaticFXProp::Init(GameObjDesc* pDesc) {
 }
 
 bool StaticFXProp::LoadLine(KromeIniLine* pLine) {
-	return StaticProp::LoadLine(pLine) || LoadLevel_LoadBool(pLine, "bVisible", &bTempVisible);
+    return StaticProp::LoadLine(pLine) || LoadLevel_LoadBool(pLine, "bVisible", &bTempVisible);
 }
 
 void StaticFXProp::LoadDone(void) {
@@ -209,14 +209,14 @@ void StaticFXProp::LoadDone(void) {
     end.z += unk58.z;
     if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, -0x401)
             && (GetDesc()->effectFlags & FX_WaterRipple)) {
-		// if collision against water occurs and this prop has Water Ripple effects
-		// set collides with water and the position of the collision
+        // if collision against water occurs and this prop has Water Ripple effects
+        // set collides with water and the position of the collision
         bCollidesWithWater = true;
         waterCollisionPos = cr.pos;
     }
     if ((GetDesc()->effectFlags & FX_Rotate) && GetDesc()->rotateSubObj[0] != '\0') {
-		// if the rotation subobject name isn't empty and this prop has Rotate effects
-		// get the index of the subobject that controls rotation
+        // if the rotation subobject name isn't empty and this prop has Rotate effects
+        // get the index of the subobject that controls rotation
         rotateSubObjIndex = pModel->GetSubObjectIndex(GetDesc()->rotateSubObj);
     }
 }
@@ -243,7 +243,7 @@ void StaticFXProp::Update(void) {
 
 void StaticFXProp::Draw(void) {
     if (bVisible) {
-		StaticProp::Draw();
+        StaticProp::Draw();
     }
 }
 

@@ -12,14 +12,14 @@ extern "C" int stricmp(char*, char*);
 GameObjectManager objectManager;
 
 void GameObjectManager::Init(void) {
-	bLevelInitialised = false;
-	pDescs = NULL;
-	pObjectMem = NULL;
-	objectMemSize = 0;
+    bLevelInitialised = false;
+    pDescs = NULL;
+    pObjectMem = NULL;
+    objectMemSize = 0;
 }
 
 void GameObjectManager::Deinit(void) {
-	return;
+    return;
 }
 
 void GameObjectManager::InitLevel(void) {
@@ -135,7 +135,7 @@ void CheckVolume(GameObject* pObj, BoundingVolume* pBV) {
 void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume* pBV) {
     pObj->pLocalToWorld = pLTW;
     pObj->pDescriptor->pVolume = pBV;
-	CheckVolume(pObj, pBV);
+    CheckVolume(pObj, pBV);
     if (pObj->pLocalToWorld == NULL) {
         pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
     }
@@ -148,7 +148,7 @@ void GameObjectManager::AddObject(GameObject* pObj, Model* pModel) {
 }
 
 void GameObjectManager::RemoveObject(GameObject* pObj) {
-	gSceneManager.RemoveProp(pObj);
+    gSceneManager.RemoveProp(pObj);
 }
 
 void GameObjectManager::UpdateModules(void) {
@@ -172,11 +172,11 @@ void GameObjectManager::DrawModules(void) {
 }
 
 void GameObjectManager::SendMessage(MKMessage* pMsg, uint mask, Vector* pPt, float radius, bool param_6) {
-	gSceneManager.SendMessage(pMsg, mask, param_6, pPt, radius);
+    gSceneManager.SendMessage(pMsg, mask, param_6, pPt, radius);
 }
 
 void GameObjectManager::SendMessageToAll(MKMessage* pMsg, int mask) {
-	gSceneManager.SendMessage(pMsg, mask, true, NULL, 0.0f);
+    gSceneManager.SendMessage(pMsg, mask, true, NULL, 0.0f);
 }
 
 GameObject* GameObjectManager::GetObjectFromID(uint id) {

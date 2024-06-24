@@ -12,28 +12,28 @@ static GameObjDesc soundPropDesc;
 static ModuleInfo<SoundProp> soundPropModule;
 
 void SoundProp_LoadResources(KromeIni* pIni) {
-	soundPropDesc.Init(&soundPropModule, "SoundProp", "SoundProp", 1, 0);
-	soundPropDesc.maxDrawDist = 0.0f;
-	soundPropDesc.maxScissorDist = 0.0f;
-	soundPropDesc.maxUpdateDist = 1500.0f;
-	objectManager.AddDescriptor(&soundPropDesc);
+    soundPropDesc.Init(&soundPropModule, "SoundProp", "SoundProp", 1, 0);
+    soundPropDesc.maxDrawDist = 0.0f;
+    soundPropDesc.maxScissorDist = 0.0f;
+    soundPropDesc.maxUpdateDist = 1500.0f;
+    objectManager.AddDescriptor(&soundPropDesc);
 }
 
 void SoundProp::Init(GameObjDesc* pDesc) {
-	GameObject::Init(pDesc);
+    GameObject::Init(pDesc);
     pModel = NULL;
-	unk84 = -1;
-	unk7C.Init();
-	maxDelay = 0;
-	minDelay = 0;
+    unk84 = -1;
+    unk7C.Init();
+    maxDelay = 0;
+    minDelay = 0;
     unk88 = 0;
-	localToWorld.SetIdentity();
-	gameObjFlags.Init(GameObjFlags_All);
+    localToWorld.SetIdentity();
+    gameObjFlags.Init(GameObjFlags_All);
 }
 
 void SoundProp::Deinit(void) {
-	GameObject::Deinit();
-	unk7C.Deinit();
+    GameObject::Deinit();
+    unk7C.Deinit();
 }
 
 bool SoundProp::LoadLine(KromeIniLine* pLine) {
@@ -59,16 +59,16 @@ bool SoundProp::LoadLine(KromeIniLine* pLine) {
 
 
 void SoundProp::LoadDone(void) {
-	GameObject::LoadDone();
-	objectManager.AddObject(this, &localToWorld, NULL);
+    GameObject::LoadDone();
+    objectManager.AddObject(this, &localToWorld, NULL);
 }
 
 void SoundProp::Reset(void) {
-	GameObject::Reset();
+    GameObject::Reset();
     unk7C.Reset();
-	unk88 = 0;
-	unk80 = 1;
-	gameObjFlags.Reset();
+    unk88 = 0;
+    unk80 = 1;
+    gameObjFlags.Reset();
 }
 
 void SoundProp::Update(void) {

@@ -28,7 +28,7 @@ void CalcYStep(float gravity, float height, float* pYStep) {
 
 void DataVal::Load(void) {
     KromeIni dataIni;
-	
+    
     nearPlane = 100.0f;
     enemyChaseSpeed = 5.0f;
     enemyPatrolSpeed = 2.0f;

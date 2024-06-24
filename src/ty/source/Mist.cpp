@@ -45,6 +45,6 @@ void Mist_Update(void) {
 
 void Mist_Draw(void) {
     if (gb.level.bDisplayMist) {
-		envMist->Draw(NULL);
-	}
+        envMist->Draw(NULL);
+    }
 }

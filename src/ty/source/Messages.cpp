@@ -26,8 +26,8 @@ MessageMap mkMessageMap = {-2, 2, mkMessageStrings};
 MessageMap globalMessageMap = {10, GLOBAL_MESSAGE_COUNT, globalMessageStrings};
 
 void EventMessage::Init(void) {
-	targetId = -1;
-	message = 0;
+    targetId = -1;
+    message = 0;
 }
 
 bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
