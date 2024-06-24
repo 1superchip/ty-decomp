@@ -9,24 +9,24 @@ DirectLight* DirectLight::pDefaultLight;
 // Contains Info for 3 lights and an ambient light
 // Light info is {{dir}, {color}}
 static Vector defaultLightSetup[7] = {
-	{-0.2f, -1.0f, 0.7f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, // Light 0
-	{0.2f, -1.0f, 0.5f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, // Light 1
-	{0.0f, 1.0f, 0.0f, 0.0f}, {0.2f, 0.2f, 0.2f, 0.0f}, // Light 2
-	{0.3f, 0.3f, 0.3f, 0.0f} // Ambient Light
+    {-0.2f, -1.0f, 0.7f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, // Light 0
+    {0.2f, -1.0f, 0.5f, 0.0f}, {0.6f, 0.6f, 0.6f, 0.0f}, // Light 1
+    {0.0f, 1.0f, 0.0f, 0.0f}, {0.2f, 0.2f, 0.2f, 0.0f}, // Light 2
+    {0.3f, 0.3f, 0.3f, 0.0f} // Ambient Light
 }; // __attribute__((aligned(16)))
 
 void DirectLight::InitModule(void) {
-	pDefaultLight = new DirectLight;
-	pDefaultLight->Init();
+    pDefaultLight = new DirectLight;
+    pDefaultLight->Init();
 }
 
 void DirectLight::DeinitModule(void) {
-	delete pDefaultLight;
-	pDefaultLight = NULL;
+    delete pDefaultLight;
+    pDefaultLight = NULL;
 }
 
 void DirectLight::Init(void) {
-	Set(&defaultLightSetup[0]);
+    Set(&defaultLightSetup[0]);
 }
 
 void DirectLight::Set(Vector* pLightArray) {

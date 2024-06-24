@@ -10,7 +10,7 @@ template <typename T>
 struct PtrList {
     T **pPointers;
     void Init(int);
-	void Destroy(T*);
+    void Destroy(T*);
     void Deinit(void);
     T* AddEntry(T* p) {
         return *--pPointers = p;
@@ -18,9 +18,9 @@ struct PtrList {
     T* GetUnkEntry(void) {
         return *pPointers++;
     }
-	T** GetPointers(void) {
-		return pPointers;
-	}
+    T** GetPointers(void) {
+        return pPointers;
+    }
 
     int GetCount(void) {
         T** p = pPointers;
@@ -33,10 +33,10 @@ struct PtrList {
 
 template <typename T>
 inline void PtrList<T>::Init(int count) {
-	if (count == 0) {
-		pPointers = (T**)&gEmptyPtrList[1];
-	} else {
-		pPointers = (T**)Heap_MemAlloc((count + 2) * sizeof(T*));
+    if (count == 0) {
+        pPointers = (T**)&gEmptyPtrList[1];
+    } else {
+        pPointers = (T**)Heap_MemAlloc((count + 2) * sizeof(T*));
         *pPointers = NULL;
         int i = 0;
         for (i; i < count; i++) {

@@ -45,10 +45,10 @@ struct CollisionNode
         pNext->pPrev = pNode;
         pNext = pNode;
     }
-	void Remove(void) {
-		pNext->pPrev = pPrev;
+    void Remove(void) {
+        pNext->pPrev = pPrev;
         pPrev->pNext = pNext;
-	}
+    }
 };
 
 struct CollisionVertex {
@@ -59,13 +59,13 @@ struct CollisionVertex {
 // Contains polygon vertex info
 struct CollisionThing {
     CollisionVertex verts[3];
-	Vector normal;
+    Vector normal;
 };
 
 struct CollisionInfo {
-	bool bEnabled;
-	int flags;
-	MKProp* pProp; // should this be MKProp* ?
+    bool bEnabled;
+    int flags;
+    MKProp* pProp; // should this be MKProp* ?
 
     void Init(bool bEnable, int _collisionFlags, MKProp* _pProp) {
         bEnabled = bEnable;
@@ -84,36 +84,36 @@ struct CollisionInfo {
 };
 
 struct CollisionTriangle {
-	int flags;
-	int subObjectIdx;
-	CollisionInfo* pCollisionInfo;
-	float vertexPos0[3]; // position of vertex 0
-	float vertexPos1[3]; // position of vertex 1
-	float vertexPos2[3]; // position of vertex 2
-	int unk30;
-	int unk34;
-	int unk38;
+    int flags;
+    int subObjectIdx;
+    CollisionInfo* pCollisionInfo;
+    float vertexPos0[3]; // position of vertex 0
+    float vertexPos1[3]; // position of vertex 1
+    float vertexPos2[3]; // position of vertex 2
+    int unk30;
+    int unk34;
+    int unk38;
 };
 
 struct Item {
-	Item* next;
-	CollisionThing* collisionThing;
-	CollisionTriangle* pTriangle;
+    Item* next;
+    CollisionThing* collisionThing;
+    CollisionTriangle* pTriangle;
 };
 
 struct DynamicItem {
-	Model* pModel;
-	int idx;
-	float unk8;
-	CollisionInfo* pInfo;
+    Model* pModel;
+    int idx;
+    float unk8;
+    CollisionInfo* pInfo;
     PtrListDL<CollisionNode> unk10; // "dynamic_links"
-	Vector unk14;
-	Vector unk24;
-	Vector pos;
-	int unk44;
-	int unk48;
-	int unk4C;
-	int unk50;
+    Vector unk14;
+    Vector unk24;
+    Vector pos;
+    int unk44;
+    int unk48;
+    int unk4C;
+    int unk50;
 
     void Update(void);
     bool UpdateOverlap(void);
@@ -125,14 +125,14 @@ struct DynamicItem {
         }
     }
     // Gets the matrix of the dynamic item
-	Matrix* GetMatrix(void) {
-		if (idx >= 0) {
-			return &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(idx)];
-		} else {
-			return &pModel->matrices[0];
-		}
-	}
-	// unlinks dynamic links and deinits the item's PtrListDL
+    Matrix* GetMatrix(void) {
+        if (idx >= 0) {
+            return &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(idx)];
+        } else {
+            return &pModel->matrices[0];
+        }
+    }
+    // unlinks dynamic links and deinits the item's PtrListDL
     void Deinit(void) {
         Unlink();
         unk10.Deinit();
@@ -181,7 +181,7 @@ void Collision_InitModule(void);
 void Collision_DeinitModule(void);
 
 void Collision_Init(int heapSize, float minX, float /* unused; */ minY, float minZ, 
-		float width, float height, int tilesAcross, int tilesDown);
+        float width, float height, int tilesAcross, int tilesDown);
 void Collision_Deinit(void);
 void Collision_Update(void);
 void Collision_Draw(void);

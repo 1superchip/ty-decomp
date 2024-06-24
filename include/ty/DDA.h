@@ -5,18 +5,18 @@
 #include "common/PtrListDL.h"
 
 enum DDADamageCause {
-	
+    
 };
 
 enum DDAPickupType {
-	Pickup_Gem = 1,
-	Pickup_Cog = 2,
-	Pickup_ThunderEgg = 3,
-	Pickup_Bibly = 4
+    Pickup_Gem = 1,
+    Pickup_Cog = 2,
+    Pickup_ThunderEgg = 3,
+    Pickup_Bibly = 4,
 };
 
 enum DDAEnemyDamageCause {
-	
+    
 };
 
 enum DDACameraAction {
@@ -104,30 +104,30 @@ struct DDASession {
     int dbgMsgTimer;
     u8 unk20;
     int unk24[(0x74-0x24) / 4];
-	
-	void Init(void);
-	void Update(void);
-	void DrawDebugMessage(void);
-	void DrawDebugStats(void);
-	void StartSession(void);
-	void EndSession(void);
-	void NewCheckpoint(int);
-	void EndCheckpoint(void);
-	void StoreDeathInfo(void);
+
+    void Init(void);
+    void Update(void);
+    void DrawDebugMessage(void);
+    void DrawDebugStats(void);
+    void StartSession(void);
+    void EndSession(void);
+    void NewCheckpoint(int);
+    void EndCheckpoint(void);
+    void StoreDeathInfo(void);
     void StoreDamageInfo(DDADamageCause);
     void StorePickupInfo(DDAPickupType);
-	void StoreEnemyDeathInfo(DDAEnemyDamageCause);
+    void StoreEnemyDeathInfo(DDAEnemyDamageCause);
     void StoreRangChanged(void);
     void StoreCameraInfo(DDACameraAction);
     int DeathCount(void);
-	void LoadStatsInfo(void);
-	void SaveCurrentSession(void);
-	void ConvertStatsToReadable(void);
-	
-	static bool bInitialised;
-	static bool bSessionStarted;
-	static bool bConvertToReadable;
-	static bool bSaveEnabled;
+    void LoadStatsInfo(void);
+    void SaveCurrentSession(void);
+    void ConvertStatsToReadable(void);
+
+    static bool bInitialised;
+    static bool bSessionStarted;
+    static bool bConvertToReadable;
+    static bool bSaveEnabled;
 };
 
 // structs of "DDACheckpointInfoList" / "DDADeathInfoList"

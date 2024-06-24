@@ -9,13 +9,13 @@
 #define MONTH_TO_SECONDS (30 * DAYS_TO_SECONDS)
 
 struct TimerInfo {
-	int hours;
-	int minutes;
-	int seconds;
-	int milliseconds;
-	int day;
-	int month;
-	int year;
+    int hours;
+    int minutes;
+    int seconds;
+    int milliseconds;
+    int day;
+    int month;
+    int year;
 };
 
 void Timer_GetSystemTime(TimerInfo*);

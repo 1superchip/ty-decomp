@@ -148,7 +148,7 @@ void GameData::SynchroniseEnterLevel(void) {
 }
 
 void GameData::SynchroniseExitLevel(void) {
-	GetCollectedGems(); // Synchronize savedata with collected gems in the level 
+    GetCollectedGems(); // Synchronize savedata with collected gems in the level 
 }
 
 SaveData* GameData::GetSaveData(void) {
@@ -168,7 +168,7 @@ void GameData::ReleaseSaveData(void) {
 }
 
 void GameData::SetDirty(bool dirty) {
-	bIsDirty = dirty;
+    bIsDirty = dirty;
 }
 
 void GameData::SetCurrentLevel(LevelNumber level) {
@@ -186,17 +186,17 @@ void GameData::SetCurrentZone(ZoneNumber zone) {
 }
 
 void GameData::SetLearntToSwim(bool learntToSwim) {
-	pSaveData->tyAttributes.bLearntToSwim = learntToSwim;
+    pSaveData->tyAttributes.bLearntToSwim = learntToSwim;
     bIsDirty = true;
 }
 
 void GameData::SetLearntToDive(bool learntToDive) {
-	pSaveData->tyAttributes.bLearntToDive = learntToDive;
+    pSaveData->tyAttributes.bLearntToDive = learntToDive;
     bIsDirty = true;
 }
 
 void GameData::SetBothRangs(bool bHasBothRangs) {
-	pSaveData->tyAttributes.bBothRangs = bHasBothRangs;
+    pSaveData->tyAttributes.bBothRangs = bHasBothRangs;
     bIsDirty = true;
 }
 
@@ -235,7 +235,7 @@ void GameData::SetZoneTalismanLocated(ZoneNumber zone, bool bLocated) {
 }
 
 void GameData::ReceiveOpalLifeup(void) {
-	bOpalLifeup = true;
+    bOpalLifeup = true;
 }
 
 void GameData::CollectGem(bool arg0) {
@@ -360,15 +360,15 @@ int GameData::GetTotalFreeBilbyCount(void) {
 }
 
 bool GameData::SetHasGalleryImage(int nIndex) {
-	// (nIndex >> 3) computes what byte should be accessed (nIndex / 8)
-	// (1 << (nIndex & 7)) computes bit index for bit
+    // (nIndex >> 3) computes what byte should be accessed (nIndex / 8)
+    // (1 << (nIndex & 7)) computes bit index for bit
     pSaveData->galleryImages[nIndex >> 3] |= (1 << (nIndex & 7));
     return false;
 }
 
 int GameData::GetHasGalleryImage(int nIndex) {
-	// (nIndex >> 3) computes what byte should be accessed (nIndex / 8)
-	// (1 << (nIndex & 7)) computes bit index for bit
+    // (nIndex >> 3) computes what byte should be accessed (nIndex / 8)
+    // (1 << (nIndex & 7)) computes bit index for bit
     return (1 << (nIndex & 7)) & pSaveData->galleryImages[nIndex >> 3];
 }
 
@@ -438,21 +438,21 @@ void GameData::UnlockZone(ZoneNumber zone) {
 }
 
 void GameData::SetTimeAttackBest(int bestTime) {
-	pSaveData->levels[pSaveData->levelAB0].bestTimeAttack = bestTime;
-	bIsDirty = true;
+    pSaveData->levels[pSaveData->levelAB0].bestTimeAttack = bestTime;
+    bIsDirty = true;
 }
 
 void GameData::SetTimeAttackLastTime(int lastTime) {
-	pSaveData->levels[pSaveData->levelAB0].lastTimeAttackTime = lastTime;
-	bIsDirty = true;
+    pSaveData->levels[pSaveData->levelAB0].lastTimeAttackTime = lastTime;
+    bIsDirty = true;
 }
 
 int GameData::GetTimeAttackBest(LevelNumber level) {
-	return pSaveData->levels[level].bestTimeAttack;
+    return pSaveData->levels[level].bestTimeAttack;
 }
 
 int GameData::GetTimeAttackLastTime(LevelNumber level) {
-	return pSaveData->levels[level].lastTimeAttackTime;
+    return pSaveData->levels[level].lastTimeAttackTime;
 }
 
 void GameData::RescueBilby(BilbyType type) {
@@ -495,7 +495,7 @@ void GameData::RestoreLives(void) {
 }
 
 void GameData::AddChargeBite(void) {
-	numChargeBites += 100;
+    numChargeBites += 100;
 }
 
 void GameData::StartTime(void) {
@@ -548,11 +548,11 @@ void GameData::SetCurrentRang(BoomerangType type) {
 
 // Seperate function to reorder floats
 static float GetFloatMusicVolume(u8 volume) {
-	return (float)volume;
-}	
+    return (float)volume;
+}
 
 float GameData::GetMusicVolume(void) {
-	float volume = GetFloatMusicVolume(pSaveData->settings.musicVolume);
+    float volume = GetFloatMusicVolume(pSaveData->settings.musicVolume);
     float div = bMusicDucked ? 20.0f : 10.0f;
     return volume / div;
 }
@@ -562,5 +562,5 @@ float GameData::GetSoundVolume(void) {
 }
 
 void GameData::SetMusicDucked(bool bDucked) {
-	bMusicDucked = bDucked;
+    bMusicDucked = bDucked;
 }

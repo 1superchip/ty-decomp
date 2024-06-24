@@ -27,8 +27,8 @@ uint Crc_Update(uint crc, const void* buf, int len) {
         Crc_MakeTable();
     }
     for (int i = 0; i < len; i++) {
-	    crc = crcTable[(crc ^ ((u8*)buf)[i]) & 0xff] ^ (crc >> 8);
-	}
+        crc = crcTable[(crc ^ ((u8*)buf)[i]) & 0xff] ^ (crc >> 8);
+    }
     return crc;
 }
 

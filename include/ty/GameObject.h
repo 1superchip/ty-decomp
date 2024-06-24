@@ -54,14 +54,14 @@ struct ModuleInfoBaseObject;
 
 struct ModuleInfoBase {
     ModuleInfoBase() {
-		pData = NULL;
+        pData = NULL;
     }
     virtual void Init(void) = 0;
     virtual void* ConstructObject(void*) = 0;
-	void Reset(void);
-	static void AddToModuleList(ModuleInfoBase*);
-	
-	ModuleInfoBaseObject* pData;
+    void Reset(void);
+    static void AddToModuleList(ModuleInfoBase*);
+
+    ModuleInfoBaseObject* pData;
     static ModuleInfoBase* pList;
 };
 
@@ -72,23 +72,23 @@ enum GameObjDescFlags {
 };
 
 struct GameObjDesc : MKPropDescriptor {
-	virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
-	virtual void Load(KromeIni* pIni);
-	virtual void* ConstructObject(void* mem) {
-		return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp
-	};
-	u8* SetUpMem(u8*);
-	void LoadObjects(KromeIni*, KromeIniLine*);
+    virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
+    virtual void Load(KromeIni* pIni);
+    virtual void* ConstructObject(void* mem) {
+        return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp
+    };
+    u8* SetUpMem(u8*);
+    void LoadObjects(KromeIni*, KromeIniLine*);
     GameObject* CreateObject(void);
-	DescriptorIterator Begin(void);
-	
-	char descrName[0x20];
-	char modelName[0x20];
-	ModuleInfoBase* pModule;
-	int unk74;
-	GameObject* pInstances; // Memory allocated to all Objects of this Descriptor
-	u8* pCurrInst;
-	GameObjDesc* unk80;
+    DescriptorIterator Begin(void);
+
+    char descrName[0x20];
+    char modelName[0x20];
+    ModuleInfoBase* pModule;
+    int unk74;
+    GameObject* pInstances; // Memory allocated to all Objects of this Descriptor
+    u8* pCurrInst;
+    GameObjDesc* unk80;
 
     bool TestFlag(GameObjDescFlags testFlags) {
         return testFlags & flags;
@@ -96,42 +96,42 @@ struct GameObjDesc : MKPropDescriptor {
 };
 
 struct GameObject : MKProp {
-	static void InitModule(void);
-	static void DeinitModule(void);
-	static void UpdateModule(void);
-	static void DrawModule(void);
-	static int* Allocate(void);
-	static void Deallocate(GameObject*);
-	uint CalcDetailLevel(void);
-	static int GetMessageIdFromString(char*);
-    
-	virtual bool LoadLine(KromeIniLine* pLine);
-	virtual void LoadDone(void);
-	virtual void Reset(void);
-	virtual void Update(void);
-	virtual void Draw(void);
-	virtual void Message(MKMessage* pMsg);
-	virtual void Init(GameObjDesc* pDesc);
-	virtual void Deinit(void);
-	
-	Vector* GetPos(void) {
-		return pLocalToWorld->Row3();
-	}
+    static void InitModule(void);
+    static void DeinitModule(void);
+    static void UpdateModule(void);
+    static void DrawModule(void);
+    static int* Allocate(void);
+    static void Deallocate(GameObject*);
+    uint CalcDetailLevel(void);
+    static int GetMessageIdFromString(char*);
+
+    virtual bool LoadLine(KromeIniLine* pLine);
+    virtual void LoadDone(void);
+    virtual void Reset(void);
+    virtual void Update(void);
+    virtual void Draw(void);
+    virtual void Message(MKMessage* pMsg);
+    virtual void Init(GameObjDesc* pDesc);
+    virtual void Deinit(void);
+
+    Vector* GetPos(void) {
+        return pLocalToWorld->Row3();
+    }
 };
 
 
 struct ModuleInfoBaseObject {
-	void (*InitModule)(void);
-	void (*DeinitModule)(void);
-	void (*pUpdateModule)(void);
-	void (*pDrawModule)(void);
-	int* (*pAllocate)(void);
-	void (*pDeallocate)(GameObject*);
-	int unk18; // entity count?
-	int instanceSize;
-	bool bUpdate;
-	int flags;
-	ModuleInfoBase* pNext;
+    void (*InitModule)(void);
+    void (*DeinitModule)(void);
+    void (*pUpdateModule)(void);
+    void (*pDrawModule)(void);
+    int* (*pAllocate)(void);
+    void (*pDeallocate)(GameObject*);
+    int unk18; // entity count?
+    int instanceSize;
+    bool bUpdate;
+    int flags;
+    ModuleInfoBase* pNext;
 };
 
 inline void* operator new(size_t size, void* mem) {
@@ -148,7 +148,7 @@ inline void* operator new(size_t size, void* mem) {
 /// @tparam T Object type
 template <typename T>
 struct ModuleInfo : ModuleInfoBase {
-	virtual void Init(void) {
+    virtual void Init(void) {
         if (pData == NULL) {
             pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
         }

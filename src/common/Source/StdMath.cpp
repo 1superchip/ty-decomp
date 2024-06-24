@@ -4,7 +4,7 @@
 
 // move 0.0f to the beginning of .sdata2
 bool Orderfloats(float x) {
-	return x < 0.0f;
+    return x < 0.0f;
 }
 
 float _sinTable[1025] = {
@@ -223,7 +223,7 @@ inline float GetFloat(int x) {
 int RandomIR(int* pSeed, int min, int max) {
     int curr;
     int range = max - min;
-	
+    
     if (range <= 0) {
         return min;
     }
@@ -234,7 +234,7 @@ int RandomIR(int* pSeed, int min, int max) {
 
 int RandomI(int* pSeed) {
     int curr;
-	// fix?
+    // fix?
     curr = *pSeed = *pSeed * 0x343fd + 0x269ec3;
     return (curr >> 8) & 0xFFFFFF; // curr = uint, divide by 256
 }
@@ -255,12 +255,12 @@ float _table_sinf(float theta) {
     float temp_f6;
     int temp_r5;
     int temp_r6;
-	union {
-		int isin;
-		float fsin;
-	};
-	
-	// 1/2PI
+    union {
+        int isin;
+        float fsin;
+    };
+    
+    // 1/2PI
     temp_r6 = 0.15915494f * (2048.0f * theta);
     temp_r5 = temp_r6 & 1023;
     temp_f6 = _sinTable[temp_r5];

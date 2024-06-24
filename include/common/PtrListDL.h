@@ -20,27 +20,27 @@ inline void Swap(T& p, T& p1) {
 template <typename T>
 struct PtrListDL {
     T **pMem;
-	void Init(int count, int size);
-	void Deinit(void);
-	void Destroy(T** p);
-	void Destroy(T* p);
+    void Init(int count, int size);
+    void Deinit(void);
+    void Destroy(T** p);
+    void Destroy(T* p);
     T** GetMem(void) {
         return pMem;
     }
-	void* GetEnd(void) {
+    void* GetEnd(void) {
         T** ptr = pMem;
         while (*ptr != NULL) {
             ptr++;
         }
         return (void*)ptr;
     }
-	inline int GetSize(void) {
+    inline int GetSize(void) {
         return ((int)GetEnd() - (int)pMem) / 4;
     }
-	inline bool IsFull(void) {
-		return pMem[-1] == NULL;
+    inline bool IsFull(void) {
+        return pMem[-1] == NULL;
     }
-	inline T* GetNextEntry(void) {
+    inline T* GetNextEntry(void) {
         return *--pMem;
     }
     inline void Reset(void) {
@@ -54,7 +54,7 @@ struct PtrListDL {
 // need the inline def here
 template <typename T>
 inline void PtrListDL<T>::Init(int count, int size) {
-	if (count == 0) {
+    if (count == 0) {
         pMem = (T**)&gEmptyPtrListDL[1];
         return;
     }
@@ -62,14 +62,14 @@ inline void PtrListDL<T>::Init(int count, int size) {
     // count * 4 = pointer array size
     pMem = (T**)Heap_MemAlloc(count * size + (count + 2) * sizeof(T*));
     T* memory = (T*)pMem;
-	/*pMem = (T**)((int)pMem + count * size);
-	*pMem = NULL;*/
+    /*pMem = (T**)((int)pMem + count * size);
+    *pMem = NULL;*/
     *(pMem = (T**)((int)pMem + count * size)) = NULL; // set mem pointer to end of array
     for (int i = 0; i < count; i++) {
         *++pMem = memory;
         memory = ((T*)memory + 1);
     }
-	*++pMem = NULL;
+    *++pMem = NULL;
 }
 
 template <typename T>

@@ -21,42 +21,42 @@ void ByteReverse(T& start)
 
 template <typename T>
 static void Fixup(T*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<T*>(data);
-		data = (T*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<T*>(data);
+        data = (T*)((int)data + baseAddress);
+    }
 }
 
 /*template <>
 static void Fixup<Vector>(Vector*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<Vector*>(data);
-		data = (Vector*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<Vector*>(data);
+        data = (Vector*)((int)data + baseAddress);
+    }
 }
 
 template <>
 static void Fixup<AnimationData::Node::KeyFrame>(AnimationData::Node::KeyFrame*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimationData::Node::KeyFrame*>(data);
-		data = (AnimationData::Node::KeyFrame*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimationData::Node::KeyFrame*>(data);
+        data = (AnimationData::Node::KeyFrame*)((int)data + baseAddress);
+    }
 }
 
 template <>
 static void Fixup<AnimDef>(AnimDef*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimDef*>(data);
-		data = (AnimDef*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimDef*>(data);
+        data = (AnimDef*)((int)data + baseAddress);
+    }
 }
 
 template <>
 static void Fixup<AnimationData::Node>(AnimationData::Node*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimationData::Node*>(data);
-		data = (AnimationData::Node*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimationData::Node*>(data);
+        data = (AnimationData::Node*)((int)data + baseAddress);
+    }
 }*/
 
 #endif // GC_BYTEFIXUP_H

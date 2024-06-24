@@ -40,7 +40,7 @@ float Vector::Normalise(Vector* pVector) {
 void Vector::ClampMagnitude(Vector* pVector, float maxMag) {
     float vecMagSq = pVector->MagSquared();
     if (vecMagSq > maxMag * maxMag) {
-		float mag = maxMag / sqrtf(vecMagSq);
+        float mag = maxMag / sqrtf(vecMagSq);
         x = mag * pVector->x;
         y = mag * pVector->y;
         z = mag * pVector->z;
@@ -61,10 +61,10 @@ void Vector::Projection(Vector* pVector1, Vector* pVector2) {
     float sqMag = pVector2->MagSquared();
     if (sqMag > 0.000001f) {
         float dot = pVector1->Dot(pVector2);
-		Scale(pVector2, dot / sqMag);
+        Scale(pVector2, dot / sqMag);
         return;
     }
-	SetZero();
+    SetZero();
 }
 
 /// @brief Interpolates from pFrom to pTo: this = pFrom + fraction * (pTo - pFrom)

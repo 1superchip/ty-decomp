@@ -13,19 +13,19 @@ bool WaterVolume_IsWithin(Vector* point, float*);
 /// @brief Object used to determine whether an object is in water or not
 struct WaterVolume : GameObject {
 
-	// Inverse Matrix
-	Matrix mInvMtx; // worldToLocal matrix
+    // Inverse Matrix
+    Matrix mInvMtx; // worldToLocal matrix
 
-	// Object World matrix
-	Matrix mWorldMtx; // pos in ini is Row3 of this matrix
+    // Object World matrix
+    Matrix mWorldMtx; // pos in ini is Row3 of this matrix
 
-	float mMinY; // Minimum y point of volume
-	float mMaxY; // Maximum y point of volume
+    float mMinY; // Minimum y point of volume
+    float mMaxY; // Maximum y point of volume
 
-	virtual bool LoadLine(KromeIniLine* pLine);
-	virtual void LoadDone(void);
-	virtual void Init(GameObjDesc* pDesc);
-	virtual void Deinit(void);
+    virtual bool LoadLine(KromeIniLine* pLine);
+    virtual void LoadDone(void);
+    virtual void Init(GameObjDesc* pDesc);
+    virtual void Deinit(void);
 };
 
 #endif // WATERVOLUME_H

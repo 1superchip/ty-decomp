@@ -10,11 +10,11 @@ extern "C" void exit(int);
 static bool heapInitialised = false;
 
 void Heap_InitModule(int arg0) {
-	heapInitialised = true;
+    heapInitialised = true;
 }
 
 void Heap_DeinitModule(void) {
-	heapInitialised = false;
+    heapInitialised = false;
 }
 
 /// @brief Returns the current amount of used memory

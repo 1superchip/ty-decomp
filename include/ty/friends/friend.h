@@ -49,14 +49,14 @@ struct Friend : GameObject {
     bool bFlashSkeleton; // Whether the Friend should flash or not
 
     // Declaration reorder needed to match vtable placement
-	virtual void Init(GameObjDesc* pDesc);
-	virtual void Deinit(void);
-	virtual bool LoadLine(KromeIniLine* pLine);
-	virtual void LoadDone(void);
-	virtual void Reset(void);
-	virtual void Update(void);
-	virtual void Draw(void);
-	virtual void Message(MKMessage* pMsg);
+    virtual void Init(GameObjDesc* pDesc);
+    virtual void Deinit(void);
+    virtual bool LoadLine(KromeIniLine* pLine);
+    virtual void LoadDone(void);
+    virtual void Reset(void);
+    virtual void Update(void);
+    virtual void Draw(void);
+    virtual void Message(MKMessage* pMsg);
 
     // Returns current position
     inline virtual Vector* GetPos(void) {

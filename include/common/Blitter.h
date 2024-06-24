@@ -29,8 +29,8 @@ struct Blitter_Box {
     Vector extent; // extent vector (edge length)
     Vector color;
     Vector color1;
-	
-	void Draw(int count);
+    
+    void Draw(int count);
     void DrawNoMat(int count) {
         Material::UseNone(-1);
         Draw(count);
@@ -38,12 +38,12 @@ struct Blitter_Box {
 };
 
 struct Blitter_Line3D {
-	Vector point; // vertex 0 position
-	Vector point1; // vertex 1 position
-	Vector color; // vertex 0 color
-	Vector color1; // vertex 1 color
-	
-	void Draw(int count, float);
+    Vector point; // vertex 0 position
+    Vector point1; // vertex 1 position
+    Vector color; // vertex 0 color
+    Vector color1; // vertex 1 color
+    
+    void Draw(int count, float);
     void DrawNoMat(int count, float f1) {
         Material::UseNone(-1);
         Draw(count, f1);
@@ -57,9 +57,9 @@ struct Blitter_Particle {
     uint unk24;
     float angle;
     float unk2C;
-	
-	void Draw(int);
-	void DrawFrames(int, float);
+    
+    void Draw(int);
+    void DrawFrames(int, float);
 };
 
 struct Blitter_Image {
@@ -74,34 +74,34 @@ struct Blitter_Image {
     float uv3;
     Vector color;
     Vector unk40;
-	
-	void Draw(int count);
+    
+    void Draw(int count);
 };
 
 struct Blitter_UntexturedImage {
     Vector pos;
-	float unk10;
-	u8 color[4];
+    float unk10;
+    u8 color[4];
     float unk20;
-	
-	void Draw(int count);
+    
+    void Draw(int count);
 };
 
 struct Blitter_TriStrip {
     Vector pos;
     Vector color;
     Vector uv;
-	
-	void Draw(int, float);
-	void DrawNoPerspective(int, float);
+    
+    void Draw(int, float);
+    void DrawNoPerspective(int, float);
 };
 
 struct Blitter_TriFan {
     Vector pos;
     Vector color;
     Vector uv;
-	
-	void Draw2D(int, float);
+    
+    void Draw2D(int, float);
 };
 
 #endif // COMMON_BLITTER

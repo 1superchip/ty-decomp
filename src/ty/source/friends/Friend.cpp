@@ -58,13 +58,6 @@ bool Friend::LoadLine(KromeIniLine* pLine) {
         LoadLevel_LoadVector(pLine, "rot", &mRot) || mPlatformRider.LoadLine(pLine);
 }
 
-struct ActorInfoStruct {
-    char padding0[0x4];
-    Model* pActorModel;
-    char padding[0xC];
-};
-extern ActorInfoStruct actorInfo[];
-
 void Friend::LoadDone(void) {
     mStartPos = mPos;
     mSaveRot = mRot;
@@ -72,7 +65,7 @@ void Friend::LoadDone(void) {
     Collision_AddDynamicModel(pModel, &mCollisionInfo, -1);
     objectManager.AddObject(this, pModel);
     if (unkActorIdx > 0) {
-        actorInfo[unkActorIdx].pActorModel = pModel;
+        actorInfo[unkActorIdx].pModel = pModel;
     }
     mDefFlags |= FSF_Unknown8;
     mFlags = mDefFlags;

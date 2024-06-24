@@ -70,7 +70,7 @@ bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
     Vector v2;
     Vector v3;
     Vector v4;
-	// Vector_Cross
+    // Vector_Cross
     v1.x = point1->x - pVec1->x;
     v1.y = point1->y - pVec1->y;
     v1.z = point1->z - pVec1->z;
@@ -80,7 +80,7 @@ bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
     v3.x = v1.y * v2.z - v1.z * v2.y;
     v3.y = v1.z * v2.x - v1.x * v2.z;
     v3.z = v1.x * v2.y - v1.y * v2.x;
-	// v3 is the surface normal?
+    // v3 is the surface normal?
     v4.x = pVec->x - pVec1->x;
     v4.y = pVec->y - pVec1->y;
     v4.z = pVec->z - pVec1->z;
@@ -251,7 +251,7 @@ float CylTest_CapsFirst(Vector* pVec, Vector* pVec1, float param_3, float param_
 }
 
 void CollisionCpp_OrderFloats(void) {
-	volatile float x = -1e+12f;
+    volatile float x = -1e+12f;
 }
 
 float GetDiv(Vector* pos, Vector* rayPos, Vector* nDXYZ, float radius) {
@@ -284,7 +284,7 @@ static void NearestPointOnTriEdge(Vector* pVec, Vector* pA, Vector* pB, Vector* 
     Vector* pNearestOnBC = PROJECT_TO_LINE_SEGMENT(pVec, pB, pC, &onBC);
     Vector* pNearestOnCA = PROJECT_TO_LINE_SEGMENT(pVec, pC, pA, &onCA);
     Vector* pNearest = NEAREST_POINT(pVec, pNearestOnAB, NEAREST_POINT(pVec, pNearestOnBC, pNearestOnCA));
-	
+    
     pVec->Copy(pNearest);
 }
 
@@ -300,7 +300,7 @@ static void NearestPointOnQuadEdge(Vector* pVec, Vector* pA, Vector* pB, Vector*
 
     Vector* pNearest = NEAREST_POINT(pVec, pNearestOnAB, NEAREST_POINT(pVec, pNearestOnBC, 
             NEAREST_POINT(pVec, pNearestOnCD, pNearestOnDA)));
-	
+    
     pVec->Copy(pNearest);
 }
 
@@ -363,7 +363,7 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
         pos.Add(&tmp);
     }
     if (!PointInPoly(&pos, &pRay->mStart, pVectors, indices, numVerts)) {
-		// point isn't in the polygon
+        // point isn't in the polygon
         NearestPointOnPolyEdge(&pos, pVectors, indices, numVerts);
         // pos is now the coordinate on the polygon's edge 
         if (pos.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
@@ -433,7 +433,7 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
     }
     if (!CheckPoint(&hitPoint, &pRay->mStart, pVec1, pVec) || 
             !CheckPoint(&hitPoint, &pRay->mStart, pVec2, pVec1) || !CheckPoint(&hitPoint, &pRay->mStart, pVec, pVec2)) {
-		// point isn't in the triangle
+        // point isn't in the triangle
         NearestPointOnTriEdge(&hitPoint, pVec, pVec1, pVec2);
         // pos is now the coordinate on the polygon's edge 
         if (hitPoint.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
@@ -726,13 +726,13 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
                         if (CheckPoint(pVec1, pVec0, p2, p1) &&
                             CheckPoint(pVec1, pVec0, p3, p2) &&
                             CheckPoint(pVec1, pVec0, p1, p3)) {
-							// ray is intersecting the polygon
+                            // ray is intersecting the polygon
                             float d = surfaceNormal.Dot(pDir);
                             if (d < 0.0f) {
                                 Vector a;
                                 a.Sub(pVec0, p1);
-								// finalPos is the intersection point of the ray and polygon
-								// finalPos may be called "a"?
+                                // finalPos is the intersection point of the ray and polygon
+                                // finalPos may be called "a"?
                                 Vector newRayNormal;
                                 float scale = -surfaceNormal.Dot(&a) / d;
                                 newRayNormal.Scale(pDir, scale);
@@ -749,7 +749,7 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
                                 lastCollision.unk40 = scale;
 
                                 if (pCr) {
-									// if a CollisionResult was passed, copy the result to it
+                                    // if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
                                 }
                                 bFound = true;
@@ -852,11 +852,11 @@ static void Collision_AddItem(Item* pItem) {
 }
 
 float CalcDynamicItemRadius(SphereRay* pRay, DynamicItem* pDynItem) {
-	return (pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8);
+    return (pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8);
 }
 
 void Collision_Init(int heapSize, float minX, float /* unused */ minY, float minZ, 
-		float width, float height, int tilesAcross, int tilesDown) {
+        float width, float height, int tilesAcross, int tilesDown) {
     bCollisionInit = true;
     collisionHeapIndex = 0;
     collisionHeapSize = (heapSize + (0x20 - 1)) & ~(0x20 - 1); // round up to 32 bytes
@@ -936,11 +936,11 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
         if (subobject >= 0 && subobject != pExplorer->subObjectIdx) {
             ret = pModel->ExploreNextSubObject((ModelExplorer*)pExplorer);
         } else {
-			/*
-			if the previous triangle is NULL or has different flags than the current material
-			or has a different subobject index
-			get the next triangle in the CollisionHeap
-			*/
+            /*
+            if the previous triangle is NULL or has different flags than the current material
+            or has a different subobject index
+            get the next triangle in the CollisionHeap
+            */
             if (pTri == NULL || pTri->flags != pExplorer->pMaterial->collisionFlags ||
                     pTri->subObjectIdx != pExplorer->subObjectIdx) {
                 pTri = (CollisionTriangle*)CollisionHeap_Update(sizeof(Item), 0);
@@ -1211,7 +1211,7 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
     
     // Check dynamic collisions if the mode includes dynamic collisions
     if (mode == COLLISION_MODE_ALL || mode == COLLISION_MODE_DYNAMIC) {
-		// Dynamic_Collides()
+        // Dynamic_Collides()
         Vector dist;
         dist.Sub(pStart, pEnd);
         float mag = dist.Magnitude();
@@ -1335,26 +1335,26 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
     vec.ApplyRotMatrix(&pVolume->v2, &pModel->matrices[0]);
     float mag = vec.Magnitude();
     nextModel->unk8 = mag;
-	nextModel->unk10.Init(CalcNumDynamicLinks(mag), sizeof(CollisionNode));
-	
+    nextModel->unk10.Init(CalcNumDynamicLinks(mag), sizeof(CollisionNode));
+    
     nextModel->unk44 = -1;
     nextModel->unk48 = -1;
     nextModel->unk4C = -1;
     nextModel->unk50 = -1;
-	
+    
     Vector* trans = nextModel->GetMatrix()->Row3();
     nextModel->pos.x = trans->x;
     nextModel->pos.y = trans->y;
     nextModel->pos.z = trans->z;
     nextModel->pos.w = trans->w;
     nextModel->pos.y += 100.0f;
-	
+    
     nextModel->Update();
     pModel->flags.bits.b4 = true;
 }
 
 void Collision_AddDynamicSubobject(Model* pModel, int subobject, CollisionInfo* pInfo) {
-	Collision_AddDynamicModel(pModel, pInfo, subobject);
+    Collision_AddDynamicModel(pModel, pInfo, subobject);
 }
 
 inline void Swap(DynamicItem** p, DynamicItem** p1) {
@@ -1382,7 +1382,7 @@ void Collision_DeleteDynamicModel(Model* pModel) {
     DynamicItem** pItems = dynamicModels.GetMem();
     while (*pItems != NULL) {
         DynamicItem* pItem = *pItems;
-		// deinit all DynamicItems which use this Model
+        // deinit all DynamicItems which use this Model
         if (pItem->pModel == pModel) {
             pItem->Deinit();
             Swap(dynamicModels.pMem++, pItems);

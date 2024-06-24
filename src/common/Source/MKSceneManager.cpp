@@ -20,11 +20,11 @@ static int occlusionObjects = 0;
 MKPropDescriptor* MKPropDescriptor::pDrawListDescs = NULL;
 
 void MKSceneManager::InitModule(void) {
-	return;
+    return;
 }
 
 void MKSceneManager::DeinitModule(void) {
-	return;
+    return;
 }
 
 void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
@@ -191,7 +191,7 @@ void MKSceneManager::AddStaticProp(MKProp* pProp, int propIdx) {
 
 void MKSceneManager::AddDynamicProp(MKProp* pProp, int propIdx) {
     pProp->pDescriptor->drawLayer = propIdx;
-	// clear all type bits and set the dynamic type bit
+    // clear all type bits and set the dynamic type bit
     pProp->pDescriptor->flags = (pProp->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Dynamic;
     MKPropDescriptor* pDesc = pProp->pDescriptor;
     pDesc->pNext = NULL;
@@ -222,9 +222,9 @@ void MKSceneManager::AddGlobalProp(MKProp* pProp, int propIdx) {
 }
 
 void MKSceneManager::Optimise(void) {
-	MakeTerrainTree();
-	MakePropTree();
-	bHasBeenOptimised = true;
+    MakeTerrainTree();
+    MakePropTree();
+    bHasBeenOptimised = true;
 }
 
 void SMTree::Init(int arg1) {
@@ -246,10 +246,10 @@ void SMTree::Init(int arg1) {
 }
 
 void SMTree::Deinit(void) {
-	if (pNodes != NULL) {
-		Heap_MemFree(pNodes);
-		pNodes = NULL;
-	}
+    if (pNodes != NULL) {
+        Heap_MemFree(pNodes);
+        pNodes = NULL;
+    }
 }
 
 static inline void Vector_Average(Vector* pOut, Vector* pIn, Vector* pIn2) {
@@ -551,7 +551,7 @@ static void SMDrawProp(void* pData, int rejectResult, float distSq, float arg3) 
     float fVar2 = distSq / arg3;
     fVar2 = 8.0f * (1.0f - Sqr<float>(1.0f - fVar2));
     int detail_level = (int)fVar2;
-	int _detail = (detail_level <= 8) ? detail_level : 8;
+    int _detail = (detail_level <= 8) ? detail_level : 8;
     pPropData->detailLevel = (char)_detail;
     if (pPropData->detailLevel != 8) {
         pPropData->unk14 = fVar2 - detail_level;
@@ -841,25 +841,25 @@ int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTes
 }
 
 bool MKProp::LoadLine(KromeIniLine* pLine) {
-	return false;
+    return false;
 }
 
 void MKProp::LoadDone(void) {
-	return;
+    return;
 }
 
 void MKProp::Reset(void) {
-	return;
+    return;
 }
 
 void MKProp::Update(void) {
-	return;
+    return;
 }
 
 void MKProp::Draw(void) {
-	return;
+    return;
 }
 
 void MKProp::Message(MKMessage* pMsg) {
-	return;
+    return;
 }

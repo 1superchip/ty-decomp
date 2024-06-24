@@ -44,7 +44,7 @@ bool Parser::IsComment(void) {
 }
 
 bool Parser::IsEOL(void) {
-	return *pData == '\r' || *pData == '\n';
+    return *pData == '\r' || *pData == '\n';
 }
 
 void Parser::GrabEndOfLine(void) {
@@ -299,7 +299,7 @@ void KromeIni::ParseData() {
                             // parser.GrabData();
                             parser.currLine->data = parser.pData;
                             do {
-								parser.SkipSpaces();
+                                parser.SkipSpaces();
                                 if (!parser.UnkFunc2()) {
                                     // var_r7_11 = 0;
                                     // parser.currLine->elementCount++;

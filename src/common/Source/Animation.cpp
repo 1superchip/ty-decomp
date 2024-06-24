@@ -80,7 +80,7 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
         animTemplates.AddEntry(pAnimTemplate);
     }
     int animSize = (pAnimTemplate->pAnimData->nmbrOfNodes - 1) * sizeof(Animation::FrameInstance);
-	pAnim = (Animation*)Heap_MemAlloc(animSize + sizeof(Animation));
+    pAnim = (Animation*)Heap_MemAlloc(animSize + sizeof(Animation));
     animInstances.AddEntry(pAnim);
     pAnim->pTemplate = pAnimTemplate;
     pAnim->pMatrices = pMatrix;
@@ -218,7 +218,7 @@ void Animation_InterpolateFrameData(Animation::FrameInstance* pFrame, float arg1
 }
 
 int Animation::GetNmbrOfNodes(void) {
-	return pTemplate->pAnimData->nmbrOfNodes;
+    return pTemplate->pAnimData->nmbrOfNodes;
 }
 
 // optional parameter pNodeIndex
@@ -410,7 +410,7 @@ void Animation_UnpackTemplate(AnimationData* pAnimData) {
     int addr = (int)pAnimData;
     AnimationData* pData = (AnimationData*)pAnimData;
     int i;
-	int j;
+    int j;
     ByteReverse<uint>(pData->id); // swap endian of file magic bytes
     ByteReverse<int>(pData->nmbrOfFrames);
     ByteReverse<int>(pData->nmbrOfNodes);
@@ -489,42 +489,42 @@ void Animation_UnpackTemplate(AnimationData* pAnimData) {
 
 template <>
 void Fixup<Vector>(Vector*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<Vector*>(data);
-		data = (Vector*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<Vector*>(data);
+        data = (Vector*)((int)data + baseAddress);
+    }
 }
 
 template <>
 void Fixup<AnimationData::Node::KeyFrame>(AnimationData::Node::KeyFrame*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimationData::Node::KeyFrame*>(data);
-		data = (AnimationData::Node::KeyFrame*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimationData::Node::KeyFrame*>(data);
+        data = (AnimationData::Node::KeyFrame*)((int)data + baseAddress);
+    }
 }
 
 template <>
 void Fixup<char>(char*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<char*>(data);
-		data = (char*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<char*>(data);
+        data = (char*)((int)data + baseAddress);
+    }
 }
 
 template <>
 void Fixup<AnimDef>(AnimDef*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimDef*>(data);
-		data = (AnimDef*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimDef*>(data);
+        data = (AnimDef*)((int)data + baseAddress);
+    }
 }
 
 template <>
 void Fixup<AnimationData::Node>(AnimationData::Node*& data, int baseAddress) {
-	if (data != NULL) {
-		ByteReverse<AnimationData::Node*>(data);
-		data = (AnimationData::Node*)((int)data + baseAddress);
-	}
+    if (data != NULL) {
+        ByteReverse<AnimationData::Node*>(data);
+        data = (AnimationData::Node*)((int)data + baseAddress);
+    }
 }
 
 // Macro to easily order these functions which are out of order (weak functions at end of TU)

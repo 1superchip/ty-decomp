@@ -34,19 +34,19 @@ void FileSys_InitModule(void) {
 }
 
 void FileSys_DeinitModule(void) {
-	return;
+    return;
 }
 
 void FileSys_Update(void) {
-	return;
+    return;
 }
 
 static int EntryCompare(void* pEntry0, void* pEntry1) {
-	return stricmp(((RkvFileEntry*)pEntry0)->name, ((RkvFileEntry*)pEntry1)->name);
+    return stricmp(((RkvFileEntry*)pEntry0)->name, ((RkvFileEntry*)pEntry1)->name);
 }
 
 void RkvTOC::Init(char* pName) {
-	strcpy(name, pName);
+    strcpy(name, pName);
     int fileLength = File_Length(pName);
     int fd;
     if (fileLength != 0) {
@@ -73,7 +73,7 @@ void RkvTOC::Init(char* pName) {
         // Free header
         Heap_MemFree(pHeader);
 
-		int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + nmbrOfDirectories * sizeof(DirectoryEntry);
+        int fileSize = nmbrOfEntries * sizeof(RkvFileEntry) + nmbrOfDirectories * sizeof(DirectoryEntry);
         File_Seek(rkvFd, fileLength - (fileSize + 8), SEEK_SET);
         pFileEntries = (RkvFileEntry *)Heap_MemAlloc(fileSize);
 
@@ -118,11 +118,11 @@ RkvFileEntry* RkvTOC::GetEntry(char* pFileName) {
 }
 
 int RkvTOC::GetAsyncHandle(void) {
-	if (unk58 == false) {
-		unk54 = File_Open(name, 1);
-	}
-	unk58 = false;
-	return unk54;
+    if (unk58 == false) {
+        unk54 = File_Open(name, 1);
+    }
+    unk58 = false;
+    return unk54;
 }
 
 /// @brief Sets the new Load Intercept handler
@@ -179,7 +179,7 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     char* namePtr;
 
     if (pLang != NULL) {
-		// if ".ENGLISH" is found in filename, run this block
+        // if ".ENGLISH" is found in filename, run this block
         int nameLen = entryLanguage - pEntry->name; // width specifier
         for (s16 i = 0; i < 4; i++) {
             switch (i) {
@@ -271,7 +271,7 @@ void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int sp
         }
 
         if (pMemoryAllocated == NULL) {
-			// if memory isn't already allocated, allocate the memory
+            // if memory isn't already allocated, allocate the memory
             spaceAllocated = pFoundEntry->length + 1;
             pMemoryAllocated = Heap_MemAlloc(spaceAllocated);
             *((char *)pMemoryAllocated + pFoundEntry->length) = 0;
@@ -329,7 +329,7 @@ void FileSys_OutputFileOrder(void) {
 
     // sort by order
     qsort(sortedEntries, data.nmbrOfEntries, 4, FileOrderSortCompare);
-	
+    
     index = 0;
     while(index < data.nmbrOfEntries) {
         if (sortedEntries[index]->unk3E != 0) {
@@ -390,7 +390,7 @@ int FileSys_Open(char* pFilename, int* pOutLen, bool bUseAsyncHandle) {
     RkvFileEntry* pFoundEntry = patch.GetEntry(pFilename);
     if (pFoundEntry != NULL) {
         if (bUseAsyncHandle) {
-			foundFd = patch.GetAsyncHandle();
+            foundFd = patch.GetAsyncHandle();
         } else {
             foundFd = File_Open(patch.name, 0);
         }
@@ -399,7 +399,7 @@ int FileSys_Open(char* pFilename, int* pOutLen, bool bUseAsyncHandle) {
         if (pFoundEntry != NULL) {
             FileSys_SetOrder(pFoundEntry);
             if (bUseAsyncHandle) {
-				foundFd = data.GetAsyncHandle();
+                foundFd = data.GetAsyncHandle();
             } else {
                 foundFd = File_Open(data.name, 0);
             }

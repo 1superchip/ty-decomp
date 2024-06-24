@@ -6,21 +6,21 @@ static GameObjDesc ddaCheckpointDesc;
 static ModuleInfo<DDACheckpoint> ddaCheckpointModule;
 
 void DDACheckpoint_LoadResources(KromeIni* pIni) {
-	ddaCheckpointDesc.Init(&ddaCheckpointModule, "DDACheckpoint", "DDACheckpoint", 0, 0);
-	objectManager.AddDescriptor(&ddaCheckpointDesc);
+    ddaCheckpointDesc.Init(&ddaCheckpointModule, "DDACheckpoint", "DDACheckpoint", 0, 0);
+    objectManager.AddDescriptor(&ddaCheckpointDesc);
 }
 
 void DDACheckpoint::Init(GameObjDesc* pDesc) {
-	GameObject::Init(pDesc);
-	Number = -1;
+    GameObject::Init(pDesc);
+    Number = -1;
 }
 
 bool DDACheckpoint::LoadLine(KromeIniLine* pLine) {
-	return LoadLevel_LoadInt(pLine, "Number", &Number) || GameObject::LoadLine(pLine);
+    return LoadLevel_LoadInt(pLine, "Number", &Number) || GameObject::LoadLine(pLine);
 }
 
 void DDACheckpoint::Message(MKMessage* pMsg) {
-	switch (pMsg->unk0) {
+    switch (pMsg->unk0) {
         case MKMSG_ACTIVATE:
             dda.NewCheckpoint(Number);
             break;

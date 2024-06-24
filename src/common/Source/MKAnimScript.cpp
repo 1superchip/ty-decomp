@@ -67,7 +67,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     int animEventCount = 0;
     int animRangeCount = 0;
     int stringSize = 1;
-	KromeIni ini;
+    KromeIni ini;
     ini.Init(arg0);
     KromeIniLine* pLine = ini.GotoLine(NULL, NULL);
     AnimEvent* pNextEvent;
@@ -150,14 +150,14 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                         int endFrame;
                         int unk2_local; // speed
                         if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
-							// sscanf returns the number of variables filled
+                            // sscanf returns the number of variables filled
                             switch (sscanf(pLine->pFieldName, "%d-%d,%d", &startFrame, &endFrame, &unk2_local)) {
                                 case 0: // if zero elements are filled, fallthrough entire switch setting default values
                                     startFrame = 0;
-									// fallthrough
+                                    // fallthrough
                                 case 1:
                                     endFrame = startFrame;
-									// fallthrough
+                                    // fallthrough
                                 case 2:
                                     unk2_local = 1;
                                     break;
@@ -179,27 +179,27 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                                 int endEventFrame;
                                 pLine->AsString(0, &unk0);
                                 pLine->AsString(1, &unk1);
-								// sscanf returns the number of variables filled
+                                // sscanf returns the number of variables filled
                                 switch (sscanf(unk1, "%d-%d", &startEventFrame, &endEventFrame)) {
                                     case 0: // if zero elements are filled, fallthrough entire switch setting default values
                                         startEventFrame = -1;
-										// fallthrough
+                                        // fallthrough
                                     case 1:
                                         endEventFrame = startEventFrame;
-										// fallthrough
+                                        // fallthrough
                                     case 2:
                                         break;
                                 }
                                 if (startEventFrame != -1) {
                                     int i = 0;
                                     for(; i < pCurAnim->nmbrOfRanges; i++) {
-										// find which animation range this event belongs to
+                                        // find which animation range this event belongs to
                                         if (pCurAnim->pAnimRanges[i].startFrame <= startEventFrame && pCurAnim->pAnimRanges[i].endFrame >= endEventFrame) {
                                             break;
                                         }
                                     }
                                     if (i < pCurAnim->nmbrOfRanges) {
-										// set event fields of range
+                                        // set event fields of range
                                         pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].startEventFrame = startEventFrame;
                                         pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].endEventFrame = endEventFrame;
                                         pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].unk0_string = AddToStringTable(pStringTable, unk0);
@@ -524,10 +524,10 @@ int MKAnimScript::UpdatesUntilFinished(void) {
 }
 
 int MKAnimScript::GetLength(void) {
-	if (currAnim != NULL) {
-		return currAnim->unk6;
-	}
-	return 0;
+    if (currAnim != NULL) {
+        return currAnim->unk6;
+    }
+    return 0;
 }
 
 void MKAnimScript::GetStartAndEnd(MKAnim* pAnim, short* pStart, short* pEnd) {

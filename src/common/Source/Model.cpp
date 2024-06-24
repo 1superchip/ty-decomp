@@ -39,8 +39,8 @@ void Model_DeinitModule(void) {
     while (*ppTemplates != NULL) {
         ppTemplates++;
     }
-	modelInstances.Deinit();
-	modelTemplates.Deinit();
+    modelInstances.Deinit();
+    modelTemplates.Deinit();
     moduleInitialised = false;
 }
 
@@ -72,7 +72,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     }
     ModelTemplate* pFoundTemplate = *pTemplates;
     if (pFoundTemplate != NULL) {
-		// if this template isn't a new instance, increment the reference count
+        // if this template isn't a new instance, increment the reference count
         pFoundTemplate->referenceCount++;
         pModelTemplate = pFoundTemplate;
     } else {
@@ -139,7 +139,7 @@ void Model::Purge(void) {
             if ((*ppModels)->pTemplate != NULL && --(*ppModels)->pTemplate->referenceCount == 0) {
                 for (int i = 0; i < (*ppModels)->pTemplate->pModelData->nmbrOfSubObjects; i++) {
                     for (int j = 0; j < (*ppModels)->pTemplate->pModelData->pSubObjects[i].nmbrOfMaterials; j++) {
-						// destroy all subobject materials
+                        // destroy all subobject materials
                         (*ppModels)->pTemplate->pModelData->pSubObjects[i].pMaterials[j].pMaterial->Destroy();
                     }
                 }
@@ -186,9 +186,9 @@ void Model::SetAnimation(Animation* pAnim) {
 }
 
 void Model::SetLocalToWorldDirty(void) {
-	if (pAnimation != NULL) {
-		pAnimation->SetLocalToWorldDirty();
-	}
+    if (pAnimation != NULL) {
+        pAnimation->SetLocalToWorldDirty();
+    }
 }
 
 bool Model::IsSubObjectEnabled(int subObjectIndex) {
@@ -244,7 +244,7 @@ int Model::GetRefPointIndex(char* pRefPointName) {
 }
 
 Vector* Model::GetRefPointOrigin(int refPointIndex) {
-	return &pTemplate->pModelData->pRefPoints[refPointIndex].position;
+    return &pTemplate->pModelData->pRefPoints[refPointIndex].position;
 }
 
 void Model::GetRefPointWorldPosition(int refPointIndex, Vector* pOut) {
@@ -280,11 +280,11 @@ int Model::GetSubObjectIndex(char* pSubObjectName) {
 }
 
 int Model::GetSubObjectMatrixIndex(int subObjectIndex) {
-	return pTemplate->pModelData->pSubObjects[subObjectIndex].matrixIndex;
+    return pTemplate->pModelData->pSubObjects[subObjectIndex].matrixIndex;
 }
 
 Vector* Model::GetSubObjectOrigin(int subObjectIndex) {
-	return &pTemplate->pModelData->pSubObjects[subObjectIndex].origin;
+    return &pTemplate->pModelData->pSubObjects[subObjectIndex].origin;
 }
 
 void Model::List(void) {
@@ -333,15 +333,15 @@ void Model::GetCentre(Vector* pCentre) {
 }
 
 int Model::GetNmbrOfMatrices(void) {
-	return pTemplate->pModelData->nmbrOfMatrices;
+    return pTemplate->pModelData->nmbrOfMatrices;
 }
 
 int Model::GetNmbrOfSubObjects(void) {
-	return pTemplate->pModelData->nmbrOfSubObjects;
+    return pTemplate->pModelData->nmbrOfSubObjects;
 }
 
 char* Model::GetSubObjectName(int subObjectIndex) {
-	return pTemplate->pModelData->pSubObjects[subObjectIndex].pName;
+    return pTemplate->pModelData->pSubObjects[subObjectIndex].pName;
 }
 
 // returns the model's volume if subObjectIndex == -1
@@ -354,7 +354,7 @@ BoundingVolume* Model::GetBoundingVolume(int subObjectIndex) {
 }
 
 char* Model::GetName(void){
-	return pTemplate->name;
+    return pTemplate->name;
 }
 
 void Model::SetAlphaLightIntensity(int subObjectIndex, float intensity) {
@@ -369,9 +369,9 @@ void Model::SetAlphaLightIntensity(int subObjectIndex, float intensity) {
 }
 
 void Model::SetRenderTypeOverride(int renderTypeOverride) {
-	renderType = renderTypeOverride;
+    renderType = renderTypeOverride;
 }
 
 Material* Model::GetSubObjectMaterial(int subObjectIndex, int materialIndex) {
-	return pTemplate->pModelData->pSubObjects[subObjectIndex].pMaterials[materialIndex].pMaterial;
+    return pTemplate->pModelData->pSubObjects[subObjectIndex].pMaterials[materialIndex].pMaterial;
 }

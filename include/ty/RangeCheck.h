@@ -16,48 +16,48 @@ void Range_ModelSetAlpha(Model*, int, float, float, float, float, int);
 void Range_Update(void);
 
 struct LODEntry {
-	char name[0x20];
-	int subObjectFlags;
-	int subObjectIndex;
-	int unk28;
-	
-	void Init(Model*);
-	bool CheckFlags(int);
+    char name[0x20];
+    int subObjectFlags;
+    int subObjectIndex;
+    int unk28;
+    
+    void Init(Model*);
+    bool CheckFlags(int);
 };
 
 struct LODDescriptor {
-	int flags;
-	LODEntry* pEntries;
-	int nmbrOfEntries;
-	int shadowFlags;
-	int particleFlags;
-	int soundFlags;
-	int scissorFlags;
-	float radius;
-	float height;
-	int invisibleZone;
-	float minalpha;
-	float maxScissorDist;
-	
-	void Init(KromeIni*, char*);
-	void ParseIni(KromeIni*, KromeIniLine*);
-	LODEntry* GetEntryFromString(char* name);
-	void ResolveSubObjects(Model*);
-	void ReplicateLODData(int, int);
+    int flags;
+    LODEntry* pEntries;
+    int nmbrOfEntries;
+    int shadowFlags;
+    int particleFlags;
+    int soundFlags;
+    int scissorFlags;
+    float radius;
+    float height;
+    int invisibleZone;
+    float minalpha;
+    float maxScissorDist;
+    
+    void Init(KromeIni*, char*);
+    void ParseIni(KromeIni*, KromeIniLine*);
+    LODEntry* GetEntryFromString(char* name);
+    void ResolveSubObjects(Model*);
+    void ReplicateLODData(int, int);
 };
 
 struct LODManager {
-	LODDescriptor* pDescriptor;
-	int subobjectEnableFlags;
-	int unk8;
-	
-	void Init(Model*, int, LODDescriptor*);
-	void InternalUpdate(Model*, int, float);
-	bool Draw(Model*, int, float, float, bool);
-	void EnableSubObjects(Model*);
-	bool TestLOD(int testFlag) {
-		return testFlag & ((subobjectEnableFlags >= 0) ? (1 << subobjectEnableFlags) : 0x40000000);
-	}
+    LODDescriptor* pDescriptor;
+    int subobjectEnableFlags;
+    int unk8;
+    
+    void Init(Model*, int, LODDescriptor*);
+    void InternalUpdate(Model*, int, float);
+    bool Draw(Model*, int, float, float, bool);
+    void EnableSubObjects(Model*);
+    bool TestLOD(int testFlag) {
+        return testFlag & ((subobjectEnableFlags >= 0) ? (1 << subobjectEnableFlags) : 0x40000000);
+    }
 };
 
 #endif // RANGECHECK_H

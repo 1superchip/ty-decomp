@@ -9,14 +9,14 @@ struct KromeIniLine {
     char* pFieldName;
     char* data;
     int elementCount;
-	bool AsFlag(int, int*);
-	bool AsInt(int, int*);
-	bool AsFloat(int, float*);
-	bool AsString(int, char**);
+    bool AsFlag(int, int*);
+    bool AsInt(int, int*);
+    bool AsFloat(int, float*);
+    bool AsString(int, char**);
 };
 
 struct KromeIni {
-	char name[0x20];
+    char name[0x20];
     void* pFileMem;
     bool bFileMemAllocated;
     int fileSize;
@@ -24,17 +24,17 @@ struct KromeIni {
     int nmbrOfLines;
     int unk34;
     int unk38; // count for "[]" sections
-	
-	inline KromeIniLine* GetNextLine(void);
+    
+    inline KromeIniLine* GetNextLine(void);
     
     // seems to just get the next line with the current line
-	inline KromeIniLine* GetLineWithLine(KromeIniLine* pLine);
-	inline KromeIniLine* GetCurrentLine(void);
-	bool Init(char* pName);
-	void ParseData(void);
-	void Deinit(void);
-	KromeIniLine* GotoLine(char* pName, char* pField);
-	void Warning(char*);
+    inline KromeIniLine* GetLineWithLine(KromeIniLine* pLine);
+    inline KromeIniLine* GetCurrentLine(void);
+    bool Init(char* pName);
+    void ParseData(void);
+    void Deinit(void);
+    KromeIniLine* GotoLine(char* pName, char* pField);
+    void Warning(char*);
 };
 
 inline KromeIniLine* KromeIni::GetNextLine(void) {
@@ -82,11 +82,11 @@ inline KromeIniLine* KromeIni::GetCurrentLine(void) {
 
 // all of parser was inlined
 struct Parser {
-	int lineNum;
-	int numLines;
-	char* pData;
-	char* pEndOfFile;
-	KromeIniLine* currLine;
+    int lineNum;
+    int numLines;
+    char* pData;
+    char* pEndOfFile;
+    KromeIniLine* currLine;
 
     void UnkFunc(void);
     bool UnkFunc2(void);

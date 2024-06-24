@@ -2,22 +2,22 @@
 #define COMMON_TRANSLATION
 
 struct Language {
-	char* localName;
-	char* languageName;
-	char* languageCode;
-	char* fileName;
-	int size;
+    char* localName;
+    char* languageName;
+    char* languageCode;
+    char* fileName;
+    int size;
 };
 
 enum TranslationLanguage {
     Language_NotSet 			= -1,
-	LANGUAGE_ENGLISH 			= 0,
-	Language_American 			= 1,
-	Language_French 			= 2,
-	Language_Spanish 			= 3,
-	Language_German 			= 4,
-	Language_Italian 			= 5,
-	Language_Dutch 				= 6,
+    LANGUAGE_ENGLISH 			= 0,
+    Language_American 			= 1,
+    Language_French 			= 2,
+    Language_Spanish 			= 3,
+    Language_German 			= 4,
+    Language_Italian 			= 5,
+    Language_Dutch 				= 6,
     LANGUAGE_NMBR_OF_LANGUAGES 	= 8,
 };
 

@@ -50,26 +50,26 @@ void GameObject::Init(GameObjDesc* pDesc) {
 }
 
 void GameObject::Deinit(void) {
-	if (pModel != NULL) {
-		pModel->Destroy();
-		pModel = NULL;
-	}
-	return;
+    if (pModel != NULL) {
+        pModel->Destroy();
+        pModel = NULL;
+    }
+    return;
 }
 
 void GameObject::Update(void) {
-	return;
+    return;
 }
 
 void GameObject::Draw(void) {
-	if (pModel != NULL) {
-		pModel->Draw(NULL);
-	}
-	return;
+    if (pModel != NULL) {
+        pModel->Draw(NULL);
+    }
+    return;
 }
 
 void GameObject::Reset(void) {
-	return;
+    return;
 }
 
 void GameObject::Message(MKMessage* pMsg) {
@@ -96,35 +96,35 @@ void GameObject::Message(MKMessage* pMsg) {
 }
 
 bool GameObject::LoadLine(KromeIniLine* pLine) {
-	return LoadLevel_LoadInt(pLine, "ID", &uniqueID);
+    return LoadLevel_LoadInt(pLine, "ID", &uniqueID);
 }
 
 void GameObject::LoadDone(void) {
-	return;
+    return;
 }
 
 void GameObject::InitModule(void) {
-	return;
+    return;
 }
 
 void GameObject::DeinitModule(void) {
-	return;
+    return;
 }
 
 void GameObject::UpdateModule(void) {
-	return;
+    return;
 }
 
 void GameObject::DrawModule(void) {
-	return;
+    return;
 }
 
 int* GameObject::Allocate(void) {
-	return NULL;
+    return NULL;
 }
 
 void GameObject::Deallocate(GameObject* pObj) {
-	return;
+    return;
 }
 
 // maybe a ternary would match this as well as DrawDynamicProps?
@@ -158,7 +158,7 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
     searchMask = _searchMask;
     pModule = pMod;
     if (pMod->pData->flags & Module_AllocateOverride) {
-		// if the module has a custom Allocation function, set the flags in the object descriptor
+        // if the module has a custom Allocation function, set the flags in the object descriptor
         flags |= 0x100000;
     }
     flags |= 0xC;
@@ -210,7 +210,7 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
 
 GameObject* GameObjDesc::CreateObject(void) {
     if (TestFlag(MODULE_ALLOCATION_OVERRIDE)) {
-		// if the descriptor's module has a custom allocation function use it
+        // if the descriptor's module has a custom allocation function use it
         return (GameObject*)ConstructObject(pModule->pData->pAllocate());
     }
     void* mem = pCurrInst;
@@ -223,9 +223,9 @@ void GameObjDesc::Load(KromeIni* pIni) {
     while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
         if (pLine->pFieldName != NULL) {
             gAssertBool = LoadLevel_LoadInt(pLine, "drawLayer", &drawLayer) ||
-				LoadLevel_LoadFloat(pLine, "maxDrawDist", &maxDrawDist) ||
-				LoadLevel_LoadFloat(pLine, "maxScissorDist", &maxScissorDist) ||
-				LoadLevel_LoadFloat(pLine, "maxUpdateDist", &maxUpdateDist);
+                LoadLevel_LoadFloat(pLine, "maxDrawDist", &maxDrawDist) ||
+                LoadLevel_LoadFloat(pLine, "maxScissorDist", &maxScissorDist) ||
+                LoadLevel_LoadFloat(pLine, "maxUpdateDist", &maxUpdateDist);
         }
         pLine = pIni->GetLineWithLine(pLine);
     }

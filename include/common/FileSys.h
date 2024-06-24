@@ -13,14 +13,14 @@ struct RKVHeader {
 };
 
 struct DirectoryEntry {
-	char name[0x100];
+    char name[0x100];
 };
 
 struct RkvFileEntry {
-	char name[0x20];
+    char name[0x20];
     int directoryIndex;
     int length; // is this the decompressed length in sunny garcia?
-	// unk28 would have been some value for decompression in earlier games
+    // unk28 would have been some value for decompression in earlier games
     int unk28; // unused in Ty
     int offset; // offset of file in RKV
     uint crc;
@@ -47,10 +47,10 @@ struct RkvTOC {
     DirectoryEntry* pDirectoryEntries;
     int unk54;
     bool unk58;
-	
-	void Init(char*);
-	RkvFileEntry* GetEntry(char*);
-	int GetAsyncHandle(void);
+    
+    void Init(char*);
+    RkvFileEntry* GetEntry(char*);
+    int GetAsyncHandle(void);
 };
 
 void FileSys_InitModule(void);
