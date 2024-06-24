@@ -1,5 +1,3 @@
-// Assembly file in asm/MKShadow_GC.s
-
 #include "common/MKShadow.h"
 #include "common/System_GC.h"
 #include "common/Heap.h"

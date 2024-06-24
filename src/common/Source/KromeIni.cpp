@@ -382,7 +382,7 @@ void KromeIni::Deinit(void) {
     pFileMem = NULL;
 }
 
-KromeIniLine *KromeIni::GotoLine(char *pName, char *pField) {
+KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
     if (pFileMem == NULL) {
         return NULL;
     }

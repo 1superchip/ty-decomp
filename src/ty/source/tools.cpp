@@ -1599,3 +1599,18 @@ float FaderObject::GetFadePercentage(void) {
     }
     return 0.0f;
 }
+
+// struct Tools_BitField {
+//     uint val;
+    
+//     char* Str(void);
+// };
+
+// char* Tools_BitField::Str(void) {
+//     char str[33] = {};
+//     for(int i = 0; i <= 31; i++) {
+//         int shift = 1 << ((31 - i) & 31);
+//         str[i] = (val & shift) ? '1' : '0';
+//     }
+//     return Str_Printf("%s", str);
+// }

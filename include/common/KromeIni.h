@@ -30,10 +30,10 @@ struct KromeIni {
     // seems to just get the next line with the current line
 	inline KromeIniLine* GetLineWithLine(KromeIniLine* pLine);
 	inline KromeIniLine* GetCurrentLine(void);
-	bool Init(char*);
+	bool Init(char* pName);
 	void ParseData(void);
 	void Deinit(void);
-	KromeIniLine* GotoLine(char*, char*);
+	KromeIniLine* GotoLine(char* pName, char* pField);
 	void Warning(char*);
 };
 
