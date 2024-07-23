@@ -102,6 +102,10 @@ struct Tools_AnimEventManager {
     int unk8;
     void Init(Tools_AnimEventDesc*);
     void Update(MKAnimScript*);
+
+    bool CheckUnk4Flags(int value) {
+        return unk4 & value;
+    }
 };
 
 int Tools_GetAnimationLength(MKAnimScript*);

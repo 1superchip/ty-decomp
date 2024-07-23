@@ -78,9 +78,9 @@ struct Animation {
     int GetNmbrOfNodes(void);
     bool NodeExists(char*, int*);
     int GetNodeIndex(char*);
-    Matrix* GetNodeMatrix(int);
-    Vector* GetNodeOrigin(int);
-    void GetNodeWorldPosition(int, Vector*);
+    Matrix* GetNodeMatrix(int nodeIndex);
+    Vector* GetNodeOrigin(int nodeNumber);
+    void GetNodeWorldPosition(int index, Vector* pPos);
     void CalculateNodeMatrix(int);
     void Set(float arg0) {
         Tween(arg0, 1.0f);

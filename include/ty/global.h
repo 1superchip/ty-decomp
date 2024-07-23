@@ -360,4 +360,8 @@ struct dpActorInfoStruct {
 
 #define DIALOG_ACTORINFO_MACRO(name, field3, field4) {name, NULL, NULL, field3, field4}
 
+extern dpActorInfoStruct actorInfo[];
+
+#define ACTOR_BUNYIP_ID (46)
+
 #endif // GLOBAL_H

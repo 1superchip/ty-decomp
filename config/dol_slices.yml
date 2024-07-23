@@ -2000,15 +2000,15 @@ ty/source/BoundingRegion.cpp:
    .rodata: [0x8023e628, 0x8023e638]
    .sdata2: [0x80400170, 0x80400178]
 
-#ty/source/bunyip.cpp:
-#   .text: [0x80147464, 0x801485c8]
-#   .ctors: [0x8023ca20, 0x8023ca24]
-#   .rodata: [0x8023e638, 0x8023e648]
-#   .data: [0x80260af0, 0x80260ce0]
-#   .bss: [0x802afd88, 0x802afea8]
-#   .sdata: [0x803f8280, 0x803f8338]
-#   .sbss: [0x803fa820, 0x803fa830]
-#   .sdata2: [0x80400178, 0x804001b8]
+ty/source/bunyip.cpp:
+  .text: [0x80147464, 0x801485c8]
+  .ctors: [0x8023ca20, 0x8023ca24]
+  .rodata: [0x8023e638, 0x8023e648]
+  .data: [0x80260af0, 0x80260ce0]
+  .bss: [0x802afd88, 0x802afea8]
+  .sdata: [0x803f8280, 0x803f8338]
+  .sbss: [0x803fa820, 0x803fa830]
+  .sdata2: [0x80400178, 0x804001b8]
 
 #ty/source/BushPig.cpp:
 #   .text: [0x801485c8, 0x8014f010]
@@ -3595,7 +3595,7 @@ common/gc/File.cpp:
    .data: [0x802764d8, 0x802764e8]
    .bss: [0x8036eaa0, 0x8036ed60]
 
-#Grass_GC.cpp:
+# common/gc/Grass_GC.cpp:
 #   .text: [0x80226398, 0x80227254]
 #   .data: [0x802764e8, 0x80276990]
 #   .bss: [0x8036ed60, 0x8036f720]

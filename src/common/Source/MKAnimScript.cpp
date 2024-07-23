@@ -385,10 +385,10 @@ void MKAnimScript::SetAnim(MKAnim* pMKAnim) {
     unk18 = 0;
 }
 
-void MKAnimScript::TweenAnim(MKAnim* pToAnim, short flags) {
+void MKAnimScript::TweenAnim(MKAnim* pToAnim, short arg2) {
     nextAnim = pToAnim;
     unk10 = (float)nextAnim->pAnimRanges->startFrame;
-    unk1C = flags;
+    unk1C = arg2;
     unk18 = 0;
 }
 

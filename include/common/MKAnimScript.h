@@ -67,32 +67,32 @@ struct MKAnimScript {
     short unk1A;
     short unk1C;
     u16 unk1E;
-	
-	static float advanceAmount;
+    
+    static float advanceAmount;
 
     void Init(char*);
-	void Init(MKAnimScript*);
+    void Init(MKAnimScript*);
     void Deinit(void);
-	MKAnim* GetAnim(char*);
-	MKAnim* GetAnim(int);
-	bool Exists(char*);
-	char* GetMeshName(void);
-	char* GetAnimName(void);
-	void SetAnim(MKAnim*);
-	void TweenAnim(MKAnim*, short);
-	void Animate(void);
-	void Apply(Animation*);
-	void ApplyNode(Animation*, int);
-	char* GetEventByName(char*);
-	char* GetEvent(int);
-	bool HasLooped(void);
-	int UpdatesUntilFinished(void);
-	int GetLength(void);
-	void GetStartAndEnd(MKAnim*, short*, short*);
-	void SetAnimKeepingPosition(MKAnim*);
-	float GetNormalPosition(void);
-	float GetFrameOfNormalPosition(float, MKAnim*);
-	void SetAnimNormalised(MKAnim*, float);
+    MKAnim* GetAnim(char*);
+    MKAnim* GetAnim(int);
+    bool Exists(char*);
+    char* GetMeshName(void);
+    char* GetAnimName(void);
+    void SetAnim(MKAnim*);
+    void TweenAnim(MKAnim* pToAnim, short arg2);
+    void Animate(void);
+    void Apply(Animation*);
+    void ApplyNode(Animation*, int);
+    char* GetEventByName(char*);
+    char* GetEvent(int);
+    bool HasLooped(void);
+    int UpdatesUntilFinished(void);
+    int GetLength(void);
+    void GetStartAndEnd(MKAnim*, short*, short*);
+    void SetAnimKeepingPosition(MKAnim*);
+    float GetNormalPosition(void);
+    float GetFrameOfNormalPosition(float, MKAnim*);
+    void SetAnimNormalised(MKAnim*, float);
 
     // Initialises fields
     void Init(void) {
@@ -111,6 +111,10 @@ struct MKAnimScript {
         unk18 = 0;
         unk1C = 0;
         unk1A = 0;
+    }
+
+    bool Condition(void) {
+        return unk1C == 0 && unk14 == 0.0f;
     }
 };
 
