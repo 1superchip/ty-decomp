@@ -507,9 +507,9 @@ void ParticleSystemType::Init(char* _pName, Material* pMat, float f1, float f2, 
     unk5C = 0.0f;
     unk60 = 1.0f;
     unk64 = 0.9999f;
-    unk68 = 0.0f;
-    unk6C = 0.0f;
-    unk70 = 0.0f;
+    xVel = 0.0f;
+    yVel = 0.0f;
+    zVel = 0.0f;
 }
 
 void ParticleSystemType::Update(ParticleSystem* pSys) {
@@ -530,9 +530,9 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
     }
     
     float f30 = pSys->age - pSys->mpType->unk1C;
-    float f29 = f31 * pSys->mpType->unk68;
-    float f28 = f31 * pSys->mpType->unk6C;
-    float f27 = f31 * pSys->mpType->unk70;
+    float f29 = f31 * pSys->mpType->xVel;
+    float f28 = f31 * pSys->mpType->yVel;
+    float f27 = f31 * pSys->mpType->zVel;
     
     float f26 = f31 * pSys->mpType->unk44;
     float f25 = f31 * pSys->mpType->unk48;

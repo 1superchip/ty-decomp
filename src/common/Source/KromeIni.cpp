@@ -83,7 +83,7 @@ bool Parser::IsEndOfData(void) {
 
 // https://decomp.me/scratch/JYbFf
 bool KromeIni::Init(char* pName) {
-    unk34 = 0;
+    currentLineNum = 0;
     if (pName == NULL || FileSys_Exists(pName, &fileSize) == false) {
         pFileMem = NULL;
         strcpy(name, "(NULL)");
@@ -117,13 +117,13 @@ void Parser::UnkFunc(void) {
     while (pData < pEndOfFile) {
         if (*pData == '\"') {
             found = !found;
-            } else if ((found != 0) || ((*pData != ' ') && (*pData != '\t') && (*pData != '=') && (*pData != ','))) {
+        } else if ((found != 0) || ((*pData != ' ') && (*pData != '\t') && (*pData != '=') && (*pData != ','))) {
             if ((*pData == '\r') || (*pData == '\n')) {
                 break;
             }
-            } else {
-                break;
-            }
+        } else {
+            break;
+        }
         pData++;
     }
 }
@@ -382,15 +382,24 @@ void KromeIni::Deinit(void) {
     pFileMem = NULL;
 }
 
+/// @brief Returns the line with a field name of pField in the section with the name pName
+/// @param pName Section name e.g. "name pName"
+/// @param pField Field name within section e.g. "pos ...". Pass NULL to return section name line
+/// @return Found line or NULL
 KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
+    // passing both pName and pField as NULL returns the very first line
+    
     if (pFileMem == NULL) {
         return NULL;
     }
-    int i = unk34; // get last line processed
+
+    int i = currentLineNum;
     int temp_r27 = 0;
+
     if (pName == NULL && pField == NULL) {
         i = 0;
     }
+
     if (pName != NULL) {
         i = 0;
         while (i < nmbrOfLines) {
@@ -404,7 +413,9 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
             return NULL;
         }
     }
+
     if (pField != NULL) {
+
         if (pName == NULL) {
             while (i > 0 && pLines[i].section == NULL) {
                 i--;
@@ -417,6 +428,7 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
                 i++;
             }
         }
+
         while (i < nmbrOfLines) {
             if (pLines[i].section != NULL) {
                 return NULL;
@@ -431,10 +443,13 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
             return NULL;
         }
     }
-    unk34 = i;
+
+    currentLineNum = i;
+
     if (i < nmbrOfLines) {
         return &pLines[i];
     }
+
     return NULL;
 }
 
@@ -529,6 +544,8 @@ bool KromeIniLine::AsString(int dataIndex, char** arg2) {
     }
 
     if (*pChar == '\"' && *(string_r6 - 1) == '\"') {
+        // if the data is in quotation marks, move the pointers to the start
+        // and beginning of data (removing the quotation marks)
         pChar++;
         string_r6--;
     }

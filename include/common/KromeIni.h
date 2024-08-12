@@ -4,11 +4,12 @@
 #include "types.h"
 
 struct KromeIniLine {
-    char* comment;
-    char* section;
-    char* pFieldName;
-    char* data;
-    int elementCount;
+    char* comment; // Line comment (denoted by //), begins at first non-whitespace character after "//"
+    char* section; // name of ini section "name sectionName" Only lines that have "name sectionName" have this field
+    char* pFieldName; // Line field name "pos -1, 0, 3" -> pFieldName = "pos"
+    char* data; // Line data, "pos -1, 0, 3" -> data = "-1, 0, 3"
+    int elementCount; // Number of data elements
+
     bool AsFlag(int, int*);
     bool AsInt(int, int*);
     bool AsFloat(int, float*);
@@ -22,7 +23,7 @@ struct KromeIni {
     int fileSize;
     KromeIniLine* pLines;
     int nmbrOfLines;
-    int unk34;
+    int currentLineNum;
     int unk38; // count for "[]" sections
     
     inline KromeIniLine* GetNextLine(void);
@@ -42,11 +43,11 @@ inline KromeIniLine* KromeIni::GetNextLine(void) {
     if (pFileMem == NULL) {
         line = NULL;
     } else {
-        if (unk34 < nmbrOfLines) {
-            unk34++;
+        if (currentLineNum < nmbrOfLines) {
+            currentLineNum++;
         }
-        if (unk34 < nmbrOfLines) {
-            line = &pLines[unk34];
+        if (currentLineNum < nmbrOfLines) {
+            line = &pLines[currentLineNum];
         } else {
             line = NULL;
         }
@@ -59,12 +60,12 @@ inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
     if (pFileMem == NULL) {
         line = NULL;
     } else {
-        unk34 = ((int)pLine + 0x14 - (int)pLines) / sizeof(KromeIniLine);
-        if (unk34 > nmbrOfLines) {
-            unk34 = nmbrOfLines;
+        currentLineNum = ((int)pLine + 0x14 - (int)pLines) / sizeof(KromeIniLine);
+        if (currentLineNum > nmbrOfLines) {
+            currentLineNum = nmbrOfLines;
         }
-        if (unk34 < nmbrOfLines) {
-            line = &pLines[unk34];
+        if (currentLineNum < nmbrOfLines) {
+            line = &pLines[currentLineNum];
         } else {
             return NULL;
         }
@@ -77,7 +78,7 @@ inline KromeIniLine* KromeIni::GetCurrentLine(void) {
     if (pFileMem == NULL) {
         return NULL;
     }
-    return (unk34 >= 0 && unk34 < nmbrOfLines) ? &pLines[unk34] : NULL;
+    return (currentLineNum >= 0 && currentLineNum < nmbrOfLines) ? &pLines[currentLineNum] : NULL;
 }
 
 // all of parser was inlined

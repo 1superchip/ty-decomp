@@ -49,7 +49,7 @@ struct SimpleParticleSystemType : BaseParticleSystemType {
     float unk44;
     float unk48;
     float unk4C;
-    int mNumEnvelopes;
+    int mNumEnvelopes; // numEnvelopeNodes
     ParticleEnvelope* mpEnvelopes;
 
     void Init(char* pName, Material* pMat, float, float, float, int);
@@ -63,9 +63,9 @@ struct ParticleSystemType : SimpleParticleSystemType {
     float unk5C;
     float unk60;
     float unk64;
-    float unk68;
-    float unk6C;
-    float unk70;
+    float xVel;
+    float yVel;
+    float zVel;
     
     void Init(char* pName, Material* pMat, float, float, float, int);
     static void Update(ParticleSystem*);
@@ -184,8 +184,8 @@ struct ParticleSystem {
     static int nextUniqueId;
     static bool bDraw;
 
-    static ParticleSystem* Create(ParticleSystemType* pType, Vector* pPos,
-        BoundingVolume* pVolume, float f1, int r6, ParticleSystemManager* pManager);
+    static ParticleSystem* Create(ParticleSystemType* _pType, Vector* _pPos,
+        BoundingVolume* pVolume, float volumeScale, int numDyn, ParticleSystemManager* pManager);
     void Destroy(void);
     void Destroy(float);
     void Init(ParticleSystemType* _pType, Vector* pPos, BoundingVolume* pVolume,
@@ -217,6 +217,10 @@ struct ParticleSystem {
                 ppChunks = &(*ppChunks)->mpNext;
             }
         } while (*ppChunks);
+    }
+
+    float GetAge(void) {
+        return age;
     }
 };
 

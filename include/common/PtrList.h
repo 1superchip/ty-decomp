@@ -29,6 +29,18 @@ struct PtrList {
         }
         return (p - pPointers);
     }
+
+    // unsure of name
+    T** FindEntry(T* p) {
+        T** pointers = pPointers;
+        while (*pointers) {
+            if (*pointers == p) {
+                return pointers;
+            }
+            pointers++;
+        }
+        return NULL;
+    }
 };
 
 template <typename T>

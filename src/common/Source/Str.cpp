@@ -42,7 +42,11 @@ char* Str_CopyString(char* string, int len) {
     }
 
     bufString[idx] = '\0';
-    bufferIndex += (idx + 0x10) & ~0xF;
+
+    // round up to a multiple of 16
+    // if idx is a multiple of 16, idx is rounded to the next (0 -> 16, 16 -> 32)
+    bufferIndex += (idx + 0x10) & ~(0x10 - 1);
+    
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }

@@ -250,7 +250,7 @@ void Bunyip::SetState(BunyipState newState) {
                 unkDB = 0;
             }
             
-            unkC4 = 0x78;
+            unkC4 = 120;
             mAnimScript.SetAnim(mAnimManager.GetAnim(unkDB + 7));
             bIsLastEventGroundHit = unkDB == 0;
 

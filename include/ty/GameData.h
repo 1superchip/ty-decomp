@@ -3,6 +3,7 @@
 
 #include "common/Timer.h"
 #include "ty/props/gem.h"
+#include "ty/boomerang.h"
 
 #define Total_Bilbies 		(5)
 #define Total_ThunderEggs	(8)
@@ -21,7 +22,6 @@ enum GoldenCogType {};
 enum ThunderEggType {};
 enum TalismanType {};
 enum BilbyType {};
-enum BoomerangType {};
 
 struct GameDataSettings {
     u8 musicVolume;

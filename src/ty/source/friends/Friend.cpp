@@ -92,12 +92,11 @@ void Friend::Draw(void) {
 
 extern "C" int Sound_IsVoicePlaying(int);
 extern int SoundBank_Play(int, Vector*, uint);
-enum BoomerangSound {};
-struct Boomerang {
-    char padding[0x50];
-    int rangType;
-    void PlaySound(BoomerangSound, int);
-};
+// struct Boomerang {
+//     char padding[0x50];
+//     int rangType;
+//     void PlaySound(BoomerangSound, int);
+// };
 
 // BoomerangMessage is a real structure
 // Furnace::HandleRangMsg(BoomerangMessage*)
@@ -127,13 +126,13 @@ void Friend::Message(MKMessage* pMsg) {
             // BoomerangMessage?
             BoomerangMessage* pBoomerangMsg = (BoomerangMessage*)pMsg;
             if (mFlags & FSF_Visible) {
-                if (pBoomerangMsg->pBoomerang->rangType != 3) {
+                if (pBoomerangMsg->pBoomerang->mRangType != (BoomerangType)3) {
                     pBoomerangMsg->SetUnk8(true);
                 }
                 if (unk100 == -1 || Sound_IsVoicePlaying(unk100) == 0) {
                     unk100 = SoundBank_Play(GetDesc()->unkD4, NULL, 0);
                 }
-                if (pBoomerangMsg->pBoomerang->rangType == 8) {
+                if (pBoomerangMsg->pBoomerang->mRangType == BR_Zappyrang) {
                     // if a Zappyrang hit a Friend, set the flash timer to 40
                     // and have the boomerang play a sound
                     // When a friend is hit by the zappyrang, they will flash on and off
