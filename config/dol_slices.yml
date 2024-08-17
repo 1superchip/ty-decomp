@@ -336,9 +336,9 @@ ty/source/effects/Flame.cpp:
 #   .sbss: [0x803f9d98, 0x803f9da0]
 #   .sdata2: [0x803fc190, 0x803fc1c8]
 
-#ty/source/effects/Trails.cpp:
-#   .text: [0x8003e11c, 0x8003e5a4]
-#   .sdata2: [0x803fc1c8, 0x803fc1d8]
+ty/source/effects/Trails.cpp:
+  .text: [0x8003e11c, 0x8003e5a4]
+  .sdata2: [0x803fc1c8, 0x803fc1d8]
 
 #ty/source/effects/Waterdrip.cpp:
 #   .text: [0x8003e5a4, 0x8003e784]

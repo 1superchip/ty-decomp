@@ -254,5 +254,77 @@ struct FaderObject {
     float GetFadePercentage(void);
 };
 
+template <typename T>
+struct CircularQueue {
+    int numMax;
+    int unk4; // rear
+    int unk8; // front
+    T* data;
+
+    void Init(int max) {
+        // ASSERT(max > 0, "CircularQueue::Init: Queue size must be >= 1");
+        data = (T*)Heap_MemAlloc(max * sizeof(T));
+        // ASSERT(data, "CircularQueue::Init: Error allocating memory");
+        numMax = max;
+        unk4 = unk8 = 0;
+    }
+
+    void Deinit(void) {
+        Heap_MemFree(data);
+
+        numMax = 0;
+        unk4 = unk8 = 0;
+    }
+
+    bool IsEmpty(void) {
+        return unk4 == 0;
+    }
+
+    void Reset(void) {
+        unk4 = unk8 = 0;
+    }
+
+    void UnkInline(void) {
+        if (unk4 > 0) {
+            unk8++;
+            if (unk8 >= numMax) {
+                unk8 -= numMax;
+            }
+            unk4--;
+        }
+    }
+
+    T* Add(void) {
+        if (unk4 == numMax) {
+            UnkInline();
+        }
+
+        int newIndex = unk8 + unk4;
+        if (newIndex >= numMax) {
+            newIndex -= numMax;
+        }
+
+        unk4++;
+
+        return &data[newIndex];
+    }
+
+    int GetUnk4(void) {
+        return unk4;
+    }
+
+    T* Get(int index) {
+        if (index < 0 || index >= unk4) {
+            return NULL;
+        }
+
+        int newIndex = unk8 + index;
+        if (newIndex >= numMax) {
+            newIndex -= numMax;
+        }
+
+        return &data[newIndex];
+    }
+};
 
 #endif // TOOLS_H

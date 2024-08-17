@@ -9,6 +9,7 @@ extern int gEmptyPtrList[2];
 template <typename T>
 struct PtrList {
     T **pPointers;
+    
     void Init(int);
     void Destroy(T*);
     void Deinit(void);
