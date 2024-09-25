@@ -2393,7 +2393,7 @@ ty/source/setup.cpp:
   .sbss: [0x803faab0, 0x803faac0]
   .sdata2: [0x804011a0, 0x80401208]
 
-#ty/source/Shadow.cpp:
+# ty/source/Shadow.cpp:
 #   .text: [0x8018fc38, 0x80190c08]
 #   .bss: [0x802b5a80, 0x802b5a90]
 #   .sbss: [0x803faac0, 0x803faac8]

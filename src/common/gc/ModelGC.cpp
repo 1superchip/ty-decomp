@@ -205,7 +205,7 @@ int Model::Draw(u16* pSubObjs) {
     mat3.data[3][3] = 1.0f;
     mat2.Multiply(&mat2, &mat3);
     mat2.Transpose(&mat2);
-    GXLoadTexMtxImm(mat2.data, 0x39, GX_MTX2x4);
+    GXLoadTexMtxImm(mat2.data, GX_TEXMTX9, GX_MTX2x4);
     GXColor chanColor = (GXColor){255, 255, 255, 255};
     int matrixIdx = 0;
     GXSetChanMatColor(GX_COLOR0A0, chanColor);

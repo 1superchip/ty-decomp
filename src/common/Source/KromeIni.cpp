@@ -386,7 +386,7 @@ void KromeIni::Deinit(void) {
 /// @param pName Section name e.g. "name pName"
 /// @param pField Field name within section e.g. "pos ...". Pass NULL to return section name line
 /// @return Found line or NULL
-KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
+KromeIniLine* KromeIni::GotoLine(char* pName, char* pField) {
     // passing both pName and pField as NULL returns the very first line
     
     if (pFileMem == NULL) {
@@ -394,7 +394,7 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
     }
 
     int i = currentLineNum;
-    int temp_r27 = 0;
+    bool temp_r27 = false;
 
     if (pName == NULL && pField == NULL) {
         i = 0;
@@ -404,7 +404,7 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
         i = 0;
         while (i < nmbrOfLines) {
             if (pLines[i].section != NULL && stricmp(pName, pLines[i].section) == 0) {
-                temp_r27 = 1;
+                temp_r27 = true;
                 break;
             }
             i++;
@@ -424,7 +424,7 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
                 i++;
             }
         } else {
-            if (temp_r27 & 0xFF) {
+            if (temp_r27) {
                 i++;
             }
         }
@@ -434,7 +434,7 @@ KromeIniLine *KromeIni::GotoLine(char* pName, char* pField) {
                 return NULL;
             }
             if (pLines[i].pFieldName != NULL && stricmp(pField, pLines[i].pFieldName) == 0) {
-                temp_r27 = 1;
+                temp_r27 = true;
                 break;
             }
             i++;

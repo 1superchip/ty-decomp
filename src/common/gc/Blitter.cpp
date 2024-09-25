@@ -226,33 +226,33 @@ void Blitter_Particle::Draw(int count) {
         
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         
-        WGPIPE.f = pParticle->pos.x + dVar29;
-        WGPIPE.f = pParticle->pos.y + dVar28;
-        WGPIPE.f = pParticle->pos.z + dVar25;
+        GXWGFifo.f32 = pParticle->pos.x + dVar29;
+        GXWGFifo.f32 = pParticle->pos.y + dVar28;
+        GXWGFifo.f32 = pParticle->pos.z + dVar25;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = pUV[0][0];
-        WGPIPE.f = pUV[0][1];
+        GXWGFifo.f32 = pUV[0][0];
+        GXWGFifo.f32 = pUV[0][1];
         
-        WGPIPE.f = pParticle->pos.x - dVar27;
-        WGPIPE.f = pParticle->pos.y - dVar26;
-        WGPIPE.f = pParticle->pos.z - dVar24;
+        GXWGFifo.f32 = pParticle->pos.x - dVar27;
+        GXWGFifo.f32 = pParticle->pos.y - dVar26;
+        GXWGFifo.f32 = pParticle->pos.z - dVar24;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = pUV[2][0];
-        WGPIPE.f = pUV[2][1];
+        GXWGFifo.f32 = pUV[2][0];
+        GXWGFifo.f32 = pUV[2][1];
         
-        WGPIPE.f = pParticle->pos.x + dVar27;
-        WGPIPE.f = pParticle->pos.y + dVar26;
-        WGPIPE.f = pParticle->pos.z + dVar24;
+        GXWGFifo.f32 = pParticle->pos.x + dVar27;
+        GXWGFifo.f32 = pParticle->pos.y + dVar26;
+        GXWGFifo.f32 = pParticle->pos.z + dVar24;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = pUV[1][0];
-        WGPIPE.f = pUV[1][1];
+        GXWGFifo.f32 = pUV[1][0];
+        GXWGFifo.f32 = pUV[1][1];
         
-        WGPIPE.f = pParticle->pos.x - dVar29;
-        WGPIPE.f = pParticle->pos.y - dVar28;
-        WGPIPE.f = pParticle->pos.z - dVar25;
+        GXWGFifo.f32 = pParticle->pos.x - dVar29;
+        GXWGFifo.f32 = pParticle->pos.y - dVar28;
+        GXWGFifo.f32 = pParticle->pos.z - dVar25;
         GXColor4u8(red, green, blue, alpha);
-        WGPIPE.f = pUV[3][0];
-        WGPIPE.f = pUV[3][1];
+        GXWGFifo.f32 = pUV[3][0];
+        GXWGFifo.f32 = pUV[3][1];
         
         pParticle++;
     }
@@ -287,27 +287,27 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
         
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         
-        WGPIPE.f = pParticle->pos.x + dVar29;
-        WGPIPE.f = pParticle->pos.y + dVar28;
-        WGPIPE.f = pParticle->pos.z + dVar25;
+        GXWGFifo.f32 = pParticle->pos.x + dVar29;
+        GXWGFifo.f32 = pParticle->pos.y + dVar28;
+        GXWGFifo.f32 = pParticle->pos.z + dVar25;
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(arg1 * pParticle->unk24, 0.0f);
         
-        WGPIPE.f = pParticle->pos.x - dVar27;
-        WGPIPE.f = pParticle->pos.y - dVar26;
-        WGPIPE.f = pParticle->pos.z - dVar24;
+        GXWGFifo.f32 = pParticle->pos.x - dVar27;
+        GXWGFifo.f32 = pParticle->pos.y - dVar26;
+        GXWGFifo.f32 = pParticle->pos.z - dVar24;
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(arg1 * pParticle->unk24, 1.0f);
         
-        WGPIPE.f = pParticle->pos.x + dVar27;
-        WGPIPE.f = pParticle->pos.y + dVar26;
-        WGPIPE.f = pParticle->pos.z + dVar24;
+        GXWGFifo.f32 = pParticle->pos.x + dVar27;
+        GXWGFifo.f32 = pParticle->pos.y + dVar26;
+        GXWGFifo.f32 = pParticle->pos.z + dVar24;
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(arg1 * (pParticle->unk24 + 1), 0.0f);
         
-        WGPIPE.f = pParticle->pos.x - dVar29;
-        WGPIPE.f = pParticle->pos.y - dVar28;
-        WGPIPE.f = pParticle->pos.z - dVar25;
+        GXWGFifo.f32 = pParticle->pos.x - dVar29;
+        GXWGFifo.f32 = pParticle->pos.y - dVar28;
+        GXWGFifo.f32 = pParticle->pos.z - dVar25;
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(arg1 * (pParticle->unk24 + 1), 1.0f);
         

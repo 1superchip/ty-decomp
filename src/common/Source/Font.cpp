@@ -189,12 +189,15 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
             posY += scaleY;
             break;
     }
+
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_NONE);
+
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+
     // this gets the color to ABGR (0 - 255) from (0 - 128)
     // color is later read backwards when storing to WGPIPE
     // (color >> 0x18 & 0xFF) -> get highest byte
@@ -202,6 +205,7 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
             (((color >> 0x10 & 0xFF) * 255) >> 7) << 0x10 |
             (((color >> 8 & 0xFF) * 255) >> 7) << 8 |
             (((color & 0xFF) * 255) >> 7) | 0xFF000000; // always set alpha to 255
+    
     GXGetProjectionv((float*)&projection);
     OrthoProject();
 
@@ -223,46 +227,45 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
                 float v = charData->unkC;
                 float char10 = charData->unk10;
                 float char14 = charData->unk14;
-                GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
-                WGPIPE.f = dVar17;
-                WGPIPE.f = dVar18;
-                WGPIPE.f = 0.0f;
-                WGPIPE.c = colorData[3];
-                WGPIPE.c = colorData[2];
-                WGPIPE.c = colorData[1];
-                WGPIPE.c = colorData[0];
-                WGPIPE.f = u;
-                WGPIPE.f = v;
-                
-                WGPIPE.f = dVar17;
-                WGPIPE.f = dVar19 + 1.0f;
-                WGPIPE.f = 0.0f;
-                WGPIPE.c = colorData[3];
-                WGPIPE.c = colorData[2];
-                WGPIPE.c = colorData[1];
-                WGPIPE.c = colorData[0];
-                WGPIPE.f = u;
-                WGPIPE.f = char14;
 
-                WGPIPE.f = dVar17 + charLength;
-                WGPIPE.f = dVar18;
-                WGPIPE.f = 0.0f;
-                WGPIPE.c = colorData[3];
-                WGPIPE.c = colorData[2];
-                WGPIPE.c = colorData[1];
-                WGPIPE.c = colorData[0];
-                WGPIPE.f = char10;
-                WGPIPE.f = v;
+                GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
+
+                GXWGFifo.f32 = dVar17;
+                GXWGFifo.f32 = dVar18;
+                GXWGFifo.f32 = 0.0f;
+                GXWGFifo.u8 = colorData[3];
+                GXWGFifo.u8 = colorData[2];
+                GXWGFifo.u8 = colorData[1];
+                GXWGFifo.u8 = colorData[0];
+                GXTexCoord2f32(u, v);
                 
-                WGPIPE.f = dVar17 + charLength;
-                WGPIPE.f = dVar19 + 1.0f;
-                WGPIPE.f = 0.0f;
-                WGPIPE.c = colorData[3];
-                WGPIPE.c = colorData[2];
-                WGPIPE.c = colorData[1];
-                WGPIPE.c = colorData[0];
-                WGPIPE.f = char10;
-                WGPIPE.f = char14;
+                GXWGFifo.f32 = dVar17;
+                GXWGFifo.f32 = dVar19 + 1.0f;
+                GXWGFifo.f32 = 0.0f;
+                GXWGFifo.u8 = colorData[3];
+                GXWGFifo.u8 = colorData[2];
+                GXWGFifo.u8 = colorData[1];
+                GXWGFifo.u8 = colorData[0];
+                GXTexCoord2f32(u, char14);
+
+                GXWGFifo.f32 = dVar17 + charLength;
+                GXWGFifo.f32 = dVar18;
+                GXWGFifo.f32 = 0.0f;
+                GXWGFifo.u8 = colorData[3];
+                GXWGFifo.u8 = colorData[2];
+                GXWGFifo.u8 = colorData[1];
+                GXWGFifo.u8 = colorData[0];
+                GXTexCoord2f32(char10, v);
+                
+                GXWGFifo.f32 = dVar17 + charLength;
+                GXWGFifo.f32 = dVar19 + 1.0f;
+                GXWGFifo.f32 = 0.0f;
+                GXWGFifo.u8 = colorData[3];
+                GXWGFifo.u8 = colorData[2];
+                GXWGFifo.u8 = colorData[1];
+                GXWGFifo.u8 = colorData[0];
+                GXTexCoord2f32(char10, char14);
+
                 dVar17 += (charData->unk18 + unk8) * xScale;
             } else {
                 dVar17 += unkC * xScale;

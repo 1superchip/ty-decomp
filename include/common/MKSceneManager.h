@@ -91,7 +91,7 @@ struct SMTree {
     void Deinit(void);
     void PairUp(int, int);
     void LinkUp(void);
-    void LinkUpRow(int, int, int);
+    void LinkUpRow(int firstLeaf, int leafCount, int);
 };
 
 struct MKSceneManagerInit {

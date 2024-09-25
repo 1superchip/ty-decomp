@@ -576,18 +576,18 @@ void MKSceneManager::DrawDynamicProps(int arg1) {
     float fVar3;
     float fVar2;
     Matrix matrix;
-    MKPropDescriptor *pDrawDescs;
-    MKProp *next = dynamicPropArray[arg1].pNext;
+    MKPropDescriptor* pDrawDescs;
+    MKProp* next = dynamicPropArray[arg1].pNext;
     while (next != &dynamicPropArray[arg1]) {
         matrix.Multiply4x4(next->pLocalToWorld, &View::GetCurrent()->unk1C8);
-        MKPropDescriptor *pDesc = next->pDescriptor;
+        MKPropDescriptor* pDesc = next->pDescriptor;
         s16 rejectResult = Model_TrivialRejectTest(pDesc->pVolume, &matrix);
         float fVar19 = 0.0f;
         float distSq = 0.0f;
         pDesc = next->pDescriptor;
         if (rejectResult != 0) {
-            Vector *pLTWTrans = next->pLocalToWorld->Row3();
-            Vector *pViewTrans = View::GetCurrent()->unk48.Row3();
+            Vector* pLTWTrans = next->pLocalToWorld->Row3();
+            Vector* pViewTrans = View::GetCurrent()->unk48.Row3();
             distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + 
                 Sqr<float>(pLTWTrans->y - pViewTrans->y) + 
                 Sqr<float>(pLTWTrans->z - pViewTrans->z);
