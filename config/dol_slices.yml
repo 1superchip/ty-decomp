@@ -3595,13 +3595,13 @@ common/gc/File.cpp:
    .data: [0x802764d8, 0x802764e8]
    .bss: [0x8036eaa0, 0x8036ed60]
 
-# common/gc/Grass_GC.cpp:
-#   .text: [0x80226398, 0x80227254]
-#   .data: [0x802764e8, 0x80276990]
-#   .bss: [0x8036ed60, 0x8036f720]
-#   .sdata: [0x803f99e8, 0x803f9a00]
-#   .sbss: [0x803fb370, 0x803fb3a8]
-#   .sdata2: [0x80402458, 0x80402480]
+common/gc/Grass_GC.cpp:
+  .text: [0x80226398, 0x80227254]
+  .data: [0x802764e8, 0x80276990]
+  .bss: [0x8036ed60, 0x8036f720]
+  .sdata: [0x803f99e8, 0x803f9a00]
+  .sbss: [0x803fb370, 0x803fb3a8]
+  .sdata2: [0x80402458, 0x80402480]
 
 common/gc/Input_GC.cpp:
   .text: [0x80227254, 0x8022825c]
