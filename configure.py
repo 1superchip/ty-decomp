@@ -695,6 +695,9 @@ def make_objdiff_json(sources: List[Source]):
             {
                 'path' : src.o_path.removeprefix("$builddir/"),
                 'name' : src.src_path,
+                'metadata' : {
+                    'source_path' : src.src_path,
+                },
             }
             for src in sources
             if src.decompiled
