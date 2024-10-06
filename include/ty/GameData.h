@@ -48,9 +48,12 @@ struct Attributes {
     bool bHasRangs[12];
 };
 
+#define CHAR_BIT (8)
+#define BITS_TO_CHARS(bits)   ((((bits) - 1) / CHAR_BIT) + 1)
+
 struct SaveLevelEntry {
     u8 nmbrOfTimesEntered;
-    u8 gemArray[0x26];
+    u8 gemArray[BITS_TO_CHARS(GEMS_MAXOPALS)];
     u8 unk27;
     bool thunderEggs[Total_ThunderEggs];
     bool cogs[Total_Cogs];

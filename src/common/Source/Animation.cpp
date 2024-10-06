@@ -172,6 +172,7 @@ int GetFrame(AnimationData::Node::KeyFrame* pKeyFrame) {
 void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData::Node* pNode, float frameNmbr) {
     int start = 0;
     int end = pNode->nmbrOfKeyFrames - 1;
+    
     // binary search
     while (end - start > 1) {
         int mid = (start + end) / 2;
@@ -184,6 +185,7 @@ void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData:
             start = mid;
         }
     }
+
     AnimationData::Node::KeyFrame* pKeyFrame = &pNode->pKeyFrames[start];
     if (frameNmbr == (float)GetFrame(pKeyFrame)) {
         pFrame->position = *pKeyFrame->unk0;

@@ -207,7 +207,7 @@ void StaticFXProp::LoadDone(void) {
     end.x += unk58.x;
     end.y += unk58.y;
     end.z += unk58.z;
-    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, -0x401)
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE /* ~ID_WATER_BLUE */)
             && (GetDesc()->effectFlags & FX_WaterRipple)) {
         // if collision against water occurs and this prop has Water Ripple effects
         // set collides with water and the position of the collision

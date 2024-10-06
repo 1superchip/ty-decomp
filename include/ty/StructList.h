@@ -1,6 +1,8 @@
 #ifndef STRUCTLIST_H
 #define STRUCTLIST_H
 
+#include "types.h"
+
 template <typename T>
 struct StructList {
     T* pStart; // pBlock?

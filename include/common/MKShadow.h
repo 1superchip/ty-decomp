@@ -7,6 +7,8 @@
 #define MKSHADOW_POLY_COUNT (1024)
 #define MKSHADOW_VERTEX_COUNT (MKSHADOW_POLY_COUNT * 3)
 
+#define MKSHADOW_DETAIL_COUNT (3)
+
 struct MKShadowDetail {
     int unk0;
     int unk4;

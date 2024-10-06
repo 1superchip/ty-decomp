@@ -314,10 +314,11 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
     end.Sub(&end, &top);
     end.Scale(4.0f);
     end.Add(&top);
+    
     // Only check for ground collisions
     if (Collision_RayCollide(&top, &end, &cr, COLLISION_MODE_POLY, 0)) {
-        if (pOut && (cr.collisionFlags & 0x400)) {
-            // collision against water iirc?
+        if (pOut && (cr.collisionFlags & ID_WATER_BLUE)) {
+            // collision against water
             *pOut = true;
         }
         if (cr.normal.y > 0.5f) {

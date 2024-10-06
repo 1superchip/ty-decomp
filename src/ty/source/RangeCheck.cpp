@@ -169,89 +169,87 @@ void LODDescriptor::ParseIni(KromeIni* pIni, KromeIniLine* pLine) {
         if (pLine->pFieldName != NULL) {
             char* pString = NULL;
             if (stricmp(pLine->pFieldName, "frag") == 0) {
-                for(int i = 0; i < pLine->elementCount; i++) {
+                for (int i = 0; i < pLine->elementCount; i++) {
                     pLine->AsString(i, &pString);
                     GetEntryFromString(pString)->unk28 = 1;
                 }
-            } else {
-                if (stricmp(pLine->pFieldName, "lod") == 0) {
-                    int newLodIndex = 0;
-                    if (pLine->AsInt(0, &newLodIndex) != false) {
-                        if ((newLodIndex < 0) || (newLodIndex >= 8)) {
-                            Warn(pIni, Str_Printf("LODDescriptor::ParseIni: LOD index out of range (%d)", warning));
-                            if (newLodIndex < 0) {
-                                newLodIndex = 0;
-                            } else if (newLodIndex >= 8) {
-                                newLodIndex = 7;
-                            }
-                        }
-                        ReplicateLODData(Max<int>(0, warning), newLodIndex);
-                        warning = newLodIndex;
-                    }
-                    if (warning + 1 > invisibleZone) {
-                        invisibleZone = warning + 1;
-                    }
-                } else if (stricmp(pLine->pFieldName, "subobj") == 0) {
-                    if (warning < -1) {
-                        pIni->Warning("LODDescriptor::ParseIni: No LOD range specified for subobj line");
-                    } else {
-                        for(int i = 0; i < pLine->elementCount; i++) {
-                            pLine->AsString(i, &pString);
-                            GetEntryFromString(pString)->subObjectFlags |= 1 << warning;
+            } else if (stricmp(pLine->pFieldName, "lod") == 0) {
+                int newLodIndex = 0;
+                if (pLine->AsInt(0, &newLodIndex) != false) {
+                    if ((newLodIndex < 0) || (newLodIndex >= 8)) {
+                        Warn(pIni, Str_Printf("LODDescriptor::ParseIni: LOD index out of range (%d)", warning));
+                        if (newLodIndex < 0) {
+                            newLodIndex = 0;
+                        } else if (newLodIndex >= 8) {
+                            newLodIndex = 7;
                         }
                     }
-                } else if (stricmp(pLine->pFieldName, "effect") == 0) {
-                    if (warning < -1) {
-                        pIni->Warning("LODDescriptor::ParseIni: No LOD range specified for effect line");
-                    } else {
-                        pLine->AsString(0, &pString);
-                        if (stricmp("particles", pString) == 0) {
-                            particleFlags |= 1 << warning;
-                        } else if (stricmp("shadow", pString) == 0) {
-                            shadowFlags |= 1 << warning;
-                        } else if (stricmp("sound", pString) == 0) {
-                            soundFlags |= 1 << warning;
-                        } else if (stricmp("scissor", pString) == 0) {
-                            scissorFlags |= 1 << warning;
-                        }
-                    }
-                } else if (stricmp(pLine->pFieldName, "flags") == 0) {
-                    flags = 0;
-                    for(int i = 0; i < pLine->elementCount; i++) {
-                        pLine->AsString(i, &pString);
-                        if (stricmp("alpha", pString) == 0) {
-                            flags |= LODFlags_Alpha;
-                        } else if (stricmp("camerafade", pString) == 0) {
-                            flags |= LODFlags_CameraFade;
-                        } else if (stricmp("scissor", pString) == 0) {
-                            flags |= LODFlags_Scissor;
-                        } else if (stricmp("alphaProp", pString) == 0) {
-                            flags |= LODFlags_AlphaProp;
-                        }
-                    }
+                    ReplicateLODData(Max<int>(0, warning), newLodIndex);
+                    warning = newLodIndex;
+                }
+                if (warning + 1 > invisibleZone) {
+                    invisibleZone = warning + 1;
+                }
+            } else if (stricmp(pLine->pFieldName, "subobj") == 0) {
+                if (warning < -1) {
+                    pIni->Warning("LODDescriptor::ParseIni: No LOD range specified for subobj line");
                 } else {
-                    if (stricmp(pLine->pFieldName, "radius") == 0) {
-                        pLine->AsFloat(0, &radius);
-                    } else if (stricmp(pLine->pFieldName, "maxScissorDist") == 0) {
-                        pLine->AsFloat(0, &maxScissorDist);
-                    } else if (stricmp(pLine->pFieldName, "height") == 0) {
-                        pLine->AsFloat(0, &height);
-                    } else if (stricmp(pLine->pFieldName, "minalpha") == 0) {
-                        pLine->AsFloat(0, &minalpha);
-                    } else if (stricmp(pLine->pFieldName, "invisibleZone") == 0) {
-                        pLine->AsInt(0, &invisibleZone);
+                    for (int i = 0; i < pLine->elementCount; i++) {
+                        pLine->AsString(i, &pString);
+                        GetEntryFromString(pString)->subObjectFlags |= 1 << warning;
                     }
                 }
+            } else if (stricmp(pLine->pFieldName, "effect") == 0) {
+                if (warning < -1) {
+                    pIni->Warning("LODDescriptor::ParseIni: No LOD range specified for effect line");
+                } else {
+                    pLine->AsString(0, &pString);
+                    if (stricmp("particles", pString) == 0) {
+                        particleFlags |= 1 << warning;
+                    } else if (stricmp("shadow", pString) == 0) {
+                        shadowFlags |= 1 << warning;
+                    } else if (stricmp("sound", pString) == 0) {
+                        soundFlags |= 1 << warning;
+                    } else if (stricmp("scissor", pString) == 0) {
+                        scissorFlags |= 1 << warning;
+                    }
+                }
+            } else if (stricmp(pLine->pFieldName, "flags") == 0) {
+                flags = 0;
+                for (int i = 0; i < pLine->elementCount; i++) {
+                    pLine->AsString(i, &pString);
+                    if (stricmp("alpha", pString) == 0) {
+                        flags |= LODFlags_Alpha;
+                    } else if (stricmp("camerafade", pString) == 0) {
+                        flags |= LODFlags_CameraFade;
+                    } else if (stricmp("scissor", pString) == 0) {
+                        flags |= LODFlags_Scissor;
+                    } else if (stricmp("alphaProp", pString) == 0) {
+                        flags |= LODFlags_AlphaProp;
+                    }
+                }
+            } else if (stricmp(pLine->pFieldName, "radius") == 0) {
+                pLine->AsFloat(0, &radius);
+            } else if (stricmp(pLine->pFieldName, "maxScissorDist") == 0) {
+                pLine->AsFloat(0, &maxScissorDist);
+            } else if (stricmp(pLine->pFieldName, "height") == 0) {
+                pLine->AsFloat(0, &height);
+            } else if (stricmp(pLine->pFieldName, "minalpha") == 0) {
+                pLine->AsFloat(0, &minalpha);
+            } else if (stricmp(pLine->pFieldName, "invisibleZone") == 0) {
+                pLine->AsInt(0, &invisibleZone);
             }
         }
         pLine = pIni->GetNextLine();
     }
+
     ReplicateLODData(Max<int>(0, warning), 8);
     invisibleZone = 8;
 }
 
 LODEntry* LODDescriptor::GetEntryFromString(char* name) {
     LODEntry* pFoundEntry = NULL;
+
     if (pEntries == NULL) {
         pEntries = LODEntry_GetNextEntryFromPool();
         nmbrOfEntries = 1;
@@ -264,12 +262,14 @@ LODEntry* LODDescriptor::GetEntryFromString(char* name) {
                 break;
             }
         }
+        
         if (pFoundEntry == NULL) {
             pFoundEntry = LODEntry_GetNextEntryFromPool();
             strncpy(pFoundEntry->name, name, sizeof(pFoundEntry->name));
             nmbrOfEntries++;
         }
     }
+
     return pFoundEntry;
 }
 
@@ -280,13 +280,13 @@ void LODManager::Init(Model* pModel, int arg1, LODDescriptor* d) {
     subobjectEnableFlags = arg1;
     pDescriptor->ResolveSubObjects(pModel);
     
-    for(i = 0; i < pModel->GetNmbrOfSubObjects(); i++) {
+    for (i = 0; i < pModel->GetNmbrOfSubObjects(); i++) {
         if (strnicmp((char const*)pModel->GetSubObjectName(i), "f_", 2) == 0) {
             pModel->EnableSubObject(i, 0);
         }
     }
 
-    for(i = 0; i < pDescriptor->nmbrOfEntries; i++) {
+    for (i = 0; i < pDescriptor->nmbrOfEntries; i++) {
         pModel->EnableSubObject(
             pDescriptor->pEntries[i].subObjectIndex, 
             pDescriptor->pEntries[i].CheckFlags(1 << subobjectEnableFlags)

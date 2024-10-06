@@ -43,9 +43,10 @@ Vector* TempAlloc(int size) {
 
 void Platform_LoadResources(KromeIni* pIni) {
     pCurrMem = tempMem = (Vector*)Heap_MemAlloc(0x1000);
-PlatformDesc defaultPlatformDesc;
-defaultPlatformDesc.Init(&platformModuleInfo, "", "", GOID_Platform, 1);
-LoadDescriptors<PlatformDesc>(pIni, "Platforms", &defaultPlatformDesc);
+    
+    PlatformDesc defaultPlatformDesc;
+    defaultPlatformDesc.Init(&platformModuleInfo, "", "", GOID_Platform, 1);
+    LoadDescriptors<PlatformDesc>(pIni, "Platforms", &defaultPlatformDesc);
 }
 
 void PlatformDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {

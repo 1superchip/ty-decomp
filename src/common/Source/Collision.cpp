@@ -25,7 +25,9 @@ static int Collision_TileHeight = 0;
 static float Collision_DynGridTileSizeX = 0;
 static float Collision_DynGridTileSizeZ = 0;
 
-static CollisionNode dynGrid[1024];
+#define NUM_DYNGRID_ENTRIES (1024)
+
+static CollisionNode dynGrid[NUM_DYNGRID_ENTRIES];
 
 #define EPSILON 1e-05f
 
@@ -884,7 +886,7 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
     
     Collision_DynGridTileSizeZ = (height / 32.0f) + 1.0f;
     
-    for(int i = 0; i < 1024; i++)
+    for(int i = 0; i < NUM_DYNGRID_ENTRIES; i++)
     {
         dynGrid[i].PTR_0x8 = NULL;
         dynGrid[i].pNext = &dynGrid[i];

@@ -8,6 +8,7 @@
 #include "common/Model.h"
 
 #define NUM_TERRAIN_MODELS (12)
+// #define MAX_TERRAIN_LAYERS (12)
 
 #define MKPROP_TypeMask 3
 #define MKPROP_Static 0

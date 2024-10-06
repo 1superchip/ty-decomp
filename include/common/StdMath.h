@@ -72,10 +72,18 @@ extern inline float sqrtf(float x)
 	}
 	return x;
 }
-
+/*
+// unclamped
+public static float Remap(this float aValue, float aIn1, float aIn2, float aOut1, float aOut2)
+{
+	float t = (aValue - aIn1) / (aIn2 - aIn1);
+	return aOut1 + (aOut2 - aOut1) * t;
+}
+*/
 // Smoothing function?
-inline float AdjustFloat(float param_1, float param_2, float param_3) {
-	return (param_2 - param_1) * param_3 + param_1;
+inline float AdjustFloat(float x, float param_2, float t) {
+	// Adjusts x on the range of [0, 1] to the interval of [param_2 * t, param_2 * t - t + 1] f
+	return (param_2 - x) * t + x;
 }
 
 #endif // COMMON_STDMATH

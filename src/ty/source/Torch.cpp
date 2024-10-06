@@ -46,7 +46,7 @@ void Torch::LoadDone(void) {
         };
         // Check for collisions with ground and if the collision occured against water
         if (Collision_RayCollide(&top, &bottom, &cr, COLLISION_MODE_POLY, 0) &&
-            (cr.collisionFlags & 0x400)) {
+            (cr.collisionFlags & ID_WATER_BLUE)) {
             bFoundWater = true;
             mWaterY = cr.pos.y;
             mWobbleTex.Init(7, 7);

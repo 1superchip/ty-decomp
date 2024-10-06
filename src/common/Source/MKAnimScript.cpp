@@ -67,38 +67,37 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     int animEventCount = 0;
     int animRangeCount = 0;
     int stringSize = 1;
+
     KromeIni ini;
     ini.Init(arg0);
+
     KromeIniLine* pLine = ini.GotoLine(NULL, NULL);
+
     AnimEvent* pNextEvent;
     MKAnim* pCurAnim;
+
     while (pLine != NULL) {
         if (pLine->section != NULL) {
             stringSize += strlen(pLine->section) + 1;
             badAnimCount++;
-        } else {
-            if (pLine->pFieldName != NULL) {
-                if (strcmpi(pLine->pFieldName, "mesh") == 0) {
-                    stringSize += strlen(pLine->data) + 1;
-                } else if (strcmpi(pLine->pFieldName, "skeleton") == 0) {
-                    stringSize += strlen(pLine->data) + 1;
-                } else {
-                    if (strcmpi(pLine->pFieldName, "anim") == 0) {
-                        stringSize += strlen(pLine->data) + 1;
-                        badAnimCount++;
-                    } else {
-                        if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
-                            animRangeCount++;
-                        } else if (strcmpi(pLine->pFieldName, "event") == 0) {
-                            char* pEventName = "";
-                            pLine->AsString(0, &pEventName);
-                            stringSize += strlen(pEventName) + 1;
-                            animEventCount++;
-                        }
-                    }
-                }
+        } else if (pLine->pFieldName != NULL) {
+            if (strcmpi(pLine->pFieldName, "mesh") == 0) {
+                stringSize += strlen(pLine->data) + 1;
+            } else if (strcmpi(pLine->pFieldName, "skeleton") == 0) {
+                stringSize += strlen(pLine->data) + 1;
+            } else if (strcmpi(pLine->pFieldName, "anim") == 0) {
+                stringSize += strlen(pLine->data) + 1;
+                badAnimCount++;
+            } else if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
+                animRangeCount++;
+            } else if (strcmpi(pLine->pFieldName, "event") == 0) {
+                char* pEventName = "";
+                pLine->AsString(0, &pEventName);
+                stringSize += strlen(pEventName) + 1;
+                animEventCount++;
             }
         }
+        
         pLine = ini.GetNextLine();
     }
 
@@ -110,14 +109,21 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     
     MKAnimTemplateSection* pTemplateSection = (MKAnimTemplateSection*)Heap_MemAlloc(templateSectionSize);
     pTemplate->pSection = pTemplateSection;
+
     memset((void*)pTemplate->pSection, 0, templateSectionSize);
+
     AnimRange* pRanges = (AnimRange*)&pTemplate->pSection->anims[badAnimCount]; // get AnimRange structs (they are placed after MKAnim structs)
+
     pNextEvent = (AnimEvent*)&pRanges[animRangeCount];
+
     char* pStringTable = (char*)&pNextEvent[animEventCount];
-    *(pStringTable + 1) = '\0';
-    *pStringTable = '\0';
+
+    pStringTable[0] = pStringTable[1] = '\0';
+
     pCurAnim = NULL;
+
     strcpy(pTemplate->name, arg0);
+
     pLine = GetStartLine_Fake(&ini);
     while (pLine != NULL) {
         if (pLine->section != NULL) {
@@ -126,103 +132,95 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
             pCurAnim->unk0 = AddToStringTable(pStringTable, pLine->section);
             pCurAnim->nmbrOfRanges = 0;
             pCurAnim->pAnimRanges = pRanges;
-        } else {
-            if (pLine->pFieldName != NULL) {
-                if (strcmpi(pLine->pFieldName, "mesh") == 0) {
-                    SplitLine(pLine->data);
-                    pTemplate->pSection->pMeshName = AddToStringTable(pStringTable, pLine->data);
-                } else if (strcmpi(pLine->pFieldName, "skeleton") == 0) {
-                    SplitLine2(pLine->data);
-                    pTemplate->pSection->pAnimName = AddToStringTable(pStringTable, pLine->data);
-                } else {
-                    if (strcmpi(pLine->pFieldName, "anim") == 0) {
-                        MKAnimTemplateSection* pTemplateSection = pTemplate->pSection;
-                        pCurAnim = &pTemplateSection->anims[pTemplateSection->animCount++];
-                        pCurAnim->unk0 = AddToStringTable(pStringTable, pLine->data);
-                        pCurAnim->nmbrOfRanges = 0;
-                        pCurAnim->cycleType = 0;
-                        pCurAnim->unk6 = 0;
-                        pCurAnim->unk8 = 0;
-                        pCurAnim->unkB = 0;
-                        pCurAnim->pAnimRanges = pRanges;
-                    } else {
-                        int startFrame;
-                        int endFrame;
-                        int unk2_local; // speed
-                        if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
-                            // sscanf returns the number of variables filled
-                            switch (sscanf(pLine->pFieldName, "%d-%d,%d", &startFrame, &endFrame, &unk2_local)) {
-                                case 0: // if zero elements are filled, fallthrough entire switch setting default values
-                                    startFrame = 0;
-                                    // fallthrough
-                                case 1:
-                                    endFrame = startFrame;
-                                    // fallthrough
-                                case 2:
-                                    unk2_local = 1;
-                                    break;
-                            }
-                            pRanges->startFrame = startFrame;
-                            pRanges->endFrame = endFrame;
-                            pRanges->unk4 = unk2_local; // speed
-                            pRanges->nmbrOfEvents = 0;
-                            pRanges->pEvents = pNextEvent;
-                            pRanges->unkC = 0;
-                            pRanges++;
-                            pCurAnim->nmbrOfRanges++;
-                            pCurAnim->unk6 = (pCurAnim->unk6 + endFrame) - startFrame;
-                        } else {
-                            if (strcmpi(pLine->pFieldName, "event") == 0) {
-                                char* unk0 = "";
-                                char* unk1 = "";
-                                int startEventFrame;
-                                int endEventFrame;
-                                pLine->AsString(0, &unk0);
-                                pLine->AsString(1, &unk1);
-                                // sscanf returns the number of variables filled
-                                switch (sscanf(unk1, "%d-%d", &startEventFrame, &endEventFrame)) {
-                                    case 0: // if zero elements are filled, fallthrough entire switch setting default values
-                                        startEventFrame = -1;
-                                        // fallthrough
-                                    case 1:
-                                        endEventFrame = startEventFrame;
-                                        // fallthrough
-                                    case 2:
-                                        break;
-                                }
-                                if (startEventFrame != -1) {
-                                    int i = 0;
-                                    for(; i < pCurAnim->nmbrOfRanges; i++) {
-                                        // find which animation range this event belongs to
-                                        if (pCurAnim->pAnimRanges[i].startFrame <= startEventFrame && pCurAnim->pAnimRanges[i].endFrame >= endEventFrame) {
-                                            break;
-                                        }
-                                    }
-                                    if (i < pCurAnim->nmbrOfRanges) {
-                                        // set event fields of range
-                                        pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].startEventFrame = startEventFrame;
-                                        pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].endEventFrame = endEventFrame;
-                                        pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].unk0_string = AddToStringTable(pStringTable, unk0);
-                                        pCurAnim->pAnimRanges[i].nmbrOfEvents++;
-                                        pNextEvent++;
-                                    }
-                                }
-                            } else {
-                                if (strcmpi(pLine->pFieldName, "cycle") == 0) {
-                                    char* pType = "";
-                                    pLine->AsString(0, &pType);
-                                    if (strcmpi(pType, "loop") == 0) {
-                                        pCurAnim->cycleType = CycleType_Loop;
-                                    } else if (strcmpi(pType, "rebound") == 0) {
-                                        pCurAnim->cycleType = CycleType_Rebound;
-                                    } else if (strcmpi(pType, "stop") == 0) {
-                                        pCurAnim->cycleType = CycleType_Stop;
-                                    } else {
-                                        pCurAnim->cycleType = CycleType_Stop; // Stop is default
-                                    }
-                                }
+        } else if (pLine->pFieldName != NULL) {
+            if (strcmpi(pLine->pFieldName, "mesh") == 0) {
+                SplitLine(pLine->data);
+                pTemplate->pSection->pMeshName = AddToStringTable(pStringTable, pLine->data);
+            } else if (strcmpi(pLine->pFieldName, "skeleton") == 0) {
+                SplitLine2(pLine->data);
+                pTemplate->pSection->pAnimName = AddToStringTable(pStringTable, pLine->data);
+            } else if (strcmpi(pLine->pFieldName, "anim") == 0) {
+                MKAnimTemplateSection* pTemplateSection = pTemplate->pSection;
+                pCurAnim = &pTemplateSection->anims[pTemplateSection->animCount++];
+                pCurAnim->unk0 = AddToStringTable(pStringTable, pLine->data);
+                pCurAnim->nmbrOfRanges = 0;
+                pCurAnim->cycleType = 0;
+                pCurAnim->unk6 = 0;
+                pCurAnim->unk8 = 0;
+                pCurAnim->unkB = 0;
+                pCurAnim->pAnimRanges = pRanges;
+            } else {
+                int startFrame;
+                int endFrame;
+                int unk2_local; // speed
+                if ((*pLine->pFieldName >= '0') && (*pLine->pFieldName <= '9')) {
+                    // sscanf returns the number of variables filled
+                    switch (sscanf(pLine->pFieldName, "%d-%d,%d", &startFrame, &endFrame, &unk2_local)) {
+                        case 0: // if zero elements are filled, fallthrough entire switch setting default values
+                            startFrame = 0;
+                            // fallthrough
+                        case 1:
+                            endFrame = startFrame;
+                            // fallthrough
+                        case 2:
+                            unk2_local = 1;
+                            break;
+                    }
+                    pRanges->startFrame = startFrame;
+                    pRanges->endFrame = endFrame;
+                    pRanges->unk4 = unk2_local; // speed
+                    pRanges->nmbrOfEvents = 0;
+                    pRanges->pEvents = pNextEvent;
+                    pRanges->unkC = 0;
+                    pRanges++;
+                    pCurAnim->nmbrOfRanges++;
+                    pCurAnim->unk6 = (pCurAnim->unk6 + endFrame) - startFrame;
+                } else if (strcmpi(pLine->pFieldName, "event") == 0) {
+                    char* unk0 = "";
+                    char* unk1 = "";
+                    int startEventFrame;
+                    int endEventFrame;
+                    pLine->AsString(0, &unk0);
+                    pLine->AsString(1, &unk1);
+                    // sscanf returns the number of variables filled
+                    switch (sscanf(unk1, "%d-%d", &startEventFrame, &endEventFrame)) {
+                        case 0: // if zero elements are filled, fallthrough entire switch setting default values
+                            startEventFrame = -1;
+                            // fallthrough
+                        case 1:
+                            endEventFrame = startEventFrame;
+                            // fallthrough
+                        case 2:
+                            break;
+                    }
+                    if (startEventFrame != -1) {
+                        int i = 0;
+                        for (; i < pCurAnim->nmbrOfRanges; i++) {
+                            // find which animation range this event belongs to
+                            if (pCurAnim->pAnimRanges[i].startFrame <= startEventFrame && pCurAnim->pAnimRanges[i].endFrame >= endEventFrame) {
+                                break;
                             }
                         }
+                        if (i < pCurAnim->nmbrOfRanges) {
+                            // set event fields of range
+                            pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].startEventFrame = startEventFrame;
+                            pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].endEventFrame = endEventFrame;
+                            pCurAnim->pAnimRanges[i].pEvents[pCurAnim->pAnimRanges[i].nmbrOfEvents].unk0_string = AddToStringTable(pStringTable, unk0);
+                            pCurAnim->pAnimRanges[i].nmbrOfEvents++;
+                            pNextEvent++;
+                        }
+                    }
+                } else if (strcmpi(pLine->pFieldName, "cycle") == 0) {
+                    char* pType = "";
+                    pLine->AsString(0, &pType);
+                    if (strcmpi(pType, "loop") == 0) {
+                        pCurAnim->cycleType = CycleType_Loop;
+                    } else if (strcmpi(pType, "rebound") == 0) {
+                        pCurAnim->cycleType = CycleType_Rebound;
+                    } else if (strcmpi(pType, "stop") == 0) {
+                        pCurAnim->cycleType = CycleType_Stop;
+                    } else {
+                        pCurAnim->cycleType = CycleType_Stop; // Stop is default
                     }
                 }
             }
@@ -341,7 +339,7 @@ MKAnim* MKAnimScript::GetAnim(char* pAnimName) {
     if (*pAnimName == '\0') {
         return NULL;
     }
-    for(int i = 0; i < pTemplate->pSection->animCount; i++) {
+    for (int i = 0; i < pTemplate->pSection->animCount; i++) {
         if (strcmpi(pAnimName, pTemplate->pSection->anims[i].unk0) == 0) {
             return &pTemplate->pSection->anims[i];
         }
@@ -357,7 +355,7 @@ MKAnim* MKAnimScript::GetAnim(int animNumber) {
 }
 
 bool MKAnimScript::Exists(char* pAnimName) {
-    for(int i = 0; i < pTemplate->pSection->animCount; i++) {
+    for (int i = 0; i < pTemplate->pSection->animCount; i++) {
         if (strcmpi(pAnimName, pTemplate->pSection->anims[i].unk0) == 0) {
             return true;
         }
@@ -410,44 +408,42 @@ void MKAnimScript::Animate(void) {
                     fVar5 = 1.0f;
                 }
                 unk14 = fVar5;
+            } else if (unk14 < 0.0f && unk1E != NULL) {
+                AnimRange* pRange = &currAnim->pAnimRanges[--unk1E];
+                fVar1 = (float)pRange->startFrame;
+                float fVar5;
+                if (pRange->unk4 != 0) {
+                    fVar5 = 1.0f / currAnim->pAnimRanges[0].unk4;
+                } else {
+                    fVar5 = 1.0f;
+                }
+                unk14 = fVar5;
             } else {
-                if (unk14 < 0.0f && unk1E != NULL) {
-                    AnimRange* pRange = &currAnim->pAnimRanges[--unk1E];
+                switch (pAnim->cycleType) {
+                case CycleType_Stop:
+                    unk14 = 0.0f;
+                    fVar1 = tempC;
+                    break;
+                case CycleType_Loop:
+                    unk1E = 0;
+                    AnimRange* pRange = &currAnim->pAnimRanges[0];
                     fVar1 = (float)pRange->startFrame;
+                    int unk2 = currAnim->pAnimRanges[0].unk4;
                     float fVar5;
                     if (pRange->unk4 != 0) {
-                        fVar5 = 1.0f / currAnim->pAnimRanges[0].unk4;
+                        fVar5 = 1.0f / (float)currAnim->pAnimRanges[0].unk4;
                     } else {
                         fVar5 = 1.0f;
                     }
                     unk14 = fVar5;
-                } else {
-                    switch (pAnim->cycleType) {
-                    case CycleType_Stop:
-                        unk14 = 0.0f;
-                        fVar1 = tempC;
-                        break;
-                    case CycleType_Loop:
-                        unk1E = 0;
-                        AnimRange* pRange = &currAnim->pAnimRanges[0];
-                        fVar1 = (float)pRange->startFrame;
-                        int unk2 = currAnim->pAnimRanges[0].unk4;
-                        float fVar5;
-                        if (pRange->unk4 != 0) {
-                            fVar5 = 1.0f / (float)currAnim->pAnimRanges[0].unk4;
-                        } else {
-                            fVar5 = 1.0f;
-                        }
-                        unk14 = fVar5;
+                    unk18++;
+                    break;
+                case CycleType_Rebound:
+                    unk14 = -unk14;
+                    if (unk14 > 0.0f) {
                         unk18++;
-                        break;
-                    case CycleType_Rebound:
-                        unk14 = -unk14;
-                        if (unk14 > 0.0f) {
-                            unk18++;
-                        }
-                        break;
                     }
+                    break;
                 }
             }
         }
@@ -478,8 +474,8 @@ void MKAnimScript::ApplyNode(Animation* pAnimation, int nodeIndex) {
 }
 
 char* MKAnimScript::GetEventByName(char* pName) {
-    for(int i = 0; i < pTemplate->pSection->animCount; i++) {
-        for(int j = 0; j < pTemplate->pSection->anims[i].nmbrOfRanges; j++) {
+    for (int i = 0; i < pTemplate->pSection->animCount; i++) {
+        for (int j = 0; j < pTemplate->pSection->anims[i].nmbrOfRanges; j++) {
             for (int z = 0; z < pTemplate->pSection->anims[i].pAnimRanges[j].nmbrOfEvents; z++) {
                 if (strcmpi(pName, pTemplate->pSection->anims[i].pAnimRanges[j].pEvents[z].unk0_string) == 0) {
                     return pTemplate->pSection->anims[i].pAnimRanges[j].pEvents[z].unk0_string;
@@ -495,7 +491,7 @@ char* MKAnimScript::GetEvent(int eventIdx) {
     s16 iUnkC = unkC;
     if (currAnim != NULL && iUnkC != unk1A && unk1C == 0) {
         AnimRange* pRange = &currAnim->pAnimRanges[unk1E];
-        for(int i = 0; i < pRange->nmbrOfEvents; i++) {
+        for (int i = 0; i < pRange->nmbrOfEvents; i++) {
             if (iUnkC >= pRange->pEvents[i].startEventFrame && iUnkC <= pRange->pEvents[i].endEventFrame && j++ == eventIdx) {
                 return pRange->pEvents[i].unk0_string;
             }
@@ -557,7 +553,7 @@ void MKAnimScript::SetAnimKeepingPosition(MKAnim* pMKAnim) {
     SetAnim(pMKAnim);
     if (fVar3 != 0.0f) {
         float fVar2 = fVar3 * GetLength();
-        for(int i = 0; i < currAnim->nmbrOfRanges; i++) {
+        for (int i = 0; i < currAnim->nmbrOfRanges; i++) {
             float fVar1 = currAnim->pAnimRanges[i].endFrame - currAnim->pAnimRanges[i].startFrame;
             if (fVar1 < fVar2) {
                 fVar2 -= fVar1;
@@ -594,7 +590,7 @@ float MKAnimScript::GetNormalPosition(void) {
 float MKAnimScript::GetFrameOfNormalPosition(float arg1, MKAnim* pAnim) {
     float fVar3 = (float)pAnim->unk6 * arg1;
     int index = 0;
-    for(int i = 0; i < pAnim->nmbrOfRanges; i++) {
+    for (int i = 0; i < pAnim->nmbrOfRanges; i++) {
         AnimRange* pRange = &pAnim->pAnimRanges[i];
         float fVar1 = fVar3 + (float)pRange->startFrame;
         if (fVar1 < pRange->endFrame) {
@@ -612,7 +608,7 @@ void MKAnimScript::SetAnimNormalised(MKAnim* pMKAnim, float normal) {
     if (currAnim->nmbrOfRanges == 1) {
         unkC += normal;
     } else {
-        for(int i = 0; i < currAnim->nmbrOfRanges; i++) {
+        for (int i = 0; i < currAnim->nmbrOfRanges; i++) {
             if (currAnim->pAnimRanges[i].startFrame + normal < (float)currAnim->pAnimRanges[i].endFrame) {
                 unk1E = (s8)i;
                 unkC = currAnim->pAnimRanges[i].startFrame + normal;
@@ -630,13 +626,13 @@ static inline void Template_UpdateAddress(int* arg0, int baseAddress) {
 void MKAnimScriptTemplate::UnpackTemplate(void) {
     Template_UpdateAddress((int*)&pSection->pMeshName, (int)pSection);
     Template_UpdateAddress((int*)&pSection->pAnimName, (int)pSection);
-    for(int animIndex = 0; animIndex < pSection->animCount; animIndex++) {
+    for (int animIndex = 0; animIndex < pSection->animCount; animIndex++) {
         Template_UpdateAddress((int*)&pSection->anims[animIndex].unk0, (int)pSection);
         Template_UpdateAddress((int*)&pSection->anims[animIndex].pAnimRanges, (int)pSection);
-        for(int rangeIndex = 0; rangeIndex < pSection->anims[animIndex].nmbrOfRanges; rangeIndex++) {
+        for (int rangeIndex = 0; rangeIndex < pSection->anims[animIndex].nmbrOfRanges; rangeIndex++) {
             Template_UpdateAddress((int*)&pSection->anims[animIndex].pAnimRanges[rangeIndex].pEvents, (int)pSection);
             Template_UpdateAddress((int*)&pSection->anims[animIndex].pAnimRanges[rangeIndex].unkC, (int)pSection);
-            for(int eventIndex = 0; eventIndex < pSection->anims[animIndex].pAnimRanges[rangeIndex].nmbrOfEvents; eventIndex++) {
+            for (int eventIndex = 0; eventIndex < pSection->anims[animIndex].pAnimRanges[rangeIndex].nmbrOfEvents; eventIndex++) {
                 Template_UpdateAddress((int*)&pSection->anims[animIndex].pAnimRanges[rangeIndex].pEvents[eventIndex].unk0_string, (int)pSection);
             }
         }

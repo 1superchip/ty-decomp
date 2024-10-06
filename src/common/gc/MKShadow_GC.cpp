@@ -2,7 +2,7 @@
 #include "common/System_GC.h"
 #include "common/Heap.h"
 
-static MKShadowDetail sd[3] = {
+static MKShadowDetail sd[MKSHADOW_DETAIL_COUNT] = {
     {256, 256, NULL, NULL, {}},
     {128, 128, NULL, NULL, {}},
     {64, 64, NULL, NULL, {}}
@@ -87,7 +87,7 @@ void MKShadow_InitModule(void) {
 }
 
 void MKShadow_DeinitModule(void) {
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < MKSHADOW_DETAIL_COUNT; i++) {
         sd[i].pMaterial0->Destroy();
         sd[i].pMaterial1->Destroy();
     }

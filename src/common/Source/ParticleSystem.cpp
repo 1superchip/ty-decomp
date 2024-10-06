@@ -78,35 +78,44 @@ void ParticleSystem::Destroy(float f1) {
 
 void ParticleSystem::Init(ParticleSystemType* _pType, Vector* pPos, BoundingVolume* pVolume,
         float volumeScale, int numDyn) {
+    
     mUniqueId = ParticleSystem::nextUniqueId;
     ParticleSystem::nextUniqueId++;
+    
     mpType = _pType;
     mpPos = pPos;
+    
     if (pVolume) {
         mVolume = *pVolume;
         mVolume.v1.Scale(volumeScale);
         mVolume.v2.Scale(volumeScale);
     }
+
     mNumDyn = numDyn;
+
     if (mNumDyn == 1) {
         pDynamicData = &dynamicData;
     } else {
         pDynamicData = (ParticleSystem::DynamicData*)
             Heap_MemAlloc(mNumDyn * sizeof(ParticleSystem::DynamicData));
     }
-    for(int i = 0; i < mNumDyn; i++) {
+
+    for (int i = 0; i < mNumDyn; i++) {
         pDynamicData[i].unk0 = 1.0f;
         pDynamicData[i].unk4 = 1.0f;
         pDynamicData[i].unk10 = false;
         pDynamicData[i].pMatrix = &ParticleSystem::identityMatrix;
         pDynamicData[i].unkC = 0.0f;
     }
+
     unk78 = -10.0f;
+
     if (_pType->unk2C & 2) {
         unk74 = true;
     } else {
         unk74 = false;
     }
+
     unk75 = false;
     age = 0.0f;
     unk30 = 1.0f;

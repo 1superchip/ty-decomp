@@ -300,7 +300,12 @@ struct GlobalVar {
     Material* unk788;
     float unk78C;
     Font* pGlobalFont;
-    bool unk794;
+
+    // Boolean setting for BushPig movement function
+    // If true, uses BushPig::MoveBull2
+    // Else, uses BushPig::MoveBull
+    bool bUseBushPigMovement2;
+
     // Refpoint position of sun object in level model used for lensflare (unused)
     Vector sunOrigin;
     float sunMagnitude;

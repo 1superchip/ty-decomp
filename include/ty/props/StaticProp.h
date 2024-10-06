@@ -151,5 +151,4 @@ void StaticProp_LoadResources(KromeIni* pIni);
 
 extern "C" void memset(void*, int, int);
 
-
 #endif // STATICPROP_H

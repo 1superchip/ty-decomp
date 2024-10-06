@@ -60,7 +60,7 @@ inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
     if (pFileMem == NULL) {
         line = NULL;
     } else {
-        currentLineNum = ((int)pLine + 0x14 - (int)pLines) / sizeof(KromeIniLine);
+        currentLineNum = ((int)(pLine + 1) - (int)pLines) / sizeof(KromeIniLine);
         if (currentLineNum > nmbrOfLines) {
             currentLineNum = nmbrOfLines;
         }
