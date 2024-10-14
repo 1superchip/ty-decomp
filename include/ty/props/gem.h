@@ -129,6 +129,8 @@ struct Gem : GameObject {
     bool CheckMagnetism(float);
     float GetMagneticRangeSqr(void);
     bool UpdateCollection(float dist);
+
+    void SpawnDynamic(Vector* p);
 };
 
 Gem* Gem_Add(GemType, Vector* pPos, Vector* r5);

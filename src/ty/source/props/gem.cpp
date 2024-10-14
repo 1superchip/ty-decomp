@@ -109,7 +109,7 @@ void Gem_LoadResources(KromeIni* pIni) {
     opalDesc.Load(pIni);
     objectManager.AddDescriptor(&opalDesc);
     spawnedGemList.Init(GEMS_MAXOPALS);
-    for(int i = 0; i < MAX_GEM_ELEMENTS; i++) {
+    for (int i = 0; i < MAX_GEM_ELEMENTS; i++) {
         elementInfo[i].pMaterial = Material::Create(elementInfo[i].pMaterialName);
         elementInfo[i].pParticleMaterial = Material::Create(elementInfo[i].pMaterialName1);
         elementInfo[i].pModel = Model::Create(elementInfo[i].pModelName, NULL);
@@ -487,10 +487,54 @@ void Gem::SpawnStatic(void) {
     mLerpTime = 0.0f;
 }
 
-// Gem::SpawnDynamic went unused and used the float literals 2.0f and 50.0f
-float Gem_SpawnDynamic(void) {
-    volatile float x = 2.0f;
-    return 50.0f;
+// Unused / Stripped
+void Gem::SpawnDynamic(Vector* p) {
+    pos = *p;
+    SetState((GemState)1);
+
+    Vector s;
+    s.x = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
+    s.x += -1.0f;
+    s.y = 0.0f;
+    s.z = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
+    s.z += -1.0f;
+    s.w = 0.0f;
+
+    s.Normalise();
+
+    unk94.Scale(&s, RandomFR(&gb.mRandSeed, 100.0f, 280.0f));
+    unk94.Add(p);
+
+    for (int i = 0; i < 5; i++) {
+        Vector temp;
+        CollisionResult cr;
+
+        temp.InterpolateLinear(&unk94, &pos, i * 0.2f);
+        temp.y = pos.y + 50.0f;
+
+        if (Tools_TestFloor(&temp, &cr, 300.0f, false)) {
+            unk94 = temp;
+            unk94.y = cr.pos.y + 50.0f;
+            break;
+        }
+
+        if (i == 4) {
+            unk94 = temp;
+            unk94.y = p->y + 50.0f;
+        }
+    }
+    
+    Vector spC;
+    spC.Sub(&unk94, &pos);
+    unk84[0] = RandomFR(&gb.mRandSeed, 0.5f, 1.0f);
+    float mag = spC.Magnitude();
+    unk84[0] = unk84[0] / (sqrtf(mag) * 0.5f);
+    unk84[1] = mag * 0.5f;
+    if (unk84[1] < 200.0f) {
+        unk84[1] = 200.0f;
+    }
+
+    mLerpTime = 0.0f;
 }
 
 void Gem::Idle(void) {
@@ -628,7 +672,7 @@ void Gem_ParticleSystem_Init(void) {
     }
     // Set the matrix of each DynamicData entry in the Particle System to the corresponding
     // gem matrix
-    for(int i = 0; i < Gem::totalGems; i++) {
+    for (int i = 0; i < Gem::totalGems; i++) {
         pSystem->pDynamicData[i].pMatrix = &Gem::gemPtrList[i]->unkB4;
     }
     numDynamicData = pSystem->mNumDyn;
@@ -648,10 +692,12 @@ void Gem_ParticleSystem_Update(void) {
     if (pSystem == NULL || bHideAll) {
         return;
     }
+
     counter++;
     if ((counter % 20) != 0) {
         return;
     }
+    
     switch (gemElement) {
         case ELEMENT_FIRE:
         case ELEMENT_AIR:
@@ -757,12 +803,14 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
     xDir = *pHero->pModel->matrices[0].Row0();
     xDir.y = 0.0f;
     xDir.Normalise();
+    
     Vector zDir;
     zDir = *pHero->pModel->matrices[0].Row2();
     zDir.y = 0.0f;
     zDir.Normalise();
     zDir.Scale(-5.5f);
-    for(int i = 0; i < 5; i++) {
+
+    for (int i = 0; i < 5; i++) {
         Blitter_Particle* pBlitterParticle = pickupDraw.GetNextEntry();
         GemPickupData* pPickupData = pickupData.GetNextEntry();
         if (pBlitterParticle == NULL) {
@@ -772,20 +820,23 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         pPickupData->unk0.Scale(RandomFR(&gb.mRandSeed, -1.8f, 1.8f));
         pPickupData->unk0.y = RandomFR(&gb.mRandSeed, 1.7f, 2.0f);
         pPickupData->unk0.Add(&zDir);
+
         pPickupData->unk10 = 0.5f;
+
         pBlitterParticle->pos = *pVector;
         pBlitterParticle->color.Set(1.0f, 1.0f, 1.0f, 0.8f);
         pBlitterParticle->unk20 = 12.0f;
         pBlitterParticle->angle = 0.0f;
     }
     GemModelDrawData* pModelData = modelDraw.GetNextEntry();
+
     if (pModelData) {
         pModelData->unk24 = 1.0f;
         pModelData->unk10 = false;
         pModelData->unk0 = *pVector;
         pModelData->unk0.w = 1.0f;
         pModelData->unk28 = 0.0f;
-        for(int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
+        for (int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
             pModelData->unk180_array[i][1] = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
             pModelData->unk180_array[i][0] = RandomFR(&gb.mRandSeed, 5.0f, 15.0f);
             pModelData->imgs[i].unk40.x = 1.0f;
@@ -827,10 +878,12 @@ void Gem_PickupParticle_Update(void) {
             pModelData->unk20 = (72.0f - pModelData->unk18) * 0.1f;
             pModelData->unk14 += pModelData->unk1C;
             pModelData->unk18 += pModelData->unk20;
+
             if (pModelData->unk28 < 0.1f) {
                 pModelData->unk28 += 0.002f;
             }
-            for(int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
+
+            for (int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
                 if (pGameSettings->unk5 == 1) {
                     pModelData->imgs[i].startX = (pModelData->unk14 - 11.0f) + 
                         (pModelData->unk180_array[i][0] * _table_sinf(pModelData->unk180_array[i][1])) + 60.0f;
@@ -840,6 +893,7 @@ void Gem_PickupParticle_Update(void) {
                         pModelData->unk180_array[i][0] * _table_sinf(pModelData->unk180_array[i][1]);
                     pModelData->imgs[i].endX = pModelData->imgs[i].startX + 22.0f;
                 }
+                
                 pModelData->imgs[i].startY = (pModelData->unk18 - 11.0f) + 
                     pModelData->unk180_array[i][0] * _table_cosf(pModelData->unk180_array[i][1]);
                 pModelData->imgs[i].endY = pModelData->imgs[i].startY + 22.0f;
@@ -855,8 +909,10 @@ void Gem_PickupParticle_Update(void) {
 
     Blitter_Particle* pBlitParticle = pickupDraw.GetCurrEntry();
     GemPickupData* pPickupData = pickupData.GetCurrEntry();
+
     while(pPickupData) {
         pPickupData->unk10 -= gDisplay.updateFreq;
+
         if (pPickupData->unk10 <= 0.0f) {
             pickupData.CopyEntry(pPickupData);
             pickupDraw.CopyEntry(pBlitParticle);
@@ -866,6 +922,7 @@ void Gem_PickupParticle_Update(void) {
                 pBlitParticle->color.w -= gDisplay.updateFreq * 4.0f;
             }
         }
+
         pPickupData = pickupData.GetNextEntryWithEntry(pPickupData);
         pBlitParticle = pickupDraw.GetNextEntryWithEntry(pBlitParticle);
     }
@@ -880,6 +937,7 @@ void Gem_PickupParticle_Draw(void) {
     GameCamera_Use(true);
     float f29 = View::GetCurrent()->unk2C0;
     View::GetCurrent()->unk2C0 = 30.0f;
+
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
     while(pModelData) {
         if (!pModelData->unk10) {
@@ -893,6 +951,7 @@ void Gem_PickupParticle_Draw(void) {
         }
         pModelData = modelDraw.GetNextEntryWithEntry(pModelData);
     }
+
     pModelData = modelDraw.GetCurrEntry();
     while (pModelData != NULL) {
         Vector scale = {
@@ -912,12 +971,14 @@ void Gem_PickupParticle_Draw(void) {
 
         pModelData = modelDraw.GetNextEntryWithEntry(pModelData);
     }
+
     Blitter_Particle* pBlitterParticle = pickupDraw.GetCurrEntry();
     if (pBlitterParticle) {
         View::GetCurrent()->SetLocalToWorldMatrix(NULL);
         elementInfo[gemElement].pParticleMaterial->Use();
         pBlitterParticle->Draw(pickupDraw.GetCount());
     }
+
     View::GetCurrent()->unk2C0 = f29;
 }
 
