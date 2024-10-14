@@ -91,16 +91,19 @@ void LevelData::Deinit(void) {
         pEnvCube->Destroy();
         pEnvCube = NULL;
     }
+
     if (pEnvCubeWater) {
         pEnvCubeWater->Destroy();
         pEnvCubeWater = NULL;
     }
-    for(int i = 0; i < nmbrOfLayers; i++) {
+
+    for (int i = 0; i < nmbrOfLayers; i++) {
         if (layers[i].pModel) {
             layers[i].pModel->Destroy();
         }
         layers[i].pModel = NULL;
     }
+
     nmbrOfLayers = 0;
 }
 
@@ -135,7 +138,7 @@ char* LevelData::GetID(LevelNumber levelNr) {
 extern "C" int stricmp(char*, char*);
 
 LevelNumber LevelData::GetLevelNumber(char* pName) {
-    for(int i = 0; i < 24; i++) {
+    for (int i = 0; i < 24; i++) {
         if (stricmp(pName, levelInfo[i].levelId) == 0) {
             return (LevelNumber)i;
         }
@@ -144,7 +147,7 @@ LevelNumber LevelData::GetLevelNumber(char* pName) {
 }
 
 LevelNumber LevelData::GetZoneFirstLevelNumber(ZoneNumber zoneNum) {
-    for(int i = 0; i < 24; i++) {
+    for (int i = 0; i < 24; i++) {
         if (levelInfo[i].zone == zoneNum) {
             return (LevelNumber)i;
         }

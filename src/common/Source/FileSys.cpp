@@ -322,7 +322,7 @@ void FileSys_OutputFileOrder(void) {
     int openFd;
     int bufferIndex;
     int index = 0;
-    for(; index < data.nmbrOfEntries; index++) {
+    for (; index < data.nmbrOfEntries; index++) {
         // store all entries in the buffer
         sortedEntries[index] = &data.pFileEntries[index];
     }

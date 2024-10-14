@@ -14,7 +14,7 @@ extern "C" void strcpy(char*, char*);
 /// @brief Initiates all File entries
 /// @param  None
 void File_InitModule(void) {
-    for(int i = 0; i < MAX_FILES; ++i) {
+    for (int i = 0; i < MAX_FILES; ++i) {
         memset(&gcFiles[i], 0, sizeof(FileEntry));
         gcFiles[i].streamOffset = -1;
     }
@@ -25,6 +25,8 @@ void File_InitModule(void) {
 /// @param openMode Open mode parameter
 /// @return FD of the opened file, -1 for failure to open
 int File_Open(char* filepath, int openMode) {
+    
+    // find a valid fd
     int fd = 0;
     for (; fd < MAX_FILES; fd++) {
         if (gcFiles[fd].streamOffset == -1) {
@@ -38,14 +40,12 @@ int File_Open(char* filepath, int openMode) {
 
     char buffer[512] = {};
 
-    char* pBuf = buffer;
-    strcpy(pBuf, filepath);
-    pBuf = buffer;
-    while (*pBuf != '\0') {
-        if (*pBuf == '\\') {
-            *pBuf = '/';
+    strcpy(buffer, filepath);
+    
+    for (char* it = buffer; *it != '\0'; it++) {
+        if (*it == '\\') {
+            *it = '/';
         }
-        pBuf++;
     }
 
     if (DVDOpen(buffer, &gcFiles[fd].fileInfo) == 1) {
@@ -127,7 +127,7 @@ void File_ReadCallback(long arg0, DVDFileInfo* arg1) {
 /// @param seekType Seek type
 /// @return New file offset
 int File_Seek(int fd, int offset, int seekType) {
-    switch(seekType) {
+    switch (seekType) {
         case SEEK_SET:
             gcFiles[fd].streamOffset = offset;
             break;
@@ -191,13 +191,16 @@ int File_Sync(int fd, int arg1) {
     if (gcFiles[fd].streamOffset == -1 || gcFiles[fd].callback == NULL) {
         return 0;
     }
+
     u32 startTick = OSGetTick();
+
     while (DVDGetCommandBlockStatus(&gcFiles[fd].fileInfo.cb)) {
         if (OSTicksToMilliseconds(OSGetTick() - startTick) > arg1) {
             return File_IsBusy(fd);
         }
         OSYieldThread();
     }
+
     return 0;
 }
 
@@ -207,6 +210,7 @@ bool File_IsAnyBusy(void) {
             return true;
         }
     }
+
     return false;
 }
 

@@ -17,7 +17,7 @@ void Script_LoadResources(KromeIni* pIni) {
 }
 
 bool ScriptProp::LoadLine(KromeIniLine* pLine) {
-    for(int i = 0; i < MessageCount; i++) {
+    for (int i = 0; i < MessageCount; i++) {
         if (messages[i].LoadLine(pLine, Str_Printf("Message%d", i))) {
             return true;
         }

@@ -12,7 +12,7 @@ void ByteReverse(T& start)
     char *buffer = (char*)(&start);
     int size = sizeof(T);
 
-    for(int i = 0; i < size / 2; i++) {
+    for (int i = 0; i < size / 2; i++) {
         char tmp = buffer[i];
         buffer[i] = buffer[size - i - 1];
         buffer[size - i - 1] = tmp;

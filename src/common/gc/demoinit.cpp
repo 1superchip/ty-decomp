@@ -73,8 +73,8 @@ extern "C" void DEMOInit(_GXRenderModeObj* prmodeObj) {
     GXDrawDone();
     
     char* rawCaptureData = (char*)rawCaptureTexData + 0x130;
-    for(int y = TEXDATA_STARTY; y < TEXDATA_STARTY + TEXDATA_HEIGHT; y++) {
-        for(u32 x = TEXDATA_STARTX; x < TEXDATA_STARTX + TEXDATA_WIDTH; x++) {
+    for (int y = TEXDATA_STARTY; y < TEXDATA_STARTY + TEXDATA_HEIGHT; y++) {
+        for (u32 x = TEXDATA_STARTX; x < TEXDATA_STARTX + TEXDATA_WIDTH; x++) {
             u16 pixel = rawCaptureTexData[*(u8*)((int)rawCaptureData ^ 3) ^ 1];
             u32 finalPixel = 0xFF000000 |
                 ((pixel << 19) & 0x00F80000) |

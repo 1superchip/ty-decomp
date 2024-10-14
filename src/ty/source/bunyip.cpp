@@ -285,7 +285,7 @@ void GameCamera_Shake(Vector*);
 void Bunyip::CheckEvents(void) {
     unkE4 = 5;
 
-    for(int i = 0; mAnimScript.GetEvent(i++) != NULL;) {
+    for (int i = 0; mAnimScript.GetEvent(i++) != NULL;) {
         if (mAnimEventManager.CheckUnk4Flags(1)) {
             Vector shake = {0.0f, 15.0f, 0.0f, 0.0f};
             unkE4 = 0;

@@ -23,7 +23,7 @@ static GCTHeightStruct heightTable[MAX_HEIGHT_INDEX + 1] = {
 
 float GCT_GetSafeHeight(uint collideFlags) {
     float ret = GCT_MIN_HEIGHT_DELTA;
-    for(int i = 0; i < MAX_HEIGHT_INDEX; i++) {
+    for (int i = 0; i < MAX_HEIGHT_INDEX; i++) {
         if ((heightTable[i].flags & collideFlags) && (heightTable[i].unk4 > ret)) {
             ret = heightTable[i].unk4;
         }
@@ -103,7 +103,7 @@ bool GCT_TestFloor(Vector* r3, float f1, float f2, int collisionFlags,
         bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, collisionFlags);
 }
 
-// Exact same as the stipped Vector method...
+// Exact same as the stripped Vector method...
 bool GCT_IntersectingPoint2D(Vector* param_1, Vector* param_2, Vector* param_3, Vector* param_4, Vector* pOut) {
     float x0 = param_1->x;
     float z0 = param_1->z;
@@ -305,18 +305,22 @@ bool GCT_Trigger::TestPoint(Vector* pPoint) {
 
 void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float f2) {
     mWaypoints.Load(pLoadInfo, (Tools_WayPoints::LoadMode)1);
+
     Vector spherePos = {0.0f, 0.0f, 0.0f, 0.0f};
-    for(int i = 0; i < mWaypoints.unk104; i++) {
+    for (int i = 0; i < mWaypoints.unk104; i++) {
         spherePos.Add(&mWaypoints.vecs[i]);
     }
+
     spherePos.Scale(1.0f / (float)mWaypoints.unk104);
+
     float closest = 0.0f;
-    for(int i = 0; i < mWaypoints.unk104; i++) {
+    for (int i = 0; i < mWaypoints.unk104; i++) {
         float dist = CameraTools_VectorDist(&spherePos, &mWaypoints.vecs[i]) + f1;
         if (dist > closest) {
             closest = dist;
         }
     }
+
     mPlanePoint = spherePos;
     mPlanePoint.w = closest;
     mNumPlanes = mWaypoints.unk104;
@@ -332,7 +336,7 @@ void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float
     Vector prevLT;
     Vector prevLB;
     int i;
-    for(i = 1; i < mWaypoints.unk104; i++) {
+    for (i = 1; i < mWaypoints.unk104; i++) {
         Vector* nextVec = &mWaypoints.vecs[i + 1];
         Vector* prevVec = &mWaypoints.vecs[i - 1];
         Vector* currVec = &mWaypoints.vecs[i];
@@ -350,7 +354,7 @@ void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float
         pPlane->mpNextPlane = NULL;
     }
     
-    for(i = 0; i < mNumPlanes - 2; i++) {
+    for (i = 0; i < mNumPlanes - 2; i++) {
         mpPlanes[i].mpNextPlane = &mpPlanes[i + 1];
         mpPlanes[i].unk50 = CameraTools_VectorDist(&mWaypoints.vecs[i], &mWaypoints.vecs[i + 1]);
         CameraTools_CalcVectorVector(&mWaypoints.vecs[i], &mWaypoints.vecs[i + 1], &mpPlanes[i].unk40);
@@ -389,8 +393,9 @@ void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float
         }
         mpPlanes[i].unk40.w = temp;
     }
+
     unk120 = 0.0f;
-    for(int i = 1; i < mWaypoints.unk104 - 2; i++) {
+    for (int i = 1; i < mWaypoints.unk104 - 2; i++) {
         unk120 += mpPlanes[i].unk50;
     }
 }
@@ -450,7 +455,7 @@ bool GCT_WaypointPlaneManager::IsWithinContainer(Vector* pVector, GCT_WaypointPl
 /// @return Index of the plane that was found to contain the point
 int GCT_WaypointPlaneManager::TestPoint(Vector* pPoint) {
     if (CameraTools_VectorDistSq(pPoint, &mPlanePoint) < mPlanePoint.w * mPlanePoint.w) {
-        for(int i = 1; i < mNumPlanes - 2; i++) {
+        for (int i = 1; i < mNumPlanes - 2; i++) {
             if (IsWithinContainer(pPoint, &mpPlanes[i])) {
                 return i;
             }
@@ -551,7 +556,7 @@ float GCT_WaypointPlaneManager::GetTimeAlongPath(Vector* pPoint, int r5) {
     }
     int prev = r5 - 1;
     float dist = CameraTools_VectorDist(pPoint, &mWaypoints.vecs[prev]);
-    for(int i = 1; i < prev; i++) {
+    for (int i = 1; i < prev; i++) {
         dist += mpPlanes[i].unk50;
     }
     return dist / unk120;
@@ -563,7 +568,7 @@ bool GCT_WaypointPlaneManager::GetPointAlongPath(float f1, Vector* pPoint) {
     }
     f1 = unk120 * f1;
     float f2 = 0.0f;
-    for(int i = 1; i < mWaypoints.unk104 - 2; i++) {
+    for (int i = 1; i < mWaypoints.unk104 - 2; i++) {
         float f0 = f2 + mpPlanes[i].unk50;
         if (f0 > f1) {
             float f31 = (f1 - f2) / mpPlanes[i].unk50;

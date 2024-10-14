@@ -49,11 +49,11 @@ struct QuadTriStrip {
             mTris[3].uv.y = pUVs[1].w;
         }
         if (pColors == NULL) {
-            for(i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
+            for (i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
                 mTris[i].color.Set(1.0f, 1.0f, 1.0f, 1.0f);
             }
         } else {
-            for(i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
+            for (i = 0; i < NUM_QUADTRISTRIP_TRIS; i++) {
                 mTris[i].color = pColors[i];
             }
         }

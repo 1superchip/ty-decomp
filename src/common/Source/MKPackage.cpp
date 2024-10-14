@@ -62,7 +62,7 @@ static void* PackageIntercept(char* pFilename, int* pOutLen, void* pMemoryAlloca
             strcpy(pAutoEntries[nmbrOfAutoEntries++].name, pFilename);
         }
 
-        for(int i = 0; i < nmbrOfPackageEntries; i++) {
+        for (int i = 0; i < nmbrOfPackageEntries; i++) {
             if (strcmpi(pFilename, pPackageEntries[i].pFilename) == 0) {
                 if (pPackageEntries[i].pFileData == NULL) {
                     return NULL;
@@ -108,7 +108,7 @@ static void* PackageIntercept(char* pFilename, int* pOutLen, void* pMemoryAlloca
 void AddToPackage(char* pName) {
     int i = 0;
     
-    for(i; i < nmbrOfPackageEntries; i++) {
+    for (i; i < nmbrOfPackageEntries; i++) {
         if (strcmpi(pPackageEntries[i].pFilename, pName) == 0) {
             break;
         }

@@ -164,7 +164,7 @@ Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int
     pTex->pFileData = pRawData;
     pTex->width = width;
     pTex->height = height;
-    switch(format) {
+    switch (format) {
         case 0:
             pTex->bTlut = false;
             memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));

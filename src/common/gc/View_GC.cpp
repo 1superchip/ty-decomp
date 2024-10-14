@@ -232,7 +232,8 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
         pLight = pDirectLight;
     }
     if (pLight != NULL) {
-        for(int i = 0; i < 3; i++) {
+        
+        for (int i = 0; i < 3; i++) {
             GXColor color;
             int r,g,b;
             r = 255.0f * pLight->mLightColors[i].x;
@@ -267,6 +268,7 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
                     break;
             }
         }
+
         GXColor ambColor = (GXColor){0, 0, 0, 255};
         ambColor.r = 255.0f * pLight->mAmbient.x;
         ambColor.g = 255.0f * pLight->mAmbient.y;

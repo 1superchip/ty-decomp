@@ -218,6 +218,7 @@ void Friend::Reset(void) {
     end.y -= 1000.0f;
     mFlashTimer = 0;
     bFlashSkeleton = false;
+
     if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
         mPos.y = cr.pos.y;
         pModel->colour = Tools_GroundColor(&cr);
@@ -225,6 +226,7 @@ void Friend::Reset(void) {
     } else {
         mCollisionNormal.Set(0.0f, 1.0f, 0.0f);
     }
+
     if (mFlags & FSF_Visible) {
         mCollisionInfo.Enable();
     } else {
@@ -321,14 +323,19 @@ void Friend::PostUpdate(void) {
     if (!(mFlags & FSF_Active)) {
         return;
     }
+
     pModel->matrices[0].SetRotationPYR(&mRot);
     pModel->matrices[0].SetTranslation(&mPos);
+    
     mAnimScript.Apply(pModel->GetAnimation());
+
     if (mTyDistSq < FRIEND_AUTOTARGET_RANGE_SQ && (mFlags & FSF_Visible)) {
         Vector sp8 = {mPos.x, mPos.y + (GetDesc()->mLodDesc.height / 2.0f), mPos.z};
         ty.mAutoTargetStruct.Set((TargetPriority)3, NULL, NULL, &sp8, pModel);
     }
+
     IceBlock_TestCollision(GetPos(), mLodManager.pDescriptor->radius, true, false, false);
+
     if ((mFlags & FSF_Visible) && (mFlags & FSF_Unknown8)) {
         Tools_DropShadow_Add(GetDesc()->pVolume->v2.x, &mPos, &mCollisionNormal, 1.0f);
     }

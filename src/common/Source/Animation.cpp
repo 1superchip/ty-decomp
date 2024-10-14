@@ -27,6 +27,7 @@ void Animation_DeinitModule(void) {
     while (*ppTemplates != NULL) {
         ppTemplates++;
     }
+    
     animInstances.Deinit();
     animTemplates.Deinit();
 }
@@ -59,12 +60,14 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
     strtok(animName, ".");
     AnimationTemplate** ppTemplates = animTemplates.GetPointers();
     AnimationTemplate* pAnimTemplate;
+
     while (*ppTemplates != NULL) {
         if (stricmp((*ppTemplates)->name, animName) == 0) {
             break;
         }
         ppTemplates++;
     }
+
     if (*ppTemplates != NULL) {
         pAnimTemplate = *ppTemplates;
         pAnimTemplate->referenceCount++;
@@ -79,13 +82,16 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
         pAnimTemplate->referenceCount = 1;
         animTemplates.AddEntry(pAnimTemplate);
     }
+
     int animSize = (pAnimTemplate->pAnimData->nmbrOfNodes - 1) * sizeof(Animation::FrameInstance);
     pAnim = (Animation*)Heap_MemAlloc(animSize + sizeof(Animation));
     animInstances.AddEntry(pAnim);
     pAnim->pTemplate = pAnimTemplate;
     pAnim->pMatrices = pMatrix;
+
     memset((void*)&pAnim->frames, 0, pAnimTemplate->pAnimData->nmbrOfNodes * sizeof(Animation::FrameInstance));
-    for(int i = 0; i < pAnimTemplate->pAnimData->nmbrOfNodes; i++) {
+    
+    for (int i = 0; i < pAnimTemplate->pAnimData->nmbrOfNodes; i++) {
         pAnim->frames[i].pOrigin = &pAnimTemplate->pAnimData->pNodes[i].origin;
         pAnim->frames[i].rotation.Set(0.0f, 0.0f, 0.0f, 1.0f);
         pAnim->frames[i].b0 = 0;
@@ -95,6 +101,7 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
         pAnim->frames[i].targetFrame = 0.0f;
         pAnim->frames[i].targetWeight = 0.0f;
     }
+
     pAnim->Set(0.0f);
     return pAnim;
 }

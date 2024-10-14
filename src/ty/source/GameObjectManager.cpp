@@ -39,9 +39,11 @@ void GameObjectManager::InitLevel(void) {
 
 void GameObjectManager::DeinitLevel(void) {
     GameObject* pObj;
+
     if (bLevelInitialised == false) {
         return;
     }
+
     DescriptorIterator it = Begin();
     while (it.GetPointers()) {
         it.GetPointers()->Deinit();
@@ -49,6 +51,7 @@ void GameObjectManager::DeinitLevel(void) {
     }
 
     gSceneManager.Deinit();
+
     GameObjDesc* pNextDesc = (GameObjDesc*)pDescs;
     while (pNextDesc != NULL) {
         if (pNextDesc->pModule->pData->bUpdate != false) {
@@ -61,9 +64,11 @@ void GameObjectManager::DeinitLevel(void) {
         }
         pNextDesc = pNextDesc->unk80;
     }
+
     if (pObjectMem != NULL) {
         Heap_MemFree(pObjectMem);
     }
+    
     pObjectMem = NULL;
     objectMemSize = 0;
     bLevelInitialised = false;
@@ -71,8 +76,8 @@ void GameObjectManager::DeinitLevel(void) {
 
 // would this function go in KromeIni?
 char* RemStaticPrefix(char* str) {
-    if (strnicmp(str, "static", 6) == 0) {
-        str = Str_Printf(str + 6);
+    if (strnicmp(str, "static", sizeof("static") - 1) == 0) {
+        str = Str_Printf(str + sizeof("static") - 1);
     } else {
         str = Str_Printf(str);
     }
@@ -221,7 +226,7 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
     GameObject* pClosestObj = NULL;
     float minRadius = Sqr<float>(radius) * 2.0f;
     // Loop over all GameObjects that were found
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         Vector v;
         v.Sub(pPt, objects[i]->GetPos());
         float distSq = v.MagSquared();

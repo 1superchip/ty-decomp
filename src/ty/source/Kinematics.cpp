@@ -6,16 +6,13 @@
 
 // https://decomp.me/scratch/EJZlC
 float Kin_GetInitialVelocity(float* arg0, float* arg1, float* arg2, float* arg3) {
-    float temp_f3;
     float temp;
 
     if (arg0 == NULL) {
         return *arg1 - (*arg3 * *arg2);
     }
     if (arg1 == NULL) {
-        temp_f3 = *arg2;
-        temp = 0.5f * *arg3;
-        return (*arg0 / temp_f3) - (temp * temp_f3);
+        return (*arg0 / *arg2) - ((*arg3 * 0.5f) * *arg2);
     }
     if (arg2 == NULL) {
         temp = 2.0f * *arg3;
@@ -24,23 +21,19 @@ float Kin_GetInitialVelocity(float* arg0, float* arg1, float* arg2, float* arg3)
     if (arg3 != NULL) {
         return 0.0f;
     }
-    return ((2.0f * *arg0) / *arg2) - *arg1;
+    return ((*arg0 * 2.0f) / *arg2) - *arg1;
 }
 
 float Kin_GetDiscreteDistance(float* arg0, float* arg1, float* arg2, float* arg3) {
     float temp_f2;
     float temp_f3;
-    float temp_f3_2;
-    float temp_f3_3;
     float temp_f4;
 
     if (arg0 == NULL) {
-        temp_f3_3 = *arg2;
-        return (*arg1 * temp_f3_3) - ((temp_f3_3 - 1.0f) * (0.5f * *arg3 * temp_f3_3));
+        return (*arg1 * *arg2) - ((*arg2 - 1.0f) * (0.5f * *arg3 * *arg2));
     }
     if (arg1 == NULL) {
-        temp_f3_2 = *arg2;
-        return (*arg0 * temp_f3_2) + ((1.0f + temp_f3_2) * (0.5f * *arg3 * temp_f3_2));
+        return (*arg0 * *arg2) + ((1.0f + *arg2) * (0.5f * *arg3 * *arg2));
     }
     if (arg2 == NULL) {
         temp_f4 = *arg3;

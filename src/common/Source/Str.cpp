@@ -7,7 +7,7 @@ static char buffer[STR_BUFFER_SIZE];
 char gNullStr[4] = "";
 
 bool gAssertBool;
-static int bufferIndex;
+static int bufferIndex = 0;
 
 extern "C" int strlen(char*);
 
@@ -15,8 +15,13 @@ extern "C" int strlen(char*);
 
 // Returns a pointer to the formatted string
 // fmt is the format "%s"
-// this function takes variadic args
 char* Str_Printf(char* fmt, ...) {
+    // this function can overflow the string buffer
+    // bufferIndex is set to 0 when (bufferIndex + 0x400) > STR_BUFFER_SIZE
+    // meaning that if bufferIndex <= (STR_BUFFER_SIZE - 0x400) before printing a string
+    // longer than the remaining space in the buffer (STR_BUFFER_SIZE - bufferIndex)
+    // the buffer overflows
+
     char* currStr = &buffer[bufferIndex];
     va_list args;
     
@@ -28,15 +33,18 @@ char* Str_Printf(char* fmt, ...) {
     if (bufferIndex + 0x400 > STR_BUFFER_SIZE) {
         bufferIndex = 0;
     }
+
     va_end(args);
     return currStr;
 }
 
 char* Str_CopyString(char* string, int len) {
+    // same buffer overflow as Str_Printf
+    
     char* bufString = &buffer[bufferIndex];
     int idx = 0;
     
-    while(idx < len && string[idx] != '\0') {
+    while (idx < len && string[idx] != '\0') {
         bufString[idx] = string[idx];
         idx++;
     }

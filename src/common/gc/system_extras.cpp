@@ -40,7 +40,7 @@ extern "C" int strcmpi(char* s1, char* s2) {
 }
 
 int strnicmp(const char* s1, const char* s2, int n) {
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         char s = GetLower(*s1++);
         char s_ = GetLower(*s2++);
         if (s < s_) {

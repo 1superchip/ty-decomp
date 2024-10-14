@@ -53,8 +53,9 @@ int Range_WhichZone(Vector* point, float* arg1) {
     if (arg1 != NULL) {
         *arg1 = 1.0f;
     }
+
     int zoneId = 0;
-    for(; zoneId < 8; zoneId++) {
+    for (; zoneId < 8; zoneId++) {
         float zone = gb.level.lodRanges[zoneId];
         if (dist < zone) {
             if (arg1 == NULL) {
@@ -65,6 +66,7 @@ int Range_WhichZone(Vector* point, float* arg1) {
         }
         fVar1 = zone;
     }
+
     return zoneId;
 }
 
@@ -125,7 +127,7 @@ bool LODEntry::CheckFlags(int flags) {
 }
 
 void LODDescriptor::ResolveSubObjects(Model* pModel) {
-    for(int i = 0; i < nmbrOfEntries; i++) {
+    for (int i = 0; i < nmbrOfEntries; i++) {
         pEntries[i].Init(pModel);
     }
 }

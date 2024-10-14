@@ -134,10 +134,13 @@ void CollisionObject::ResolveCollisions(Vector* pVec, Vector* pVec1, int arg3) {
     contexts[0].ResetNumValid();
     contexts[1].ResetNumValid();
     contexts[2].ResetNumValid();
+
     CollisionResult lastCr;
     CollisionResult cr;
+
     bool bHasLastCr = false;
-    for(int i = 0; i < arg3; i++) {
+
+    for (int i = 0; i < arg3; i++) {
         Vector rayNormal;
         Vector end;
         if (pVec1->MagSquared() < Sqr<float>(0.05f)) {
@@ -211,7 +214,7 @@ void CollisionObject::CalculateNewVelocity(Vector* pVec, Vector* pVec1, float f1
 bool CollisionObject::CheckCollisions(Vector* pVec, Vector* pVec1, CollisionResult* pCr) {
     if (ppColObjects) {
         // if ppColObjects isn't NULL, loop through all entries to check object collisions
-        for(int i = 0; i < colObjCount; i++) {
+        for (int i = 0; i < colObjCount; i++) {
             if (ppColObjects[i]->IsEnabled()) { // Only run the object collision on the current object, if it is enabled
                 if (CheckObjectCollision(pVec, pVec1, ppColObjects[i], pCr)) {
                     return true; // return true if an object-to-object collision occurred

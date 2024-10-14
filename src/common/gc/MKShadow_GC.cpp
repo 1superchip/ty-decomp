@@ -87,10 +87,11 @@ void MKShadow_InitModule(void) {
 }
 
 void MKShadow_DeinitModule(void) {
-    for(int i = 0; i < MKSHADOW_DETAIL_COUNT; i++) {
+    for (int i = 0; i < MKSHADOW_DETAIL_COUNT; i++) {
         sd[i].pMaterial0->Destroy();
         sd[i].pMaterial1->Destroy();
     }
+    
     Heap_MemFree((void*)pWVerts);
     Heap_MemFree((void*)pHashTable);
     Heap_MemFree((void*)pEdgeTable);

@@ -63,7 +63,7 @@ void BoomerangTrail::Draw(void) {
         f4 = 1.0f / (queue.GetUnk4() - 1.0f);
     }
 
-    for(i = 0; i < queue.GetUnk4(); i++) {
+    for (i = 0; i < queue.GetUnk4(); i++) {
         TrailNode* p = queue.Get(i);
 
         if (p == NULL) {

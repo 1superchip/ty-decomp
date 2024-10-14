@@ -44,7 +44,7 @@ void AnimatingPropDesc::Load(KromeIni* pIni) {
             } else if (stricmp(pLine->pFieldName, "soundEvents") == 0 && pLine->elementCount > 0) {
                 nmbrOfSoundEvents = pLine->elementCount;
                 pSoundEvents = (SoundEvent*)Heap_MemAlloc(nmbrOfSoundEvents * sizeof(SoundEvent));
-                for(int i = 0; i < nmbrOfSoundEvents; i++) {
+                for (int i = 0; i < nmbrOfSoundEvents; i++) {
                     pSoundEvents[i].animEventName = mAnimScript.GetEventByName(Str_Printf("SoundEvent%d", i + 1));
                     pLine->AsString(i, &pString);
                     pSoundEvents[i].soundEventIndex = SoundBank_ResolveSoundEventIndex(pString);
@@ -105,7 +105,7 @@ void AnimatingProp::Update(void) {
             int i = 0;
             char* event;
             while (event = mAnimScript.GetEvent(i)) {
-                for(int j = 0; j < GetDesc()->nmbrOfSoundEvents; j++) {
+                for (int j = 0; j < GetDesc()->nmbrOfSoundEvents; j++) {
                     if (event == GetDesc()->pSoundEvents[j].animEventName) {
                         SoundEventHelper soundEvent;
                         soundEvent.unk0 = -1;

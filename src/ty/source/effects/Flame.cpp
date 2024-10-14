@@ -25,7 +25,7 @@ void Flame_LoadResources(void) {
     Flame::type.unk48 = 0.4f;
     Flame::type.unk64 = 0.995f;
     Flame::type.updateFunc = &Flame_CustomUpdate;
-    Flame::type.unk2C |= 0x102;
+    Flame::type.unk2C |= 0x100 | 0x2;
 }
 
 /// @brief Initiates this Flame object

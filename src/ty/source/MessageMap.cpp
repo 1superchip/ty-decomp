@@ -13,7 +13,7 @@ char* MessageMap::GetStringFromId(int id) const {
 }
 
 int MessageMap::GetIdFromString(char* pString) const {
-    for(int i = 0; i < nmbrOfMessages; i++) {
+    for (int i = 0; i < nmbrOfMessages; i++) {
         if (stricmp(pString, ppMessages[i]) == 0) {
             return i + ids;
         }

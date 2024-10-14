@@ -41,7 +41,7 @@ void Translation_InitModule(void) {
     int i;
     int maxSize = 0;
     int var_r25 = 0;
-    for(i = 0; i < 8; i++) {
+    for (i = 0; i < 8; i++) {
         if (!FileSys_Exists(gLanguageInfo[i].fileName, &gLanguageInfo[i].size)) {
             gLanguageInfo[i].size = 0;
         } else {
@@ -199,7 +199,7 @@ void Translation_SetLanguage(TranslationLanguage language) {
             }
         }
     }
-    for(gLanguageDebugOption = 0; gLanguageOptionLanguages[gLanguageDebugOption] != gCurrentLanguage; 
+    for (gLanguageDebugOption = 0; gLanguageOptionLanguages[gLanguageDebugOption] != gCurrentLanguage; 
     gLanguageDebugOption++) {};
 }
 

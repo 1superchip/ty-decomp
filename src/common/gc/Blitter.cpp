@@ -183,7 +183,7 @@ void Blitter_Particle::Draw(int count) {
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         float (* pUV)[2] = defaultUV;
         if (pParticle->angle) {
             float c = _table_cosf(pParticle->angle);
@@ -271,7 +271,7 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
     View* pView = View::GetCurrent();
     Vector* viewVec = pView->unk48.Row0();
     Vector* viewVec1 = pView->unk48.Row1();
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         float dVar29, dVar28, dVar27, dVar26, dVar25, dVar24;
         dVar29 = pParticle->unk20 * (viewVec1->x - viewVec->x);
         dVar28 = pParticle->unk20 * (viewVec1->y - viewVec->y);
@@ -416,7 +416,7 @@ void Blitter_TriStrip::Draw(int count, float arg2) {
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, (u16)count);
 
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         int red = (int)(pTriStrip[i].color.x * 255.0f);
         int green = (int)(pTriStrip[i].color.y * 255.0f);
         int blue = (int)(pTriStrip[i].color.z * 255.0f);
@@ -446,7 +446,7 @@ void Blitter_TriFan::Draw2D(int count, float arg2) {
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXBegin(GX_TRIANGLEFAN, GX_VTXFMT1, (u16)count);
 
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         int red = (int)(pTriStrip[i].color.x * 255.0f);
         int green = (int)(pTriStrip[i].color.y * 255.0f);
         int blue = (int)(pTriStrip[i].color.z * 255.0f);

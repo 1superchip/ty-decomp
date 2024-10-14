@@ -241,7 +241,7 @@ void SMTree::Init(int arg1) {
     propCount = unkC + arg1;
     pNodes = (SMNode*)Heap_MemAlloc(propCount * sizeof(SMNode));
     pLastNode = &pNodes[propCount - 1];
-    memset(pNodes, 0, sizeof(SMNode) * propCount);
+    memset(pNodes, 0, propCount * sizeof(SMNode));
     return;
 }
 

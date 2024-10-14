@@ -7,6 +7,7 @@
 #include "common/Str.h"
 #include "common/System_GC.h"
 #include "common/system_extras.h"
+#include "ty/global.h"
 
 // array of pregenerated random floats
 float randomFloats[32] = { 
@@ -33,27 +34,6 @@ extern "C" void strcpy(char*, const char*);
 
 static bool bDropShadowsIsInit = false;
 static StructList<ShadowInfo> shadows;
-
-struct UnkLevelInfo {
-    Model* pModel;
-    char padding0[0x10];
-    char padding1[0x24];
-};
-
-struct GlobalVar {
-    char padding0[0x2B8];
-    int randSeed;
-    char padding1[0x44];
-    UnkLevelInfo levels[8];
-    char padding2[0x50];
-    int nmbrOfGroundModels;
-    char padding3[0xAC];
-    Vector color;
-    char padding4[0x17C];
-    Material* pShadowMat;
-};
-
-extern GlobalVar gb;
 
 extern "C" char* strstr(char*, char*);
 
@@ -87,27 +67,36 @@ void Tools_ApplyDoppler(int arg0, Vector* pVec, Vector* pVec1, Vector* pVec2, Ve
 
 Model* Tools_GetGroundLightModel(Vector* pVec, int* pSubObjectIndex, float maxDist) {
     Model* pGroundModel = NULL;
-    for(int i = 0; i < gb.nmbrOfGroundModels; i++) {
-        if (gb.levels[i].pModel && strstr(gb.levels[i].pModel->GetName(), "_alm")) {
-            pGroundModel = gb.levels[i].pModel;
+
+    for (int i = 0; i < gb.level.nmbrOfLayers; i++) {
+        if (gb.level.layers[i].pModel && strstr(gb.level.layers[i].pModel->GetName(), "_alm")) {
+            pGroundModel = gb.level.layers[i].pModel;
             pGroundModel->renderType = 7;
-            pGroundModel->colour = gb.color;
+            pGroundModel->colour = gb.level.alphaLightMapColor;
             break;
         }
     }
+
     int numSubObjects = pGroundModel->GetNmbrOfSubObjects();
     float closestDist = Sqr<float>(100000.0f);
     int groundSubObject = -1;
-    for(int subObjectIndex = 0; subObjectIndex < numSubObjects; subObjectIndex++) {
+
+    for (int subObjectIndex = 0; subObjectIndex < numSubObjects; subObjectIndex++) {
         float subObjDist = pGroundModel->GetSubObjectOrigin(subObjectIndex)->DistSq(pVec);
         if (subObjDist < closestDist) {
             closestDist = subObjDist;
             groundSubObject = subObjectIndex;
         }
     }
-    if (closestDist > maxDist * maxDist) return NULL;
+
+    if (closestDist > maxDist * maxDist) {
+        return NULL;
+    }
+    
     pGroundModel->SetAlphaLightIntensity(groundSubObject, 0.0f);
+
     *pSubObjectIndex = groundSubObject;
+
     return pGroundModel;
 }
 
@@ -116,6 +105,7 @@ bool Tools_CollideXZ(Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3,
     if (radius && !pVec->CheckSphereRadius(pVec1, radius)) {
         return false;
     }
+
     Vector sp18;
     sp18.Sub(pVec1, pVec);
     sp18.y = 0.0f;
@@ -133,6 +123,7 @@ bool Tools_CollideXZ(Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3,
         pVec2->x += tmp.x;
         pVec2->z += tmp.z;
     }
+
     if (radius) {
         Vector sp8 = sp18;
         sp8.Scale(&sp18, ((radius - len) * f3) / (f3 + f4));
@@ -141,6 +132,7 @@ bool Tools_CollideXZ(Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3,
         pVec->Sub(pVec, &sp8);
         return true;
     }
+
     return dot1 < dot0;
     // next 2 lines match PS2 build
     // if (dot1 < dot0) return true;
@@ -162,33 +154,40 @@ void Tools_StripExtension(char* pDest, const char* pSrc) {
 
 Vector Tools_GroundColor(CollisionResult* pCr) {
     Vector color;
+
     if (pCr->pModel) {
         color = pCr->color;
         color.w = 1.0f;
         return color;
     }
+
     color = pCr->color;
     color.w = 1.0f;
+
     if (!pCr->pInfo) {
         color.x += 0.2f;
         color.y += 0.2f;
         color.z += 0.2f;
     }
+
     if (color.x > 1.0f) {
         color.x = 1.0f;
     }
+
     if (color.y > 1.0f) {
         color.y = 1.0f;
     }
+
     if (color.z > 1.0f) {
         color.z = 1.0f;
     }
+
     return color;
 }
 
 float Tools_RandomGaussian(void) {
-    float angle = RandomFR(&gb.randSeed, -1.0f, 1.0f);
-    float randomy = RandomFR(&gb.randSeed, -1.0f, 1.0f);
+    float angle = RandomFR(&gb.mRandSeed, -1.0f, 1.0f);
+    float randomy = RandomFR(&gb.mRandSeed, -1.0f, 1.0f);
     float f1 = _table_cosf(angle * PI);
     if (f1 < randomy) {
         if (angle > 0.0f) {
@@ -204,11 +203,14 @@ void Tools_ApplyRotationToSubObject(Model* pModel, int subobjectIdx, Matrix* pMa
     int matrixIdx = pModel->GetSubObjectMatrixIndex(subobjectIdx);
     Matrix* pSubObjectMatrix = &pModel->pMatrices[matrixIdx];
     Vector objectOrigin = *pModel->GetSubObjectOrigin(subobjectIdx);
+
     Vector tmp;
     tmp.Scale(&objectOrigin, -1.0f);
+
     pSubObjectMatrix->SetIdentity();
     pSubObjectMatrix->Translate(&tmp);
     pSubObjectMatrix->Multiply(pMatrix);
+
     if (secondSubObject != 0) {
         int matrixIdx2 = pModel->GetSubObjectMatrixIndex(secondSubObject);
         Matrix* pSubObjectMatrix2 = &pModel->pMatrices[matrixIdx2];
@@ -216,6 +218,7 @@ void Tools_ApplyRotationToSubObject(Model* pModel, int subobjectIdx, Matrix* pMa
         pSubObjectMatrix->Multiply(pSubObjectMatrix2);
         pSubObjectMatrix->Translate(&tmp);
     }
+
     pSubObjectMatrix->Translate(&objectOrigin);
 }
 
@@ -1175,7 +1178,7 @@ void Tools_ApplyFrictionAndGravity(Vector* pVec, Vector* pVec1, Vector* pVec2, f
 // Generates a Random Radial Vector X/Z Components
 void Tools_RandomRadialVectorXZ(Vector& pOut) {
     // Get random angle in the range of 0, 2PI
-    float angle = RandomFR(&gb.randSeed, 0.0f, 2 * PI);
+    float angle = RandomFR(&gb.mRandSeed, 0.0f, 2 * PI);
     pOut.x = _table_sinf(angle);
     pOut.y = 0.0f;
     pOut.z = -_table_cosf(angle);
@@ -1183,7 +1186,7 @@ void Tools_RandomRadialVectorXZ(Vector& pOut) {
 
 Vector* Tools_RandomNormal(Vector* pOut) {
     Tools_RandomRadialVectorXZ(*pOut);
-    float randomy = RandomFR(&gb.randSeed, -1.0f, 1.0f);
+    float randomy = RandomFR(&gb.mRandSeed, -1.0f, 1.0f);
     pOut->Scale(sqrtf(1.0f - Sqr<float>(randomy)));
     // maybe this isn't meant to return a random normalized vector?
     pOut->y = randomy; // possibly should be stored before normalizing?
@@ -1269,17 +1272,17 @@ float Tools_SmoothToAngle2(float f1, float f2, float f3, float f4, float f5) {
 }
 
 Vector* Tools_RandomBox(Vector* pVector, float maxExtent) {
-    pVector->x += RandomFR(&gb.randSeed, -maxExtent, maxExtent);
-    pVector->y += RandomFR(&gb.randSeed, -maxExtent, maxExtent);
-    pVector->z += RandomFR(&gb.randSeed, -maxExtent, maxExtent);
+    pVector->x += RandomFR(&gb.mRandSeed, -maxExtent, maxExtent);
+    pVector->y += RandomFR(&gb.mRandSeed, -maxExtent, maxExtent);
+    pVector->z += RandomFR(&gb.mRandSeed, -maxExtent, maxExtent);
     return pVector;
 }
 
 // pMin is the minimum values, pMax is the maximum values
 void Tools_RandomVector(Vector* pResult, Vector* pMin, Vector* pMax) {
-    pResult->x = RandomFR(&gb.randSeed, pMin->x, pMax->x);
-    pResult->y = RandomFR(&gb.randSeed, pMin->y, pMax->y);
-    pResult->z = RandomFR(&gb.randSeed, pMin->z, pMax->z);
+    pResult->x = RandomFR(&gb.mRandSeed, pMin->x, pMax->x);
+    pResult->y = RandomFR(&gb.mRandSeed, pMin->y, pMax->y);
+    pResult->z = RandomFR(&gb.mRandSeed, pMin->z, pMax->z);
     pResult->w = 0.0f;
 }
 

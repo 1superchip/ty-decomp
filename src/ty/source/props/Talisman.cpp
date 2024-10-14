@@ -21,7 +21,7 @@ static ModuleInfo<Talisman> TalismanModule;
 
 // Loads the descriptor for each Talisman
 void Talisman_LoadResources(KromeIni* pIni) {
-    for(int i = 0; i < TALISMAN_COUNT; i++) {
+    for (int i = 0; i < TALISMAN_COUNT; i++) {
         TalismanDesc[i].Init(&TalismanModule, talismanData[i].pModelName, talismanData[i].pDescrName, 1, 1);
         TalismanDesc[i].Load(pIni);
         objectManager.AddDescriptor(&TalismanDesc[i]);
@@ -59,6 +59,7 @@ void Talisman::Reset(void) {
 void Talisman::Update(void) {
     // if Talisman isn't visible, don't update it
     if (!bCurrentVisible) return;
+    
     if ((gb.logicGameCount & 3) == 1) {
         Vector vec; // particlePos?
         Vector vec1; // vel?
