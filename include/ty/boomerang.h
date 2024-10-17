@@ -6,6 +6,7 @@
 #include "ty/LevelObjective.h"
 #include "common/PtrList.h"
 #include "ty/Spline.h"
+#include "ty/effects/Trails.h"
 
 struct BoomerangInfo {
     char* pModelName;
@@ -78,7 +79,7 @@ struct Boomerang : GameObject {
     int unkA8;
     float mag;
     float unkB0;
-    char mTrail[0x40]; // BoomerangTrail
+    BoomerangTrail mTrail;
     Model* pModelUnkF4;
     ParticleSystem* pFireSys;
 
