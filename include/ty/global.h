@@ -195,7 +195,7 @@ struct LevelData {
     Vector quarterLight;
     Vector lightDir;
     Vector halfLight;
-    float alphaLightMapColor[4];
+    Vector alphaLightMapColor;
     Vector mLights[3];
     Vector mLightColors[3];
     Vector ambientLight;

@@ -26,9 +26,9 @@ struct View {
     int unk3C;
     int unk40;
     int unk44;
-    Matrix unk48; // Camera matrix?
+    Matrix unk48; // Camera view matrix?
     Matrix unk88;
-    Matrix unkC8; // View matrix?
+    Matrix unkC8; // View matrix? InverseSimple(unk48)
     Matrix unk108;
     Matrix unk148;
     char unk188[64];

@@ -13,7 +13,7 @@ struct Vector {
     float z;
     float w;
     
-    float Magnitude();
+    float Magnitude(void);
     float Normalise(Vector*);
     void ClampMagnitude(Vector* pVector, float);
     void Cross(Vector* pVector1, Vector* pVector2);

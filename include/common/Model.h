@@ -170,6 +170,7 @@ struct Model {
     BoundingVolume* GetModelVolume(void) {
         return GetBoundingVolume(-1);
     }
+    
     char* GetName(void);
     void SetAlphaLightIntensity(int subObjectIndex, float intensity);
     void SetRenderTypeOverride(int);

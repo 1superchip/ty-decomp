@@ -1178,7 +1178,7 @@ ty/source/props/Aquarang.cpp:
 #   .sbss: [0x803fa318, 0x803fa320]
 #   .sdata2: [0x803fe760, 0x803fe790]
 
-#BunyipStone.cpp:
+# ty/source/props/BunyipStone.cpp:
 #   .text: [0x800de1f0, 0x800dec40]
 #   .ctors: [0x8023c8d0, 0x8023c8d4]
 #   .data: [0x802564c8, 0x802565c8]
@@ -2393,11 +2393,11 @@ ty/source/setup.cpp:
   .sbss: [0x803faab0, 0x803faac0]
   .sdata2: [0x804011a0, 0x80401208]
 
-# ty/source/Shadow.cpp:
-#   .text: [0x8018fc38, 0x80190c08]
-#   .bss: [0x802b5a80, 0x802b5a90]
-#   .sbss: [0x803faac0, 0x803faac8]
-#   .sdata2: [0x80401208, 0x80401228]
+ty/source/Shadow.cpp:
+  .text: [0x8018fc38, 0x80190c08]
+  .bss: [0x802b5a80, 0x802b5a90]
+  .sbss: [0x803faac0, 0x803faac8]
+  .sdata2: [0x80401208, 0x80401228]
 
 #ty/source/Shatter.cpp:
 #   .text: [0x80190c08, 0x80192c3c]
