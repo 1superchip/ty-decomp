@@ -37,19 +37,28 @@ void AquarangProp::Reset(void) {
 }
 
 void AquarangProp::Update(void) {
-    if (!bCurrVisible) return;
+    if (!bCurrVisible) {
+        return;
+    }
+
     randAngle += 0.1f;
+
     if (randAngle > (2 * PI)) {
         randAngle -= (2 * PI);
     }
+
     particle.unk20 = 60.0f + 8.0f * _table_sinf(randAngle);
+
     particle.pos = *StaticProp::GetPos();
+
     yaw += yawUpdateVal;
+
     if (yaw > (2 * PI)) {
         yaw -= (2 * PI);
     } else if (yaw > 0.0f) {
         yaw += (2 * PI);
     }
+
     pModel->matrices[0].SetRotationYaw(yaw);
 }
 
@@ -71,5 +80,6 @@ void AquarangProp::Message(MKMessage* pMsg) {
             bCurrVisible = true;
             break;
     }
+    
     GameObject::Message(pMsg);
 }

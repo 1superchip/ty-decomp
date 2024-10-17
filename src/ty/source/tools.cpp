@@ -188,7 +188,9 @@ Vector Tools_GroundColor(CollisionResult* pCr) {
 float Tools_RandomGaussian(void) {
     float angle = RandomFR(&gb.mRandSeed, -1.0f, 1.0f);
     float randomy = RandomFR(&gb.mRandSeed, -1.0f, 1.0f);
+    
     float f1 = _table_cosf(angle * PI);
+
     if (f1 < randomy) {
         if (angle > 0.0f) {
             return angle - 1.0f;
@@ -196,6 +198,7 @@ float Tools_RandomGaussian(void) {
             return angle += 1.0f;
         }
     }
+
     return angle;
 }
 
@@ -293,16 +296,19 @@ float GetFloor(Vector* pPos, float arg1, CollisionResult* pCr) {
             collideY = cr.pos.y;
         }
     }
+
     return collideY;
 }
 
 float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) {
     CollisionResult cr;
     Vector top;
-    Vector end; 
+    Vector end;
+
     if (pOut) {
         *pOut = false;
     }
+
     float f13 = pVec1->y / f1;
     if (f13 < 0.0f) {
         f13 = 0.0f;
@@ -328,6 +334,7 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
             return cr.pos.y;
         }
     }
+
     return -1e+06f;
 }
 

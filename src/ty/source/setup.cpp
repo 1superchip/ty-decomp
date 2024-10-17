@@ -143,6 +143,7 @@ LevelNumber LevelData::GetLevelNumber(char* pName) {
             return (LevelNumber)i;
         }
     }
+
     return (LevelNumber)0;
 }
 
@@ -152,6 +153,7 @@ LevelNumber LevelData::GetZoneFirstLevelNumber(ZoneNumber zoneNum) {
             return (LevelNumber)i;
         }
     }
+
     return (LevelNumber)3;
 }
 
@@ -233,9 +235,11 @@ extern TyParticleManager* particleManager;
 
 void DeinitializeLevel(void) {
     gb.mGameData.SynchroniseExitLevel();
+
     if (DDASession::bSessionStarted) {
         dda.EndSession();
     }
+
     MKRumble_Reset();
     Shadow_Deinit();
     Ty_Deinit();
@@ -284,9 +288,11 @@ void DeinitializeLevel(void) {
     FreeManuallyScrollingTexturePointers();
     gb.level.Deinit();
     GameCamera_Deinit();
+
     if (gb.unk4) {
         gb.unk4 = 0;
     }
+
     defaultParticleManager.RemoveAll();
     gb.mGameData.StopTime();
 }
@@ -303,7 +309,9 @@ void Setup_PreloadLevel(void) {
 
     // read the collision heap size of the current level from collision.ini
     ini.Init("collision.ini");
+
     KromeIniLine* pLine = ini.GotoLine(NULL, NULL);
+
     while (pLine) {
         if (pLine->pFieldName) {
             if (stricmp(pLine->pFieldName, gb.level.GetID()) == 0) {
@@ -318,6 +326,7 @@ void Setup_PreloadLevel(void) {
         }
         pLine = ini.GetNextLine();
     }
+    
     ini.Deinit();
 
     // get the world minimum and maximum from the level's lv2 file
@@ -456,6 +465,7 @@ void Setup_LoadLevel(void) {
             Model::List();
         }
     }
+    
     modelCount = modelInstances.GetCount();
 
     Ty_Init();

@@ -77,7 +77,9 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
     Vector transformedPoint;
     bool isWithin = false;
     float closest = -1e+11f;
+    
     DescriptorIterator itr = waterVolumeDesc.Begin();
+
     while (itr.GetPointers()) {
         WaterVolume *volume = (WaterVolume *)itr.GetPointers();
         // initial check to see if the point y position is less than the maximum y and
@@ -85,6 +87,7 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
         if (point->y < volume->mMaxY && point->y > volume->mMinY) {
             // applying waterVolumeMatrix to transformedPoint gets the original point
             transformedPoint.ApplyMatrix(point, &volume->mInvMtx);
+
             if (BoundingVolume_CheckPoint(&waterBoundingVolume, &transformedPoint) != false) {
                 closest = Max<float>(closest, volume->mMaxY);
                 if (arg1 != NULL) {
@@ -94,8 +97,10 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
                     return true;
                 }
             }
+
         }
         itr.UpdatePointers();
     }
+
     return isWithin;
 }

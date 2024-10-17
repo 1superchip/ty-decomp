@@ -39,10 +39,12 @@ void SoundProp::Deinit(void) {
 bool SoundProp::LoadLine(KromeIniLine* pLine) {
     Vector rot;
     char string[50];
+
     if (LoadLevel_LoadVector(pLine, "rot", &rot) != false) {
         localToWorld.SetRotationYaw(rot.y);
         return true;
     }
+
     if (LoadLevel_LoadString(pLine, "sound", string, 30, 0) != false) {
         char* pString = string;
         if (string[0] == '*') {
@@ -51,6 +53,7 @@ bool SoundProp::LoadLine(KromeIniLine* pLine) {
         unk84 = SoundBank_ResolveSoundEventIndex(pString);
         return true;
     }
+    
     return GameObject::LoadLine(pLine) ||
         LoadLevel_LoadVector(pLine, "pos", localToWorld.Row3()) || 
         LoadLevel_LoadInt(pLine, "minDelay", &minDelay) || LoadLevel_LoadInt(pLine, "maxDelay", &maxDelay)||

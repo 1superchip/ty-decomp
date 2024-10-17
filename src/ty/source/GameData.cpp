@@ -90,7 +90,7 @@ void GameData::Init(void) {
 void GameData::SynchroniseEnterLevel(void) {
     numChargeBites = 0;
     numChargeBites = gb.mNumChargeBites * 100;
-    for(int i = 0; i < Total_ThunderEggs; i++) {
+    for (int i = 0; i < Total_ThunderEggs; i++) {
         SpecialPickupStruct* pEgg = GetThunderEgg((ThunderEggType)i);
         if (pSaveData->levels[pSaveData->levelAB0].thunderEggs[i] && pEgg) {
             // Set collected thunder eggs transparent
@@ -104,7 +104,7 @@ void GameData::SynchroniseEnterLevel(void) {
         }
     }
     
-    for(int i = 0; i < Total_Cogs; i++) {
+    for (int i = 0; i < Total_Cogs; i++) {
         SpecialPickupStruct* pCog = GetGoldenCog((GoldenCogType)i);
         // if cog for index is collected and Cog pointer isn't NULL
         // Set the cog collected and place a Picnic Basket
@@ -115,7 +115,7 @@ void GameData::SynchroniseEnterLevel(void) {
         }
     }
     
-    for(int i = 0; i < Total_Bilbies; i++) {
+    for (int i = 0; i < Total_Bilbies; i++) {
         bool rescued = ((pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 2) && (GetFreeBilbyCount() == 5))
             && !pSaveData->levels[pSaveData->levelAB0].thunderEggs[1];
         if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
@@ -130,12 +130,17 @@ void GameData::SynchroniseEnterLevel(void) {
         numCollectedGems = 0;
         Hud_SetGems(numCollectedGems);
     }
+
     Crate_CheckGems();
+
     SetHasExtraHealth(pSaveData->tyAttributes.bHasExtraHealth);
+
     pSaveData->lives = (pSaveData->lives >= 5) ? pSaveData->lives : 5;
+
     if (pSaveData->levelAB4 != 0x18) {
         TyMemCard_AutoSaveGame();
     }
+
     SetHasRang((BoomerangType)4, false);
     SoundBank_SetVolume(1.0f, 3);
     Tools_EnableWideScreen(GameCamera_View(), (pGameSettings->unk5 == 1) ? true : false);
@@ -202,11 +207,13 @@ void GameData::SetBothRangs(bool bHasBothRangs) {
 
 void GameData::SetHasExtraHealth(bool bExtraHealth) {
     pSaveData->tyAttributes.bHasExtraHealth = bExtraHealth;
+
     if (bExtraHealth) {
         ty.health.SetNumSymbols(2);
     } else {
         ty.health.SetNumSymbols(1);
     }
+
     bIsDirty = true;
 }
 
@@ -242,11 +249,14 @@ void GameData::CollectGem(bool arg0) {
     if (!arg0) {
         numCollectedGems++;
     }
+
     numChargeBites++;
+
     if (numCollectedGems == GEMS_MAXOPALS) {
         // play a sound when all opals have been collected
         SoundBank_Play(0x1bb, NULL, 0);
     }
+
     Hud_ShowOpals();
 }
 
@@ -255,13 +265,15 @@ void GameData::SetCollectedGems(void) {
     int gemCount = 0;
     u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
     int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
-    for(int i = 0; i < totalGems; i++) {
+
+    for (int i = 0; i < totalGems; i++) {
         if (CheckArrayByBitIndex(pGems, i) && Gem::gemPtrList[i]) {
             Gem::gemPtrList[i]->mCollected = true;
             Gem::gemPtrList[i]->SetState((GemState)5);
             gemCount++;
         }
     }
+
     numCollectedGems = gemCount;
     Hud_SetGems(numCollectedGems);
 }
@@ -269,14 +281,18 @@ void GameData::SetCollectedGems(void) {
 // Synchronizes the savedata for already collected gems in the current level
 void GameData::GetCollectedGems(void) {
     u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
+
     memset(pGems, 0, sizeof(pSaveData->levels[pSaveData->levelAB0].gemArray));
+
     int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
-    for(int i = 0; i < totalGems; i++) {
+
+    for (int i = 0; i < totalGems; i++) {
         Gem* pGem = Gem::gemPtrList[i];
         if (pGem->mState == 5 || pGem->mState == 4 || pGem->mCollected) {
             pGems[i >> 3] |= 1 << (i & 7);
         }
     }
+
 }
 
 int GameData::GetGameCompletePercent(void) {
@@ -290,11 +306,13 @@ int GameData::GetGameCompletePercent(void) {
 /// @return Total cogs collected in the level of the level parameter
 int GameData::GetGoldenCogCount(LevelNumber level) {
     int count = 0;
-    for(int i = 0; i < Total_Cogs; i++) {
+
+    for (int i = 0; i < Total_Cogs; i++) {
         if (pSaveData->levels[level].cogs[i]) {
             count++;
         }
     }
+
     return count;
 }
 
@@ -303,23 +321,27 @@ int GameData::GetGoldenCogCount(LevelNumber level) {
 /// @return Total cogs collected in all levels
 int GameData::GetTotalGoldenCogCount(void) {
     int count = 0;
+
     for (int i = 0; i < Total_Levels; i++) {
-        for(int j = 0; j < Total_Cogs; j++) {
+        for (int j = 0; j < Total_Cogs; j++) {
             if (pSaveData->levels[i].cogs[j]) {
                 count++;
             }
         }
     }
+
     return count;
 }
 
 int GameData::GetTotalTalismanCount(void) {
     int count = 0;
-    for(int i = 0; i < Total_Talismans; i++) {
+
+    for (int i = 0; i < Total_Talismans; i++) {
         if (pSaveData->bHasTalismans[i] != false) {
             count++;
         }
     }
+
     return count;
 }
 
@@ -327,35 +349,42 @@ int GameData::GetCollectedGemCount(LevelNumber level) {
     if (level == pSaveData->levelAB0) {
         return numCollectedGems;
     }
+
     int count = 0;
     u8* gemArray = pSaveData->levels[level].gemArray;
-    for(int i = 0; i < GEMS_MAXOPALS; i++) {
+
+    for (int i = 0; i < GEMS_MAXOPALS; i++) {
         if (CheckArrayByBitIndex(gemArray, i) != false) {
             count++;
         }
     }
+
     return count;
 }
 
 int GameData::GetFreeBilbyCount(void) {
     int count = 0;
-    for(int i = 0; i < Total_Bilbies; i++) {
+
+    for (int i = 0; i < Total_Bilbies; i++) {
         if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
             count++;
         }
     }
+
     return count++;
 }
 
 int GameData::GetTotalFreeBilbyCount(void) {
     int count = 0;
+
     for (u32 i = 0; i < Total_Levels; i++) {
-        for(int j = 0; j < Total_Bilbies; j++) {
+        for (int j = 0; j < Total_Bilbies; j++) {
             if (IsBilbyFree(i, j)) {
                 count++;
             }
         }
     }
+
     return count;
 }
 
@@ -375,11 +404,13 @@ int GameData::GetHasGalleryImage(int nIndex) {
 int GameData::GetTotalGalleryCount(void) {
     int count = 0;
     u8* galleryArray = pSaveData->galleryImages;
-    for(int i = 0; i < TOTAL_GALLERYIMAGES; i++) {
+
+    for (int i = 0; i < TOTAL_GALLERYIMAGES; i++) {
         if (CheckArrayByBitIndex(galleryArray, i)) {
             count++;
         }
     }
+
     return count;
 }
 
@@ -395,15 +426,17 @@ void GameData::CollectCog(GoldenCogType cogType) {
 /// @return Number of thundereggs collected
 int GameData::GetThunderEggCount(ElementType type) {
     int count = 0;
-    for(int i = 0; i < Total_Levels; i++) {
+
+    for (int i = 0; i < Total_Levels; i++) {
         if (gb.level.GetElementType((LevelNumber)i) == type) {
-            for(int j = 0; j < Total_ThunderEggs; j++) {
+            for (int j = 0; j < Total_ThunderEggs; j++) {
                 if (pSaveData->levels[i].thunderEggs[j]) {
                     count++;
                 }
             }
         }
     }
+
     return count;
 }
 
@@ -412,13 +445,15 @@ int GameData::GetThunderEggCount(ElementType type) {
 /// @return Number of thundereggs collected
 int GameData::GetTotalThunderEggCount(void) {
     int count = 0;
-    for(int i = 0; i < Total_Levels; i++) {
-        for(int j = 0; j < Total_ThunderEggs; j++) {
+
+    for (int i = 0; i < Total_Levels; i++) {
+        for (int j = 0; j < Total_ThunderEggs; j++) {
             if (pSaveData->levels[i].thunderEggs[j]) {
                 count++;
             }
         }
     }
+    
     return count;
 }
 
@@ -457,18 +492,22 @@ int GameData::GetTimeAttackLastTime(LevelNumber level) {
 
 void GameData::RescueBilby(BilbyType type) {
     pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 1;
+
     if (GetFreeBilbyCount() == 5) {
         pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 2;
     }
+
     Hud_ShowBilbies();
     bIsDirty = true;
 }
 
 void GameData::AddLife(void) {
     pSaveData->lives++;
+
     if (pSaveData->lives > 99) {
         pSaveData->lives = 99;
     }
+
     bIsDirty = true;
     Hud_ShowLives();
     bIsDirty = true;
@@ -482,15 +521,18 @@ void GameData::LoseLife(void) {
         }
         bIsDirty = true;
     }
+
     Hud_ShowLives();
     bIsDirty = true;
 }
 
 void GameData::RestoreLives(void) {
     pSaveData->lives = 5;
+
     if (pSaveData->lives > 99) {
         pSaveData->lives = 99;
     }
+
     bIsDirty = true;
 }
 
@@ -505,12 +547,14 @@ void GameData::StartTime(void) {
 void GameData::StopTime(void) {
     TimerInfo timeDiff;
     TimerInfo currTime;
+
     if (time.year != -1) {
         Timer_GetSystemTime(&currTime);
         Timer_GetDifference(&timeDiff, &time, &currTime);
         pSaveData->totalPlayTime += Timer_GetDHMSInSeconds(&timeDiff);
     }
 }
+
 int GameData::GetTotalTime(void) {
     TimerInfo timeDiff;
     TimerInfo currTime;
@@ -520,20 +564,22 @@ int GameData::GetTotalTime(void) {
         pSaveData->totalPlayTime += Timer_GetDHMSInSeconds(&timeDiff);
         time = currTime;
     }
+
     return pSaveData->totalPlayTime;
 }
 
 bool GameData::GetHasBeenTriggered(uint uniqueID) {
-    for(int i = 0; i < Total_Triggers; i++) {
+    for (int i = 0; i < Total_Triggers; i++) {
         if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == uniqueID) {
             return true;
         }
     }
+
     return false;
 }
 
 void GameData::SetHasBeenTriggered(uint uniqueID) {
-    for(int i = 0; i < Total_Triggers; i++) {
+    for (int i = 0; i < Total_Triggers; i++) {
         if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == 0) {
             pSaveData->levels[pSaveData->levelAB0].triggers[i] = uniqueID;
             return;

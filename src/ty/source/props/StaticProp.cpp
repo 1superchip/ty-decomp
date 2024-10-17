@@ -113,13 +113,14 @@ void StaticPropDescriptor::Load(KromeIni* pIni) {
 
 void StaticProp::Init(GameObjDesc* pDesc) {
     GameObject::Init(pDesc);
+
     pModel = Model::Create(pDesc->modelName, NULL);
     pModel->renderType = 3;
-    int collisionFlags = GetDesc()->collisionInfoFlags;
-    collisionInfo.bEnabled = true;
-    collisionInfo.flags = collisionFlags;
-    collisionInfo.pProp = this;
+
+    collisionInfo.Init(true, GetDesc()->collisionInfoFlags, this);
+
     lodManager.Init(pModel, 0, &GetDesc()->lodDesc);
+
     collide = true;
 }
 
@@ -136,21 +137,27 @@ bool StaticProp::LoadLine(KromeIniLine* pLine) {
 
 void StaticProp::LoadDone(void) {
     CollisionResult cr;
+
     pModel->matrices[0].SetTranslation(GetPos());
     pModel->matrices[0].SetRotationPYR(&loadInfo.defaultRot);
     pModel->matrices[0].Scale(&loadInfo.defaultScale);
     pModel->SetLocalToWorldDirty();
+
     if (pModel->pAnimation != NULL) {
         pModel->pAnimation->CalculateMatrices();
     }
+
     Vector start = {0.0f, 300.0f, 0.0f, 0.0f};
     start.Add(&start, GetPos());
+
     Vector end = {0.0f, -12300.0f, 0.0f, 0.0f};
     end.Add(&end, GetPos());
+
     if (GetDesc()->bUseGroundColor &&
         Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0x400)) {
         pModel->colour = Tools_GroundColor(&cr);
     }
+
     if (collide != false) {
         int index = -1;
         if (GetDesc()->bDynamic) {
@@ -168,8 +175,10 @@ void StaticProp::LoadDone(void) {
             }
         }
     }
+
     loadInfo.defaultRot.SetZero();
     loadInfo.defaultScale.Set(1.0f, 1.0f, 1.0f, 1.0f);
+
     objectManager.AddObject(this, pModel);
 }
 
@@ -203,10 +212,12 @@ void StaticFXProp::LoadDone(void) {
     start.x += unk58.x;
     start.y += unk58.y;
     start.z += unk58.z;
+
     Vector end = {0.0f, -300.0f, 0.0f, 0.0f};
     end.x += unk58.x;
     end.y += unk58.y;
     end.z += unk58.z;
+
     if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE /* ~ID_WATER_BLUE */)
             && (GetDesc()->effectFlags & FX_WaterRipple)) {
         // if collision against water occurs and this prop has Water Ripple effects
@@ -303,6 +314,7 @@ void StaticFXProp::UpdateWaterRipple(void) {
 
 void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
+
     if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > (uint)unk9C)) {
         Vector temp = unk58;
         Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
@@ -317,6 +329,7 @@ void StaticFXProp::UpdateDropLeaf(void) {
 void StaticFXProp::UpdateRotate(void) {
     autoRotation.Add(&GetDesc()->autoRotate);
     autoRotation.NormaliseRot();
+
     if (rotateSubObjIndex < 0) {
         Vector modelRot = mDefaultRot;
         modelRot.Add(&autoRotation);
@@ -350,9 +363,10 @@ void StaticFXProp::Message(MKMessage* pMsg) {
 
 void StaticFXProp::Show(bool bShow) {
     bVisible = bShow;
-    if (bVisible != false) {
-        collisionInfo.bEnabled = true;
+    
+    if (bVisible) {
+        collisionInfo.Enable();
     } else {
-        collisionInfo.bEnabled = false;
+        collisionInfo.Disable();
     }
 }

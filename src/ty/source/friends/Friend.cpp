@@ -207,15 +207,22 @@ void Friend::Deinit(void) {
 /// @param  None
 void Friend::Reset(void) {
     mAnimScript.Init(&GetDesc()->mAnimScript);
+
     mFlags = mDefFlags;
+    
     unk100 = -1;
+
     pModel->matrices[0].SetRotationPYR(&mRot);
     pModel->matrices[0].SetTranslation(&mPos);
+
     CollisionResult cr;
+
     Vector start = mPos;
     start.y += 10.0f;
+
     Vector end = mPos;
     end.y -= 1000.0f;
+
     mFlashTimer = 0;
     bFlashSkeleton = false;
 
@@ -290,10 +297,13 @@ struct Ty {
 extern Ty ty;
 
 void Friend::PreUpdate(void) {
+
     if (!(mFlags & FSF_Active)) {
         return;
     }
+
     mAnimScript.Animate();
+    
     mTyDistSq = mPos.DistSq(&ty.mPos);
     Vector tyDir;
     Vector dot = {0.0f, 1.0f, 0.0f, 0.0f};

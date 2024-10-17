@@ -187,27 +187,34 @@ u8* GameObjDesc::SetUpMem(u8* pMem) {
 
 void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
     GameObject* pObj;
+
     if (pModule->pData->bUpdate == false) {
         pModule->pData->InitModule();
         pModule->pData->bUpdate = true;
     }
+
     pLine = pIni->GetLineWithLine(pLine);
     while (pLine != NULL && pLine->section == NULL) {
         while (pLine->comment == NULL && pLine->pFieldName == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
+
         pObj = CreateObject();
         pObj->Init(this);
+
         while (pLine != NULL && (pLine->pFieldName || pLine->comment)) {
             if (pLine->pFieldName != NULL) {
                 pObj->LoadLine(pLine);
             }
             pLine = pIni->GetLineWithLine(pLine);
         }
+
         pObj->LoadDone();
+
         while (pLine != NULL && pLine->pFieldName == NULL && pLine->section == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
+        
     }
 }
 
@@ -216,6 +223,7 @@ GameObject* GameObjDesc::CreateObject(void) {
         // if the descriptor's module has a custom allocation function use it
         return (GameObject*)ConstructObject(pModule->pData->pAllocate());
     }
+    
     void* mem = pCurrInst;
     pCurrInst = pCurrInst + pModule->pData->instanceSize;
     return (GameObject*)ConstructObject(mem);

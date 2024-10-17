@@ -24,3 +24,13 @@ symbol_aligns:
   # 0x802c38e0: 32 # ? __AXStudio from AXSPB.c
   # 0x8026ce20: 32 # ? __AXCompressorTable from AXComp.c
   0x8038dde0: 32 # effectData from ModelGC.cpp
+  # 0x80276A80: 32 # rawCaptureTexData from Material_GC.cpp
+  # 0x80298020: 32 # XFontBitmap
+  # 0x802DBC20: 32 # __THPIDCTWorkspace
+  # 0x8036F760: 32 # materialIni from Material_GC.cpp
+  # 0x8036F7A0: 16 # restorationTexObj
+  # 0x803F33C0: 32 # lo$433 from View_GC.cpp
+  # 0x803F3420: 32 # ortho_old from View_GC.cpp
+  # 0x803FAFD8: 8 # bound_32KHz
+  # 0x803FB4E0: 8 # timePadLast$863 from System_GC.cpp
+  # 0x803FB4F0: 8 # timeDiscClosed$866 from System_GC.cpp

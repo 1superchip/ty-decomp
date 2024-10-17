@@ -6,9 +6,14 @@ forced_types:
   0x801fc300: FUNCTION # TRKExceptionHandler
   0x801fc460: FUNCTION # TRKInterruptHandlerEnableInterrupts
 
+# these should probably be aligned too
 sdata_sizes:
   - [0x803fae48, 8]
+  # - [0x803FAD48, 8]
   - [0x803fadc0, 8]
+  # - [0x803FAE80, 8]
+  # - [0x803FAEB0, 8]
+  # - [0x803FAF30, 8]
   - [0x803fb4e0, 8]
   - [0x803fb4f0, 8]
   - [0x803ff4b0, 8]

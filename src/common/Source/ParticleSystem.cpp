@@ -273,7 +273,7 @@ void ParticleSystem::Draw(void) {
     unk75 = true;
     bool r30 = false;
     
-    for(int i = 0; i < mNumDyn; i++) {
+    for (int i = 0; i < mNumDyn; i++) {
         if (IsVisible(&pDynamicData[i])) {
             r30 = true;
         }
@@ -289,7 +289,7 @@ void ParticleSystem::Draw(void) {
     
     if (!unk75 && (bDrawBoundingBox || bDrawPos)) {
         if (bDrawBoundingBox) {
-            for(int i = 0; i < mNumDyn; i++) {
+            for (int i = 0; i < mNumDyn; i++) {
                 if (pDynamicData[i].unkC > 0.0f && !pDynamicData[i].unk10) {
                     BoundingVolume localVol = mVolume;
                     localVol.v1.Add(mpPos);
@@ -305,7 +305,7 @@ void ParticleSystem::Draw(void) {
         }
 
         if (bDrawPos) {
-            for(int i = 0; i < mNumDyn; i++) {
+            for (int i = 0; i < mNumDyn; i++) {
                 if (pDynamicData[i].unkC > 0.0f && !pDynamicData[i].unk10) {
                     Vector dataPos = *mpPos;
                     /// @bug Shouldn't this be comparing the indexed struct's matrix?
@@ -324,7 +324,7 @@ void ParticleSystem::Draw(void) {
 // They have to be weak and it is probably easier to declare them as inline
 
 inline void ParticleSystem::DrawCPU(void) {
-    for(int i = 0; i < mNumDyn; i++) {
+    for (int i = 0; i < mNumDyn; i++) {
         if (!pDynamicData[i].unk10 && !(pDynamicData[i].unkC <= 0.0f) && 
             pDynamicData[i].unk0 != 0.0f) {
             ParticleChunk* pCurrChunk = mpChunks;
@@ -631,11 +631,11 @@ void SimpleParticleSystemType::SetEnvelope(int numEnvelopes, ParticleEnvelope* p
 }
 
 void SimpleParticleSystemType::CalculateEnvelope(void) {
-    for(int i = 0; i < mNumEnvelopes; i++) {
+    for (int i = 0; i < mNumEnvelopes; i++) {
         mpEnvelopes[i].unkC = mpEnvelopes[i].age * unk1C;
     }
     int max = mNumEnvelopes - 1;
-    for(int i = 0; i < max; i++) {
+    for (int i = 0; i < max; i++) {
         int nextEnvIndex = i + 1;
         mpEnvelopes[i].deltaAge = mpEnvelopes[nextEnvIndex].unkC - mpEnvelopes[i].unkC;
         mpEnvelopes[i].unk14 = mpEnvelopes[nextEnvIndex].unk4 - mpEnvelopes[i].unk4;

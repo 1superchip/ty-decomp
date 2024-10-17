@@ -20,6 +20,7 @@ void AnimatingPropDesc::Init(ModuleInfoBase* pModuleBase, char* param_2, char* p
     soundEventIndex = -1;
     nmbrOfSoundEvents = 0;
     pSoundEvents = NULL;
+
     if (stricmp(param_2, "") != 0) {
         mAnimScript.Init(modelName);
         mAnimDesc.Init(pAnimEntry, animEntryCount, &mAnimScript);
@@ -30,6 +31,7 @@ void AnimatingPropDesc::Init(ModuleInfoBase* pModuleBase, char* param_2, char* p
         mAnimEventDesc.pEvents = pAnimEvent;
         mAnimEventDesc.mCount = animEventCount;
     }
+    
     unk10C = param_10;
 }
 
@@ -94,9 +96,11 @@ void AnimatingProp::Reset(void) {
 
 void AnimatingProp::Update(void) {
     bool flagsCheck = gameObjFlags.CheckFlags(GameObjFlags_Enabled) && gameObjFlags.CheckFlags(GameObjFlags_Visible);
+
     if (GetDesc()->soundEventIndex > -1) {
         soundHelper.Update(GetDesc()->soundEventIndex, false, flagsCheck && mAnimScript.currAnim, this, NULL, -1.0f, 0);
     }
+
     if (flagsCheck) {
         mAnimScript.Animate();
         mAnimScript.Apply(pModel->pAnimation);

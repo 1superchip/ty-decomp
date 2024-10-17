@@ -67,9 +67,11 @@ void Projectile::Message(MKMessage* pMsg) {
 
 void Projectile::Update(void) {
     unk6C++;
+    
     if (mState != (ProjectileState)2) {
         return;
     }
+
     if (unk70 > 1 && gb.pDialogPlayer == NULL) {
         unk70--;
         unk5C = *GetPos();
@@ -218,6 +220,7 @@ void Projectile::SetState(ProjectileState newState) {
     } else if (mState != 0 && newState == 0) {
         objectManager.RemoveObject(this);
     }
+
     mState = newState;
 }
 

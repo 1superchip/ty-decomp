@@ -26,7 +26,7 @@ void GameObjectManager::InitLevel(void) {
     if (bLevelInitialised == false) {
         GameObjDesc* descriptor = pDescs;
         while (descriptor != NULL) {
-            descriptor->unk74 = NULL;
+            descriptor->unk74 = 0;
             descriptor->pInstances = NULL;
             descriptor->pModule->Reset();
             descriptor = descriptor->unk80;
@@ -58,7 +58,7 @@ void GameObjectManager::DeinitLevel(void) {
             pNextDesc->pModule->pData->DeinitModule();
             pNextDesc->pModule->pData->bUpdate = false;
             pNextDesc->pModule->pData->unk18 = 0;
-            pNextDesc->unk74 = NULL;
+            pNextDesc->unk74 = 0;
             pNextDesc->pCurrInst = NULL;
             pNextDesc->pInstances = NULL;
         }
@@ -86,8 +86,10 @@ char* RemStaticPrefix(char* str) {
 
 void GameObjectManager::LoadLevel(KromeIni* pIni) {
     objectMemSize = 0;
+
     KromeIniLine* pLine = pIni->GotoLine(NULL, NULL);
     while (pLine != NULL) {
+
         if (pLine->section != NULL) {
             char* str = RemStaticPrefix(pLine->section); // remove "static" from string
             GameObjDesc* pDesc = FindDescriptor(str);
@@ -100,8 +102,10 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
                 }
             }
         }
+
         pLine = pIni->GetLineWithLine(pLine);
     }
+
     if (objectMemSize != 0) {
         pObjectMem = Heap_MemAlloc(objectMemSize + 4);
         memset(pObjectMem, 0xCF, objectMemSize);
@@ -109,14 +113,16 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
     } else {
         pObjectMem = NULL;
     }
+
     GameObject* pObj = static_cast<GameObject*>(pObjectMem);
-    GameObjDesc* pDesc = static_cast<GameObjDesc*>(pDescs);
+    GameObjDesc* pDesc = pDescs;
     while (pDesc != NULL) {
         if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
             pObj = (GameObject*)pDesc->SetUpMem((u8*)pObj);
         }
         pDesc = pDesc->unk80;
     }
+
     pLine = pIni->GotoLine(NULL, NULL);
     while (pLine != NULL) {
         if (pLine->section != NULL) {
@@ -126,6 +132,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
                 pDesc->LoadObjects(pIni, pLine);
             }
         }
+        
         pLine = pIni->GetLineWithLine(pLine);
     }
 }
@@ -196,7 +203,7 @@ GameObject* GameObjectManager::GetObjectFromID(uint id) {
 }
 
 void GameObjectManager::AddDescriptor(GameObjDesc* pDesc) {
-    pDesc->unk80 = (GameObjDesc*)pDescs;
+    pDesc->unk80 = pDescs;
     pDescs = pDesc;
 }
 
@@ -222,19 +229,26 @@ int GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int maxCount, V
 // Returns the closest object in range
 GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius, int param_2) {
     GameObject* objects[MAX_SEARCH_GOBJS];
+
     int count = GetObjectsInRange(objects, MAX_SEARCH_GOBJS, pPt, radius, param_2); // Total GOBJS = 0x400
+
     GameObject* pClosestObj = NULL;
+
     float minRadius = Sqr<float>(radius) * 2.0f;
+
     // Loop over all GameObjects that were found
     for (int i = 0; i < count; i++) {
         Vector v;
         v.Sub(pPt, objects[i]->GetPos());
+
         float distSq = v.MagSquared();
+
         if (distSq < minRadius) {
             minRadius = distSq;
             pClosestObj = objects[i];
         }
     }
+
     return pClosestObj;
 }
 

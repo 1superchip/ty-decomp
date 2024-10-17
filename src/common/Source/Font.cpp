@@ -59,21 +59,25 @@ Font* Font::Create(char* pName) {
 /// @return NULL if font has not been created or the Font pointer
 Font* Font::Find(char* pName) {
     Font** ppFonts = fontList.GetMem();
+    
     while (*ppFonts != NULL) {
         if (stricmp((*ppFonts)->name, pName) == 0) {
             return *ppFonts;
         }
         ppFonts++;
     }
+
     return NULL;
 }
 
 void Font::Destroy(void) {
 	if (--referenceCount == 0) {
 		pFontMaterial->Destroy();
+
 		if ((void*)unk20 != NULL) {
 			Heap_MemFree((void*)unk20);
 		}
+
 		Heap_MemFree((void*)pChars);
 		fontList.Destroy(this);
 	}
@@ -88,12 +92,14 @@ void Font::InitModule(void) {
 }
 
 void Font::DeinitModule(void) {
+
 	if (*fontList.pMem != NULL) {
 		Font** ppFonts = fontList.pMem;
 		while (*ppFonts != NULL) {
 			ppFonts++;
 		}
 	}
+
 	fontList.Deinit();
 	initialised = false;
 }
@@ -101,6 +107,7 @@ void Font::DeinitModule(void) {
 float Font::CalcLength(char* string) {
 	float length = 0.0f;
     u8* str = (u8*)string;
+
 	while (*str != '\0') {
         int c = *str;
 		if (c > ' ' && c < 256) {
@@ -115,6 +122,7 @@ float Font::CalcLength(char* string) {
 		}
 		str++;
 	}
+
 	return length;
 }
 
@@ -158,7 +166,9 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
         }
 		str++;
 	}
+
     stringLength *= xScale;
+
     switch (justify) {
         case 1:
             posX -= GetScreenData(stringLength * 0.5f);
@@ -329,6 +339,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
     float sy = mHeight * scaleY;
     Vector sp8;
     topLeft = *pPos;
+
     switch(justify) {
         case 1:
             topLeft.x -= 0.5f * sx;
@@ -359,6 +370,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
             topLeft.y += sy;
             break;
     }
+
     float f26 = unk8 * scaleX;
     text = (u8*)pText;
     int colorR;
@@ -414,12 +426,14 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
                 colors[1] = (colorG * 255) >> 7;
                 colors[2] = (colorB * 255) >> 7;
                 colors[3] = (colorA * 255) >> 7;
-                for(int i = 0; i < 4; i++) {
+
+                for (int i = 0; i < 4; i++) {
                     GXPosition3f32(charPos[i].x, charPos[i].y, charPos[i].z);
                     GXColor4u8(colors[0], colors[1], colors[2], colors[3]);
                     GXTexCoord2f32(uv[(i * 2)], uv[(i * 2) + 1]);
                     // uvs += 2;
                 }
+
                 topLeft.x += scale + f26;
             } else {
                 topLeft.x += unkC * scaleX;
@@ -503,9 +517,11 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
     if (flags & 4) {
         xPos -= zPos * 0.5f;
     }
+
     if (flags & 8) {
         yPos -= wPos * 0.5f;
     }
+
     if (showFontWrapArea || flags & 1) {
         Blitter_UntexturedImage image;
         image.pos.x = xPos;
@@ -517,6 +533,7 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
         *(int*)&image.color = 0x40800000;
         image.Draw(1);
     }
+
     int r24 = (u8)((flags & 2));
     TextSegmentInfo info[MAX_TEXT_SEGMENTS];
     int r29;
@@ -601,7 +618,7 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
     }
 
     xPos += dVar16;
-    for(int i = 0; i < r29; i++) {
+    for (int i = 0; i < r29; i++) {
         float unkC_save = unkC;
         if (bSave_fieldC && !info[i].unk8) {
             int spaceCount = 0;
@@ -707,13 +724,16 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
             dVar18 = 0.0f;
             break;
     }
+
     Vector pos;
     pos.x = pPos->x + dVar16;
     pos.y = pPos->y - dVar18;
     pos.z = pPos->z;
+
     if (flags & 4) {
         pos.x -= f3 * 0.5f;
     }
+
     if (flags & 8) {
         pos.y += f4 * 0.5f;
     }
@@ -727,13 +747,13 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
         if (flags & 8) {
             area.origin.y += dVar18;
         }
-        area.extent.Set(f3, -f4, 0.0099999998f, 0.0f);
+        area.extent.Set(f3, -f4, 0.01f, 0.0f);
         area.color.Set(128.0f, 0.0f, 0.0f, 128.0f);
         area.color1.Set(128.0f, 0.0f, 0.0f, 128.0f);
         area.Draw(1);
     }
     
-    for(int i = 0; i < r29; i++) {
+    for (int i = 0; i < r29; i++) {
         float unkC_save = unkC;
         if (r27 && !segs[i].unk8) {
             int spaceCount = 0;
@@ -758,23 +778,29 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
 
 void Font::RenderChars(Font::TextCharStrip* pCharStrips, int count) {
     Blitter_TriStrip strip[4];
+
     for (int i = 0; i < count; i++) {
-        for(int triIndex = 0; triIndex < ARRAY_SIZE(strip); triIndex++) {
+        for (int triIndex = 0; triIndex < ARRAY_SIZE(strip); triIndex++) {
             CharStripVert* pCharVert = &pCharStrips[i].verts[triIndex];
+
             strip[triIndex].pos.Set(pCharVert->x, pCharVert->y, pCharVert->z);
+
             float a = (pCharVert->color) & 0xFF;
             float b = (pCharVert->color >> 0x8) & 0xFF;
             float g = (pCharVert->color >> 0x10) & 0xFF;
             float r = (pCharVert->color >> 0x18) & 0xFF;
+
             strip[triIndex].color.Set(
                 a * (1.0f / 128.0f),
                 b * (1.0f / 128.0f),
                 g * (1.0f / 128.0f),
                 r * (1.0f / 128.0f)
             );
+
             strip[triIndex].uv.x = pCharVert->u;
             strip[triIndex].uv.y = pCharVert->v;
         }
+
         strip[0].Draw(ARRAY_SIZE(strip), 1.0f);
     }
 }
@@ -909,7 +935,7 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
             f27 += (f2 - tld.z) * f29;
             break;
     }
-    for(int i = 0; i < tld.x; i++) {
+    for (int i = 0; i < tld.x; i++) {
         LineDataSub* pSubData = &tld.data[i];
         if (pSubData->unk0 != pSubData->unk4) {
             float f5;
@@ -929,8 +955,11 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
             }
             f5 = f27 + f28;
             int r27 = 0;
+
             u8* lineStart = (u8*)pSubData->unk0;
+            
             Font::TextCharStrip* strip = chars;
+
             while (lineStart != (u8*)pSubData->unk4) {
                 if (*lineStart > 0x20 && *lineStart <= 255 && pChars[*lineStart].unk1C != 0) {
                     FontCharData* pCharData = &pChars[*lineStart];
@@ -970,13 +999,15 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
                 }
                 lineStart++;
             }
+
             if (stripFunc0 != NULL) {
                 stripFunc0(chars, r27);
             }
+
             // Apply matrix to all characters
             // Rotation and translation
-            for(int j = 0; j < r27; j++) {
-                for(int k = 0; k < 4; k++) {
+            for (int j = 0; j < r27; j++) {
+                for (int k = 0; k < 4; k++) {
                     float x = chars[j].verts[k].x;
                     float y = chars[j].verts[k].y;
                     float tx = x * pMatrix->data[0][0] + y * pMatrix->data[1][0] + pMatrix->data[3][0];
@@ -985,9 +1016,11 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
                     chars[j].verts[k].y = ty;
                 }
             }
+
             if (stripFunc1 != NULL) {
                 stripFunc1(chars, r27);
             }
+
             RenderChars(chars, r27);
         }
         f27 += f28;
