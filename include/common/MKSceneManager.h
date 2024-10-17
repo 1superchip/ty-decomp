@@ -35,8 +35,8 @@ struct MKPropDescriptor {
     BoundingVolume* pVolume;
     int unk1C;
     float maxScissorDist;
-    int unk24;
-    MKProp* pNext;
+    MKPropDescriptor* pNext;
+    MKProp* pProps; // MKProps of this type
     
     static MKPropDescriptor* pDrawListDescs;
 };

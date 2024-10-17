@@ -28,10 +28,11 @@ void MKSceneManager::DeinitModule(void) {
 }
 
 void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
-    for(int i = 0; i < NUM_TERRAIN_MODELS; i++) {
+    for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         pTerrainModel[i] = NULL;
     }
-    for(int i = 0; i < 4; i++) {
+
+    for (int i = 0; i < 4; i++) {
         staticPropTree[i].pLastNode = NULL;
         trees[i].pLastNode = NULL;
         staticPropArray[i].pNext = &staticPropArray[i];
@@ -44,10 +45,12 @@ void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
         dynamicPropArray[i].uniqueID = 0;
         globalPropArray[i].uniqueID = 0;
     }
+
     props[0].pNextUpdated = &props[0];
     props[0].pPrevUpdated = &props[0];
     props[1].pNextUpdated = &props[1];
     props[1].pPrevUpdated = &props[1];
+    
     propIdx = 0;
     bHasBeenOptimised = false;
     updateDistMult = initInfo->unk34;
@@ -56,10 +59,11 @@ void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
 }
 
 void MKSceneManager::Deinit(void) {
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         staticPropTree[i].Deinit();
     }
-    for(int i = 0; i < NUM_TERRAIN_MODELS; i++) {
+
+    for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
         trees[i].Deinit();
     }
 }
@@ -126,7 +130,7 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
     vecs[7].w = vecs[2].w;
     vecs[7].z = vecs[2].z + pDesc->pVolume->v2.z;
     
-    for(int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         vecs[i].ApplyMatrix(pProp->pLocalToWorld);
     }
 
@@ -136,7 +140,7 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
     Vector max;
     max.Set(vecs[0].x, vecs[0].y, vecs[0].z);
 
-    for(int i = 1; i < 8; i++) {
+    for (int i = 1; i < 8; i++) {
         min.x = Min<float>(min.x, vecs[i].x);
         max.x = Max<float>(max.x, vecs[i].x);
         min.y = Min<float>(min.y, vecs[i].y);
@@ -173,9 +177,12 @@ void MKSceneManager::AddProp(MKProp* pProp) {
 void MKSceneManager::AddStaticProp(MKProp* pProp, int propIdx) {
     pProp->pDescriptor->drawLayer = propIdx;
     pProp->pDescriptor->flags = pProp->pDescriptor->flags & ~MKPROP_TypeMask;
+
     MKPropDescriptor* pDesc = pProp->pDescriptor;
+
+    pDesc->pProps = NULL;
     pDesc->pNext = NULL;
-    pDesc->unk24 = 0;
+
     if (pProp->pLocalToWorld == NULL || pProp->pDescriptor->pVolume == NULL) {
         AddGlobalProp(pProp, propIdx);
     } else {
@@ -193,9 +200,10 @@ void MKSceneManager::AddDynamicProp(MKProp* pProp, int propIdx) {
     pProp->pDescriptor->drawLayer = propIdx;
     // clear all type bits and set the dynamic type bit
     pProp->pDescriptor->flags = (pProp->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Dynamic;
+
     MKPropDescriptor* pDesc = pProp->pDescriptor;
+    pDesc->pProps = NULL;
     pDesc->pNext = NULL;
-    pDesc->unk24 = 0;
     pProp->pNext = dynamicPropArray[propIdx].pNext;
     pProp->pPrev = &dynamicPropArray[propIdx];
     pProp->pNext->pPrev = pProp;
@@ -209,9 +217,10 @@ void MKSceneManager::AddGlobalProp(MKProp* pProp, int propIdx) {
     pProp->pDescriptor->drawLayer = propIdx;
      // clear all type bits and set the global type bit
     pProp->pDescriptor->flags = (pProp->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
+
     MKPropDescriptor* pDesc = pProp->pDescriptor;
+    pDesc->pProps = NULL;
     pDesc->pNext = NULL;
-    pDesc->unk24 = 0;
     pProp->pNext = globalPropArray[propIdx].pNext;
     pProp->pPrev = &globalPropArray[propIdx];
     pProp->pNext->pPrev = pProp;
@@ -236,6 +245,7 @@ void SMTree::Init(int arg1) {
         nmbrOfSubObjects = 0;
         return;
     }
+
     nmbrOfSubObjects = arg1;
     unkC = arg1 - 1;
     propCount = unkC + arg1;
@@ -274,12 +284,13 @@ void SMTree::PairUp(int arg1, int arg2) {
     SMNode* pNode2;
     SMNode save1;
     SMNode* pSave;
-    int idx = 0;
-    while (idx < arg2 - 1) {
+
+    for (int idx = 0; idx < arg2 - 1; idx += 2) {
         int iVar8 = idx + 1;
         SMNode* pNode1 = &pNodes[arg1 + idx];
         SMNode* pClosest = pNode1;
         float centreX = pNode1->volume.v1.x + 0.5f * pNode1->volume.v2.x;
+        
         while (iVar8 < arg2) {
             pNode2 = &pNodes[arg1 + iVar8];
             float centreX2 = pNode2->volume.v1.x + 0.5f * pNode2->volume.v2.x;
@@ -289,6 +300,7 @@ void SMTree::PairUp(int arg1, int arg2) {
             }
             iVar8++;
         }
+
         pSave = NULL;
         iVar8 = idx + 1;
         save1 = *pNode1;
@@ -310,7 +322,7 @@ void SMTree::PairUp(int arg1, int arg2) {
             }
             iVar8++;
         }
-        idx += 2;
+
         save1 = *(pNode1 + 1);
         *(pNode1 + 1) = *pSave;
         *pSave = save1;
@@ -393,9 +405,12 @@ void MKSceneManager::MakeTerrainTree(void) {
 
 void MKSceneManager::MakePropTree(void) {
     for (int i = 0; i < 4; i++) {
+
         staticPropTree[i].Init(staticPropArray[i].uniqueID);
+
         MKProp* next = staticPropArray[i].pNext;
         SMNode* pNode = staticPropTree[i].pNodes;
+
         if (next != NULL) {
             while (next != &staticPropArray[i]) {
                 pNode->pData = (void*)next;
@@ -408,6 +423,7 @@ void MKSceneManager::MakePropTree(void) {
             }
             staticPropTree[i].LinkUp();
         }
+
     }
 }
 
@@ -527,21 +543,25 @@ void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
 
 void MKSceneManager::DrawStaticProps(int arg1) {
     MKPropDescriptor::pDrawListDescs = NULL;
-    MKProp* next;
-    MKPropDescriptor* pDrawDescs = MKPropDescriptor::pDrawListDescs;
+
     if (staticPropTree[arg1].pLastNode != NULL) {
         DrawRecursiveProps(staticPropTree[arg1].pLastNode, 0);
     }
-    pDrawDescs = MKPropDescriptor::pDrawListDescs;
+
+    MKProp* pProps;
+    MKPropDescriptor* pDrawDescs = MKPropDescriptor::pDrawListDescs;
+
     while (pDrawDescs != NULL) {
-        next = pDrawDescs->pNext;
-        while (next != NULL) {
-            next->Draw();
-            next = next->pNextOfThisType;
+        pProps = pDrawDescs->pProps;
+        while (pProps != NULL) {
+            pProps->Draw();
+            pProps = pProps->pNextOfThisType;
         }
-        pDrawDescs->pNext = NULL;
-        pDrawDescs = (MKPropDescriptor*)pDrawDescs->unk24;
+
+        pDrawDescs->pProps = NULL;
+        pDrawDescs = pDrawDescs->pNext;
     }
+
     MKPropDescriptor::pDrawListDescs = NULL;
 }
 
@@ -552,7 +572,9 @@ static void SMDrawProp(void* pData, int rejectResult, float distSq, float arg3) 
     fVar2 = 8.0f * (1.0f - Sqr<float>(1.0f - fVar2));
     int detail_level = (int)fVar2;
     int _detail = (detail_level <= 8) ? detail_level : 8;
+
     pPropData->detailLevel = (char)_detail;
+
     if (pPropData->detailLevel != 8) {
         pPropData->unk14 = fVar2 - detail_level;
         pPropData->distSquared = distSq;
@@ -562,12 +584,14 @@ static void SMDrawProp(void* pData, int rejectResult, float distSq, float arg3) 
             fVar3 = fVar3 - pPropData->unk14;
         }
         pPropData->unk1C = fVar3;
-        if (pDesc->pNext == NULL) {
-            pDesc->unk24 = (int)MKPropDescriptor::pDrawListDescs;
+
+        if (pDesc->pProps == NULL) {
+            pDesc->pNext = MKPropDescriptor::pDrawListDescs;
             MKPropDescriptor::pDrawListDescs = pDesc;
         }
-        pPropData->pNextOfThisType = pDesc->pNext;
-        pDesc->pNext = pPropData;
+
+        pPropData->pNextOfThisType = pDesc->pProps;
+        pDesc->pProps = pPropData;
     }
 }
 
@@ -576,80 +600,104 @@ void MKSceneManager::DrawDynamicProps(int arg1) {
     float fVar3;
     float fVar2;
     Matrix matrix;
-    MKPropDescriptor* pDrawDescs;
-    MKProp* next = dynamicPropArray[arg1].pNext;
-    while (next != &dynamicPropArray[arg1]) {
-        matrix.Multiply4x4(next->pLocalToWorld, &View::GetCurrent()->unk1C8);
-        MKPropDescriptor* pDesc = next->pDescriptor;
+
+    MKProp* pProp = dynamicPropArray[arg1].pNext;
+    while (pProp != &dynamicPropArray[arg1]) {
+        matrix.Multiply4x4(pProp->pLocalToWorld, &View::GetCurrent()->unk1C8);
+
+        MKPropDescriptor* pDesc = pProp->pDescriptor;
+
         s16 rejectResult = Model_TrivialRejectTest(pDesc->pVolume, &matrix);
+
         float fVar19 = 0.0f;
         float distSq = 0.0f;
-        pDesc = next->pDescriptor;
+
+        pDesc = pProp->pDescriptor;
+
         if (rejectResult != 0) {
-            Vector* pLTWTrans = next->pLocalToWorld->Row3();
+            Vector* pLTWTrans = pProp->pLocalToWorld->Row3();
             Vector* pViewTrans = View::GetCurrent()->unk48.Row3();
+
             distSq = Sqr<float>(pLTWTrans->x - pViewTrans->x) + 
                 Sqr<float>(pLTWTrans->y - pViewTrans->y) + 
                 Sqr<float>(pLTWTrans->z - pViewTrans->z);
+            
             fVar19 = Sqr<float>(Max<float>(updateDistMult, pDesc->maxDrawDist * updateDrawMult));
+
             if (distSq < fVar19) {
-                SMDrawProp((int*)next, rejectResult, distSq, fVar19);
+                SMDrawProp(pProp, rejectResult, distSq, fVar19);
             }
         }
-        next = next->pNext;
+        pProp = pProp->pNext;
     }
-    pDrawDescs = MKPropDescriptor::pDrawListDescs;
+
+    MKPropDescriptor* pDrawDescs = MKPropDescriptor::pDrawListDescs;
+
     while (pDrawDescs != NULL) {
-        next = pDrawDescs->pNext;
-        while (next != NULL) {
-            next->Draw();
-            next = next->pNextOfThisType;
+        pProp = pDrawDescs->pProps;
+        while (pProp != NULL) {
+            pProp->Draw();
+            pProp = pProp->pNextOfThisType;
         }
-        pDrawDescs->pNext = NULL;
-        pDrawDescs = (MKPropDescriptor *)pDrawDescs->unk24;
+        
+        pDrawDescs->pProps = NULL;
+        pDrawDescs = pDrawDescs->pNext;
     }
+    
     MKPropDescriptor::pDrawListDescs = NULL;
 }
 
 void MKSceneManager::DrawGlobalProps(int arg1) {
-    MKPropDescriptor* pDesc;
     MKPropDescriptor::pDrawListDescs = NULL;
-    MKProp* next = globalPropArray[arg1].pNext;
-    while (next != &globalPropArray[arg1]) {
-        pDesc = next->pDescriptor;
-        if (pDesc->pNext == NULL) {
-            pDesc->unk24 = (int)MKPropDescriptor::pDrawListDescs;
+    
+    MKPropDescriptor* pDesc;
+    MKProp* pProp = globalPropArray[arg1].pNext;
+
+    while (pProp != &globalPropArray[arg1]) {
+        pDesc = pProp->pDescriptor;
+
+        if (pDesc->pProps == NULL) {
+            pDesc->pNext = MKPropDescriptor::pDrawListDescs;
             MKPropDescriptor::pDrawListDescs = pDesc;
         }
-        next->pNextOfThisType = pDesc->pNext;
-        pDesc->pNext = next;
-        next = next->pNext;
+
+        pProp->pNextOfThisType = pDesc->pProps;
+        pDesc->pProps = pProp;
+
+        pProp = pProp->pNext;
     }
+
     MKPropDescriptor* pDrawDescs = MKPropDescriptor::pDrawListDescs;
-    pDrawDescs = MKPropDescriptor::pDrawListDescs;
     while (pDrawDescs != NULL) {
-        next = pDrawDescs->pNext;
-        while (next != NULL) {
-            next->Draw();
-            next = next->pNextOfThisType;
+
+        pProp = pDrawDescs->pProps;
+        while (pProp != NULL) {
+            pProp->Draw();
+            pProp = pProp->pNextOfThisType;
         }
-        pDrawDescs->pNext = NULL;
-        pDrawDescs = (MKPropDescriptor*)pDrawDescs->unk24;
+
+        pDrawDescs->pProps = NULL;
+        pDrawDescs = pDrawDescs->pNext;
     }
+
     MKPropDescriptor::pDrawListDescs = NULL;
 }
 
 void MKSceneManager::UpdateProps(void) {
     int idx;
-    SMNode* node;
+
     MKMessage message;
     message.unk0 = -3;
+
     for (int i = 0; i < 4; i++) {
-        idx = 0;
-        node = staticPropTree[i].pNodes;
-        while (idx < staticPropTree[i].propCount) {
-            MKProp *data = (MKProp *)node->pData;
+
+        SMNode* node = staticPropTree[i].pNodes;
+
+        for (idx = 0; idx < staticPropTree[i].propCount; idx++) {
+
+            MKProp* data = (MKProp*)node->pData;
             node++;
+
             if (data != NULL) {
                 Vector *pLTWTrans = data->pLocalToWorld->Row3();
                 Vector *pActivePoint = &activePoint;
@@ -662,15 +710,17 @@ void MKSceneManager::UpdateProps(void) {
                     UpdateProp(data, &message);
                 }
             }
-            idx++;
         }
+
         MKProp* dynamicProp = dynamicPropArray[i].pNext;
         while (dynamicProp != &dynamicPropArray[i]) {
             Vector* pLTWTrans = dynamicProp->pLocalToWorld->Row3();
             Vector* pActivePoint = &activePoint;
+
             float dist = Sqr<float>(pLTWTrans->x - pActivePoint->x) + 
                 Sqr<float>(pLTWTrans->y - pActivePoint->y) + 
                 Sqr<float>(pLTWTrans->z - pActivePoint->z);
+
             dynamicProp->distSquared = dist;
             if (dynamicProp->distSquared < dynamicProp->pDescriptor->maxUpdateDist * dynamicProp->pDescriptor->maxUpdateDist) {
                 // if the dist is less than the prop's max update distance, update the prop
@@ -680,18 +730,22 @@ void MKSceneManager::UpdateProps(void) {
             } else {
                 dynamicProp = dynamicProp->pNext;
             }
+
         }
+
         MKProp* pGlobalProp = globalPropArray[i].pNext;
         while (pGlobalProp != &globalPropArray[i]) {
             prop1BC = pGlobalProp->pNext;
             UpdateProp(pGlobalProp, &message);
             pGlobalProp = prop1BC;
         }
+
     }
     
     propIdx = 1 - propIdx;
     MKProp* lastProp = &props[propIdx];
     message.unk0 = -4;
+    
     MKProp* pUpdateProp = lastProp->pNextUpdated;
     while (pUpdateProp != lastProp) {
         MKProp *nextProp = pUpdateProp->pNextUpdated;
@@ -728,16 +782,16 @@ void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool bIncludeSt
     if (bIncludeStatic) {
         // Loop over and check all static props
         for (i = 0; i < 4; i++) {
-            SMNode *node = staticPropTree[i].pNodes;
-            index = 0;
-            while (index < staticPropTree[i].propCount) {
-                MKProp *currProp = (MKProp *)node->pData;
+            SMNode* node = staticPropTree[i].pNodes;
+
+            for (index = 0; index < staticPropTree[i].propCount; index++) {
+                MKProp* currProp = (MKProp*)node->pData;
                 node++;
                 if (currProp) {
                     SendMessageToProp(currProp, pMessage, mask, pPos, radius);
                 }
-                index++;
             }
+
         }
     }
 
@@ -753,7 +807,7 @@ void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool bIncludeSt
 
     // Loop over and check all global props
     for (i = 0; i < 4; i++) {
-        MKProp *globalProp = globalPropArray[i].pNext;
+        MKProp* globalProp = globalPropArray[i].pNext;
         while (globalProp != &globalPropArray[i]) {
             prop1C0 = globalProp->pNext;
             SendMessageToProp(globalProp, pMessage, mask, NULL, radius);
@@ -785,21 +839,30 @@ void MKSceneManager::UpdateProp(MKProp* pProp, MKMessage* pMessage) {
 
 void MKSceneManager::RemoveProp(MKProp* pProp) {
     MKMessage message;
+
     if (prop1BC == pProp) {
         prop1BC = pProp->pNext;
     }
+
     if (prop1C0 == pProp) {
         prop1C0 = pProp->pNext;
     }
+
+    // delink pProp from the list
     pProp->pNext->pPrev = pProp->pPrev;
     pProp->pPrev->pNext = pProp->pNext;
+
     pProp->pPrev = NULL;
     pProp->pNext = NULL;
+
     if (pProp->pNextUpdated != NULL || pProp->pPrevUpdated != NULL) {
         message.unk0 = -4; // analyze these ids
         pProp->Message(&message);
+        
+        // delink pProp from the updated list
         pProp->pNextUpdated->pPrevUpdated = pProp->pPrevUpdated;
         pProp->pPrevUpdated->pNextUpdated = pProp->pNextUpdated;
+
         pProp->pPrevUpdated = NULL;
         pProp->pNextUpdated = NULL;
     }

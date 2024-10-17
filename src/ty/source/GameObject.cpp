@@ -19,14 +19,17 @@ void ModuleInfoBase::AddToModuleList(ModuleInfoBase* pModule) {
     if ((pModule->pData->flags & 3) == 0) {
         return;
     }
+
     ModuleInfoBase* list = ModuleInfoBase::pList;
     ModuleInfoBase* list1 = list;
+
     while (list != NULL) {
         if (list == pModule) {
             return;
         }
         list = list->pData->pNext;
     }
+    
     pModule->pData->pNext = list1;
     ModuleInfoBase::pList = pModule;
 }
@@ -169,7 +172,7 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
     strncpy(descrName, pDescrName, sizeof(descrName));
     Tools_StripExtension(modelName, pMdlName);
     pName = descrName;
-    pNext = NULL;
+    pProps = NULL;
 }
 
 u8* GameObjDesc::SetUpMem(u8* pMem) {
