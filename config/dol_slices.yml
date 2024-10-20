@@ -1178,14 +1178,14 @@ ty/source/props/Aquarang.cpp:
 #   .sbss: [0x803fa318, 0x803fa320]
 #   .sdata2: [0x803fe760, 0x803fe790]
 
-# ty/source/props/BunyipStone.cpp:
-#   .text: [0x800de1f0, 0x800dec40]
-#   .ctors: [0x8023c8d0, 0x8023c8d4]
-#   .data: [0x802564c8, 0x802565c8]
-#   .bss: [0x802a6f90, 0x802a7070]
-#   .sdata: [0x803f6530, 0x803f6568]
-#   .sbss: [0x803fa320, 0x803fa328]
-#   .sdata2: [0x803fe790, 0x803fe7f0]
+ty/source/props/BunyipStone.cpp:
+  .text: [0x800de1f0, 0x800dec40]
+  .ctors: [0x8023c8d0, 0x8023c8d4]
+  .data: [0x802564c8, 0x802565c8]
+  .bss: [0x802a6f90, 0x802a7070]
+  .sdata: [0x803f6530, 0x803f6568]
+  .sbss: [0x803fa320, 0x803fa328]
+  .sdata2: [0x803fe790, 0x803fe7f0]
 
 #ty/source/props/Burnable.cpp:
 #   .text: [0x800dec40, 0x800dfd80]
