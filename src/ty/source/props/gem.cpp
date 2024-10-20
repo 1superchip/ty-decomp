@@ -61,71 +61,21 @@ extern Ty ty;
 // END EXTERNS
 
 bool bDrawCheatLines = false;
+
+StructList<Gem> spawnedGemList;
+
 Gem** Gem::gemPtrList = NULL;
 int Gem::totalGems = 0;
 static int bHideAll = false;
 static ModuleInfo<Gem> moduleInfo;
+static GameObjDesc opalDesc;
+static ParticleSystemType gemType[MAX_GEM_ELEMENTS];
 static ParticleSystem* pSystem = NULL;
 static int numDynamicData = 0;
 static ElementType gemElement = ELEMENT_FIRE;
-static int counter = 0;
 
-StructList<Gem> spawnedGemList;
-static GameObjDesc opalDesc;
-static ParticleSystemType gemType[MAX_GEM_ELEMENTS];
-static StructList<GemModelDrawData> modelDraw;
-static StructList<GemPickupData> pickupData;
-static StructList<Blitter_Particle> pickupDraw;
 
 // TODO: Correct data ordering without externs and variables for literals
-extern ElementInfo elementInfo[MAX_GEM_ELEMENTS];
-extern GemParticleSysInfo gemPartSysInfo[MAX_GEM_ELEMENTS];
-
-void Gem_DrawModel(Vector* pPos, Vector* pScale, ElementType type) {
-    if (type < ELEMENT_FIRE || type >= MAX_GEM_ELEMENTS) {
-        // if the type isn't valid, use the gemElement
-        type = gemElement;
-    }
-    Model* pGemModel = elementInfo[type].pModel;
-    pGemModel->matrices[0].CopyRotation(&View::GetCurrent()->unk48);
-    pGemModel->matrices[0].SetTranslation(pPos);
-    pGemModel->matrices[0].Scale(pScale);
-    pGemModel->colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
-    pGemModel->Draw(NULL);
-}
-
-void Gem_SetElement(ElementType newType) {
-    gemElement = newType;
-}
-
-// fake symbols to disable pooling of .data in Gem_LoadResources
-// and keep the correct .data order
-__declspec(section ".sdata") extern char opal_str[];
-extern char Prop_0270_FireOpal_str[];
-extern char GemParticles_str[];
-
-void Gem_LoadResources(KromeIni* pIni) {
-    opalDesc.Init(&moduleInfo, Prop_0270_FireOpal_str, opal_str, 0, 1);
-    opalDesc.Load(pIni);
-    objectManager.AddDescriptor(&opalDesc);
-    spawnedGemList.Init(GEMS_MAXOPALS);
-    for (int i = 0; i < MAX_GEM_ELEMENTS; i++) {
-        elementInfo[i].pMaterial = Material::Create(elementInfo[i].pMaterialName);
-        elementInfo[i].pParticleMaterial = Material::Create(elementInfo[i].pMaterialName1);
-        elementInfo[i].pModel = Model::Create(elementInfo[i].pModelName, NULL);
-        elementInfo[i].pModel->renderType = 3;
-        gemType[i].Init(GemParticles_str, elementInfo[i].pParticleMaterial,
-            gemPartSysInfo[i].unk0, gemPartSysInfo[i].unk4, gemPartSysInfo[i].unk8, 1);
-        if (gemPartSysInfo[i].updateFunc != NULL) {
-            gemType[i].updateFunc = gemPartSysInfo[i].updateFunc;
-        }
-        gemType[i].SetEnvelope(4, gemPartSysInfo[i].envelopes);
-        gemType[i].SetDistances(1000.0f, 2500.0f, 3000.0f);
-    }
-    // Allocate memory for opal pointer list
-    Gem::gemPtrList = (Gem**)Heap_MemAlloc(sizeof(Gem*) * GEMS_MAXOPALS);
-    Gem_PickupParticle_LoadResources();
-}
 
 // Data is defined here to force the previous function to not pool data
 static ElementInfo elementInfo[MAX_GEM_ELEMENTS] = {
@@ -135,6 +85,23 @@ static ElementInfo elementInfo[MAX_GEM_ELEMENTS] = {
     {"prop_0218_rainbowscale", "fx_090", "fx_128", NULL, NULL, NULL},
     {"prop_0381_EarthOpal", "fx_117", "fx_127", NULL, NULL, NULL}
 };
+
+void Gem_DrawModel(Vector* pPos, Vector* pScale, ElementType type) {
+    if (type < ELEMENT_FIRE || type >= MAX_GEM_ELEMENTS) {
+        // if the type isn't valid, use the gemElement
+        type = gemElement;
+    }
+
+    Model* pGemModel = elementInfo[type].pModel;
+
+    pGemModel->matrices[0].CopyRotation(&View::GetCurrent()->unk48);
+    pGemModel->matrices[0].SetTranslation(pPos);
+    pGemModel->matrices[0].Scale(pScale);
+
+    pGemModel->colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
+    
+    pGemModel->Draw(NULL);
+}
 
 static GemParticleSysInfo gemPartSysInfo[MAX_GEM_ELEMENTS] = {
     {
@@ -189,9 +156,48 @@ static GemParticleSysInfo gemPartSysInfo[MAX_GEM_ELEMENTS] = {
     }
 };
 
+
+void Gem_SetElement(ElementType newType) {
+    gemElement = newType;
+}
+
+// fake symbols to disable pooling of .data in Gem_LoadResources
+// and keep the correct .data order
+extern char Prop_0270_FireOpal_str[];
+extern char GemParticles_str[];
+
+void Gem_LoadResources(KromeIni* pIni) {
+    opalDesc.Init(&moduleInfo, Prop_0270_FireOpal_str, "Opal", 0, 1);
+    opalDesc.Load(pIni);
+    objectManager.AddDescriptor(&opalDesc);
+
+    spawnedGemList.Init(GEMS_MAXOPALS);
+
+    for (int i = 0; i < MAX_GEM_ELEMENTS; i++) {
+        elementInfo[i].pMaterial = Material::Create(elementInfo[i].pMaterialName);
+        elementInfo[i].pParticleMaterial = Material::Create(elementInfo[i].pMaterialName1);
+        elementInfo[i].pModel = Model::Create(elementInfo[i].pModelName, NULL);
+        elementInfo[i].pModel->renderType = 3;
+
+        gemType[i].Init(GemParticles_str, elementInfo[i].pParticleMaterial,
+            gemPartSysInfo[i].unk0, gemPartSysInfo[i].unk4, gemPartSysInfo[i].unk8, 1);
+        
+        if (gemPartSysInfo[i].updateFunc != NULL) {
+            gemType[i].updateFunc = gemPartSysInfo[i].updateFunc;
+        }
+
+        gemType[i].SetEnvelope(4, gemPartSysInfo[i].envelopes);
+        gemType[i].SetDistances(1000.0f, 2500.0f, 3000.0f);
+    }
+
+    // Allocate memory for opal pointer list
+    Gem::gemPtrList = (Gem**)Heap_MemAlloc(sizeof(Gem*) * GEMS_MAXOPALS);
+    
+    Gem_PickupParticle_LoadResources();
+}
+
 char Prop_0270_FireOpal_str[] = "Prop_0270_FireOpal";
 char GemParticles_str[] = "Gem Particles";
-__declspec(section ".sdata") char opal_str[] = "Opal";
 
 
 /// @brief Creates a new gem object
@@ -201,7 +207,9 @@ __declspec(section ".sdata") char opal_str[] = "Opal";
 /// @return Pointer to gem object
 Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
     Gem* pNewGem = spawnedGemList.GetNextEntry();
+
     opalDesc.pModule->ConstructObject(pNewGem); // construct the new Gem object
+
     pNewGem->Init(&opalDesc);
     pNewGem->pos = *pPos;
     pNewGem->unk94 = pNewGem->pos;
@@ -213,8 +221,10 @@ Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
     pNewGem->SetState((GemState)2);
     pNewGem->unkB4.SetIdentity();
     pNewGem->unkB4.SetTranslation(&pNewGem->pos);
+
     objectManager.AddObject(pNewGem, &pNewGem->unkB4,
         elementInfo[gemElement].pModel->GetModelVolume());
+
     if (r5) {
         pNewGem->unkF6b0 = 1;
         pNewGem->unk94 = *r5;
@@ -223,6 +233,7 @@ Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
     } else {
         pNewGem->SetState((GemState)2);
     }
+    
     pNewGem->Reset();
     pNewGem->CalcShadowPos();
     // Add the new gem to the list
@@ -243,11 +254,14 @@ extern "C" void memset(void*, int, int);
 /// @param  None
 void Gem_DeleteList(void) {
     Gem* pGem = spawnedGemList.GetCurrEntry();
+
     while (pGem) {
         pGem->Deinit();
         pGem = spawnedGemList.GetNextEntryWithEntry(pGem);
     }
+
     spawnedGemList.UnknownSetPointer();
+
     // Set all gem pointers to NULL
     memset((void*)Gem::gemPtrList, 0, sizeof(Gem*) * GEMS_MAXOPALS);
     Gem::totalGems = 0; // set total spawned gems to 0
@@ -262,14 +276,19 @@ void Gem::LoadDone(void) {
     mCollected = false;
     unk6C = 0;
     unkF6b0 = 0;
+
     mParticle.pos = pos;
     mParticle.angle = 0.0f;
+
     SetState((GemState)2);
     CalcShadowPos();
+    
     unkB4.SetIdentity();
     unkB4.SetTranslation(&pos);
+
     objectManager.AddObject(this, &unkB4,
         elementInfo[gemElement].pModel->GetModelVolume());
+    
     // add this gem to the pointer list and increment the total gem count
     Gem::gemPtrList[Gem::totalGems++] = this;
     Reset();
@@ -291,10 +310,12 @@ void Gem::Update(void) {
     if (bHideAll || mState == (GemState)0) {
         return;
     }
+
     yOffsetAngle += 0.081f;
     if (yOffsetAngle >= (2 * PI)) {
         yOffsetAngle -= (2 * PI);
     }
+
     switch (mState) {
         case 2:
             Idle();
@@ -309,8 +330,10 @@ void Gem::Update(void) {
             Spawning();
             break;
     }
+    
     mParticle.pos.w = 1.0f;
     unkB4.SetTranslation(&mParticle.pos);
+
     if (mState < (GemState)5 && unkF6b2) {
         Vector tempPos;
         tempPos.x = mParticle.pos.x;
@@ -321,6 +344,7 @@ void Gem::Update(void) {
             1.0f - Clamp<float>(0.0f, (mParticle.pos.y - unkFC) / 100.0f, 1.0f) * 0.5f
         );
     }
+
     if (mState < (GemState)4) {
         pSystem->pDynamicData[pSystem->mNumDyn].pMatrix = &unkB4;
         pSystem->mNumDyn++;
@@ -333,9 +357,11 @@ void Gem::Draw(void) {
     if (bHideAll || mState == (GemState)0) {
         return;
     }
+
     if (mState >= (GemState)4) {
         return;
     }
+
     if (bDrawCheatLines) {
         Blitter_Line3D line;
         line.color.Set(0.0f, 1.0f, 0.0f, 1.0f);
@@ -345,13 +371,18 @@ void Gem::Draw(void) {
         line.point1.y += 10000.0f;
         line.DrawNoMat(1, 1.0f);
     }
+
     unkB4.CopyRotation(&View::GetCurrent()->unk48);
+
     elementInfo[gemElement].pModel->matrices[0] = unkB4;
     float draw = Sqr<float>(GetDesc()->maxDrawDist * 0.5f);
+
     if (mCollected) {
         unk1C *= 0.1f;
     }
+
     elementInfo[gemElement].pModel->colour.Set(1.0f, 1.0f, 1.0f, unk1C);
+
     if (distSquared < draw) {
         Draw_AddPostDrawElement((void*)this, &PostDraw, distSquared, GetDrawFlag() ? true : false);
     } else {
@@ -372,11 +403,13 @@ void Gem::PostDraw(void* pObj) {
 void Gem::Reset(void) {
     yOffsetAngle = RandomFR(&gb.mRandSeed, 0.0f, 2 * PI);
     bHideAll = false;
+
     if (unkF6b0) {
         SetState((GemState)0);
         mLerpTime = 0.0f;
         return;
     }
+
     SetState((GemState)2);
     mParticle.pos = pos;
 }
@@ -397,17 +430,21 @@ void Gem::Spawn(void) {
 
 bool Gem::UpdateCollection(float f1) {
     bool bCollect = false;
+
     if (unkF4 > 0) {
         unkF4--;
         return false;
     }
+
     if (f1 <= Sqr<float>(pHero->objectAdjustmentRadius)) {
         bCollect = true;
     }
+
     if (bCollect) {
         Collect();
         return true;
     }
+
     return false;
 }
 
@@ -441,6 +478,7 @@ float Gem::GetMagneticRangeSqr(void) {
         }
         magneticRadius = Sqr<int>(newRadius);
     }
+
     if (pHero->IsTy()) {
         if (ty.fsm.BiteState()) {
             switch (ty.GetMedium()) {
@@ -458,6 +496,7 @@ float Gem::GetMagneticRangeSqr(void) {
             }
         }
     }
+
     return magneticRadius;
 }
 
@@ -466,10 +505,12 @@ bool Gem::CheckMagnetism(float f1) {
         || (f1 > 1000000.0f && !pHero->mMagnetData.IsActive())) {
         return false;
     }
+
     if (f1 <= GetMagneticRangeSqr()) {
         SetState((GemState)3);
         return true;
     }
+
     return false;
 }
 
@@ -530,6 +571,7 @@ void Gem::SpawnDynamic(Vector* p) {
     float mag = spC.Magnitude();
     unk84[0] = unk84[0] / (sqrtf(mag) * 0.5f);
     unk84[1] = mag * 0.5f;
+
     if (unk84[1] < 200.0f) {
         unk84[1] = 200.0f;
     }
@@ -539,6 +581,7 @@ void Gem::SpawnDynamic(Vector* p) {
 
 void Gem::Idle(void) {
     mParticle.pos.y = unk94.y + _table_sinf(yOffsetAngle) * 5.0f;
+
     float heroDist = pHero->mPos.DistSq(&mParticle.pos);
     if (!UpdateCollection(heroDist)) {
         CheckMagnetism(heroDist);
@@ -564,6 +607,7 @@ void Gem::Magnetised(void) {
             f31 = 0.9f;
         }
     }
+
     Vector dir; // direction to hero
     Vector heroPos = pHero->mPos;
     heroPos.y += 50.0f;
@@ -658,19 +702,25 @@ void Gem::CalcShadowPos(void) {
     }
 }
 
+static int counter = 0;
+
 void Gem_ParticleSystem_Init(void) {
     static Vector pos = {0.0f, 0.0f, 0.0f, 0.0f};
     static BoundingVolume volume = {
         {-30.0f, -30.0f, -30.0f, 0.0f}, {30.0f, 30.0f, 30.0f, 0.0f}
     };
+
     if (Gem::totalGems <= 0) {
         return;
     }
+
     pSystem = ParticleSystem::Create(&gemType[gemElement],
         &pos, &volume, 1.0f, Gem::totalGems, NULL);
+    
     if (pSystem == NULL) {
         return;
     }
+
     // Set the matrix of each DynamicData entry in the Particle System to the corresponding
     // gem matrix
     for (int i = 0; i < Gem::totalGems; i++) {
@@ -794,6 +844,10 @@ void Gem_FireCustomUpdate(ParticleSystem* pSys) {
     }
 }
 
+static StructList<GemModelDrawData> modelDraw;
+static StructList<GemPickupData> pickupData;
+static StructList<Blitter_Particle> pickupDraw;
+
 void Gem_PickupParticle_LoadResources(void) {
     modelDraw.Init(15);
     pickupData.Init(75);
@@ -871,7 +925,7 @@ void Gem_PickupParticle_Update(void) {
 
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
 
-    while(pModelData) {
+    while (pModelData) {
         pModelData->unk24 -= gDisplay.frameTime;
         if (pModelData->unk24 <= 0.0f) {
             modelDraw.CopyEntry(pModelData);
@@ -912,7 +966,7 @@ void Gem_PickupParticle_Update(void) {
     Blitter_Particle* pBlitParticle = pickupDraw.GetCurrEntry();
     GemPickupData* pPickupData = pickupData.GetCurrEntry();
 
-    while(pPickupData) {
+    while (pPickupData) {
         pPickupData->unk10 -= gDisplay.frameTime;
 
         if (pPickupData->unk10 <= 0.0f) {
@@ -936,12 +990,14 @@ void Gem_PickupParticle_Draw(void) {
     if (gb.pDialogPlayer) {
         return;
     }
+
     GameCamera_Use(true);
+
     float f29 = View::GetCurrent()->unk2C0;
     View::GetCurrent()->unk2C0 = 30.0f;
 
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
-    while(pModelData) {
+    while (pModelData) {
         if (!pModelData->unk10) {
             pModelData->unk10 = true;
             View::GetCurrent()->SetLocalToWorldMatrix(NULL);
@@ -962,10 +1018,12 @@ void Gem_PickupParticle_Draw(void) {
             pModelData->unk28,
             0.0f
         };
+        
         View::GetCurrent()->TransformPoint2Dto3D(
             pModelData->unk14, pModelData->unk18,
             10.0f + View::GetCurrent()->unk2C0, &pModelData->unk0
         );
+
         Gem_DrawModel(&pModelData->unk0, &scale, gemElement);
         View::GetCurrent()->SetLocalToWorldMatrix(NULL);
         elementInfo[gemElement].pParticleMaterial->Use();
