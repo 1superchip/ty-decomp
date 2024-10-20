@@ -13,7 +13,6 @@ extern "C" {
     int stricmp(char*, char*);
 };
 
-
 Vector Texture_Color;
 
 bool Texture::initialised = false;
@@ -116,6 +115,7 @@ Texture* Texture::Create(char* pName) {
         }
         pTex->referenceCount = 1;
     }
+
     return pTex;
 }
 
@@ -123,10 +123,12 @@ void Texture::Destroy(void) {
     if (--referenceCount != 0) {
         return;
     }
+
     if (pFileData != NULL) {
         Heap_MemFree(pFileData);
         pFileData = NULL;
     }
+
     textures.Destroy(this);
 }
 
@@ -159,11 +161,14 @@ Texture* Texture::CreateRenderTarget(char* pName, int arg2, int arg3, int arg4) 
 
 Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int width, int height) {
     Texture* pTex = textures.GetNextEntry();
+
     strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
+    
     pTex->bMpegTarget = false;
     pTex->pFileData = pRawData;
     pTex->width = width;
     pTex->height = height;
+
     switch (format) {
         case 0:
             pTex->bTlut = false;
@@ -178,6 +183,7 @@ Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int
                 GX_TF_RGB565, GX_REPEAT, GX_REPEAT, GX_FALSE);
             break;
     }
+
     pTex->referenceCount = 1;
     return pTex;
 }
@@ -189,13 +195,16 @@ Texture* Texture::CreateMpegTarget(char* pName, void* arg2, int width, int heigh
         pTex->referenceCount++;
     } else {
         pTex = textures.GetNextEntry();
+
         pTex->pFileData = NULL;
         strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
+
         pTex->width = width;
         pTex->height = height;
         pTex->referenceCount = 1;
         pTex->unk70 = 0;
         pTex->bMpegTarget = true;
     }
+
     return pTex;
 }

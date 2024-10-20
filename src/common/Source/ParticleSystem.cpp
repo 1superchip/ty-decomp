@@ -244,7 +244,7 @@ bool ParticleSystem::CheckLiveness(void) {
 }
 
 void ParticleSystem::Update(void) {
-    float f31 = gDisplay.updateFreq;
+    float f31 = gDisplay.frameTime;
     if (bPaused) {
         return;
     }
@@ -522,7 +522,7 @@ void ParticleSystemType::Init(char* _pName, Material* pMat, float f1, float f2, 
 }
 
 void ParticleSystemType::Update(ParticleSystem* pSys) {
-    float f31 = gDisplay.updateFreq;
+    float f31 = gDisplay.frameTime;
     
     pSys->uOffset += f31 * pSys->mpType->unk58;
     pSys->vOffset += f31 * pSys->mpType->unk5C;
@@ -647,7 +647,7 @@ void SimpleParticleSystemType::CalculateEnvelope(void) {
 }
 
 void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
-    float f31 = gDisplay.updateFreq;
+    float f31 = gDisplay.frameTime;
     float f30 = pSys->age - pSys->mpType->unk1C;
     float f29 = f31 * pSys->mpType->unk44;
     float f28 = f31 * pSys->mpType->unk48;

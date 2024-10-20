@@ -105,11 +105,13 @@ void RkvTOC::Init(char* pName) {
 RkvFileEntry* RkvTOC::GetEntry(char* pFileName) {
     RkvFileEntry* pEntry = NULL;
     if (rkvFd >= 0) {
+        
         pEntry = (RkvFileEntry*)Util_BinarySearch(
             (void*)pFileName, (void*)pFileEntries, 
             nmbrOfEntries, sizeof(RkvFileEntry), 
             EntryCompare
         );
+
         if (pEntry != NULL && pEntry->offset < 0) {
             pEntry = NULL;
         }

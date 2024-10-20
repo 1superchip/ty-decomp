@@ -57,8 +57,10 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
         rand.x = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
         rand.y = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
         rand.z = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+        
         Vector dir = *pDir;
         dir.Normalise();
+
         float dx = dir.x;
         float dy = dir.y;
         float dz = dir.z;
@@ -66,17 +68,21 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
         dir.y += (rand.y * dx) + (rand.y * dir.z);
         dir.z += (rand.z * dx) + (rand.z * dy);
         dir.Scale(Abs<float>(dirLen));
+
         p->mX = mpSystem->mpPos->x;
         p->mY = mpSystem->mpPos->y;
         p->mZ = mpSystem->mpPos->z;
+
         p->unk20 = dir.x;
         p->unk24 = dir.y;
         p->unk28 = dir.z;
+
         if (pColor) {
             p->mColor = *pColor;
         } else {
             p->mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
         }
+
         p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
         p->unk48 = _table_sinf(p->mAngle);
         p->unk4C = _table_cosf(p->mAngle);
@@ -93,7 +99,7 @@ void Flame::Reset(void) {
 /// @brief Custom update for the Flame Particle System
 /// @param pSys ParticleSystem to update
 void Flame_CustomUpdate(ParticleSystem* pSys) {
-    float f31 = gDisplay.updateFreq;
+    float f31 = gDisplay.frameTime;
     float f30 = pSys->age - pSys->mpType->unk1C;
     float f28 = pSys->mpType->unk48;
     float f29 = pSys->mpType->unk64;

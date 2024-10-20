@@ -29,6 +29,7 @@ void MKAnimScript_DeinitModule(void) {
 
 static inline char* AddToStringTable(char* arg0, char* arg2) {
     int len = strlen(arg2);
+
     while (*arg0 != '\0') {
         int tmp_len = strlen(arg0);
         if ((tmp_len == len) && (strcmpi(arg0, arg2) == 0)) {
@@ -36,6 +37,7 @@ static inline char* AddToStringTable(char* arg0, char* arg2) {
         }
         arg0 += tmp_len + 1;
     }
+
     strcpy(arg0, arg2);
     arg0[len + 1] = '\0';
     return arg0;
@@ -228,7 +230,9 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
         pLine = ini.GetNextLine();
     }
     ini.Deinit();
+
     pTemplate->templateSize = (int)pStringTable - (int)pTemplate->pSection;
+
     while (((char*)pTemplate->pSection)[pTemplate->templateSize] != '\0' || ((char*)pTemplate->pSection + 1)[pTemplate->templateSize] != '\0') {
         pTemplate->templateSize++;
     }
@@ -339,11 +343,13 @@ MKAnim* MKAnimScript::GetAnim(char* pAnimName) {
     if (*pAnimName == '\0') {
         return NULL;
     }
+
     for (int i = 0; i < pTemplate->pSection->animCount; i++) {
         if (strcmpi(pAnimName, pTemplate->pSection->anims[i].unk0) == 0) {
             return &pTemplate->pSection->anims[i];
         }
     }
+
     return NULL;
 }
 
@@ -351,6 +357,7 @@ MKAnim* MKAnimScript::GetAnim(int animNumber) {
     if (animNumber < pTemplate->pSection->animCount) {
         return &pTemplate->pSection->anims[animNumber];
     }
+
     return NULL;
 }
 
@@ -360,6 +367,7 @@ bool MKAnimScript::Exists(char* pAnimName) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -483,6 +491,7 @@ char* MKAnimScript::GetEventByName(char* pName) {
             }
         }
     }
+
     return NULL;
 }
 
@@ -497,6 +506,7 @@ char* MKAnimScript::GetEvent(int eventIdx) {
             }
         }
     }
+
     return NULL;
 }
 
@@ -511,11 +521,13 @@ int MKAnimScript::UpdatesUntilFinished(void) {
     }
     float fVar3 = currAnim->pAnimRanges[unk1E].endFrame - unkC;
     int start = unk1E + 1;
+
     while (start < currAnim->nmbrOfRanges) {
         AnimRange* pRange = &currAnim->pAnimRanges[start];
         fVar3 += pRange->startFrame - pRange->endFrame;
         start++;
     }
+
     return fVar3 / advanceAmount;
 }
 
@@ -523,6 +535,7 @@ int MKAnimScript::GetLength(void) {
     if (currAnim != NULL) {
         return currAnim->unk6;
     }
+
     return 0;
 }
 
@@ -530,6 +543,7 @@ void MKAnimScript::GetStartAndEnd(MKAnim* pAnim, short* pStart, short* pEnd) {
     if (pStart != NULL) {
         *pStart = pAnim->pAnimRanges[0].startFrame;
     }
+
     if (pEnd != NULL) {
         *pEnd = pAnim->pAnimRanges[pAnim->nmbrOfRanges - 1].endFrame;
     }
@@ -548,8 +562,10 @@ void MKAnimScript::SetAnimKeepingPosition(MKAnim* pMKAnim) {
             i++;
             fVar1 += currAnim->pAnimRanges[index].endFrame - currAnim->pAnimRanges[index].startFrame;
         }
+
         fVar3 = fVar2 / fVar1;
     }
+
     SetAnim(pMKAnim);
     if (fVar3 != 0.0f) {
         float fVar2 = fVar3 * GetLength();
@@ -573,6 +589,7 @@ float MKAnimScript::GetNormalPosition(void) {
         float fVar2 = 0.0f;
         int index = currAnim->nmbrOfRanges;
         int i = 0;
+
         for (int index = 0; index < currAnim->nmbrOfRanges; index++) {
             if (i == unk1E) {
                 fVar2 = fVar1 + (unkC - (float)currAnim->pAnimRanges[index].startFrame);
@@ -580,25 +597,31 @@ float MKAnimScript::GetNormalPosition(void) {
             i++;
             fVar1 += currAnim->pAnimRanges[index].endFrame - currAnim->pAnimRanges[index].startFrame;
         }
+
         if (fVar1 != 0.0f) {
             fVar3 = fVar2 / fVar1;
         }
     }
+
     return fVar3;
 }
 
 float MKAnimScript::GetFrameOfNormalPosition(float arg1, MKAnim* pAnim) {
     float fVar3 = (float)pAnim->unk6 * arg1;
     int index = 0;
+
     for (int i = 0; i < pAnim->nmbrOfRanges; i++) {
         AnimRange* pRange = &pAnim->pAnimRanges[i];
         float fVar1 = fVar3 + (float)pRange->startFrame;
+        
         if (fVar1 < pRange->endFrame) {
             return pAnim->pAnimRanges[index].startFrame + fVar3;
         }
+
         index++;
         fVar3 -= (float)(pRange->endFrame - pRange->startFrame);
     }
+
     return pAnim->pAnimRanges[pAnim->nmbrOfRanges - 1].endFrame;
 }
 

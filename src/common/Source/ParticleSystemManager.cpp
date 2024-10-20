@@ -80,6 +80,7 @@ ParticleSystem* ParticleSystemManager::CreateParticleSystem(ParticleSystemType* 
         pGroup->pSystem = pSys;
         pSys->pSystemManager = this;
     }
+    
     return pSys;
 }
 

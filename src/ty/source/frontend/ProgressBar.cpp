@@ -7,12 +7,15 @@ void ProgressBar::Init(char* pBGMatName, char* pFGMatName, int xPos,
     progressRatio = 0.0f;
     maxProgress = tMaxProgress;
     mUpdateVal = updateVal;
+
     mPos.Set(xPos, yPos, 0.0f);
+
     if (pBGMatName) {
         pMat = Material::Create(pBGMatName);
     } else {
         pMat = NULL;
     }
+
     pFGMat = Material::Create(pFGMatName);
     if (pBGMatName) {
         int w = pMat->GetTexture()->width;
@@ -22,6 +25,7 @@ void ProgressBar::Init(char* pBGMatName, char* pFGMatName, int xPos,
         backgroundImage.endX = backgroundImage.startX + (float)w;
         backgroundImage.endY = backgroundImage.startY + (float)h;
     }
+
     unk268 = (float)pFGMat->GetTexture()->width * scale;
     float temp = (float)pFGMat->GetTexture()->height * scale;
     backgroundImage.z = 0.0f;
@@ -45,23 +49,29 @@ void ProgressBar::Init(char* pBGMatName, char* pFGMatName, int xPos,
     foregroundImage.endX = foregroundImage.startX + (unk268 * progressRatio);
     foregroundImage.endY = foregroundImage.startY + temp;
     foregroundImage.uv2 = progressRatio;
+
     bDrawQuad = false;
+
     bInitialised = true;
 }
 
 void ProgressBar::Update(void) {
     if (floatProgress < (float)mProgress) {
         floatProgress += mUpdateVal;
+
         if (floatProgress > (float)mProgress) {
             floatProgress = mProgress;
         }
     }
+
     if (floatProgress > (float)mProgress) {
         floatProgress -= mUpdateVal;
+
         if (floatProgress < (float)mProgress) {
             floatProgress = mProgress;
         }
     }
+
     progressRatio = floatProgress / (float)maxProgress;
 }
 
@@ -69,14 +79,17 @@ void ProgressBar::Draw(void) {
     // Background Image and Bar are optional
     if (pMat) {
         pMat->Use();
+
         if (!bDrawQuad) {
             backgroundImage.Draw(1);
         } else {
             backgroundQuad.Draw(&mPos);
         }
     }
+
     // Foreground material is not optional!
     pFGMat->Use();
+
     if (!bDrawQuad) {
         foregroundImage.endX = foregroundImage.startX + unk268 * progressRatio;
         foregroundImage.uv2 = progressRatio;
@@ -95,6 +108,7 @@ void ProgressBar::Deinit(void) {
         pMat->Destroy();
         // Does not set to NULL
     }
+
     if (pFGMat) {
         pFGMat->Destroy();
         // Does not set to NULL
@@ -122,10 +136,12 @@ bool ProgressBar::DecrementProgress(void) {
     if (floatProgress > (float)mProgress) {
         return false;
     }
+
     if (--mProgress < 0) {
         mProgress = 0;
         return false;
     }
+
     return true;
 }
 

@@ -22,6 +22,7 @@ bool ScriptProp::LoadLine(KromeIniLine* pLine) {
             return true;
         }
     }
+
     return LoadLevel_LoadFloat(pLine, "Delay", &Delay) ||
         LoadLevel_LoadBool(pLine, "bDelayEachMessage", &bDelayEachMessage) ||
         LoadLevel_LoadBool(pLine, "bEnabled", &bEnabled) ||
@@ -42,6 +43,7 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
     bDefaultEnabled = true;
     bDelayEachMessage = false;
     currentMessageIndex = 0;
+
     for (int i = 0; i < MessageCount; i++) {
         messages[i].Init();
     }
@@ -49,19 +51,23 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
 
 void ScriptProp::Update(void) {
     if (bActive) {
-        unk40 -= gDisplay.updateFreq;
+        unk40 -= gDisplay.frameTime;
+
         if (!(unk40 <= 0.0f)) {
             return;
         }
+
         if (bDelayEachMessage) {
             messages[currentMessageIndex++].Send();
             if (currentMessageIndex == MessageCount) {
                 bActive = false;
                 return;
             }
+            
             unk40 = Delay;
             return;
         }
+
         Execute();
         bActive = false;
     }
@@ -140,6 +146,7 @@ void ConditionalScriptProp::Message(MKMessage* pMsg) {
             }
             return;
     }
+    
     ScriptProp::Message(pMsg);
 }
 

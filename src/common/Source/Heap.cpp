@@ -46,6 +46,7 @@ void* Heap_MemAlloc(int size) {
     if (pMem == NULL) {
         printf("Heap Alloc Failed: %d bytes attempted, %d used\n", size, OSGetConsoleSimulatedMemSize() - OSCheckHeap(0));
     }
+    
     return pMem;
 }
 
@@ -63,5 +64,6 @@ int Heap_Check(char* file, int lineNumber) {
         printf("%s Line: %d\n", file, lineNumber);
         exit(0);
     }
+
     return 0;
 }

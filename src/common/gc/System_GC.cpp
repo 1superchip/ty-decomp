@@ -37,13 +37,6 @@ int resetState = 0;
 static PtrListDL<ZCheckRequest> zCheckRequests;
 static int gSysOptions = 0;
 static bool bExit = false;
-int gFrameCounter = 0;
-int gDrawCounter = 0;
-static bool bDebugEnabled = false;
-static bool bDebugMenuActive = false;
-static bool bDebugModeActive = false;
-static View* pGameView;
-static int cmdLineArgCount = 0;
 
 
 MKDefaults gMKDefaults = {
@@ -85,7 +78,7 @@ Display gDisplay = {
     2, // region
     0, // unk4
     0.0f, // displayFreq
-    0.0f, // updateFreq
+    0.0f, // frameTime
     0, // unk10
     0, // unk14
     {0}, // unk18
@@ -95,6 +88,13 @@ Display gDisplay = {
     0.0f, // orthoXSize
     0.0f // orthoYSize
 };
+int gFrameCounter = 0;
+int gDrawCounter = 0;
+static bool bDebugEnabled = false;
+static bool bDebugMenuActive = false;
+static bool bDebugModeActive = false;
+static View* pGameView;
+static int cmdLineArgCount = 0;
 
 static char* gFillModeOptStrings[9] = {
     "Solid",
@@ -121,11 +121,15 @@ extern void MKGrass_InitTypes(char*);
 
 void System_InitModule(void*, char* pCmdLineArgs) {
     pMainThread = OSGetCurrentThread();
+
     memset((void*)&gRenderState, 0, sizeof(RenderState));
+
     gRenderState.alpha = -1;
+    
     if (pCmdLineArgs) {
         System_InitCommandLineArgs(pCmdLineArgs);
     }
+
     Game_InitSystem();
     Heap_InitModule(gMKDefaults.unk50);
     bDebugEnabled = true;
@@ -222,17 +226,21 @@ extern void MKMemoryCard_Update(void);
 // Main game loop function
 void System_DoGameLoop(void) {
     bool inputMapping = Input_IsKeyMappingEnabled();
+    
     while (true) {
         Model::Purge();
         Input_Update(true);
         FileSys_Update();
         Sound_Update();
         Water_Update();
+
         if (stopFrame != -1 && gFrameCounter >= stopFrame) {
             stopFrame = -1;
             bDebugModeActive = true;
         }
+
         MKMemoryCard_Update();
+
         if (bDebugEnabled != false) {
             if (Input_WasButtonPressed((InputDevices)0, 3, NULL)) {
                 if (bDebugMenuActive || Input_GetButtonState((InputDevices)0, 6, NULL)) {
@@ -243,10 +251,13 @@ void System_DoGameLoop(void) {
                 }
             }
         }
+
         Input_EnableKeyMapping(inputMapping);
+
         if (System_Update_Normal()) {
             return;
         }
+
         DEMODoneRender();
         System_GameDraw();
     }
@@ -254,23 +265,32 @@ void System_DoGameLoop(void) {
 
 bool System_Update_Normal(void) {
     static int lastCount = VIGetRetraceCount();
+
     int newRetraceCount = VIGetRetraceCount();
-    uint r29 = newRetraceCount - lastCount;
+
+    uint deltaRetraceCount = newRetraceCount - lastCount;
+
     lastCount = newRetraceCount;
-    if (r29 > 4) {
-        r29 = 4;
+
+    if (deltaRetraceCount > 4) {
+        deltaRetraceCount = 4;
     }
-    while (r29-- != 0) {
+
+    while (deltaRetraceCount-- != 0) {
         Material::UpdateCounter();
+
         if (Game_Update() || bExit) {
             return true;
         }
+
         gFrameCounter++;
-        if (r29 != 0) {
+
+        if (deltaRetraceCount != 0) {
             Input_Update(false);
             Sound_Update();
         }
     }
+
     return false;
 }
 
@@ -285,12 +305,15 @@ void System_GameDraw(void) {
     Matrix m;
     m.SetIdentity();
     Game_Draw();
+
     static Material* pTestCapture;
     static int createmat = 0;
+
     if (createmat == 0) {
         pTestCapture = Material::Create("capture");
         createmat++;
     }
+
     pGameView = View::GetCurrent();
     Material::UseNone(-1);
     Collision_Draw();
@@ -300,7 +323,7 @@ void System_GameDraw(void) {
             gCPUCycles / 81000, gGXCycles / 81000,
             totalMemLeft / 1024.0f, 105, gpBuildVersion);
         gpDebugFont->DrawText(debugStr, 320.0f, 495.0f, 1.0f, 1.0f,
-            (FontJustify)5, 0x80ffffff);
+            (FontJustify)5, COLOR_WHITE);
     }
     gDrawCounter++;
 }
@@ -317,12 +340,14 @@ void System_SetDebugCameraSpeedMultiplier(float speed) {
 
 void System_SetDisplayMode(int _region, int r4, int r5, int r6, int r7) {
     gDisplay.region = _region;
+
     if (VIGetTvFormat() == VI_PAL) {
         gDisplay.displayFreq = 50.0f;
     } else {
         gDisplay.displayFreq = 60.0f;
     }
-    gDisplay.updateFreq = 1.0f / gDisplay.displayFreq;
+
+    gDisplay.frameTime = 1.0f / gDisplay.displayFreq;
     gDisplay.unk10 = r4;
     gDisplay.unk14 = r5;
     gDisplay.unk28 = 640;
@@ -354,14 +379,17 @@ void System_InitCommandLineArgs(char* pCmdLineArgs) {
         if (*pCmdLine == 0) {
             return;
         }
+
         char* pFoundSpace = strchr(pCmdLine, ' ');
         pCmdLine = pFoundSpace;
+
         if (pCmdLine != NULL) {
             len = pCmdLine - r30;
             pCmdLine++;
         } else {
             len = strlen(r30);
         }
+
         ppCmdLineArgStrings[cmdLineArgCount] = (char*)malloc(len + 1);
         strncpy(ppCmdLineArgStrings[cmdLineArgCount], r30, len);
         ppCmdLineArgStrings[cmdLineArgCount][len] = '\0';
@@ -373,7 +401,7 @@ void System_InitCommandLineArgs(char* pCmdLineArgs) {
 extern "C" void free(void*);
 
 void System_DeinitCommandLineArgs(void) {
-    for(int i = 0; i < cmdLineArgCount; i++) {
+    for (int i = 0; i < cmdLineArgCount; i++) {
         free(ppCmdLineArgStrings[i]);
     }
     cmdLineArgCount = 0;
@@ -383,7 +411,8 @@ extern int strnicmp(const char*, const char*, int);
 
 char* System_GetCommandLineParameter(char* cmd) {
     int len = strlen(cmd);
-    for(int i = 0; i < cmdLineArgCount; i++) {
+    
+    for (int i = 0; i < cmdLineArgCount; i++) {
         if (strnicmp(cmd, ppCmdLineArgStrings[i], len) == 0) {
             if (ppCmdLineArgStrings[i][len] == '=') {
                 return &ppCmdLineArgStrings[i][len + 1];
@@ -426,10 +455,13 @@ void System_CheckZRequests(void) {
     ZCheckRequest** ppRequests = zCheckRequests.GetMem();
     while (*ppRequests != NULL) {
         ZCheckRequest* pCheck = *ppRequests;
+
         if (pCheck->unk10 == 0) {
             return;
         }
+
         pCheck->unk0.w = 1.0f;
+        
         Vector spC;
         spC.ApplyMatrixW(&pCheck->unk0, &pCheck->unk14->unk1C8);
         if (spC.w == 0.0f) {
@@ -441,14 +473,16 @@ void System_CheckZRequests(void) {
             pCheck->depth = 0.0f;
             return;
         }
+
         int r26 = gDisplay.unk10;
         int r31 = VIGetTvFormat() == 1 ? 496 : 448;
+
         float f5 = 1.0f / spC.w;
         float f1 = (spC.x * f5) * (float)r26;
         float f3 = (spC.y * f5) * r31;
         
         IntVector vec;
-        vec.x = (r26 >> 1) + (int)(f1  * 0.5f);
+        vec.x = (r26 >> 1) + (int)(f1 * 0.5f);
         vec.y = r31 - ((r31 >> 1) + (int)(f3 * 0.5f));
         vec.z = (spC.z * f5) * Z_BUFFER_DEPTH;
 
@@ -461,17 +495,19 @@ void System_CheckZRequests(void) {
             pCheck->depth = 0.0f;
             return;
         }
+
         pCheck->unk18 = 1;
         pCheck->unk20 = (float)vec.x;
         pCheck->unk24 = (float)vec.y;
         pCheck->unk2C = f5;
         pCheck->unk28 = 1.0f / f5;
+
         switch (pCheck->unk10) {
             case 1:
             case 2:
             pCheck->depth = 0.0f;
-            for(int y = -6; y <= 6; y++) {
-                for(int x = -6; x <= 6; x++) {
+            for (int y = -6; y <= 6; y++) {
+                for (int x = -6; x <= 6; x++) {
                     int yPos = vec.y + y;
                     int xPos = vec.x + x;
                     if (yPos >= 0 && yPos < r31 && xPos >= 0 && vec.x + x < r26) {
@@ -489,7 +525,7 @@ void System_CheckZRequests(void) {
     }
 }
 
-bool bHeapAllocated;
+static bool bHeapAllocated = false;
 
 void* operator new(size_t size) {
     if (bHeapAllocated) {
@@ -512,7 +548,7 @@ void ByteReverseVector(Vector &vec) {
     ByteReverse<float>(vec.w);
 }
 
-int ErrorHandled = 0;
+static int ErrorHandled = 0;
 extern "C" void OSDumpContext(OSContext*);
 extern "C" void exit(int);
 
@@ -528,14 +564,15 @@ static void MyErrorHandler(u16 r3, OSContext* pContext, ...) {
 extern void XFONTInit(u32, u32);
 extern void XFONTSetFrameBuffer(void*);
 extern void XFONTSetFgColor(u32);
-extern "C" void GXPokeZMode(int, int, int);
-extern "C" void GXPokeBlendMode(int, int, int, int);
+extern "C" void GXPokeZMode(GXBool doCompare, GXCompare func, GXBool doUpdate);
+extern "C" void GXPokeBlendMode(GXBlendMode mode, GXBlendFactor srcFactor, GXBlendFactor destFactor, GXLogicOp op);
 extern "C" int strlen(char*);
 extern "C" void strcpy(char*, char*);
 extern "C" void strcat(char*, char*);
 
 extern "C" int main(int argc, char* argv[]) {
     static char cmdLine[256] = {};
+
     // Initiate Error handlers
     OSSetErrorHandler(OS_ERROR_PROTECTION, MyErrorHandler);
     OSSetErrorHandler(OS_ERROR_DSI, MyErrorHandler);
@@ -549,10 +586,11 @@ extern "C" int main(int argc, char* argv[]) {
 
     // Initiate XFONT
     GXRenderModeObj* pRModeObj = DEMOGetRenderModeObj();
-    XFONTInit(0x180, ((u16)ALIGN_UP((u16)pRModeObj->fbWidth, 16) * pRModeObj->xfbHeight) * sizeof(u16));
+    XFONTInit(384, ((u16)ALIGN_UP((u16)pRModeObj->fbWidth, 16) * pRModeObj->xfbHeight) * sizeof(u16));
     XFONTSetFrameBuffer(DEMOGetCurrentBuffer());
     XFONTSetFgColor(0);
     zCheckRequests.Init(4, sizeof(ZCheckRequest));
+    
     if (VIGetTvFormat() == VI_PAL) {
         System_SetDisplayMode(0, 512, 528, 0, 24);
     } else {
@@ -567,14 +605,15 @@ extern "C" int main(int argc, char* argv[]) {
     Matrix mtx;
     mtx.SetIdentity();
     GXLoadPosMtxImm(mtx.data, GX_PNMTX1);
+
     GXSetLineWidth(6, GX_TO_ZERO);
     GXSetPointSize(4, GX_TO_ZERO);
     GXSetCullMode(GX_CULL_NONE);
     GXSetAlphaUpdate(true);
     GXSetCurrentMtx(GX_PNMTX0);
     GXSetDstAlpha(GX_ENABLE, 127);
-    GXPokeZMode(0, 7, 1);
-    GXPokeBlendMode(1, 1, 0, 15);
+    GXPokeZMode(GX_FALSE, GX_ALWAYS, GX_TRUE);
+    GXPokeBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_SET);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, false, 0x7d);
 
     GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
@@ -601,16 +640,19 @@ extern "C" int main(int argc, char* argv[]) {
 
     int i;
     int argStrLen = 0;
-    for(i = 1; i < argc; i++) {
+    for (i = 1; i < argc; i++) {
         argStrLen += strlen(argv[i]);
     }
+
     if (argc >= 2) {
         strcpy(cmdLine, argv[1]);
     }
-    for(i = 2; i < argc; i++) {
+
+    for (i = 2; i < argc; i++) {
         strcat(cmdLine, " ");
         strcat(cmdLine, argv[i]);
     }
+
     System_InitModule(NULL, cmdLine);
     System_SetOrthoSize(640, 512);
     Game_Init();
@@ -631,12 +673,14 @@ int MKMemoryCard_GetStatus(int);
 
 static bool System_AnyMemCardBusy(void) {
     bool ret = false;
-    for(int i = 0; i < 2; i++) {
+
+    for (int i = 0; i < 2; i++) {
         if (MKMemoryCard_GetStatus(i) == 1) {
             ret = true;
             break;
         }
     }
+
     return ret;
 }
 
@@ -647,10 +691,13 @@ void System_DoReset(bool r3, bool r4, bool bDeinitSounds) {
     VIFlush();
     VIWaitForRetrace();
     Input_StopAllVibration();
+
     if (bDeinitSounds) {
         Sound_DeinitModule();
     }
+
     PADRecalibrate(PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT);
+
     if (r3) {
         OSResetSystem(1, 0, r4);
     } else {
@@ -665,11 +712,13 @@ void System_IdleFunction(void* r3) {
     while (true) {
         static u64 timePadLast = 0;
         static s64 timeDiscClosed = OSGetTime();
+        
         static bool bDiscJustClosed = false;
         static bool bMainThreadSuspened = false;
+
         switch (DVDGetDriveStatus()) {
-            case 0:
-            case 1:
+            case DVD_STATE_END:
+            case DVD_STATE_BUSY:
                 DiscErr_ClearError();
                 if (OSIsThreadSuspended(pMainThread) && bMainThreadSuspened) {
                     Sound_SysResumeVoices();
@@ -677,7 +726,7 @@ void System_IdleFunction(void* r3) {
                     bMainThreadSuspened = false;
                 }
                 break;
-            case -1:
+            case DVD_STATE_FATAL_ERROR:
                 DiscErr_SetError(0);
                 Sound_SysPauseVoices();
                 if (!bMainThreadSuspened) {
@@ -685,7 +734,7 @@ void System_IdleFunction(void* r3) {
                     bMainThreadSuspened = true;
                 }
                 break;
-            case 2:
+            case DVD_STATE_WAITING:
                 if (bDiscJustClosed) {
                     timeDiscClosed = OSGetTime();
                 }
@@ -717,7 +766,7 @@ void System_IdleFunction(void* r3) {
                     bMainThreadSuspened = true;
                 }
                 break;
-            case 11:
+            case DVD_STATE_RETRY:
                 DiscErr_SetError(3); // "Disk could not be read"
                 Sound_SysPauseVoices();
                 if (!bMainThreadSuspened) {
@@ -726,6 +775,7 @@ void System_IdleFunction(void* r3) {
                 }
                 break;
         }
+
         if (DiscErr_IsError()) {
             DiscErr_DrawErrorString();
         } else if (bDiscJustClosed) {
@@ -733,6 +783,7 @@ void System_IdleFunction(void* r3) {
                 bDiscJustClosed = false;
             }
         }
+
         int resetButtonState = OSGetResetButtonState();
         if (resetButtonState != 0) {
             resetState = 1;
@@ -750,9 +801,11 @@ void System_IdleFunction(void* r3) {
                 resetState = 3;
             }
         }
+
         if (resetState == 4) {
             break;
         }
     }
+
     OSSetIdleFunction(NULL, NULL, NULL, 0);
 }

@@ -52,8 +52,10 @@ void Torch::LoadDone(void) {
             mWobbleTex.Init(7, 7);
         }
     }
+
     Particle_Fire_Init(&mpParticleSys0, GetPos(), pModel->GetModelVolume(), 2.0f, true);
     Particle_Fire_Init(&mpParticleSys1, GetPos(), pModel->GetModelVolume(), 2.0f, false);
+
     mDefaultScale = StaticProp::loadInfo.defaultScale;
     mDefaultRot = StaticProp::loadInfo.defaultRot;
     pLocalToWorld->GetRotationPYR(&mDefaultRot);
@@ -63,15 +65,19 @@ void Torch::LoadDone(void) {
 void Particle_DestroyASystem(ParticleSystem**, float);
 void Torch::Deinit(void) {
     mSoundHelper.Deinit();
+
     if (mpWobbleTexMat) {
         mpWobbleTexMat->Destroy();
         mpWobbleTexMat = NULL;
     }
+
     Particle_DestroyASystem(&mpParticleSys0, 0.0f);
     Particle_DestroyASystem(&mpParticleSys1, 0.0f);
+
     if (bFoundWater) {
         mWobbleTex.Deinit();
     }
+
     StaticProp::Deinit();
 }
 
@@ -79,9 +85,12 @@ void Torch::Deinit(void) {
 /// @param  None
 void Torch::Reset(void) {
     SetState(TORCH_IDLE, 1);
+    
     mSoundHelper.Reset();
     mFrozenTimer = 0;
+
     mRot = mDefaultRot;
+
     Vector temp0 = *GetPos();
     CollisionResult cr;
     temp0.y += 50.0f;
@@ -90,17 +99,22 @@ void Torch::Reset(void) {
     } else {
         mFloorY = GetPos()->y - 150.0f;
     }
+
     if (Tools_TestFloor(&temp0, &cr, -1000.0f, false)) {
         mCeilingY = cr.pos.y;
     } else {
         mCeilingY = GetPos()->y + 500.0f;
     }
+
     // Emits fire by default
     bEmitFire = true;
+
     unkA8 = 0.0f;
+
     if (flameRefIndex < 0) {
         flameRefIndex = pModel->GetRefPointIndex("R_Flame");
     }
+
     mFlameRefIndex = flameRefIndex;
     pModel->GetRefPointWorldPosition(mFlameRefIndex, &mFlamePos);
     mLightCol = lightCol;
@@ -112,6 +126,7 @@ void Torch::Reset(void) {
 /// @param  None
 void Torch::Update(void) {
     unkAC++;
+
     if (mFrozenTimer > 0) {
         // if mFrozenTimer is greater than 0
         // the Torch should not emit fire
@@ -143,16 +158,20 @@ void Torch::Update(void) {
         // Only update Ty's shadow if the torch flame is lit
         UpdateShadow();
     }
+
     bEmitFire2 = bEmitFire;
     mSoundHelper.Update(199, 0, bEmitFire, 0, &mFlamePos, distSquared, 0);
 }
 
 void Torch::Draw(void) {
     lodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
+
     pModel->GetRefPointWorldPosition(flameRefIndex, &mFlamePos);
+
     if (bFoundWater) {
         mWobbleTex.SetUpGrid(&mFlamePos, 100.0f, 200.0f, mWaterY);
         mWobbleTex.WobbleUVs(0.33f);
+
         if (mWaterY < View::GetCurrent()->mCamPos.y) {
             mWobbleTex.Draw(mpWobbleTexMat, false);
         }
@@ -177,6 +196,7 @@ void Torch::Hit(void) {
         mRotSpeedSetting = 0;
         mRotInc = PI / 32.0f;
     }
+
     switch (unkB0) {
         case 1:
             mRot.x += mRotInc;
@@ -213,6 +233,7 @@ void Torch::Hit(void) {
             mRot = mDefaultRot;
             break;
     }
+    
     pModel->SetRotation(&mRot);
     pModel->GetRefPointWorldPosition(mFlameRefIndex, &mFlamePos);
     EmitFire();

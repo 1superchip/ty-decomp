@@ -89,5 +89,6 @@ void D1PropEndOfCredits(void) {
             gpD1Prop->OnCompletion.Send();
         }
     }
+    
     gpD1Prop->bActive = false;
 }

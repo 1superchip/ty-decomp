@@ -107,6 +107,7 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
                 OSPanic("demoinit.cpp", 237, "DEMOInit: invalid TV format\n");
                 break;
         }
+        
         rmode->fbWidth = 512;
         GXAdjustForOverscan(rmode, &rmodeobj, 0, 16);
         rmode = &rmodeobj;
@@ -116,6 +117,7 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
 static void __DEMOInitMem(void) {
     OSReport("Simulated Memory Size = %dMB\nPhysical Memory Size = %dMB\n",
         OSGetConsoleSimulatedMemSize() / 0x100000, OSGetPhysicalMemSize() / 0x100000);
+    
     void* lo = OSGetArenaLo();
     void* hi = OSGetArenaHi();
     void* arenaLo = OSInitAlloc(lo, hi, 1);
@@ -123,6 +125,7 @@ static void __DEMOInitMem(void) {
     arenaLo = (void *)ALIGN_UP((int)arenaLo, 32);
     OSSetCurrentHeap(OSCreateHeap(arenaLo, (void*)((int)hi & ~(32 - 1))));
     OSSetArenaLo((void*)((int)hi & ~(32 - 1)));
+
     memset(pBuffer, 0, sizeof(pBuffer));
     DCStoreRange(pBuffer, sizeof(pBuffer));
 }
@@ -130,10 +133,13 @@ static void __DEMOInitMem(void) {
 static void __DEMOInitGX(void) {
     GXSetViewport(0.0f, 0.0f, (float)rmode->fbWidth, (float)rmode->efbHeight, 0.0f, 1.0f);
     GXSetScissor(0, 0, rmode->fbWidth, rmode->efbHeight);
+    
     u16 r31 = GXSetDispCopyYScale(GXGetYScaleFactor(rmode->efbHeight, rmode->xfbHeight));
+    
     GXSetDispCopySrc(0, 0, rmode->fbWidth, rmode->efbHeight);
     GXSetDispCopyDst(rmode->fbWidth, r31);
     GXSetCopyFilter(rmode->aa, rmode->sample_pattern, 1, rmode->vfilter);
+
     if (rmode->aa != 0) {
         GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
     } else {
@@ -141,6 +147,7 @@ static void __DEMOInitGX(void) {
         GXSetCopyClear(copyClrColor, 0x00FFFFFF);
         GXSetPixelFmt(GX_PF_RGBA6_Z24, GX_ZC_LINEAR);
     }
+
     GXCopyDisp(pBuffer, GX_TRUE);
     GXSetDispCopyGamma(GX_GM_1_0);
 }
@@ -151,19 +158,25 @@ extern "C" void DEMOBeforeRender(void) {
     } else {
         GXSetViewport(0.0f, 0.0f, (float)rmode->fbWidth, (float)rmode->efbHeight, 0.0f, 1.0f);
     }
+
     GXInvalidateVtxCache();
     GXInvalidateTexAll();
 }
 
 extern "C" void DEMODoneRender(void) {
     static int lastCPUCycles = 0;
+
     gCPUCycles = OSTicksToCycles(OSGetTick()) - lastCPUCycles;
+
     GXDrawDone();
     System_CheckZRequests();
+
     gGXCycles = OSTicksToCycles(OSGetTick()) - lastCPUCycles;
+
     if (gMKDefaults.lockTo30 && VIGetRetraceCount() % 2) {
         VIWaitForRetrace();
     }
+
     bNeedAFlip = true;
     VIWaitForRetrace();
     lastCPUCycles = OSTicksToCycles(OSGetTick());

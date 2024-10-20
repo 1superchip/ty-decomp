@@ -459,16 +459,20 @@ ModelExplorer_GC* Model::Explore(int* pVertCount, int* pTriangleCount, int* pStr
     pExplorer->subObjectIdx = 0;
     pExplorer->materialIdx = 0;
     pExplorer->PrimeMaterial();
+    
     if (pVertCount || pTriangleCount || pStripCount) {
         int numVertices = pTemplate->pModelData->vertexCount;
         int triangleCount = 0;
         int stripCount = 0;
-        for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
+
+        for (int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
             SubObject* pSubobj = &pTemplate->pModelData->pSubObjects[i];
-            for(int j = 0; j < pSubobj->nmbrOfMaterials; j++) {
+
+            for (int j = 0; j < pSubobj->nmbrOfMaterials; j++) {
                 SubObjectMaterial* pObjMaterial = &pSubobj->pMaterials[j];
                 u8* pStrip = (u8*)pObjMaterial->pStripData;
-                for(int stripIdx = 0; stripIdx < pObjMaterial->nmbrOfStrips; stripIdx++) {
+
+                for (int stripIdx = 0; stripIdx < pObjMaterial->nmbrOfStrips; stripIdx++) {
 					// code does not check primitive
 					// not designed to support anything but triangle strips within display lists
                     DisplayList* pDL = (DisplayList*)pStrip;
@@ -481,15 +485,19 @@ ModelExplorer_GC* Model::Explore(int* pVertCount, int* pTriangleCount, int* pStr
                 }
             }
         }
+
         if (pVertCount != NULL) {
             *pVertCount = numVertices;
         }
+
         if (pTriangleCount != NULL) {
             *pTriangleCount = triangleCount;
         }
+        
         if (pStripCount != NULL) {
             *pStripCount = stripCount;
         }
+
     }
 
     return pExplorer;
@@ -568,7 +576,8 @@ bool Model::ExploreNextFace(ModelExplorer* pExplorer) {
         pExplorer->unk8++;
     } else {
         int stripCount = 
-        pTemplate->pModelData->pSubObjects[pExplorer->subObjectIdx].pMaterials[pExplorer->materialIdx].nmbrOfStrips;
+            pTemplate->pModelData->pSubObjects[pExplorer->subObjectIdx].pMaterials[pExplorer->materialIdx].nmbrOfStrips;
+        
         if (++pExplorer->stripNum < stripCount) {
             ModelExplorer_GC* explorerGC = (ModelExplorer_GC*)pExplorer;
             u8* pStrip = (u8*)pExplorer->pStripData;
@@ -579,6 +588,7 @@ bool Model::ExploreNextFace(ModelExplorer* pExplorer) {
             return ExploreNextMaterial(pExplorer);
         }
     }
+
     return true;
 }
 
@@ -586,11 +596,13 @@ bool Model::ExploreNextMaterial(ModelExplorer* pExplorer) {
 	// no inheritance?
     ModelExplorer_GC* explorerGC = (ModelExplorer_GC*)pExplorer;
     int matCount = pTemplate->pModelData->pSubObjects[pExplorer->subObjectIdx].nmbrOfMaterials;
+
     if (++pExplorer->materialIdx < matCount) {
         explorerGC->PrimeMaterial();
     } else {
 		return ExploreNextSubObject(pExplorer);
     }
+
     return 1;
 }
 
@@ -602,6 +614,7 @@ bool Model::ExploreNextSubObject(ModelExplorer* pExplorer) {
     } else {
         return 0;
     }
+    
     return 1;
 }
 

@@ -40,9 +40,12 @@ void Video_DeinitModule(void) {
 
 Video* Video_CreateStreaming(char* pName, Material* pMaterial, bool, int track) {
     char buffer[256];
+
     Video_SwitchSoundState((sound_state)1);
+
     sprintf(buffer, "video/%s.thp", pName);
     THPPlayerOpen(buffer, 0);
+
     currentVideo.pMem = Heap_MemAlloc(THPPlayerCalcNeedMemory());
     THPPlayerSetBuffer((u8*)currentVideo.pMem);
     THPPlayerGetVideoInfo(&currentVideo.videoInfo);
@@ -50,6 +53,7 @@ Video* Video_CreateStreaming(char* pName, Material* pMaterial, bool, int track) 
     currentVideo.bActive = true;
     THPPlayerPrepare(0, 0, track);
     THPPlayerPlay();
+
     if (pMaterial == NULL) {
         // if the material parameter is NULL, create a new Mpeg material
         pMaterial = Material::CreateMpegTarget(
@@ -57,22 +61,29 @@ Video* Video_CreateStreaming(char* pName, Material* pMaterial, bool, int track) 
             currentVideo.videoInfo.mXSize, currentVideo.videoInfo.mYSize
         );
     }
+
     currentVideo.pVideoMat = pMaterial;
     Texture* tex = pMaterial->unk54;
     void** ppTexYData = &tex->pYData;
     void** ppTexUData = &tex->pUData;
     void** ppTexVData = &tex->pVData;
+
     u32 end = ActivePlayer.mRetraceCount + 60;
     u64 start = ActivePlayer.mRetraceCount;
+
     while (!ActivePlayer.mDispTextureSet && start != end) {}
+
     Video_GetYUVData(ppTexYData, ppTexUData, ppTexVData);
+
     return &currentVideo;
 }
 
 bool Video_Update(Video* pVideo) {
     Texture* tex = currentVideo.pVideoMat->unk54;
     Video_GetYUVData(&tex->pYData, &tex->pUData, &tex->pVData);
+
     bRenderTargetUpdated = true;
+
     switch (THPPlayerGetState()) {
         case 1:
         case 2:
@@ -91,6 +102,7 @@ bool Video_Update(Video* pVideo) {
             }
             break;
     }
+
     return false;
 }
 
@@ -98,14 +110,17 @@ void Video_Destroy(Video* pVideo) {
     if (pVideo != NULL && currentVideo.bActive) {
         THPPlayerStop();
         THPPlayerClose();
+
         if (currentVideo.pMem) {
             Heap_MemFree(currentVideo.pMem);
             currentVideo.pMem = NULL;
         }
+
         if (currentVideo.pVideoMat) {
             currentVideo.pVideoMat->Destroy();
             currentVideo.pVideoMat = NULL;
         }
+
         currentVideo.bActive = false;
         Video_SwitchSoundState((sound_state)0);
     }
@@ -117,6 +132,7 @@ void Video_Draw(Video* pVideo, float z, float f2) {
     if (!bRenderTargetUpdated) {
         Video_Update(pVideo);
     }
+
     currentVideo.pVideoMat->Use();
 
     float x = (f2 * 640.0f) * 0.5f;
@@ -146,6 +162,7 @@ static int Video_GetYUVData(void** ppYTexture, void** ppUTexture, void** ppVText
         return (ActivePlayer.mDispTextureSet->mFrameNumber + ActivePlayer.mInitReadFrame) % 
             ActivePlayer.mHeader.mNumFrames;
     }
+
     return -1;
 }
 
@@ -155,6 +172,7 @@ static void Video_SwitchSoundState(sound_state state) {
     if (state == Sound_CurrentState) {
         return;
     }
+    
     switch (state) {
         case 1:
             videoVolume = GetVideoVolume();

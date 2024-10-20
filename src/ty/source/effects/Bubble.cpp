@@ -63,7 +63,7 @@ void Bubble_CustomUpdate(ParticleSystem* pSys) {
             Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
             do {
                 pParticle->SetUnk58ArrayByIndex(1, 
-                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.updateFreq);
+                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.frameTime);
                 if (pParticle->GetUnk58ArrayByIndex(1) <= 0.0f || 
                     pParticle->mY > pParticle->GetUnk58ArrayByIndex(0)) {
                     pSys->DestroyParticle(pParticle, ppChunks);

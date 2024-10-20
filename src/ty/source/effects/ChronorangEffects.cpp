@@ -137,7 +137,7 @@ void SleepyDust::Init(void) {
     SleepyDust_Reset();
 
     if (pSystem) {
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             Particle* p = pSystem->CreateParticle();
             
             if (p) {
@@ -161,7 +161,7 @@ void SleepyDust_Deinit(void) {
 }
 
 void SleepyDust_Reset(void) {
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         sleepyDust.dustEntries[i].matrix.SetIdentity();
         sleepyDust.pSystem->pDynamicData[i].pMatrix = &sleepyDust.dustEntries[i].matrix;
 
@@ -179,7 +179,7 @@ void SleepyDust::Update(void) {
         return;
     }
 
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         if (dustEntries[i].unk0) {
             if (dustEntries[i].unk1) {
                 dustEntries[i].matrix.Scale(0.92f);
@@ -229,7 +229,7 @@ void SleepyDust::Update(void) {
 }
 
 void SleepyDust_Update(Model* pModel) {
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         if (sleepyDust.dustEntries[i].unk0 && sleepyDust.dustEntries[i].pModel == pModel) {
             sleepyDust.dustEntries[i].unk1 = false;
         }
@@ -241,13 +241,13 @@ void SleepyDust_AddNewUser(Model* pModel) {
         return;
     }
 
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         if (sleepyDust.dustEntries[i].unk0 && sleepyDust.dustEntries[i].pModel == pModel) {
             return;
         }
     }
 
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         if (!sleepyDust.dustEntries[i].unk0) {
             sleepyDust.dustEntries[i].pModel = pModel;
             sleepyDust.dustEntries[i].unk1 = false;
@@ -263,7 +263,7 @@ void SleepyDust_RemoveUser(Model* pModel) {
         return;
     }
 
-    for(int i = 0; i < NUM_DUST_ENTRIES; i++) {
+    for (int i = 0; i < NUM_DUST_ENTRIES; i++) {
         if (sleepyDust.dustEntries[i].unk0 && sleepyDust.dustEntries[i].pModel == pModel) {
             sleepyDust.dustEntries[i].unk1 = true;
         }

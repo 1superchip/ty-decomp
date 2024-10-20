@@ -38,6 +38,7 @@ void Talisman::Deinit(void) {
     if (pParticleSystem) {
         Particle_DestroyASystem(&pParticleSystem, 0.0f);
     }
+
     pParticleSystem = NULL;
     StaticProp::Deinit();
 }
@@ -58,7 +59,9 @@ void Talisman::Reset(void) {
 
 void Talisman::Update(void) {
     // if Talisman isn't visible, don't update it
-    if (!bCurrentVisible) return;
+    if (!bCurrentVisible) {
+        return;
+    }
     
     if ((gb.logicGameCount & 3) == 1) {
         Vector vec; // particlePos?
@@ -95,5 +98,6 @@ void Talisman::Message(MKMessage* pMsg) {
             bCurrentVisible = false;
             break;
     }
+    
     GameObject::Message(pMsg);
 }

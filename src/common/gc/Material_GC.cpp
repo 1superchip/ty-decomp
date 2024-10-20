@@ -118,63 +118,61 @@ char* Material::InitFromMatDefs(char* pName) {
                 if (stricmp(pLine->pFieldName, "blend") == 0) {
                     if (pLine->elementCount == 0) {
                         materialIni.Warning("Missing blend value!");
+                    } else if (pLine->AsInt(0, &blend) != false) {
+                        switch (blend) {
+                        case 0:
+                            blendMode = Blend_Opaque;
+                            ClearFlags(8);
+                            ClearFlags(0x10);
+                            break;
+                        case 1:
+                            blendMode = Blend_Additive;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                            break;
+                        case 2:
+                            blendMode = Blend_Subtractive;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                            break;
+                        case 5:
+                            blendMode = Blend_Alpha;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                            break;
+                        case 6:
+                            blendMode = Blend_Blend;
+                            ClearFlags(8);
+                            ClearFlags(0x10);
+                            break;
+                        default:
+                            materialIni.Warning(Str_Printf("Bad blend type %d", blend));
+                            break;
+                        }
                     } else {
-                        if (pLine->AsInt(0, &blend) != false) {
-                            switch (blend) {
-                            case 0:
-                                blendMode = Blend_Opaque;
-                                ClearFlags(8);
-                                ClearFlags(0x10);
-                                break;
-                            case 1:
-                                blendMode = Blend_Additive;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                                break;
-                            case 2:
-                                blendMode = Blend_Subtractive;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                                break;
-                            case 5:
-                                blendMode = Blend_Alpha;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                                break;
-                            case 6:
-                                blendMode = Blend_Blend;
-                                ClearFlags(8);
-                                ClearFlags(0x10);
-                                break;
-                            default:
-                                materialIni.Warning(Str_Printf("Bad blend type %d", blend));
-                                break;
-                            }
+                        pLine->AsString(0, &pBlend);
+                        if (stricmp(pBlend, "opaque") == 0) {
+                            blendMode = Blend_Opaque;
+                            ClearFlags(8);
+                            ClearFlags(0x10);
+                        } else if (stricmp(pBlend, "additive") == 0) {
+                            blendMode = Blend_Additive;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                        } else if (stricmp(pBlend, "subtractive") == 0) {
+                            blendMode = Blend_Subtractive;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                        } else if (stricmp(pBlend, "alpha") == 0) {
+                            blendMode = Blend_Alpha;
+                            ClearFlags(8);
+                            SetFlags(0x10);
+                        } else if (stricmp(pBlend, "blend") == 0) {
+                            blendMode = Blend_Blend;
+                            ClearFlags(8);
+                            ClearFlags(0x10);
                         } else {
-                            pLine->AsString(0, &pBlend);
-                            if (stricmp(pBlend, "opaque") == 0) {
-                                blendMode = Blend_Opaque;
-                                ClearFlags(8);
-                                ClearFlags(0x10);
-                            } else if (stricmp(pBlend, "additive") == 0) {
-                                blendMode = Blend_Additive;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                            } else if (stricmp(pBlend, "subtractive") == 0) {
-                                blendMode = Blend_Subtractive;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                            } else if (stricmp(pBlend, "alpha") == 0) {
-                                blendMode = Blend_Alpha;
-                                ClearFlags(8);
-                                SetFlags(0x10);
-                            } else if (stricmp(pBlend, "blend") == 0) {
-                                blendMode = Blend_Blend;
-                                ClearFlags(8);
-                                ClearFlags(0x10);
-                            } else {
-                                materialIni.Warning(Str_Printf("Unknown blend mode %s", pBlend));
-                            }
+                            materialIni.Warning(Str_Printf("Unknown blend mode %s", pBlend));
                         }
                     }
                 } else if (stricmp(pLine->pFieldName, "filter_gc") == 0) {
@@ -305,164 +303,161 @@ char* Material::InitFromMatDefs(char* pName) {
                     } else {
                         ClearFlags(Flag_AlphaMask);
                     }
-                } else {
-                    if (stricmp(pLine->pFieldName, "envmap") == 0) {
-                        type = Type_EnvMap;
-                    } else {
-                        if (stricmp(pLine->pFieldName, "indirectWater") == 0) {
-                            type = Type_IndirectWater;
-                            if (pLine->elementCount < 6) {
-                                materialIni.Warning("Missing parameters!");
-                            }
-                            // switch to go to last element in line and then read every element until element 0
-                            switch (pLine->elementCount) {
-                                int val;
-                            default:
-                            case 5:
-                                pLine->AsFloat(5, &indirectWaterVec.y);
-                            case 4:
-                                pLine->AsFloat(4, &indirectWaterVec.x);
-                            case 3:
-                                pLine->AsFloat(3, &indirectWaterVec.w);
-                            case 2:
-                                pLine->AsFloat(2, &indirectWaterVec.z);
-                            case 1:
-                                pLine->AsFlag(1, &val);
-                                unkCD = val;
-                            case 0:
-                                pLine->AsFlag(0, &val);
-                                unkCC = val;
-                                if (pLine->elementCount == 0) {
-                                    materialIni.Warning("Missing type value!");
-                                }
-                            }
-                        } else if (stricmp(pLine->pFieldName, "color") == 0) {
-                            pLine->AsFloat(0, &color.x);
-                            pLine->AsFloat(1, &color.y);
-                            pLine->AsFloat(2, &color.z);
-                            if (pLine->AsFloat(3, &color.w) == false) {
-                                color.w = 1.0f;
-                            }
-                        } else if (stricmp(pLine->pFieldName, "overlay") == 0) {
-                            if (pLine->AsString(0, &pOverlayName) == false) {
-                                materialIni.Warning("Missing overlay name");
-                            }
-                        } else if (stricmp(pLine->pFieldName, "ambient") == 0) {
-                            float amb;
-                            pLine->AsFloat(0, &amb);
-                            if (amb > 0.0f) {
-                                // if ambient light is greater than 0.0f, the material is prelit
-                                type = Type_Prelit;
-                            }
-                        } else if (stricmp(pLine->pFieldName, "aref") == 0) {
-                            pLine->AsFloat(0, &unk5C); // alpha reference0 for parameter 2 of GXSetAlphaCompare
-                        } else if (stricmp(pLine->pFieldName, "zread") == 0) {
-                            int zread;
-                            if (pLine->AsInt(0, &zread) == false) {
-                                materialIni.Warning("Missing on/off");
-                            } else {
-                                ConditionallySetRemoveFlags(0x8, zread == 0);
-                            }
-                        } else if (stricmp(pLine->pFieldName, "zwrite") == 0) {
-                            int zwrite;
-                            if (pLine->AsInt(0, &zwrite) == false) {
-                                materialIni.Warning("Missing on/off");
-                            } else {
-                                ConditionallySetRemoveFlags(0x10, zwrite == 0);
-                            }
-                        } else if (stricmp(pLine->pFieldName, "alias") == 0) {
-                            if (pLine->AsString(0, &pTextureName) == false) {
-                                materialIni.Warning("Missing texture name");
-                            } else {
-                                Texture_IsAlias = true;
-                            }
-                        } else if (stricmp(pLine->pFieldName, "animate") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("animate cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
-                                    materialIni.Warning("Missing parameters for 'animate'");
-                                } else {
-                                    flags |= Flag_Animate;
-                                }
-                            }
-                        } else if (stricmp(pLine->pFieldName, "scroll") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("scroll cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4))) {
-                                    materialIni.Warning("Missing parameters");
-                                } else {
-                                    flags |= Flag_Scroll;
-                                }
-                            }
-                        } else if (stricmp(pLine->pFieldName, "rotate") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
-                                    materialIni.Warning("Missing parameters");
-                                } else {
-                                    flags |= Flag_Rotate;
-                                }
-                            }
-                        } else if (stricmp(pLine->pFieldName, "envscroll") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                if (pLine->elementCount == 0) {
-                                    // set default envscroll values if none are provided
-                                    unkA0 = 1.0f;
-                                    unkA4 = -1.0f;
-                                    unkB4 = 0.25f;
-                                    unkB8 = 0.5f;
-                                    unkBC = 0.0f;
-                                    unkC0 = 0.25f;
-                                }
-                                else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
-                                        pLine->AsFloat(2, &unkB4) | pLine->AsFloat(3, &unkB8) | 
-                                        pLine->AsFloat(4, &unkBC) | pLine->AsFloat(5, &unkC0))) {
-                                    materialIni.Warning("Missing parameters");
-                                    goto end;
-                                }
-                                flags |= Flag_EnvRotate;
-                            }
-                        } else if (stricmp(pLine->pFieldName, "sinrotate") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
-                                    pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
-                                    materialIni.Warning("Missing parameters");
-                                } else {
-                                    flags |= Flag_SinRotate;
-                                }
-                            }
-                        } else if (stricmp(pLine->pFieldName, "matrix") == 0) {
-                            if (flags & 0x1f2000) {
-                                materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
-                            } else {
-                                flags |= 0x2000;
-                            }
-                        } else {
-                            materialIni.Warning("Unknown field name");
-                        }
+                } else if (stricmp(pLine->pFieldName, "envmap") == 0) {
+                    type = Type_EnvMap;
+                } else if (stricmp(pLine->pFieldName, "indirectWater") == 0) {
+                    type = Type_IndirectWater;
+                    if (pLine->elementCount < 6) {
+                        materialIni.Warning("Missing parameters!");
                     }
+                    // switch to go to last element in line and then read every element until element 0
+                    int val;
+                    switch (pLine->elementCount) {
+                        default:
+                        case 5:
+                            pLine->AsFloat(5, &indirectWaterVec.y);
+                            // fallthrough
+                        case 4:
+                            pLine->AsFloat(4, &indirectWaterVec.x);
+                            // fallthrough
+                        case 3:
+                            pLine->AsFloat(3, &indirectWaterVec.w);
+                            // fallthrough
+                        case 2:
+                            pLine->AsFloat(2, &indirectWaterVec.z);
+                            // fallthrough
+                        case 1:
+                            pLine->AsFlag(1, &val);
+                            unkCD = val;
+                            // fallthrough
+                        case 0:
+                            pLine->AsFlag(0, &val);
+                            unkCC = val;
+                            if (pLine->elementCount == 0) {
+                                materialIni.Warning("Missing type value!");
+                            }
+                            break;
+                    }
+                } else if (stricmp(pLine->pFieldName, "color") == 0) {
+                    pLine->AsFloat(0, &color.x);
+                    pLine->AsFloat(1, &color.y);
+                    pLine->AsFloat(2, &color.z);
+                    if (pLine->AsFloat(3, &color.w) == false) {
+                        color.w = 1.0f;
+                    }
+                } else if (stricmp(pLine->pFieldName, "overlay") == 0) {
+                    if (pLine->AsString(0, &pOverlayName) == false) {
+                        materialIni.Warning("Missing overlay name");
+                    }
+                } else if (stricmp(pLine->pFieldName, "ambient") == 0) {
+                    float amb;
+                    pLine->AsFloat(0, &amb);
+                    if (amb > 0.0f) {
+                        // if ambient light is greater than 0.0f, the material is prelit
+                        type = Type_Prelit;
+                    }
+                } else if (stricmp(pLine->pFieldName, "aref") == 0) {
+                    pLine->AsFloat(0, &unk5C); // alpha reference0 for parameter 2 of GXSetAlphaCompare
+                } else if (stricmp(pLine->pFieldName, "zread") == 0) {
+                    int zread;
+                    if (pLine->AsInt(0, &zread) == false) {
+                        materialIni.Warning("Missing on/off");
+                    } else {
+                        ConditionallySetRemoveFlags(0x8, zread == 0);
+                    }
+                } else if (stricmp(pLine->pFieldName, "zwrite") == 0) {
+                    int zwrite;
+                    if (pLine->AsInt(0, &zwrite) == false) {
+                        materialIni.Warning("Missing on/off");
+                    } else {
+                        ConditionallySetRemoveFlags(0x10, zwrite == 0);
+                    }
+                } else if (stricmp(pLine->pFieldName, "alias") == 0) {
+                    if (pLine->AsString(0, &pTextureName) == false) {
+                        materialIni.Warning("Missing texture name");
+                    } else {
+                        Texture_IsAlias = true;
+                    }
+                } else if (stricmp(pLine->pFieldName, "animate") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("animate cannot be combined with animate/scrolling/rotating");
+                    } else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
+                        materialIni.Warning("Missing parameters for 'animate'");
+                    } else {
+                        flags |= Flag_Animate;
+                    }
+                } else if (stricmp(pLine->pFieldName, "scroll") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("scroll cannot be combined with animate/scrolling/rotating");
+                    } else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4))) {
+                        materialIni.Warning("Missing parameters");
+                    } else {
+                        flags |= Flag_Scroll;
+                    }
+                } else if (stricmp(pLine->pFieldName, "rotate") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                    } else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | pLine->AsFloat(2, &unkA8))) {
+                        materialIni.Warning("Missing parameters");
+                    } else {
+                        flags |= Flag_Rotate;
+                    }
+                } else if (stricmp(pLine->pFieldName, "envscroll") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                    } else {
+                        if (pLine->elementCount == 0) {
+                            // set default envscroll values if none are provided
+                            unkA0 = 1.0f;
+                            unkA4 = -1.0f;
+                            unkB4 = 0.25f;
+                            unkB8 = 0.5f;
+                            unkBC = 0.0f;
+                            unkC0 = 0.25f;
+                        } else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
+                                pLine->AsFloat(2, &unkB4) | pLine->AsFloat(3, &unkB8) | 
+                                pLine->AsFloat(4, &unkBC) | pLine->AsFloat(5, &unkC0))) {
+                            materialIni.Warning("Missing parameters");
+                            goto end;
+                        }
+                        flags |= Flag_EnvRotate;
+                    }
+                } else if (stricmp(pLine->pFieldName, "sinrotate") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                    } else if (!(pLine->AsFloat(0, &unkA0) | pLine->AsFloat(1, &unkA4) | 
+                        pLine->AsFloat(2, &unkA8) | pLine->AsFloat(3, &unkB0))) {
+                        materialIni.Warning("Missing parameters");
+                    } else {
+                        flags |= Flag_SinRotate;
+                    }
+                } else if (stricmp(pLine->pFieldName, "matrix") == 0) {
+                    if (flags & 0x1f2000) {
+                        materialIni.Warning("rotate cannot be combined with animate/scrolling/rotating");
+                    } else {
+                        flags |= 0x2000;
+                    }
+                } else {
+                    materialIni.Warning("Unknown field name");
                 }
             }
             end:
             pLine = materialIni.GetNextLine();
         } while (pLine != NULL && pLine->section == NULL);
     }
+
     if (pTextureName != NULL) {
         strcpy(textureName, pTextureName);
     }
+
     if (pOverlayName != NULL) {
         pOverlayMat = Material::Create(pOverlayName);
     }
+
     if (pTextureName != NULL) {
         return Str_CopyString(textureName, sizeof(textureName));
     }
+    
     return name;
 }
 
@@ -800,15 +795,10 @@ void Material::Use(void) {
                     GXLoadTexMtxImm(ident.data, 0x40, GX_MTX3x4);
                     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0x1e, GX_FALSE, 0x40);
                 } else {
-                    Mtx24 texMat = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-                    texMat.data[0][0] = unk60.data[0][0];
-                    texMat.data[0][1] = unk60.data[1][0];
-                    texMat.data[0][2] = unk60.data[2][0];
-                    texMat.data[0][3] = unk60.data[3][0];
-                    texMat.data[1][0] = unk60.data[0][1];
-                    texMat.data[1][1] = unk60.data[1][1];
-                    texMat.data[1][2] = unk60.data[2][1];
-                    texMat.data[1][3] = unk60.data[3][1];
+                    Mtx24 texMat = {
+                        unk60.data[0][0], unk60.data[1][0], unk60.data[2][0], unk60.data[3][0],
+                        unk60.data[0][1], unk60.data[1][1], unk60.data[2][1], unk60.data[3][1]
+                    };
                     GXLoadTexMtxImm(texMat.data, GX_TEXMTX0, GX_MTX2x4);
                     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
                 }
@@ -843,7 +833,10 @@ void Material::Use(void) {
                     GXLoadTexMtxImm(mtx.data, GX_TEXMTX1, GX_MTX2x4);
                     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, 0x21, GX_FALSE, 0x7d);
                 }
-                Mtx23 mat23 = {0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+                Mtx23 mat23 = {
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f
+                };
                 mat23.data[0][0] = indirectWaterVec.z;
                 mat23.data[1][1] = indirectWaterVec.w;
                 GXSetIndTexMtx(GX_ITM_0, mat23.data, 1);
@@ -852,15 +845,10 @@ void Material::Use(void) {
                 GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
                 break;
             default:
-                Mtx24 mat24 = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-                mat24.data[0][0] = unk60.data[0][0];
-                mat24.data[0][1] = unk60.data[1][0];
-                mat24.data[0][2] = unk60.data[2][0];
-                mat24.data[0][3] = unk60.data[3][0];
-                mat24.data[1][0] = unk60.data[0][1];
-                mat24.data[1][1] = unk60.data[1][1];
-                mat24.data[1][2] = unk60.data[2][1];
-                mat24.data[1][3] = unk60.data[3][1];
+                Mtx24 mat24 = {
+                    unk60.data[0][0], unk60.data[1][0], unk60.data[2][0], unk60.data[3][0],
+                    unk60.data[0][1], unk60.data[1][1], unk60.data[2][1], unk60.data[3][1]
+                };
                 GXLoadTexMtxImm(mat24.data, GX_TEXMTX0, GX_MTX2x4);
                 GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, GX_FALSE, 0x7d);
                 pTex->Use();
@@ -1070,7 +1058,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
 }
 
 void Material::Update(void) {
-    float frameSpeed = gDisplay.updateFreq * (float)(frameCounter - frameCounter1);
+    float frameSpeed = gDisplay.frameTime * (float)(frameCounter - frameCounter1);
     frameCounter1 = frameCounter;
     int matFlags = flags;
     if (matFlags & 0x10000) {

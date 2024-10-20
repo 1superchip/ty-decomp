@@ -99,7 +99,7 @@ struct Display {
     int region; // Default = 2
     int unk4;
     float displayFreq; // 50 for PAL, 60 for NTSC
-    float updateFreq; // 1.0f / displayFreq
+    float frameTime; // 1.0f / displayFreq
     int unk10;
     int unk14;
     char padding_0x18[0x10];

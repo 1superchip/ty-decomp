@@ -133,6 +133,7 @@ void Model::Destroy(void) {
 
 void Model::Purge(void) {
     Model **ppModels = modelInstances.pPointers;
+
     while (*ppModels != NULL) {
         Model *pModel = *ppModels;
         if (pModel->flags.bits.b0 != 0 && --pModel->flags.bits.b0 == 0) {
@@ -153,6 +154,7 @@ void Model::Purge(void) {
         }
         ppModels++;
     }
+    
 }
 
 void Model::SetPosition(Vector* pPos) {

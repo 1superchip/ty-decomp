@@ -145,12 +145,14 @@ extern MessageMap globalMessageMap;
 
 int GameObject::GetMessageIdFromString(char* string) {
     int result = mkMessageMap.GetIdFromString(string);
+    
     if (result == 0) {
         result = globalMessageMap.GetIdFromString(string);
         if (stricmp(string, "Reset") == 0) {
             return -1;
         }
     }
+
     return result;
 }
 

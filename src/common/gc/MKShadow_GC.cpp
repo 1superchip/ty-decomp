@@ -64,7 +64,7 @@ int MKShadow_Animated::AddPoly(MKShadowVert* pVert0, MKShadowVert* pVert1, MKSha
 /// @return Index of the vertex to add
 int MKShadow_Animated::AddVert(MKShadowVert* pNewVert) {
     // Search through all existing vertices
-    for(int i = 0; i < numberOfVertices; i++) {
+    for (int i = 0; i < numberOfVertices; i++) {
         if (pVerts[i].x == pNewVert->x && 
             pVerts[i].y == pNewVert->y &&
             pVerts[i].z == pNewVert->z &&
@@ -201,6 +201,7 @@ void MKShadow_Render(MKShadow* pShadow, Vector* pVec, Vector* pVec1, float f1, i
         if (i == 2) {
             MKShadow_VolumeRenderStage2();
         }
+
         for (int j = 0; j < nmbrOfEdges; j++) {
 
             Vector vert0;
@@ -344,19 +345,22 @@ void MKShadow_Animated::Build(char* pName) {
     
     pPolys = (MKShadowPoly*)Heap_MemAlloc(sizeof(MKShadowPoly) * MKSHADOW_POLY_COUNT);
     numberOfPolys = 0;
+
     pVerts = (MKShadowVert*)Heap_MemAlloc(sizeof(MKShadowVert) * MKSHADOW_POLY_COUNT);
     numberOfVertices = 0;
     
-    for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
+    for (int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
         SubObject* pSub = &pTemplate->pModelData->pSubObjects[i];
-        for(int j = 0; j < pSub->nmbrOfMaterials; j++) {
+
+        for (int j = 0; j < pSub->nmbrOfMaterials; j++) {
             SubObjectMaterial* pMat = &pSub->pMaterials[j];
             DisplayList* pDList = pMat->pStripData;
+
             while (pDList->primitive == GX_TRIANGLESTRIP &&
                     (u16*)pDList < (u16*)&((u8*)pMat->pStripData)[pMat->maxOffset * 16]) {
                 u16 totalVertices = pDList->vertexCount;
                 // skip over display list header
-                (char*)pDList += 3;
+                (char*)pDList += sizeof(pDList->primitive) + sizeof(pDList->vertexCount);
                 // now the display list pointer points to indices
                 
                 for(int k = 0; k < totalVertices - 2; k++) {
@@ -365,6 +369,7 @@ void MKShadow_Animated::Build(char* pName) {
                     Vertex* pModelVertices =
                         pModel->pTemplate->pModelData->pVertices;
                     int x = 0;
+                    
                     for(int v = 0; v < 3; v++) {
                         verts[v].matrixIndex = pModelVertices[((u16*)pDList)[x]].matrix1;
                         verts[v].mNormal.Set(
@@ -377,6 +382,7 @@ void MKShadow_Animated::Build(char* pName) {
                         verts[v].z = pModelVertices[((u16*)pDList)[x]].pos[2];
                         x += 4;
                     }
+
                     Vector sp38;
                     sp38.Add(&verts[0].mNormal, &verts[1].mNormal);
                     sp38.Add(&verts[2].mNormal);

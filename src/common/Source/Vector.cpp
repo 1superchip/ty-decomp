@@ -34,6 +34,7 @@ float Vector::Normalise(Vector* pVector) {
     } else {
         len = 0.0f;
     }
+    
     return len;
 }
 
@@ -46,6 +47,7 @@ void Vector::ClampMagnitude(Vector* pVector, float maxMag) {
         z = mag * pVector->z;
         return;
     }
+
     *this = *pVector;
 }
 
@@ -64,6 +66,7 @@ void Vector::Projection(Vector* pVector1, Vector* pVector2) {
         Scale(pVector2, dot / sqMag);
         return;
     }
+
     SetZero();
 }
 
@@ -159,9 +162,11 @@ void Vector::NormaliseRot(Vector* pVector) {
     if (pVector->x < 0.0f) {
         pVector->x += 6.2831855f;
     }
+
     if (pVector->y < 0.0f) {
         pVector->y += 6.2831855f;
     }
+
     if (pVector->z < 0.0f) {
         pVector->z += 6.2831855f;
     }

@@ -75,9 +75,11 @@ void DDASession::StartSession(void) {
 
 void DDASession::EndSession(void) {
     TimerInfo endTime;
+
     if (currentCheckpoint) {
         EndCheckpoint();
     }
+
     Timer_GetSystemTime(&endTime);
     endHours = endTime.hours;
     endMinutes = endTime.minutes;
@@ -96,9 +98,11 @@ void DDASession::NewCheckpoint(int arg1) {
         }
         EndCheckpoint();
     }
+
     if(unk10.IsFull()) {
         return;
     }
+
     // Get new checkpoint pointer
     currentCheckpoint = unk10.GetNextEntry();
     currentCheckpoint->unk0 = unk10.GetSize();
@@ -143,12 +147,15 @@ extern "C" float* pHero;
 void DDASession::StoreDeathInfo(void) {
     DDAUnk14* pInfo;
     TimerInfo deathTime;
+
     if (currentCheckpoint == NULL) {
         return;
     }
+
     if (unk14.IsFull()) {
         return;
     }
+
     pInfo = unk14.GetNextEntry();
     pInfo->unk0 = currentCheckpoint->unk0;
 
@@ -192,6 +199,7 @@ void DDASession::StorePickupInfo(DDAPickupType pickupType) {
     if (currentCheckpoint == NULL) {
         return;
     }
+
     switch (pickupType) {
         case Pickup_Gem:
             currentCheckpoint->opals++;
@@ -233,10 +241,13 @@ void DDASession::StoreRangChanged(void) {
     if (currentCheckpoint == NULL) {
         return;
     }
+
     if (unk24[19] == ty[0x1178 / 4]) {
         return;
     }
+
     unk24[19] = ty[0x1178 / 4];
+
     currentCheckpoint->unk10++;
 }
 
@@ -244,6 +255,7 @@ void DDASession::StoreCameraInfo(DDACameraAction cameraAction) {
     if (currentCheckpoint == NULL) {
         return;
     }
+
     switch (cameraAction) {
         case 0:
             currentCheckpoint->unk2C++;
@@ -299,6 +311,7 @@ void DDASession::SaveCurrentSession(void) {
     if (bSaveEnabled == false) {
         return;
     }
+    
     if (gb.autoLevelSwitch == false) {
         return;
     }

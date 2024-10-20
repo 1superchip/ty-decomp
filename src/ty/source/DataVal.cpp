@@ -10,6 +10,7 @@ bool Load_Float(KromeIniLine* pIniLine, float* pFloat, char* name) {
     if (stricmp(pIniLine->pFieldName, name) == 0) {
         return pIniLine->AsFloat(0, pFloat);
     }
+
     return false;
 }
 
@@ -17,6 +18,7 @@ bool Load_Int(KromeIniLine* pIniLine, int* pInt, char* name) {
     if (stricmp(pIniLine->pFieldName, name) == 0) {
         return pIniLine->AsInt(0, pInt);
     }
+    
     return false;
 }
 

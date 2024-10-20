@@ -271,6 +271,7 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
     View* pView = View::GetCurrent();
     Vector* viewVec = pView->unk48.Row0();
     Vector* viewVec1 = pView->unk48.Row1();
+    
     for (int i = 0; i < count; i++) {
         float dVar29, dVar28, dVar27, dVar26, dVar25, dVar24;
         dVar29 = pParticle->unk20 * (viewVec1->x - viewVec->x);
@@ -338,6 +339,7 @@ void Blitter_Image::Draw(int count) {
         u8 green = 255.0f * pImage->color.y;
         u8 blue = 255.0f * pImage->color.z;
         u8 alpha = 255.0f * pImage->color.w;
+
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
         GXPosition3f32(_startX, _startY, pImage->z);
@@ -386,6 +388,7 @@ void Blitter_UntexturedImage::Draw(int count) {
         alpha = (pImage->color[0] * 255) >> 7;
         u8 green = pImage->color[2];
         u8 blue = pImage->color[1];
+
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
         GXPosition3f32(posX, posY, pImage->unk10);
@@ -421,6 +424,7 @@ void Blitter_TriStrip::Draw(int count, float arg2) {
         int green = (int)(pTriStrip[i].color.y * 255.0f);
         int blue = (int)(pTriStrip[i].color.z * 255.0f);
         int alpha = (int)(pTriStrip[i].color.w * 255.0f);
+
         GXPosition3f32(pTriStrip[i].pos.x, pTriStrip[i].pos.y, pTriStrip[i].pos.z);
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(pTriStrip[i].uv.x, pTriStrip[i].uv.y);

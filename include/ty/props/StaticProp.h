@@ -86,7 +86,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
                     if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, 5, &effectFlags) == false) {
                         bool foundLine = LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate);
                         if (foundLine != false) {
-                            float speed = gDisplay.updateFreq;
+                            float speed = gDisplay.frameTime;
                             autoRotate.x *= speed;
                             autoRotate.y *= speed;
                             autoRotate.z *= speed;

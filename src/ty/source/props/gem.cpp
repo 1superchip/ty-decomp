@@ -595,6 +595,7 @@ void Gem::Spawning(void) {
     if (UpdateCollection(dist) || CheckMagnetism(dist)) {
         return;
     }
+
     if (mLerpTime >= 1.0f) {
         mParticle.pos = unk94;
         CalcShadowPos();
@@ -675,6 +676,7 @@ void Gem_ParticleSystem_Init(void) {
     for (int i = 0; i < Gem::totalGems; i++) {
         pSystem->pDynamicData[i].pMatrix = &Gem::gemPtrList[i]->unkB4;
     }
+    
     numDynamicData = pSystem->mNumDyn;
     pSystem->mNumDyn = 0;
 }
@@ -870,7 +872,7 @@ void Gem_PickupParticle_Update(void) {
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
 
     while(pModelData) {
-        pModelData->unk24 -= gDisplay.updateFreq;
+        pModelData->unk24 -= gDisplay.frameTime;
         if (pModelData->unk24 <= 0.0f) {
             modelDraw.CopyEntry(pModelData);
         } else if (pModelData->unk10) {
@@ -911,7 +913,7 @@ void Gem_PickupParticle_Update(void) {
     GemPickupData* pPickupData = pickupData.GetCurrEntry();
 
     while(pPickupData) {
-        pPickupData->unk10 -= gDisplay.updateFreq;
+        pPickupData->unk10 -= gDisplay.frameTime;
 
         if (pPickupData->unk10 <= 0.0f) {
             pickupData.CopyEntry(pPickupData);
@@ -919,7 +921,7 @@ void Gem_PickupParticle_Update(void) {
         } else {
             pBlitParticle->pos.Add(&pPickupData->unk0);
             if (pPickupData->unk10 < 0.2f) {
-                pBlitParticle->color.w -= gDisplay.updateFreq * 4.0f;
+                pBlitParticle->color.w -= gDisplay.frameTime * 4.0f;
             }
         }
 

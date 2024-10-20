@@ -43,9 +43,8 @@ float Quadratic::GetClosestTime(Vector *pPoint) {
 void Quadratic::Init(void) {
     pos.Set(0.0f, 0.0f, 0.0f);
     pos.w = 1.0f;
-    coeffsZ = pos;
-    coeffsY = coeffsZ;
-    coeffsX = coeffsY;
+
+    coeffsX = coeffsY = coeffsZ = pos;
 }
 
 // calculate equation coefficients from 3 points
@@ -66,5 +65,6 @@ void Quadratic::SetPoints(Vector* arg0, Vector* arg1, Vector* arg2) {
     coeffsZ.y = 4.0f * p2.z - p3.z;
     coeffsZ.x = p3.z - coeffsZ.y;
     coeffsZ.z = arg0->z;
+    
     pos.SetZero();
 }
