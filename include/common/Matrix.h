@@ -35,6 +35,7 @@ struct Matrix {
     void RotatePYR(Matrix*, Vector*);
     void GetRotationPYR(Vector*);
     void Inverse(Matrix*);
+    
     void SetLookAt(Vector* arg1, Vector* arg2) {
         Vector cross;
         Vector up;
@@ -54,48 +55,67 @@ struct Matrix {
         Row2()->Copy(&normalizedDiff);
         data[2][3] = 0.0f;
     }
+
     void RotatePitch(float pitch) {
         RotatePitch(this, pitch);
     }
+
     void RotateYaw(float yaw) {
         RotateYaw(this, yaw);
     }
+
     void RotateRoll(float roll) {
         RotateRoll(this, roll);
     }
+
     Vector* Row0(void) {
         return (Vector*)&data[0][0];
     }
+
     Vector* Row1(void) {
         return (Vector*)&data[1][0];
     }
+
     Vector* Row2(void) {
         return (Vector*)&data[2][0];
     }
+
     Vector* Row3(void) {
         return (Vector*)&data[3][0];
     }
+
     void Multiply(Matrix* pOther) {
         Multiply(this, pOther);
     }
-    void Translate(Vector* pVector) {
-        Translate(this, pVector);
-    }
+
     void InverseSimple(void) {
         InverseSimple(this);
     }
+
     void Scale(Vector* pScale) {
         Scale(this, pScale);
     }
+
     void Scale(float scalar) {
         Scale(this, scalar);
     }
+
     void Multiply3x3(Matrix* pMatrix) {
         Multiply3x3(this, pMatrix);
     }
+
+    void Multiply4x4(Matrix* pMatrix) {
+        Multiply4x4(this, pMatrix);
+    }
+
+    void Translate(Vector* pVector) {
+        Translate(this, pVector);
+    }
+
     void RotatePYR(Vector* pAngles) {
         RotatePYR(this, pAngles);
     }
+    
 #if mips
 // PS2 GCC has mips defined
 // Matrix structs are aligned to 0x10 in the July 1st build

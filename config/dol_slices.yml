@@ -2277,10 +2277,10 @@ ty/source/mist.cpp:
    .sbss: [0x803fa9c8, 0x803fa9d0]
    .sdata2: [0x80400c78, 0x80400c88]
 
-#ty/source/NodeOverride.cpp:
-#   .text: [0x8017a7b0, 0x8017af58]
-#   .rodata: [0x8023ea48, 0x8023ea58]
-#   .sdata2: [0x80400c88, 0x80400ca8]
+ty/source/NodeOverride.cpp:
+  .text: [0x8017a7b0, 0x8017af58]
+  .rodata: [0x8023ea48, 0x8023ea58]
+  .sdata2: [0x80400c88, 0x80400ca8]
 
 #ty/source/particleEffects.cpp:
 #   .text: [0x8017af58, 0x8017df00]
