@@ -407,12 +407,14 @@ int FileSys_Open(char* pFilename, int* pOutLen, bool bUseAsyncHandle) {
             }
         }
     }
+
     if (foundFd != -1) {
         if (pOutLen != NULL) {
             *pOutLen = pFoundEntry->length;
         }
         File_Seek(foundFd, pFoundEntry->offset, SEEK_SET);
     }
+
     return foundFd;
 }
 
@@ -425,6 +427,7 @@ void FileSys_Close(int fd) {
             patch.unk58 = true;
             return;
         }
+
         File_Close(fd);
     }
 }
@@ -440,8 +443,10 @@ int FileSys_GetOffset(char* pFilename) {
     } else {
         pFoundEntry = data.GetEntry(pFilename);
     }
+    
     if (pFoundEntry != NULL) {
         return pFoundEntry->offset;
     }
+    
     return -1;
 }

@@ -28,7 +28,6 @@ static Tools_AnimEvent animEvents[4] = {
     {"footThud", NULL},
 };
 
-#pragma pool_data off
 void Bunyip_LoadResources(KromeIni* pIni) {
 
     bunyipDesc.Init(
@@ -45,7 +44,6 @@ void Bunyip_LoadResources(KromeIni* pIni) {
 
     objectManager.AddDescriptor(&bunyipDesc);
 }
-#pragma pool_data reset
 
 void Bunyip::Init(GameObjDesc* pDesc) {
     AnimatingProp::Init(pDesc);

@@ -1,5 +1,6 @@
 #include "types.h"
 #include "ty/DataVal.h"
+#include "ty/tytypes.h"
 #include "common/Str.h"
 #include "common/StdMath.h"
 

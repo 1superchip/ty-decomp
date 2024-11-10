@@ -1,8 +1,7 @@
 
 #include "ty/global.h"
 #include "common/MKRumble.h"
-
-#pragma pool_data off
+#include "ty/tytypes.h"
 
 const char VersionNumber[] = "190b";
 
@@ -238,39 +237,50 @@ void ManuallyScrollTextures(void) {
     static int LastLogicGameCount = 0;
     if (!gb.bOnPauseScreen && LastLogicGameCount != gb.logicGameCount) {
         LastLogicGameCount = gb.logicGameCount;
+
         if (gb.pWaterfallMat) {
             gb.pWaterfallMat->ScrollUVOffset(0.0f, 1.0f / 60.0f);
         }
+
         if (gb.pTyZ1Mat) {
             gb.pTyZ1Mat->ScrollUVOffset(1.0f / 120.0f, 1.0f / 120.0f);
         }
+
         if (gb.pTyZ1MatB) {
             gb.pTyZ1MatB->ScrollUVOffset(0.0f, 1.0f / 2400.0f);
         }
+
         if (gb.pTyA1Mat) {
             gb.pTyA1Mat->ScrollUVOffset(0.0f, -(1.0f / 300.0f));
         }
+
         if (gb.pTyA1OverlayMat) {
             gb.pTyA1OverlayMat->SetMatrixX(0.5f);
             gb.pTyA1OverlayMat->ScrollUVOffset(0.0f, -0.0050000004f);
         }
+
         if (gb.pWaterfallOverlay) {
             gb.pWaterfallOverlay->SetMatrixX(0.5f);
             gb.pWaterfallOverlay->ScrollUVOffset(0.0f, 7.0f / 6000.0f);
         }
+
         if (gb.unk778) {
             gb.unk778->ScrollUVOffset(1.0f / 2400.0f, 1.0f / 6000.0f);
         }
+
         if (gb.unk77C) {
             gb.unk77C->ScrollUVOffset(3.0f / 8000.0f, 1.0f / 6000.0f);
         }
+
         if (gb.unk780) {
             gb.unk780->ScrollUVOffset(1.0f / 3000.0f, 1.0f / 6000.0f);
         }
+
         if (gb.pSmokeTex) {
             gb.pSmokeTex->SetMatrixX(0.0f);
             gb.pSmokeTex->ScrollUVOffset(0.0f, 1.0f / 1200.0f);
         }
+        
         if (gb.unk784) {
             gb.unk784->ScrollUVOffset(0.0f, 1.0f / 2400.0f);
         }

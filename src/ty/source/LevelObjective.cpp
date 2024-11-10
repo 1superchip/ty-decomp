@@ -105,6 +105,7 @@ extern void SoundBank_Play(int, Vector*, uint);
 void LevelObjective::Increment(void) {
     OnIncrement.Send();
     Hud_ShowSpecialPickups();
+    
     switch (gb.level.GetCurrentLevel()) {
         case 4:
             SoundBank_Play(0x22C, NULL, 0);
@@ -130,14 +131,16 @@ void LevelObjective::Increment(void) {
         case 14:
             SoundBank_Play(0x233, NULL, 0);
             break;
-        case 0x17:
+        case 23:
             SoundBank_Play(0x234, NULL, 0);
             break;
         default:
             SoundBank_Play(0x1B5, NULL, 0);
             break;
     }
+
     pCurObjective = this;
+
     if (++unk68 >= unk66) {
         Success();
     }

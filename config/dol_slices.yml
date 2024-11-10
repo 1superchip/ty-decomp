@@ -1643,7 +1643,7 @@ ty/source/props/RangStone.cpp:
 #   .sbss: [0x803fa598, 0x803fa5a8]
 #   .sdata2: [0x803ff480, 0x803ff4b0]
 
-#ty/source/props/Shatterable.cpp:
+# ty/source/props/Shatterable.cpp:
 #   .text: [0x8010b518, 0x8010cc90]
 #   .ctors: [0x8023c998, 0x8023c99c]
 #   .rodata: [0x8023deb8, 0x8023dec8]
@@ -3038,70 +3038,70 @@ Runtime/abort_exit.c:
   .bss: [0x802d5ce8, 0x802d5de8]
   .sbss: [0x803fb028, 0x803fb038]
 
-#alloc.c:
+#Runtime/alloc.c:
 #   .text: [0x801e9e44, 0x801eac2c]
 #   .rodata: [0x8023f0e0, 0x8023f0f8]
 #   .bss: [0x802d5de8, 0x802d5e20]
 #   .sbss: [0x803fb038, 0x803fb040]
 
-#ansi_files.c:
+#Runtime/ansi_files.c:
 #   .text: [0x801eac2c, 0x801ead34]
 #   .data: [0x80271e40, 0x80271f80]
 #   .bss: [0x802d5e20, 0x802d6120]
 
-#ansi_fp.c:
+#Runtime/ansi_fp.c:
 #   .text: [0x801ead34, 0x801ec9a0]
 #   .rodata: [0x8023f0f8, 0x8023f1d8]
 #   .data: [0x80271f80, 0x802720e8]
 #   .sdata2: [0x80401cb0, 0x80401ce0]
 
-#arith.c:
+#Runtime/arith.c:
 #   .text: [0x801ec9a0, 0x801ec9b0]
 
-#buffer_io.c:
+#Runtime/buffer_io.c:
 #   .text: [0x801ec9b0, 0x801ecaa8]
 
-#ctype.c:
+#Runtime/ctype.c:
 #   .text: [0x801ecaa8, 0x801ecacc]
 #   .data: [0x802720e8, 0x802723e8]
 
-#direct_io.c:
+#Runtime/direct_io.c:
 #   .text: [0x801ecacc, 0x801ecdf8]
 
-#errno.c:
+#Runtime/errno.c:
 #   .sbss: [0x803fb040, 0x803fb048]
 
-#file_io.c:
+#Runtime/file_io.c:
 #   .text: [0x801ecdf8, 0x801ecff0]
 
-#FILE_POS.C:
+#Runtime/FILE_POS.C:
 #   .text: [0x801ecff0, 0x801ed2bc]
 
-#locale.c:
+#Runtime/locale.c:
 #   .rodata: [0x8023f1d8, 0x8023f1e0]
 #   .data: [0x802723e8, 0x80272420]
 
-#mbstring.c:
+#Runtime/mbstring.c:
 #   .text: [0x801ed2bc, 0x801ed62c]
 #   .sdata2: [0x80401ce0, 0x80401ce8]
 
-#mem.c:
+#Runtime/mem.c:
 #   .text: [0x801ed62c, 0x801ed79c]
 
-#mem_funcs.c:
+#Runtime/mem_funcs.c:
 #   .text: [0x801ed79c, 0x801eda7c]
 
-#misc_io.c:
+#Runtime/misc_io.c:
 #   .text: [0x801eda7c, 0x801eda8c]
 
-#printf.c:
+#Runtime/printf.c:
 #   .text: [0x801eda8c, 0x801efab4]
 #   .rodata: [0x8023f1e0, 0x8023f208]
 #   .data: [0x80272420, 0x80272650]
 #   .sdata: [0x803f97d0, 0x803f97d8]
 #   .sdata2: [0x80401ce8, 0x80401cf0]
 
-#qsort.c:
+#Runtime/qsort.c:
 #   .text: [0x801efab4, 0x801efc24]
 
 Runtime/rand.c:
@@ -3113,72 +3113,72 @@ Runtime/rand.c:
 #   .rodata: [0x8023f208, 0x8023f230]
 #   .data: [0x80272650, 0x80272720]
 
-#string.c:
+#Runtime/string.c:
 #   .text: [0x801f0c8c, 0x801f11a0]
 #   .rodata: [0x8023f230, 0x8023f5c0]
 #   .sdata: [0x803f97e0, 0x803f97e8]
 
-#strtold.c:
+#Runtime/strtold.c:
 #   .text: [0x801f11a0, 0x801f2238]
 #   .rodata: [0x8023f5c0, 0x8023f5f8]
 #   .sdata2: [0x80401cf0, 0x80401d08]
 
-#strtoul.c:
+#Runtime/strtoul.c:
 #   .text: [0x801f2238, 0x801f2a7c]
 #   .data: [0x80272720, 0x802727a8]
 
-#uart_console_io.c:
+#Runtime/uart_console_io.c:
 #   .text: [0x801f2a7c, 0x801f2b48]
 #   .sbss: [0x803fb048, 0x803fb050]
 
-#float.c:
+#Runtime/float.c:
 #   .sdata: [0x803f97e8, 0x803f9818]
 
-#wchar_io.c:
+#Runtime/wchar_io.c:
 #   .text: [0x801f2b48, 0x801f2bd0]
 
-#e_acos.c:
+#Runtime/e_acos.c:
 #   .text: [0x801f2bd0, 0x801f2ee0]
 #   .sdata2: [0x80401d08, 0x80401d98]
 
-#e_asin.c:
+#Runtime/e_asin.c:
 #   .text: [0x801f2ee0, 0x801f3144]
 #   .sdata2: [0x80401d98, 0x80401e30]
 
-#e_atan2.c:
+#Runtime/e_atan2.c:
 #   .text: [0x801f3144, 0x801f33d4]
 #   .sdata2: [0x80401e30, 0x80401e88]
 
-#e_fmod.c:
+#Runtime/e_fmod.c:
 #   .text: [0x801f33d4, 0x801f3710]
 #   .rodata: [0x8023f5f8, 0x8023f608]
 
-#e_log.c:
+#Runtime/e_log.c:
 #   .text: [0x801f3710, 0x801f398c]
 #   .sbss: [0x803fb050, 0x803fb058]
 #   .sdata2: [0x80401e88, 0x80401f08]
 
-#e_log10.c:
+#Runtime/e_log10.c:
 #   .text: [0x801f398c, 0x801f3a9c]
 #   .sbss: [0x803fb058, 0x803fb060]
 #   .sdata2: [0x80401f08, 0x80401f38]
 
-#e_pow.c:
+#Runtime/e_pow.c:
 #   .text: [0x801f3a9c, 0x801f4328]
 #   .rodata: [0x8023f608, 0x8023f638]
 #   .sdata2: [0x80401f38, 0x80402048]
 
-#e_rem_pio2.c:
+#Runtime/e_rem_pio2.c:
 #   .text: [0x801f4328, 0x801f46c8]
 #   .rodata: [0x8023f638, 0x8023f7c0]
 #   .sdata2: [0x80402048, 0x804020a0]
 
-#k_rem_pio2.c:
+#Runtime/k_rem_pio2.c:
 #   .text: [0x801f46c8, 0x801f551c]
 #   .rodata: [0x8023f7c0, 0x8023f810]
 #   .sdata2: [0x804020a0, 0x804020e0]
 
-#k_tan.c:
+#Runtime/k_tan.c:
 #   .text: [0x801f551c, 0x801f5730]
 #   .rodata: [0x8023f810, 0x8023f878]
 #   .sdata2: [0x804020e0, 0x80402118]
@@ -3188,50 +3188,50 @@ Runtime/rand.c:
 #   .rodata: [0x8023f878, 0x8023f910]
 #   .sdata2: [0x80402118, 0x80402140]
 
-#s_copysign.c:
+#Runtime/s_copysign.c:
 #   .text: [0x801f5930, 0x801f5958]
 
-#s_floor.c:
+#Runtime/s_floor.c:
 #   .text: [0x801f5958, 0x801f5aa0]
 #   .sdata2: [0x80402140, 0x80402150]
 
-#s_frexp.c:
+#Runtime/s_frexp.c:
 #   .text: [0x801f5aa0, 0x801f5b2c]
 #   .sdata2: [0x80402150, 0x80402158]
 
-#s_ldexp.c:
+#Runtime/s_ldexp.c:
 #   .text: [0x801f5b2c, 0x801f5cf0]
 #   .sdata2: [0x80402158, 0x80402180]
 
-#s_modf.c:
+#Runtime/s_modf.c:
 #   .text: [0x801f5cf0, 0x801f5dec]
 
-#s_nextafter.c:
+#Runtime/s_nextafter.c:
 #   .text: [0x801f5dec, 0x801f5f70]
 
-#s_tan.c:
+#Runtime/s_tan.c:
 #   .text: [0x801f5f70, 0x801f5fe8]
 #   .sdata2: [0x80402180, 0x80402188]
 
-#w_acos.c:
+#Runtime/w_acos.c:
 #   .text: [0x801f5fe8, 0x801f6008]
 
-#w_asin.c:
+#Runtime/w_asin.c:
 #   .text: [0x801f6008, 0x801f6028]
 
-#w_atan2.c:
+#Runtime/w_atan2.c:
 #   .text: [0x801f6028, 0x801f6048]
 
-#w_fmod.c:
+#Runtime/w_fmod.c:
 #   .text: [0x801f6048, 0x801f6068]
 
-#w_log.c:
+#Runtime/w_log.c:
 #   .text: [0x801f6068, 0x801f6088]
 
-#w_log10.c:
+#Runtime/w_log10.c:
 #   .text: [0x801f6088, 0x801f60a8]
 
-#w_pow.c:
+#Runtime/w_pow.c:
 #   .text: [0x801f60a8, 0x801f60c8]
 
 #DebuggerDriver.c:
@@ -3242,7 +3242,7 @@ Runtime/rand.c:
 Runtime/__mem.c:
   .init: [0x800033a8, 0x800034e0]
 
-#__va_arg.c:
+#Runtime/__va_arg.c:
 #   .text: [0x801f6b48, 0x801f6c10]
 
 Runtime/global_destructor_chain.c:

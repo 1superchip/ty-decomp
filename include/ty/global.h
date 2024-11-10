@@ -230,9 +230,11 @@ struct LevelData {
     int GetCurrentLevel(void) {
         return levelNumber;
     }
+
     void ChangeLevel(LevelNumber newLevel) {
 
     }
+    
     void InitDefaults(void);
 };
 

@@ -37,15 +37,16 @@ void Input_Update(bool bReadInputs) {
     }
     static u32 connectedBits = 0;
     u32 invalidControllers = 0;
-    for(int i = 0; i < JoyStickCount; i++) {
+    for (int i = 0; i < JoyStickCount; i++) {
         u32 r9 = (0x80000000 >> i);
 
-        // Copy Previous Frame inputs
+        // Copy inputs to previous frame inputs
         joyPad[i].mPrevButtonFlags = joyPad[i].mCurrButtonFlags;
         joyPad[i].mPrevStickX = joyPad[i].mCurrStickX;
         joyPad[i].mPrevStickY = joyPad[i].mCurrStickY;
         joyPad[i].mPrevSubStickX = joyPad[i].mCurrSubStickX;
         joyPad[i].mPrevSubStickY = joyPad[i].mCurrSubStickY;
+
         switch (pad[i].err) {
             case PAD_ERR_TRANSFER:
             case PAD_ERR_NONE:
@@ -55,6 +56,7 @@ void Input_Update(bool bReadInputs) {
                 invalidControllers |= r9;
                 break;
         }
+
         if (pad[i].err == PAD_ERR_NONE) {
             joyPad[i].mCurrButtonFlags = joyPad[i].pPad->button;
             
@@ -68,16 +70,19 @@ void Input_Update(bool bReadInputs) {
             } else if (joyPad[i].mCurrStickX > 0xff) {
                 joyPad[i].mCurrStickX = 0xff;
             }
+
             if (joyPad[i].mCurrStickY < 0) {
                 joyPad[i].mCurrStickY = 0;
             } else if (joyPad[i].mCurrStickY > 0xff) {
                 joyPad[i].mCurrStickY = 0xff;
             }
+
             if (joyPad[i].mCurrSubStickX < 0) {
                 joyPad[i].mCurrSubStickX = 0;
             } else if (joyPad[i].mCurrSubStickX > 0xff) {
                 joyPad[i].mCurrSubStickX = 0xff;
             }
+
             if (joyPad[i].mCurrSubStickY < 0) {
                 joyPad[i].mCurrSubStickY = 0;
             } else if (joyPad[i].mCurrSubStickY > 0xff) {
@@ -97,9 +102,11 @@ void Input_Update(bool bReadInputs) {
             joyPad[i].triggerR = 0;
         }
     }
+
     if (connectedBits != 0) {
         invalidControllers &= connectedBits;
     }
+
     if (invalidControllers && bReadInputs) {
         PADReset(invalidControllers);
     }
@@ -115,7 +122,7 @@ int Input_GetDeviceStatus(InputDevices deviceID) {
     if (deviceID == ALL_CHANS) {
         // Never will happen!
         // This code checks all channels
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             status = Input_GetDeviceStatus((InputDevices)i);
             if (status == 0) {
                 break;
@@ -127,26 +134,26 @@ int Input_GetDeviceStatus(InputDevices deviceID) {
             case ALL_CHANS:
             case MAX_CHANS:
                 break;
-            
             case CHAN_0:
             case CHAN_1:
             case CHAN_2:
             case CHAN_3:
-            switch (joyPad[deviceID].pPad->err) {
-                case PAD_ERR_NONE:
-                    status = 0;
-                    break;
-                case PAD_ERR_NOT_READY:
-                    status = 1;
-                    break;
-                case PAD_ERR_NO_CONTROLLER:
-                case PAD_ERR_TRANSFER:
-                    status = 2;
-                    break;
-            }
-            break;
+                switch (joyPad[deviceID].pPad->err) {
+                    case PAD_ERR_NONE:
+                        status = 0;
+                        break;
+                    case PAD_ERR_NOT_READY:
+                        status = 1;
+                        break;
+                    case PAD_ERR_NO_CONTROLLER:
+                    case PAD_ERR_TRANSFER:
+                        status = 2;
+                        break;
+                }
+                break;
         }
     }
+
     return status;
 }
 
@@ -161,7 +168,7 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
         // Never will happen
         // This code checks every channel for the button
         bool isStickButton = Input_IsButtonStick(button);
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             int buttonState = Input_GetButtonState((InputDevices)i, button, pFoundDevice);
             if (isStickButton) {
                 if (buttonState < 107 || buttonState > 147) {
@@ -171,8 +178,10 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
                 return buttonState;
             }
         }
+
         return isStickButton ? 0x7f : 0;
     }
+
     int ret = 0;
     switch (deviceID) {
         case CHAN_0:
@@ -302,7 +311,7 @@ bool Input_IsKeyMappingEnabled(void) {
 }
 
 void Input_StopAllVibration(void) {
-    for(int i = 0; i < PAD_CHANMAX; i++) {
+    for (int i = 0; i < PAD_CHANMAX; i++) {
         PADControlMotor(i, PAD_MOTOR_STOP_HARD);
     }
 }

@@ -472,6 +472,7 @@ Material* Material::Create(char* pName) {
         Texture_bColourKey = (pFoundMat->flags & Flag_AlphaMask) == Flag_AlphaMask;
         Texture_filterType = pFoundMat->texture_filterType;
         Texture_Color = pFoundMat->color;
+
         if (!FileSys_Exists(Str_Printf("%s.tga", textureName), NULL) && 
             !FileSys_Exists(Str_Printf("%s.gtx", textureName), NULL)) {
             // if neither texture file exists, use the texture from the debug font material
@@ -480,6 +481,7 @@ Material* Material::Create(char* pName) {
         } else {
             pFoundMat->unk54 = Texture::Create(textureName);
         }
+
         Texture_bColourKey = false;
         Texture_IsAlias = false;
 
@@ -489,6 +491,7 @@ Material* Material::Create(char* pName) {
             GXInitTexObjWrapMode(&pFoundMat->unk54->texObj, wrap_s, wrap_t);
         }
     }
+
     return pFoundMat;
 }
 
@@ -507,15 +510,19 @@ void Material::Destroy(void) {
     if (--referenceCount != 0) {
         return;
     }
+
     if (pOverlayMat != NULL) {
         pOverlayMat->Destroy();
     }
+
     if (unk54 != NULL) {
         unk54->Destroy();
     }
+
     if (unk58 != NULL) {
         unk58->Destroy();
     }
+    
     materials.Destroy(this);
 }
 #pragma inline_max_size reset
@@ -525,19 +532,23 @@ void Material::Destroy(void) {
 /// @return NULL if a Material does not exist otherwise the Material
 Material* Material::Find(char* pName) {
     Material** list;
+
     char* tmpName = Str_CopyString(pName, 31);
-    list = (Material**)materials.pMem;
-    while (*list != NULL) {
+
+    list = materials.GetMem();
+
+    while (*list) {
         if (stricmp((*list)->name, tmpName) == 0) {
             return *list;
         }
+
         list++;
     }
+
     return NULL;
 }
 
 // Initialises material list and initiates texobjs from this file
-#pragma pool_data off
 void Material::InitModule(void) {
 
 	materials.Init(gMKDefaults.materialCount, sizeof(Material));
@@ -560,7 +571,6 @@ void Material::InitModule(void) {
     GXInitTexObjLOD(&restorationTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
     GXInitTexObj(&rawCaptureTexObj, (void*)&rawCaptureTexData, 256, 256, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
 }
-#pragma pool_data reset
 
 void Material::DeinitModule(void) {
     materialIni.Deinit();
@@ -576,17 +586,21 @@ Material* Material::CreateFromRawData(char* pName, void* pData, int texFmt, int 
 }
 
 void Material::SetTextureAlias(Material* arg1) {
-    Texture* alias = arg1->unk58 != NULL ? arg1->unk58 : arg1->unk54;
+    Texture* alias = arg1->GetTexture();
+
     if (alias == unk54) {
         alias = NULL;
     }
+
     if (unk58 != NULL) {
         unk58->Destroy();
     }
     unk58 = alias;
+    
     if (alias != NULL) {
         alias->referenceCount++;
     }
+
     SetFlags(0x1000);
 }
 
@@ -594,13 +608,17 @@ void Material::SetTextureAlias(Texture* pTexAlias) {
     if (pTexAlias == unk54) {
         pTexAlias = NULL;
     }
+
     if (unk58 != NULL) {
         unk58->Destroy();
     }
+
     unk58 = pTexAlias;
+
     if (pTexAlias != NULL) {
         pTexAlias->referenceCount++;
     }
+
     flags |= 0x1000;
 }
 
@@ -630,11 +648,14 @@ void Material::Use(void) {
             return;
         }
     }
+
     ClearFlags(0x1000);
+
     pCurrMat[0] = this;
     if (flags & 0x1f0000 && frameCounter1 != frameCounter) {
         Update();
     }
+    
     Texture* pTex;
     Texture* defTex = gRenderState.pDefaultTexture;
     if (defTex != NULL) {
@@ -643,6 +664,7 @@ void Material::Use(void) {
         pTex = unk58;
         pTex = (pTex != NULL) ? unk58 : unk54;
     }
+    
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
@@ -1128,12 +1150,14 @@ void Material::ScrollUVOffset(float arg1, float arg2) {
     } else if (arg1 >= 1.0f) {
         arg1 -= 1.0f;
     }
+
     arg2 = unk60.data[3][1] + arg2;
     if (arg2 < 0.0f) {
         arg2 += 1.0f;
     } else if (arg2 >= 1.0f) {
         arg2 -= 1.0f;
     }
+
     unk60.data[3][0] = arg1;
     unk60.data[3][1] = arg2;
     flags |= 0x2000;

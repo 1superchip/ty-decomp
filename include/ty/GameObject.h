@@ -6,13 +6,13 @@
 //#include "common/KromeIni.h"
 #include "common/MKSceneManager.h"
 #include "ty/tools.h"
+#include "ty/tytypes.h"
 
 #define GOMSG_Last 0x10
 #define In_WaterVolume 0x40000000
 
 // Search Mask Flags
 #define GOID_Platform 0x40
-
 
 struct GameObject;
 
@@ -152,26 +152,35 @@ struct ModuleInfo : ModuleInfoBase {
         if (pData == NULL) {
             pData = (ModuleInfoBaseObject*)Heap_MemAlloc(sizeof(ModuleInfoBaseObject));
         }
+
         Reset();
+
         pData->flags = 0;
+
         pData->InitModule = GameObject::InitModule;
         pData->DeinitModule = GameObject::DeinitModule;
         pData->pUpdateModule = GameObject::UpdateModule;
         pData->pDrawModule = GameObject::DrawModule;
         pData->pAllocate = GameObject::Allocate;
         pData->pDeallocate = GameObject::Deallocate;
+
         pData->instanceSize = sizeof(T);
+
         if (pData->pUpdateModule != GameObject::UpdateModule) {
             pData->flags |= Module_UpdateOverride;
         }
+
         if (pData->pDrawModule != GameObject::DrawModule) {
             pData->flags |= Module_DrawOverride;
         }
+
         if (pData->pAllocate != GameObject::Allocate) {
             pData->flags |= Module_AllocateOverride;
         }
+
         AddToModuleList(this);
     }
+
     virtual void* ConstructObject(void* ptr) {
         return new(ptr) T;
     }
@@ -206,6 +215,7 @@ void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {
     GameObjDesc* desc = NULL;
     KromeIniLine* pLine = pIni->GotoLine(name, NULL);
     GameObjDesc* p = desc;
+
     while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
         char* pString = NULL;
         if (pLine->pFieldName != NULL && pLine->AsString(0, &pString) != false) {
@@ -216,8 +226,10 @@ void LoadDescriptors(KromeIni* pIni, char* name, T* pDesc) {
             static_cast<GameObjDesc*>(p)->unk80 = desc;
             desc = (GameObjDesc*)p;
         }
+
         pLine = pIni->GetLineWithLine(pLine);
     }
+
     while (desc != NULL) {
         GameObjDesc* p = desc;
         desc = p->unk80;

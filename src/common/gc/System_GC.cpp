@@ -317,6 +317,7 @@ void System_GameDraw(void) {
     pGameView = View::GetCurrent();
     Material::UseNone(-1);
     Collision_Draw();
+    
     if (pf_enabled != 0) {
         int totalMemLeft = OSGetConsoleSimulatedMemSize() - OSCheckHeap(0);
         char* debugStr = Str_Printf("%3d /%3d MEM:%.2fK MK:%d BLD:%s",
@@ -325,6 +326,7 @@ void System_GameDraw(void) {
         gpDebugFont->DrawText(debugStr, 320.0f, 495.0f, 1.0f, 1.0f,
             (FontJustify)5, COLOR_WHITE);
     }
+    
     gDrawCounter++;
 }
 

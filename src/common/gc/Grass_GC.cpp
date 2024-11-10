@@ -246,7 +246,8 @@ void Grass_DrawGC(Model* pModel, u8* pStripData, int stripMaxOffset, int grassIn
                 continue;
             }
             
-            float f29 = pGrass->upVector * (1.0f - (dist / maxRadius));
+            // bend the grass up and down based on the distance from the camera
+            float grassHeightScale = pGrass->upVector * (1.0f - (dist / maxRadius));
 
             u8* r23 = pModelVertices[*(u16*)((u8*)pStrip - 4)].color;
             u8* r22 = pModelVertices[*(u16*)((u8*)pStrip + 4)].color;
@@ -264,7 +265,7 @@ void Grass_DrawGC(Model* pModel, u8* pStripData, int stripMaxOffset, int grassIn
             float numTexturesScaled = (pGrass->numTextures - 1) * 0.125f;
 
             for (int j = 0; j < count; j++) {
-                GrassHeight = f29 * (f31 + ((float)(~j & (8 - 1)) * f30));
+                GrassHeight = grassHeightScale * (f31 + ((float)(~j & (8 - 1)) * f30));
                 
                 float x = *times++;
                 float y = *times++;

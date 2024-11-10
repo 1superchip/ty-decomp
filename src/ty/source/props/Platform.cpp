@@ -71,6 +71,7 @@ void PlatformDesc::Load(KromeIni* pIni) {
             pLine = pIni->GetLineWithLine(pLine);
         }
     }
+
     bDynamic = true;
     maxMag = 150.0f;
     radius = 20.0f;
@@ -149,9 +150,11 @@ void Platform::Message(MKMessage* pMsg) {
 
 void Platform::BeginUpdate(void) {
     Matrix mat;
+
     if (numAttached == 0) {
         return;
     }
+
     unk58 = TempAlloc(numAttached * sizeof(Vector) + 0x70);
     mat.Inverse(&pModel->matrices[0]);
     *(Matrix*)unk58 = mat;
@@ -165,6 +168,7 @@ void Platform::BeginUpdate(void) {
         idx++;
         iter++;
     }
+
     if (unk58 != NULL) {
         unk58[5].Scale(1.0f / numAttached);
     }
@@ -173,12 +177,15 @@ void Platform::BeginUpdate(void) {
 void Platform::EndUpdate(void) {
     UpdateRotationMatrix();
     UpdateAttached();
+
     if (GetDesc()->maxShadowHeight > 0.0f) {
         UpdateShadow();
     }
+
     if (unk58 != NULL) {
         pCurrMem = unk58;
     }
+
     unk58 = NULL;
 }
 
@@ -196,6 +203,7 @@ void Platform::UpdateTilt(void) {
                 return;
             }
         }
+
         mCurrRot.x = AdjustFloat(mCurrRot.x, 0.0f, 0.1f);
         mCurrRot.z = AdjustFloat(mCurrRot.z, 0.0f, 0.1f);
     }
@@ -237,12 +245,14 @@ void Platform::UpdateShadow(void) {
         pModel->matrices[0].Row3()->z, 
         0.0f
     };
+
     Vector end = {
         start.x, 
         start.y - GetDesc()->maxShadowHeight,
         start.z, 
         0.0f
     };
+
     if (CompareVectors(&start, &unkA0) == false) {
         unkD0 = false;
         CollisionResult cr;
@@ -256,6 +266,7 @@ void Platform::UpdateShadow(void) {
             }
         }
     }
+    
     if (unkD0) {
         float mag = 2.0f * GetDesc()->maxMag;
         float div = 1.0f - (0.6f * Clamp<float>(0.0f, (pModel->matrices[0].data[3][1] - unkB0.y) / 1000.0f, 1.0f));

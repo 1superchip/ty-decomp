@@ -248,10 +248,13 @@ void SMTree::Init(int arg1) {
 
     nmbrOfSubObjects = arg1;
     unkC = arg1 - 1;
+
     propCount = unkC + arg1;
     pNodes = (SMNode*)Heap_MemAlloc(propCount * sizeof(SMNode));
     pLastNode = &pNodes[propCount - 1];
+
     memset(pNodes, 0, propCount * sizeof(SMNode));
+
     return;
 }
 
@@ -471,6 +474,7 @@ void MKSceneManager::DrawTerrain(int arg1) {
         pTerrainModel[arg1]->Draw(terrainSubObjects);
         return;
     }
+
     if (pTerrainModel[arg1] != NULL) {
         pTerrainModel[arg1]->Draw(NULL);
     }
@@ -487,6 +491,7 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode* node, int arg2) {
             arg2 |= 1;
         }
     }
+
     if (node->pData != NULL) {
         u16 object = terrainSubObjects[0];
         object = object + 1;
@@ -494,6 +499,7 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode* node, int arg2) {
         terrainSubObjects[object] = ((int)node->pData) - 1 | ((test == 1) ? 0x8000 : 0);
         return;
     }
+
     if (node->unk20[0] != NULL) {
         DrawRecursiveTerrain(node->unk20[0], arg2);
     }

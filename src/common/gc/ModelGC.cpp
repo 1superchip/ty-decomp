@@ -45,22 +45,27 @@ int Model::Draw(u16* pSubObjs) {
     int ret = 0;
     int r25;
     Matrix localMat;
+
     if (pSubObjs || flags.bits.b5 || disableTrivialRejection) {
         ret = 1;
     } else {
         mat0.Multiply4x4(&matrices[0], &currView->unk1C8);
         ret = Model_TrivialRejectTest(&pTemplate->pModelData->volume, &mat0);
     }
+
     if (ret == 0) {
         return ret;
     }
+
     if (gRenderState.fillState == 2) {
         Material::UseNone(-1);
     }
+
     GXColor color = *(GXColor*)&currView->fogColour;
     GXSetFog(GX_FOG_PERSP_LIN, currView->closeFogPlane,
         (currView->farFogPlane - currView->closeFogPlane) * 2.0f + currView->closeFogPlane,
         currView->unk2C0, currView->unk2BC, (GXColor&)color);
+    
     Vertex* pVerts = pTemplate->pModelData->pVertices;
     
     GXClearVtxDesc();
@@ -148,14 +153,18 @@ int Model::Draw(u16* pSubObjs) {
             vertexBuf += 3;
             vertexCount--;
         }
+
         GXSetArray(GX_VA_POS, (void*)&vertexBuffer[bufferOffset], sizeof(float) * 3);
         GXSetArray(GX_VA_NRM, (void*)&normalBuffer[bufferOffset], sizeof(char) * 3);
         DCStoreRange((uint*)&normalBuffer[bufferOffset], r25);
         DCStoreRange((uint*)&vertexBuffer[bufferOffset], r25 * sizeof(float));
+
         Matrix invMatrix = View::GetCurrent()->unkC8;
+
         if (View::GetCurrent()->unk288) {
             invMatrix.Multiply(&invMatrix, &View::GetCurrent()->unk248);
         }
+
         invMatrix.data[0][2] *= -1.0f;
         invMatrix.data[1][2] *= -1.0f;
         invMatrix.data[2][2] *= -1.0f;
@@ -173,9 +182,11 @@ int Model::Draw(u16* pSubObjs) {
         } else {
             mat1 = pView->unkC8;
         }
+
         if (pView->unk288) {
             mat1.Multiply(&mat1, &pView->unk248);
         }
+
         mat1.data[0][2] *= -1.0f;
         mat1.data[1][2] *= -1.0f;
         mat1.data[2][2] *= -1.0f;
@@ -186,6 +197,7 @@ int Model::Draw(u16* pSubObjs) {
         GXSetArray(GX_VA_POS, (void*)&pVerts->pos, sizeof(Vertex));
         GXSetArray(GX_VA_NRM, (void*)&pVerts->normal, sizeof(Vertex));
     }
+
     Matrix mat3;
     Matrix mat2;
     mat2.SetIdentity();
@@ -206,9 +218,11 @@ int Model::Draw(u16* pSubObjs) {
     mat2.Multiply(&mat2, &mat3);
     mat2.Transpose(&mat2);
     GXLoadTexMtxImm(mat2.data, GX_TEXMTX9, GX_MTX2x4);
+
     GXColor chanColor = (GXColor){255, 255, 255, 255};
     int matrixIdx = 0;
     GXSetChanMatColor(GX_COLOR0A0, chanColor);
+
     int effectIdx = 0;
     int size = (pSubObjs != NULL) ? *pSubObjs++ : pTemplate->pModelData->nmbrOfSubObjects; // get number of subobjects to run through
     while (size-- != 0) {
@@ -270,6 +284,7 @@ int Model::Draw(u16* pSubObjs) {
                 } else {
                     pMat = pObjMaterial->pMaterial;
                 }
+
 				// if material isn't invisible, call display lists of the material
                 if (!(pMat->flags & Flag_Invisible)) {
                     switch (pMat->grass) {
@@ -371,6 +386,7 @@ int Model::Draw(u16* pSubObjs) {
     }
     GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     *(int*)&Material_MixedColor = -1;
+    
     if (effectIdx != 0) {
         while (effectIdx-- > 0) {
             EffectDat* pEffect = &effectData[effectIdx];
@@ -378,6 +394,7 @@ int Model::Draw(u16* pSubObjs) {
                 pEffect->matEffect, pEffect->minW, pEffect->maxW);
         }
     }
+
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&currView->fogColour);
     return ret;
 }

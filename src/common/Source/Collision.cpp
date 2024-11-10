@@ -953,7 +953,7 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
 
             CollisionThing* pTriData = (CollisionThing*)CollisionHeap_Update(sizeof(CollisionTriangle), 0);
             // loop through all vertices of the triangle
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++) {
                 ((Vector*)&pTriData->verts[i].pos)->ApplyMatrix(&pExplorer->vertices[i].pos, &pModel->matrices[0]);
                 float r = (pExplorer->vertices[i].color.x * pModel->colour.x);
                 float g = (pExplorer->vertices[i].color.y * pModel->colour.y);
@@ -963,6 +963,7 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
                 pTriData->verts[i].color[2] = b * 255.0f;
                 pTriData->verts[i].color[3] = 255;
             }
+
             item.pTriangle = pTri;
             item.collisionThing = pTriData;
             Vector baDiff;
@@ -1032,7 +1033,7 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
 
     normals[5].Inverse(&normals[4]);
     
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         int dotTest = normals[i * 2].Dot(&pRay->mDir) > 0.0f ? 1 : 0;
         if (CheckPoint(&pRay->mStart, &corners[quads[(dotTest + 2*i)][0]], 
                 &corners[quads[(dotTest + 2*i)][1]], &corners[quads[(dotTest + 2*i)][2]]) &&
@@ -1049,10 +1050,12 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
             ret = true;
         }
     }
+
     // if a collision was found and pCr isn't NULL, copy the result of the collision to pCr
     if (ret && pCr) {
         *pCr = lastCollision;
     }
+
     return ret;
 }
 
@@ -1087,6 +1090,7 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
         {
         return false;
     }
+
     if (newStart.x >= pVolume->v1.x &&
         newStart.x < pVolume->v1.x + pVolume->v2.x &&
         newStart.y >= pVolume->v1.y &&
@@ -1186,8 +1190,10 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
         if (pCr) {
             *pCr = lastCollision;
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -1198,6 +1204,7 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
     if (tmp.MagSquared() > Sqr<float>(radius * 2.0f + pItem->unk8)) {
         return false;
     }
+    
     bool collide = Collision_RayCollideDynamicModel(vec1, vec2, pCr, pItem->pModel, pItem->idx);
     if (collide) {
         lastCollision.pInfo = pItem->pInfo;
@@ -1205,6 +1212,7 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
             pCr->pInfo = pItem->pInfo;
         }
     }
+
     return collide;
 }
 

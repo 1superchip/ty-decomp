@@ -57,12 +57,15 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     int size;
     Model* pModel;
     ModelTemplate* pModelTemplate;
+    
     strcpy(meshName, pMeshName);
     strtok(meshName, ".");
+
     if (pAnimName != NULL) {
         strcpy(animName, pAnimName);
         strtok(animName, ".");
     }
+
     ModelTemplate** pTemplates = modelTemplates.pPointers;
     while (*pTemplates != NULL) {
         if (stricmp((*pTemplates)->name, meshName) == 0) {
@@ -70,6 +73,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         }
         pTemplates++;
     }
+
     ModelTemplate* pFoundTemplate = *pTemplates;
     if (pFoundTemplate != NULL) {
         // if this template isn't a new instance, increment the reference count
@@ -98,6 +102,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     pModel->pMatrices = pModel->matrices;
     pModel->unkC = (float*)(pModel->pMatrices + pModelTemplate->pModelData->nmbrOfMatrices);
     pModel->subobjectData = (u8*)(pModel->unkC + pModelTemplate->pModelData->nmbrOfMatrices);
+
     if (pAnimName != NULL) {
         pModel->SetAnimation(Animation::Create(animName, pModel->pMatrices));
         pModel->flags.bits.bHasAnimation = 1;
@@ -105,6 +110,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         pModel->pAnimation = NULL;
         pModel->flags.bits.bHasAnimation = 0;
     }
+
     pModel->flags.bits.b0 = 0;
     pModel->renderType = -1;
     pModel->flags.bits.b3 = 0;
@@ -124,6 +130,7 @@ void Model::Destroy(void) {
     if (!flags.bits.bHasAnimation) {
         return;
     }
+
     if (pAnimation != NULL) {
         pAnimation->Destroy();
         pAnimation = NULL;
@@ -176,13 +183,16 @@ void Model::SetAnimation(Animation* pAnim) {
     if (pTemplate->pModelData->nmbrOfAnimNodes == 0) {
         return;
     }
+
     if (pAnim == NULL) {
         return;
     }
+
     if (pTemplate->pModelData->unk14 == NULL) {
         return;
     }
-    for(int i = 0; i < pTemplate->pModelData->nmbrOfAnimNodes; i++) {
+
+    for (int i = 0; i < pTemplate->pModelData->nmbrOfAnimNodes; i++) {
         pAnim->frames[i].pOrigin = &pTemplate->pModelData->unk14[i];
     }
 }
@@ -212,7 +222,7 @@ void Model::EnableOnlySubObject(int subObjectIndex, bool arg2) {
 
 void Model::SetInverseScaleValue(int idx, float arg2) {
     if (idx == -1) {
-        for(int i = 0; i < pTemplate->pModelData->nmbrOfMatrices; i++) {
+        for (int i = 0; i < pTemplate->pModelData->nmbrOfMatrices; i++) {
             unkC[i] = arg2;
         }
         return;
@@ -228,14 +238,16 @@ extern "C" int strcmpi(char*, char*);
 // returns true if the refpoint exists
 // else returns false
 bool Model::RefPointExists(char* pRefPointName, int* pRefPointIdx) {
-    for(int i = 0; i < pTemplate->pModelData->nmbrOfRefPoints; i++) {
+    for (int i = 0; i < pTemplate->pModelData->nmbrOfRefPoints; i++) {
         if (strcmpi(pTemplate->pModelData->pRefPoints[i].pName, pRefPointName) == 0) {
             if (pRefPointIdx != NULL) {
                 *pRefPointIdx = i;
             }
+
             return true;
         }
     }
+
     return false;
 }
 
@@ -264,14 +276,16 @@ void Model::GetRefPointWorldPosition(int refPointIndex, Vector* pOut) {
 // returns true if the subobject exists
 // else returns false
 bool Model::SubObjectExists(char* pSubObjectName, int* pSubObjectIdx) {
-    for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
+    for (int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
         if (strcmpi(pTemplate->pModelData->pSubObjects[i].pName, pSubObjectName) == 0) {
             if (pSubObjectIdx != NULL) {
                 *pSubObjectIdx = i;
             }
+
             return true;
         }
     }
+
     return false;
 }
 

@@ -1,7 +1,6 @@
 // Opal object source file
 
 #include "ty/props/gem.h"
-#include "ty/tytypes.h"
 #include "ty/global.h"
 #include "ty/DDA.h"
 #include "ty/tools.h"
@@ -161,13 +160,8 @@ void Gem_SetElement(ElementType newType) {
     gemElement = newType;
 }
 
-// fake symbols to disable pooling of .data in Gem_LoadResources
-// and keep the correct .data order
-extern char Prop_0270_FireOpal_str[];
-extern char GemParticles_str[];
-
 void Gem_LoadResources(KromeIni* pIni) {
-    opalDesc.Init(&moduleInfo, Prop_0270_FireOpal_str, "Opal", 0, 1);
+    opalDesc.Init(&moduleInfo, "Prop_0270_FireOpal", "Opal", 0, 1);
     opalDesc.Load(pIni);
     objectManager.AddDescriptor(&opalDesc);
 
@@ -179,7 +173,7 @@ void Gem_LoadResources(KromeIni* pIni) {
         elementInfo[i].pModel = Model::Create(elementInfo[i].pModelName, NULL);
         elementInfo[i].pModel->renderType = 3;
 
-        gemType[i].Init(GemParticles_str, elementInfo[i].pParticleMaterial,
+        gemType[i].Init("Gem Particles", elementInfo[i].pParticleMaterial,
             gemPartSysInfo[i].unk0, gemPartSysInfo[i].unk4, gemPartSysInfo[i].unk8, 1);
         
         if (gemPartSysInfo[i].updateFunc != NULL) {
@@ -195,9 +189,6 @@ void Gem_LoadResources(KromeIni* pIni) {
     
     Gem_PickupParticle_LoadResources();
 }
-
-char Prop_0270_FireOpal_str[] = "Prop_0270_FireOpal";
-char GemParticles_str[] = "Gem Particles";
 
 
 /// @brief Creates a new gem object

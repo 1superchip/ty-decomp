@@ -12,41 +12,42 @@
 #include "ty/LensFlare.h"
 #include "ty/Mist.h"
 #include "ty/props/WeatherProp.h"
+#include "ty/tytypes.h"
 
 MKSceneManager gSceneManager;
 
 int gLevelLoadStartTime = 0;
 
 LevelInfo levelInfo[24] = {
-    {"z1", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, true}, 
+    {"z1", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, true}, // Rainbow Cliffs
     {"z2", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, true}, 
     {"z3", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, false}, 
     {"z4", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, false}, 
 
-    {"a1", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, 
-    {"a2", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, 
-    {"a3", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, 
-    {"a4", (ElementType)0, (ZoneNumber)1, (TalismanType)0, false, false}, 
+    {"a1", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Two Up
+    {"a2", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Walk in the Park
+    {"a3", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Ship Rex
+    {"a4", (ElementType)0, (ZoneNumber)1, (TalismanType)0, false, false}, // Bull's Pen
 
-    {"b1", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, 
-    {"b2", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, 
-    {"b3", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, 
-    {"b4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, 
+    {"b1", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Bridge on the River Ty
+    {"b2", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Snow Worries
+    {"b3", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Outback Safari
+    {"b4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, //
 
-    {"c1", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, 
-    {"c2", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, 
-    {"c3", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, 
-    {"c4", (ElementType)2, (ZoneNumber)3, (TalismanType)2, false, false}, 
+    {"c1", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Lyre Lyre Pants on Fire
+    {"c2", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Beyond the Black Stump
+    {"c3", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Rex Marks The Spot
+    {"c4", (ElementType)2, (ZoneNumber)3, (TalismanType)2, false, false}, // Fluffy's Fjord
 
     {"d1", (ElementType)2, (ZoneNumber)5, (TalismanType)3, false, false}, 
-    {"d2", (ElementType)2, (ZoneNumber)5, (TalismanType)3, false, false}, 
+    {"d2", (ElementType)2, (ZoneNumber)5, (TalismanType)3, false, false}, // Cass' Crest
     {"d3", (ElementType)2, (ZoneNumber)4, (TalismanType)3, false, false}, 
-    {"d4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, 
+    {"d4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, // Crikey's Cove
 
-    {"e1", (ElementType)4, (ZoneNumber)5, (TalismanType)3, false, false}, 
-    {"e2", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, 
-    {"e3", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, 
-    {"e4", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, 
+    {"e1", (ElementType)4, (ZoneNumber)5, (TalismanType)3, false, false}, // Cass' Pass
+    {"e2", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Bonus World (Day)
+    {"e3", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Bonus World (Night)
+    {"e4", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Final Battle
 };
 
 void LevelData::InitDefaults(void) {
@@ -101,6 +102,7 @@ void LevelData::Deinit(void) {
         if (layers[i].pModel) {
             layers[i].pModel->Destroy();
         }
+
         layers[i].pModel = NULL;
     }
 
@@ -138,17 +140,17 @@ char* LevelData::GetID(LevelNumber levelNr) {
 extern "C" int stricmp(char*, char*);
 
 LevelNumber LevelData::GetLevelNumber(char* pName) {
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < TOTAL_LEVEL_MAX; i++) {
         if (stricmp(pName, levelInfo[i].levelId) == 0) {
             return (LevelNumber)i;
         }
     }
 
-    return (LevelNumber)0;
+    return LN_RAINBOW_CLIFFS;
 }
 
 LevelNumber LevelData::GetZoneFirstLevelNumber(ZoneNumber zoneNum) {
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < TOTAL_LEVEL_MAX; i++) {
         if (levelInfo[i].zone == zoneNum) {
             return (LevelNumber)i;
         }
@@ -297,7 +299,6 @@ void DeinitializeLevel(void) {
     gb.mGameData.StopTime();
 }
 
-#pragma pool_data off
 void Setup_PreloadLevel(void) {
 
     KromeIni ini;
@@ -436,11 +437,13 @@ void Setup_LoadLevel(void) {
     Shadow_Init();
     InitializeLevel();
     Weather_Enable(false);
+
     MKGrass_Init();
     MKGrassGC_LoadTextures(Setup_GetGrassForLevel());
-    GrassGCMaxRadius = gb.level.levelNumber == 12 ? 5000.0f : 12000.0f;
+    GrassGCMaxRadius = gb.level.GetCurrentLevel() == LN_LYRE_LYRE ? 5000.0f : 12000.0f;
     MKGrass_SetPushAwayPos(&ty.unk40, 0);
     MKGrass_SetPushAwayPos(pCameraGrassPoint, 2);
+    
     particleManager->Init();
     Shatter_Init();
     HeatFlare_Init();
@@ -481,8 +484,7 @@ void Setup_LoadLevel(void) {
     gb.mGameFsm.Init(GSS_InGame);
 
     switch (gb.level.GetCurrentLevel()) {
-        case 10:
-            // 10 = Outback Safari?
+        case LN_OUTBACK_SAFARI:
             // if current level == 10, change the game fsm state to GSS_BushPig
             // and call BushPig_Init
             gb.mGameFsm.ChangeState(GSS_BushPig);
@@ -676,43 +678,43 @@ char* no_grass[] = {NULL};
 
 char** Setup_GetGrassForLevel(void) {
     switch (gb.level.GetCurrentLevel()) {
-        case 0:
+        case LN_RAINBOW_CLIFFS:
             return z1_grass;
-        case 4:
+        case LN_TWO_UP:
             return a1_grass;
-        case 5:
+        case LN_WALK_IN_THE_PARK:
             return a2_grass;
-        case 6:
+        case LN_SHIP_REX:
             return a3_grass;
-        case 7:
+        case LN_BULLS_PEN:
             return a4_grass;
-        case 8:
+        case LN_BRIDGE_RIVER_TY:
             return b1_grass;
-        case 9:
+        case LN_SNOW_WORRIES:
             return b2_grass;
-        case 10:
+        case LN_OUTBACK_SAFARI:
             return b3_grass;
-        case 12:
+        case LN_LYRE_LYRE:
             return c1_grass;
-        case 13:
+        case LN_BLACK_STUMP:
             return c2_grass;
-        case 14:
+        case LN_REX_MARKS_SPOT:
             return c3_grass;
-        case 15:
+        case LN_FLUFFYS_FJORD:
             return c4_grass;
-        case 16:
+        case LN_16:
             return d1_grass;
-        case 17:
+        case LN_CASS_CREST:
             return d2_grass;
-        case 19:
+        case LN_CRIKEYS_COVE:
             return d4_grass;
-        case 20:
+        case LN_CASS_PASS:
             return e1_grass;
-        case 21:
+        case LN_BONUS_WORLD_DAY:
             return e2_grass;
-        case 22:
+        case LN_BONUS_WORLD_NIGHT:
             return e3_grass;
-        case 23:
+        case LN_FINAL_BATTLE:
             return e4_grass;
         default:
             return no_grass;

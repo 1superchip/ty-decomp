@@ -14,9 +14,41 @@
 #define TOTAL_GALLERYIMAGES	(512)
 
 enum LevelNumber {
-    LN_First = 0,
-    TOTAL_LEVEL_MAX = 0x18
+    LN_First            = 0, 
+
+    LN_RAINBOW_CLIFFS   = 0,  // z1
+    LN_1                = 1,  // z2
+    LN_2                = 2,  // z3
+    LN_3                = 3,  // z4
+
+    LN_TWO_UP           = 4,  // a1
+    LN_WALK_IN_THE_PARK = 5,  // a2
+    LN_SHIP_REX         = 6,  // a3
+    LN_BULLS_PEN        = 7,  // a4
+
+    LN_BRIDGE_RIVER_TY  = 8,  // b1
+    LN_SNOW_WORRIES     = 9,  // b2
+    LN_OUTBACK_SAFARI   = 10, // b3
+    LN_11               = 11, // b4
+
+    LN_LYRE_LYRE        = 12, // c1
+    LN_BLACK_STUMP      = 13, // c2
+    LN_REX_MARKS_SPOT   = 14, // c3
+    LN_FLUFFYS_FJORD    = 15, // c4
+
+    LN_16               = 16, // d1
+    LN_CASS_CREST       = 17, // d2
+    LN_18               = 18, // d3
+    LN_CRIKEYS_COVE     = 19, // d4
+
+    LN_CASS_PASS        = 20, // e1
+    LN_BONUS_WORLD_DAY  = 21, // e2
+    LN_BONUS_WORLD_NIGHT= 22, // e3
+    LN_FINAL_BATTLE     = 23, // e4
+
+    TOTAL_LEVEL_MAX     = 24,
 };
+
 enum ZoneNumber {};
 enum GoldenCogType {};
 enum ThunderEggType {};

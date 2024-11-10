@@ -22,4 +22,11 @@ struct Rotation {
     }
 };
 
+struct UnknownColorVectorStruct {
+    Vector* GetColor(void) {
+        static Vector colorVec = {0.0f, 0.0f, 0.0f, 0.0f};
+        return &colorVec;
+    }
+};
+
 #endif // TYTYPES_H

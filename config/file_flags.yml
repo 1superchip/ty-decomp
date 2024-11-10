@@ -3,27 +3,6 @@
 # any files that have extra flags are placed here with the flags
 # these flags will be added to the default flags
 
-ty/source/DataVal.cpp:
-    .flags: "-pool off"
-
-ty/source/GameObject.cpp:
-    .flags: "-pool off"
-
-ty/source/LevelObjective.cpp:
-    .flags: "-pool off"
-
-ty/source/RangeCheck.cpp:
-    .flags: "-pool off"
-
-ty/source/props/AnimatingProp.cpp:
-    .flags: "-pool off"
-
-ty/source/props/SoundProp.cpp:
-    .flags: "-pool off"
-
-ty/source/Script.cpp:
-    .flags: "-pool off"
-
 common/gc/THPAudioDecode.c:
     .flags: "-lang c"
 
