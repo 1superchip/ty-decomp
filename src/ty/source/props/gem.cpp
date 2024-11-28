@@ -73,10 +73,6 @@ static ParticleSystem* pSystem = NULL;
 static int numDynamicData = 0;
 static ElementType gemElement = ELEMENT_FIRE;
 
-
-// TODO: Correct data ordering without externs and variables for literals
-
-// Data is defined here to force the previous function to not pool data
 static ElementInfo elementInfo[MAX_GEM_ELEMENTS] = {
     {"prop_0270_fireopal", "fx_105", "fx_005", NULL, NULL, NULL},
     {"prop_0380_IceOpal", "fx_116", "fx_073", NULL, NULL, NULL},

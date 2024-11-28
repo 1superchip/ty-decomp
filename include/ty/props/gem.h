@@ -28,12 +28,12 @@ struct ElementInfo {
 };
 
 enum ElementType {
-    ELEMENT_FIRE 		= 0,
-    ELEMENT_ICE 		= 1,
-    ELEMENT_AIR 		= 2,
-    ELEMENT_RAINBOW		= 3,
-    ELEMENT_EARTH 		= 4,
-    MAX_GEM_ELEMENTS	= 5,
+    ELEMENT_FIRE        = 0,
+    ELEMENT_ICE         = 1,
+    ELEMENT_AIR         = 2,
+    ELEMENT_RAINBOW     = 3,
+    ELEMENT_EARTH       = 4,
+    MAX_GEM_ELEMENTS    = 5,
 };
 
 enum GemState {};

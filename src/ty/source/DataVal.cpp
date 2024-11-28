@@ -96,7 +96,7 @@ void DataVal::Load(void) {
     dataIni.Init("data.val");
     KromeIniLine* pLine = dataIni.GotoLine(NULL, NULL);
 
-    while(pLine != NULL) {
+    while (pLine != NULL) {
         if (pLine->pFieldName != NULL) {
             gAssertBool = Load_Float(pLine, &nearPlane, "near plane") || 
                 Load_Float(pLine, &enemyChaseSpeed, "enemyChaseSpeed") ||
