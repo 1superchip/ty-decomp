@@ -27,6 +27,7 @@ void ModuleInfoBase::AddToModuleList(ModuleInfoBase* pModule) {
         if (list == pModule) {
             return;
         }
+
         list = list->pData->pNext;
     }
     
@@ -57,7 +58,6 @@ void GameObject::Deinit(void) {
         pModel->Destroy();
         pModel = NULL;
     }
-    return;
 }
 
 void GameObject::Update(void) {
@@ -68,7 +68,6 @@ void GameObject::Draw(void) {
     if (pModel != NULL) {
         pModel->Draw(NULL);
     }
-    return;
 }
 
 void GameObject::Reset(void) {
@@ -184,6 +183,7 @@ u8* GameObjDesc::SetUpMem(u8* pMem) {
         pCurrInst = (u8*)pInstances;
         pMem += unk74 * pModule->pData->instanceSize;
     }
+    
     return pMem;
 }
 

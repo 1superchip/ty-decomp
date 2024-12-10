@@ -34,6 +34,7 @@ void RainbowScaleObjective::Update(void) {
     if (!bActive) {
         return;
     }
+    
     if (gb.mGameData.GetLevelCollectedGemCount() == 1 && !bStarted) {
         // if the first Rainbow Scale has been collected
         // and this objective hasn't been started
@@ -43,6 +44,7 @@ void RainbowScaleObjective::Update(void) {
         bActive = true;
         bStarted = true;
     }
+
     if (gb.mGameData.GetLevelCollectedGemCount() == unk66) {
         OnSuccess.Send();
         bComplete = true;

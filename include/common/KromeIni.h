@@ -39,45 +39,37 @@ struct KromeIni {
 };
 
 inline KromeIniLine* KromeIni::GetNextLine(void) {
-    KromeIniLine* line;
-    if (pFileMem == NULL) {
-        line = NULL;
-    } else {
-        if (currentLineNum < nmbrOfLines) {
-            currentLineNum++;
-        }
-        if (currentLineNum < nmbrOfLines) {
-            line = &pLines[currentLineNum];
-        } else {
-            line = NULL;
-        }
-    }
-    return line;
-}
-
-inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
-    KromeIniLine* line;
-    if (pFileMem == NULL) {
-        line = NULL;
-    } else {
-        currentLineNum = ((int)(pLine + 1) - (int)pLines) / sizeof(KromeIniLine);
-        if (currentLineNum > nmbrOfLines) {
-            currentLineNum = nmbrOfLines;
-        }
-        if (currentLineNum < nmbrOfLines) {
-            line = &pLines[currentLineNum];
-        } else {
-            return NULL;
-        }
-    }
-    return line;
-}
-
-inline KromeIniLine* KromeIni::GetCurrentLine(void) {
-    KromeIniLine* line;
     if (pFileMem == NULL) {
         return NULL;
     }
+
+    if (currentLineNum < nmbrOfLines) {
+        currentLineNum++;
+    }
+
+    return currentLineNum < nmbrOfLines ? &pLines[currentLineNum] : NULL;
+}
+
+inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {
+    if (pFileMem == NULL) {
+        return NULL;
+    }
+    
+    KromeIniLine* pNextLine = pLine + 1;
+    currentLineNum = ((int)pNextLine - (int)pLines) / sizeof(KromeIniLine);
+    
+    if (currentLineNum > nmbrOfLines) {
+        currentLineNum = nmbrOfLines;
+    }
+
+    return currentLineNum < nmbrOfLines ? &pLines[currentLineNum] : NULL;
+}
+
+inline KromeIniLine* KromeIni::GetCurrentLine(void) {
+    if (pFileMem == NULL) {
+        return NULL;
+    }
+
     return (currentLineNum >= 0 && currentLineNum < nmbrOfLines) ? &pLines[currentLineNum] : NULL;
 }
 

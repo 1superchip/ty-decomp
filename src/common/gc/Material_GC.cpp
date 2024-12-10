@@ -675,6 +675,7 @@ void Material::Use(void) {
     int numTexGens = 1;
     int numTevStages = 1;
     int numIndStages = 0;
+
     if (*(uint*)&Material_MixedColor != -1) {
         GXColor color = Material_MixedColor;
         GXSetTevColor(GX_TEVREG0, color);
@@ -685,12 +686,15 @@ void Material::Use(void) {
         GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         numTevStages = 2;
     }
+
     GXSetTevDirect(GX_TEVSTAGE0);
+    
     if (gRenderState.alpha < 0 || gRenderState.alpha > 255) {
         GXSetDstAlpha(GX_ENABLE, 127);
     } else {
         GXSetDstAlpha(GX_ENABLE, gRenderState.alpha);
     }
+
     if (pTex->bMpegTarget != false) {
         // setup GX for video
 		
@@ -876,6 +880,7 @@ void Material::Use(void) {
                 pTex->Use();
                 break;
         }
+
         switch (blendMode) {
             case Blend_Opaque:
             case Blend_Blend:
@@ -889,6 +894,7 @@ void Material::Use(void) {
                 GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
                 break;
         }
+
         int uVar8 = flags & 0x10;
         int uVar6 = flags & 0x8;
         if (View::GetCurrent()->bDisableZWrite != false) {

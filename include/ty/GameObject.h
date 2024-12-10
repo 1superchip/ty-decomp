@@ -76,9 +76,9 @@ struct GameObjDesc : MKPropDescriptor {
     virtual void Load(KromeIni* pIni);
     virtual void* ConstructObject(void* mem) {
         return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp
-    };
-    u8* SetUpMem(u8*);
-    void LoadObjects(KromeIni*, KromeIniLine*);
+    }
+    u8* SetUpMem(u8* pMem);
+    void LoadObjects(KromeIni* pIni, KromeIniLine* pLine);
     GameObject* CreateObject(void);
     DescriptorIterator Begin(void);
 
@@ -101,9 +101,9 @@ struct GameObject : MKProp {
     static void UpdateModule(void);
     static void DrawModule(void);
     static int* Allocate(void);
-    static void Deallocate(GameObject*);
+    static void Deallocate(GameObject* pObj);
     uint CalcDetailLevel(void);
-    static int GetMessageIdFromString(char*);
+    static int GetMessageIdFromString(char* string);
 
     virtual bool LoadLine(KromeIniLine* pLine);
     virtual void LoadDone(void);

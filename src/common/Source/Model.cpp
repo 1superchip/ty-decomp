@@ -321,21 +321,25 @@ void Ptr_Fixup(char** x, ModelData* pData) {
 void Model_UnpackTemplate(ModelTemplate* pTemplate) {
     ModelData* pData = pTemplate->pModelData;
     int i;
+
     Ptr_Fixup((char**)&pData->pSubObjects, pData);
     Ptr_Fixup((char**)&pData->pRefPoints, pData);
     Ptr_Fixup((char**)&pData->unk14, pData);
     Ptr_Fixup((char**)&pData->pVertices, pData);
-    for(i = 0; i < pData->nmbrOfSubObjects; i++) {
+
+    for (i = 0; i < pData->nmbrOfSubObjects; i++) {
         Ptr_Fixup(&pData->pSubObjects[i].pName, pData);
         Ptr_Fixup(&pData->pSubObjects[i].pOptions, pData);
         Ptr_Fixup((char**)&pData->pSubObjects[i].pMaterials, pData);
-        for(int j = 0; j < pData->pSubObjects[i].nmbrOfMaterials; j++) {
+        
+        for (int j = 0; j < pData->pSubObjects[i].nmbrOfMaterials; j++) {
             Ptr_Fixup(&pData->pSubObjects[i].pMaterials[j].pMaterialName, pData);
             Ptr_Fixup((char**)&pData->pSubObjects[i].pMaterials[j].pStripData, pData);
             pData->pSubObjects[i].pMaterials[j].pMaterial = Material::Create(pData->pSubObjects[i].pMaterials[j].pMaterialName);
         }
     }
-    for(i = 0; i < pData->nmbrOfRefPoints; i++) {
+
+    for (i = 0; i < pData->nmbrOfRefPoints; i++) {
         Ptr_Fixup(&pData->pRefPoints[i].pName, pData);
     }
 }

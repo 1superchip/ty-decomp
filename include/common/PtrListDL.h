@@ -43,10 +43,15 @@ struct PtrListDL {
     inline T* GetNextEntry(void) {
         return *--pMem;
     }
+    
     inline void Reset(void) {
         while (*pMem != NULL) {
             pMem++;
         }
+    }
+
+    inline bool IsEmpty(void) {
+        return *pMem == NULL;
     }
 };
 
@@ -69,6 +74,7 @@ inline void PtrListDL<T>::Init(int count, int size) {
         *++pMem = memory;
         memory = ((T*)memory + 1);
     }
+    
     *++pMem = NULL;
 }
 
@@ -81,6 +87,7 @@ inline void PtrListDL<T>::Deinit(void) {
             memory = *temp;
         }
     }
+
     if (temp != (T**)&gEmptyPtrListDL[0]) {
         T** ptrs = pMem;
         while(*ptrs != NULL) {
@@ -89,8 +96,10 @@ inline void PtrListDL<T>::Deinit(void) {
             }
             ptrs++;
         }
+
         Heap_MemFree(memory);
     }
+
     pMem = NULL;
 }
 
@@ -107,6 +116,7 @@ inline void PtrListDL<T>::Destroy(T* p) {
             Destroy(memPtr);
             break;
         }
+
         memPtr++;
     }
 }

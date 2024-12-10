@@ -860,7 +860,7 @@ bool Tools_CapsuleTestMagSq(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1
 void Tools_AnimDesc::Init(Tools_AnimEntry* _pAnims, int _count, MKAnimScript* pAnimScript) {
     pEntries = _pAnims;
     unk4 = _count;
-    for(int i = 0; i < unk4; i++) {
+    for (int i = 0; i < unk4; i++) {
         pEntries[i].pAnim = pAnimScript->GetAnim(pEntries[i].pName);
     }
 }
@@ -872,7 +872,7 @@ void Tools_AnimManager::Init(Tools_AnimDesc* pAnimDesc) {
 void Tools_AnimEventDesc::Init(Tools_AnimEvent* pAnimEvent, int count, MKAnimScript* pAnimScript) {
     mCount = count;
     pEvents = pAnimEvent;
-    for(int i = 0; i < mCount; i++) {
+    for (int i = 0; i < mCount; i++) {
         pEvents[i].pEventName = pAnimScript->GetEventByName(pEvents[i].pName);
     }
 }
@@ -895,9 +895,10 @@ void Tools_AnimEventManager::Update(MKAnimScript* pAnimScript) {
     if (!pDescriptor || !pDescriptor->pEvents) {
         return;
     }
+    
     char* name = (char*)pDescriptor;
     while (name = pAnimScript->GetEvent(index++)) {
-        for(int i = 0; i < pDescriptor->mCount; i++) {
+        for (int i = 0; i < pDescriptor->mCount; i++) {
             if (name == pDescriptor->pEvents[i].pEventName) {
                 unk4 |= 1 << i;
             }
@@ -909,6 +910,7 @@ int Tools_GetAnimationLength(MKAnimScript* pAnimScript) {
     if (pAnimScript != NULL) {
         return pAnimScript->UpdatesUntilFinished() + 2;
     }
+
     return 0;
 }
 
@@ -989,7 +991,7 @@ void Tools_DropShadow_Draw(void) {
     if (shadows.CheckMemory2()) return;
     gb.pShadowMat->Use();
     ShadowInfo* pInfo = shadows.GetCurrEntry();
-    for(int i = 0; i < (shadows.pEnd2 - shadows.pEnd); i++) {
+    for (int i = 0; i < (shadows.pEnd2 - shadows.pEnd); i++) {
         pInfo[i].Draw();
     }
 }
@@ -1072,6 +1074,7 @@ bool WayPointLoadInfo::LoadLine(KromeIniLine* pLine, bool bLoadPos) {
     if (stricmp(pLine->pFieldName, "waypoints") == 0) {
         return true;
     }
+    
     if (bLoadPos) {
         if (LoadLevel_LoadVector(pLine, "pos", &vecs[unk0]) || LoadLevel_LoadVector(pLine, "waypoint", &vecs[unk0])) {
             unk0++;
@@ -1083,6 +1086,7 @@ bool WayPointLoadInfo::LoadLine(KromeIniLine* pLine, bool bLoadPos) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -1233,15 +1237,18 @@ float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnRate) {
 float Tools_SmoothToValue2(float f1, float f2, float f3, float f4, float f5) {
     float f6 = f1 - f2;
     float f0;
+
     if (f6 < 0.0f) {
         f6 = -f6;
     }
+
     f0 = f6 * f3;
     if (f0 < f4) {
         f0 = f4;
     } else if (f0 > f5) {
         f0 = f5;
     }
+
     if (f6 > f0) {
         if (f1 > f2) {
             f2 = f1 - f0;
@@ -1249,25 +1256,30 @@ float Tools_SmoothToValue2(float f1, float f2, float f3, float f4, float f5) {
             f2 = f1 + f0;
         }
     }
+
     return f2;
 }
 
 float Tools_SmoothToAngle2(float f1, float f2, float f3, float f4, float f5) {
     f1 = NormaliseAngle(f1);
     f2 = NormaliseAngle(f2);
+
     if (f1 < f2 - PI) {
         f1 += (2 * PI);
     } else if (f1 > f2 + PI) {
         f1 -= (2 * PI);
     }
+
     float finalAngle = f2;
     float abs = Abs<float>(f1 - f2);
     float f0 = abs * f3;
+
     if (f0 < f4) {
         f0 = f4;
     } else if (f0 > f5) {
         f0 = f5;
     }
+
     if (abs > f0) {
         if (f1 > f2) {
             finalAngle = f1 - f0;
@@ -1275,6 +1287,7 @@ float Tools_SmoothToAngle2(float f1, float f2, float f3, float f4, float f5) {
             finalAngle = f1 + f0;
         }
     }
+
     return NormaliseAngle(finalAngle);
 }
 
@@ -1348,7 +1361,7 @@ char* Tools_DynamicStringTable::AppendString(char* pString) {
 // if not found, returns NULL
 char* Tools_DynamicStringTable::FindString(char* pString) {
     char* pCurrStr = pStringTable;
-    for(int i = 0; i < nmbrOfStrings; i++) {
+    for (int i = 0; i < nmbrOfStrings; i++) {
         if (stricmp(pCurrStr, pString) == 0) {
             return pCurrStr;
         }
@@ -1444,6 +1457,7 @@ int Tools_MapPadToKey(int target) {
             return padKeyMap[i].unk4;
         }
     }
+
     return ' ';
 }
 

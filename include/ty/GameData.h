@@ -112,8 +112,8 @@ struct SaveData {
     GameDataSettings settings;
     SaveLevelEntry levels[Total_Levels];
     ZoneStruct zoneInfo[6];
-    int levelAB0;
-    int levelAB4;
+    LevelNumber currentLevel;
+    LevelNumber previousLevel;
     int currentZone;
     int currentRang;
     Attributes tyAttributes;
@@ -129,7 +129,7 @@ struct GameData {
     bool unk0;
     bool bIsDirty;
     int numCollectedGems;
-    int numChargeBites;
+    int numChargeBites; // Opal count used for charged bites (super bites)
     bool bOpalLifeup;
     TimerInfo time;
     SaveData* pSaveData;
@@ -141,8 +141,8 @@ struct GameData {
     SaveData* GetSaveData(void);
     void ReleaseSaveData(void);
     void SetDirty(bool);
-    void SetCurrentLevel(LevelNumber);
-    void SetCurrentZone(ZoneNumber);
+    void SetCurrentLevel(LevelNumber level);
+    void SetCurrentZone(ZoneNumber zone);
     void SetLearntToSwim(bool);
     void SetLearntToDive(bool);
     void SetBothRangs(bool);
@@ -193,47 +193,93 @@ struct GameData {
     bool IsBilbyFree(int level, int type) {
         return pSaveData->levels[level].bilbies[type] & 1;
     }
+
     void SetDataDirty(bool bSet) {
         bIsDirty = bSet;
     }
+
     void SetHasTalisman(int zone, bool bHas) {
+        // Most likely defined in GameData.cpp
         pSaveData->bHasTalismans[zone] = bHas;
         SetDataDirty(true);
     }
+
     bool CheckLearntToSwim(void) {
         return pSaveData->tyAttributes.bLearntToSwim;
     }
+
     bool HasBothRangs(void) {
         return pSaveData->tyAttributes.bBothRangs;
     }
+
     bool IsThunderEggCollected(int eggIdx, int level) {
         return pSaveData->levels[level].thunderEggs[eggIdx];
     }
+
     bool CheckCurrentLevelThunderEgg(int eggIdx) {
-        return IsThunderEggCollected(eggIdx, pSaveData->levelAB0);
+        return IsThunderEggCollected(eggIdx, pSaveData->currentLevel);
     }
+
     bool IsZoneCompleted(int zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bZoneCompleted;
     }
+
     int GetCurrentLevel(void) {
-        return pSaveData->levelAB0;
+        return pSaveData->currentLevel;
     }
+
     bool HasLevelBeenEntered(int level) {
         return pSaveData->levels[level].nmbrOfTimesEntered <= 1;
     }
+
     bool HasBoomerang(BoomerangType index) {
         return pSaveData->tyAttributes.bHasRangs[index];
     }
+
     bool GetLevelEnterCount(int level) {
         return pSaveData->levels[level].nmbrOfTimesEntered;
     }
+
     bool CheckZone_Unk0(int zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bUnlocked;
     }
+
     int GetLevelCollectedGemCount(void) {
-        return GetCollectedGemCount((LevelNumber)pSaveData->levelAB0);
+        return GetCollectedGemCount(pSaveData->currentLevel);
+    }
+
+    void SetHasGoldenCog(GoldenCogType cogType, bool bHasCog) {
+        // Most likely defined in GameData.cpp
+        pSaveData->levels[pSaveData->currentLevel].cogs[cogType] = bHasCog;
+        SetDataDirty(true);
+    }
+
+    void SetHasThunderEgg(ThunderEggType eggType, bool bHasEgg) {
+        // Most likely defined in GameData.cpp
+        pSaveData->levels[pSaveData->currentLevel].thunderEggs[eggType] = bHasEgg;
+        SetDataDirty(true);
+    }
+
+    int GetLives(void) {
+        return pSaveData->lives;
+    }
+
+    void SetLives(int numLives) {
+        pSaveData->lives = numLives;
+
+        if (pSaveData->lives > 99) {
+            pSaveData->lives = 99;
+        }
+
+        SetDataDirty(true);
+    }
+
+    void SetChargeBites(int count) {
+        // Set the charge bite opal count to (count * 100)
+        numChargeBites = count * 100;
     }
 };
+
 void GameData_Init(void);
 void GameData_New(void);
 

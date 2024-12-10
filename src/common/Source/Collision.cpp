@@ -146,9 +146,10 @@ static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vect
     vecs[7].w = vecs[2].w;
     vecs[7].z = vecs[2].z + pVolume->v2.z;
     
-    for(int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         vecs[i].ApplyMatrix(&vecs[i], pMatrix);
     }
+
     pMin->x = vecs[0].x;
     pMin->y = vecs[0].y;
     pMin->z = vecs[0].z;
@@ -157,7 +158,8 @@ static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vect
     pMax->y = vecs[0].y;
     pMax->z = vecs[0].z;
     pMax->w = vecs[0].w;
-    for(int i = 1; i < 8; i++) {
+
+    for (int i = 1; i < 8; i++) {
         pMin->x = Min<float>(pMin->x, vecs[i].x);
         pMax->x = Max<float>(pMax->x, vecs[i].x);
         pMin->y = Min<float>(pMin->y, vecs[i].y);
@@ -316,7 +318,7 @@ static void NearestPointOnPolyEdge(Vector* pVec, Vector* pVec1, int* indices, in
 
 // checks if the ray formed by pVec and pVec1 intersects the polygon with nmbrOfVertices vertices of pVec2
 static bool PointInPoly(Vector* pVec, Vector* pVec1, Vector* pVec2, int* indices, int nmbrOfVertices) {
-    for(int i = 0; i < nmbrOfVertices - 1; i++) {
+    for (int i = 0; i < nmbrOfVertices - 1; i++) {
         if (CheckPoint(pVec, pVec1, &pVec2[indices[i]], &pVec2[indices[i + 1]])) {
             return false;
         }
@@ -707,8 +709,8 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
     int maxz;
     FindGridBoundaries(pVec0, pVec1, &minx, &minz, &maxx, &maxz);
     bFound = false;
-    for(int j = minz; j <= maxz; j++) {
-        for(int i = minx; i <= maxx; i++) {
+    for (int j = minz; j <= maxz; j++) {
+        for (int i = minx; i <= maxx; i++) {
             Item* pItem = Collision_Grid[j * Collision_TilesAcross + i];
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL ||
@@ -774,8 +776,8 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
     int maxz;
     FindGridBoundaries(&pRay->mMinPos, &pRay->mMaxPos, &minx, &minz, &maxx, &maxz);
 
-    for(int j = minz; j <= maxz; j++) {
-        for(int i = minx; i <= maxx; i++) {
+    for (int j = minz; j <= maxz; j++) {
+        for (int i = minx; i <= maxx; i++) {
             float local_60 = i * (float)Collision_TileWidth + Collision_MinX;
             float local_64 = j * (float)Collision_TileHeight + Collision_MinZ;
             Item* pItem = Collision_Grid[j * Collision_TilesAcross + i];
@@ -841,8 +843,8 @@ static void Collision_AddItem(Item* pItem) {
     int endZ = (Max<float>(pVert0->z, Max<float>(pVert1->z, pVert2->z)) - Collision_MinZ) / Collision_TileHeight;
     if (startX >= 0 && endX < Collision_TilesAcross &&
         startZ >= 0 && endZ < Collision_TilesDown) {
-        for(int j = startZ; j <= endZ; j++) {
-            for(int i = startX; i <= endX; i++) {
+        for (int j = startZ; j <= endZ; j++) {
+            for (int i = startX; i <= endX; i++) {
                 int idx = j * Collision_TilesAcross + i;
                 pItem->next = Collision_Grid[idx];
                 Collision_Grid[idx] = (Item*)CollisionHeap_Update(sizeof(Item), 0);
@@ -870,7 +872,7 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
     // this call might use the parameters rather than the local variables
     Collision_Grid = (Item**)CollisionHeap_Update(Collision_TilesDown * Collision_TilesAcross * sizeof(Item**), 0);
     
-    for(int i = 0; i < tilesDown * tilesAcross; i++) {
+    for (int i = 0; i < tilesDown * tilesAcross; i++) {
         Collision_Grid[i] = NULL;
     }
     
@@ -886,8 +888,7 @@ void Collision_Init(int heapSize, float minX, float /* unused */ minY, float min
     
     Collision_DynGridTileSizeZ = (height / 32.0f) + 1.0f;
     
-    for(int i = 0; i < NUM_DYNGRID_ENTRIES; i++)
-    {
+    for (int i = 0; i < NUM_DYNGRID_ENTRIES; i++) {
         dynGrid[i].PTR_0x8 = NULL;
         dynGrid[i].pNext = &dynGrid[i];
         dynGrid[i].pPrev = &dynGrid[i];
@@ -1006,7 +1007,7 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
         {v2.x, v2.y, v1.z}, 
     };
 
-    for(int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         corners[i].ApplyMatrix(pDynItem->GetMatrix());
     }
 
@@ -1103,7 +1104,7 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
     float div = 1.0f;
     if (diff.x) {
         float f8 = div / diff.x;
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             float volumeX = i == 0 ? pVolume->v1.x : pVolume->v1.x + pVolume->v2.x;
             float f9 = f8 * (volumeX - newStart.x);
             if (f9 >= 0.0f && f9 < div) {
@@ -1129,7 +1130,7 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
 
     if (diff.y) {
         float f8 = 1.0f / diff.y;
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             float volumeY = i == 0 ? pVolume->v1.y : pVolume->v1.y + pVolume->v2.y;
             float f9 = f8 * (volumeY - newStart.y);
             if (f9 >= 0.0f && f9 < div) {
@@ -1155,7 +1156,7 @@ bool Collision_RayCollideDynamicModel(Vector* vec1, Vector* vec2, CollisionResul
 
     if (diff.z) {
         float f8 = 1.0f / diff.z;
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             float volumeZ = i == 0 ? pVolume->v1.z : pVolume->v1.z + pVolume->v2.z;
             float f9 = f8 * (volumeZ - newStart.z);
             if (f9 >= 0.0f && f9 < div) {
@@ -1243,8 +1244,8 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
         int overlapZSize;
         // might not be the correct function, but it is equivalent
         Collision_FindSphereDynamicGrid(&min, &max, &overlapX, &overlapZ, &overlapXSize, &overlapZSize);
-        for(int i = overlapZ; i < overlapZ + overlapZSize; i++) {
-            for(int j = overlapX; j < overlapX + overlapXSize; j++) {
+        for (int i = overlapZ; i < overlapZ + overlapZSize; i++) {
+            for (int j = overlapX; j < overlapX + overlapXSize; j++) {
                 CollisionNode* currNode = dynGrid[i * 0x20 + j].pNext;
                 while (currNode != &dynGrid[i * 0x20 + j]) {
                     DynamicItem* currItem = (DynamicItem*)currNode->PTR_0x8;
@@ -1286,7 +1287,7 @@ bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadi
         int lengthX;
         int lengthZ;
         Collision_FindSphereDynamicGrid(&ray.mMinPos, &ray.mMaxPos, &startX, &startZ, &lengthX, &lengthZ);
-        for(int i = startZ; i < startZ + lengthZ; i++) {
+        for (int i = startZ; i < startZ + lengthZ; i++) {
             for (int j = startX; j < startX + lengthX; j++) {
                 CollisionNode* currNode = dynGrid[i * 0x20 + j].pNext;
                 while (currNode != &dynGrid[i * 0x20 + j]) {
@@ -1315,20 +1316,25 @@ void Collision_Deinit(void) {
     if (!bCollisionInit) {
         return;
     }
+
     DynamicItem** dynItems = dynamicModels.GetMem();
     while (*dynItems != NULL) {
         DynamicItem* item = *dynItems;
         item->Deinit();
         dynItems++;
     }
+
     dynamicModels.Deinit();
+
     collisionHeapIndex = 0;
     collisionHeapSize = 0;
     collisionPolysAdded = 0;
+
     if (pCollisionHeap != NULL) {
         Heap_MemFree(pCollisionHeap);
         pCollisionHeap = NULL;
     }
+
     bCollisionInit = false;
 }
 
@@ -1336,6 +1342,7 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
     if (!bCollisionInit) {
         return;
     }
+
     DynamicItem* nextModel = dynamicModels.GetNextEntry();
     nextModel->pInfo = pInfo;
     nextModel->pModel = pModel;
@@ -1377,6 +1384,7 @@ void Collision_DeleteDynamicModel(Model* pModel) {
     if (!bCollisionInit) {
         return;
     }
+
     if (pModel == NULL) {
         DynamicItem** pDynItems = dynamicModels.GetMem();
         while (*pDynItems != NULL) {
@@ -1384,11 +1392,14 @@ void Collision_DeleteDynamicModel(Model* pModel) {
             pDynamicItem->Deinit();
             pDynItems++;
         }
+
         while (*dynamicModels.pMem != NULL) {
             dynamicModels.pMem++;
         }
+
         return;
     }
+
     DynamicItem** pItems = dynamicModels.GetMem();
     while (*pItems != NULL) {
         DynamicItem* pItem = *pItems;
@@ -1435,14 +1446,13 @@ void DynamicItem::Unlink(void) {
         (*pData)->Remove();
         pData++;
     }
+
     GotoEnd();
 }
 
 void DynamicItem::Link(void) {
-    for (int i = unk48; i < unk48 + unk50; i++)
-    {
-        for (int j = unk44; j < unk44 + unk4C; j++)
-        {
+    for (int i = unk48; i < unk48 + unk50; i++) {
+        for (int j = unk44; j < unk44 + unk4C; j++) {
             dynGrid[i * 32 + j].LINK(unk10.GetNextEntry(), this);
         }
     }

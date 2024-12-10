@@ -59,9 +59,11 @@ bool Picture::LoadLine(KromeIniLine* pLine) {
 
 void Picture::LoadDone(void) {
     StaticProp::LoadDone();
+
     if (mFrameNumber >= 0) {
         bShow = gb.mGameData.GetHasGalleryImage(mFrameNumber);
     }
+    
     unk68 = StaticProp::GetPos()->y;
     pos = *StaticProp::GetPos();
 }
@@ -81,7 +83,10 @@ void Picture::Reset(void) {
 }
 
 void Picture::Update(void) {
-    if (!bInitialised) return; // if not initialised, don't update
+    if (!bInitialised) {
+        return; // if not initialised, don't update
+    }
+
     if (bShow) {
         if (pModel->matrices[0].Row0()->MagSquared() > 0.01f) {
             pModel->matrices[0].Row3()->x = pHero->pLocalToWorld->Row3()->x;
@@ -90,8 +95,10 @@ void Picture::Update(void) {
         } else {
             pModel->matrices[0].Scale(0.0f);
         }
+
         return;
     }
+
     Vector temp;
     Vector heroPos = *pHero->GetPos();
     heroPos.y += 50.0f;
@@ -107,6 +114,7 @@ void Picture::Update(void) {
             }
             return;
         }
+
         unk74 += temp.Normalise() * 0.01f * 0.15f;
         temp.Scale(unk74);
         GetPos()->Add(&temp);
@@ -125,6 +133,7 @@ void Picture::Update(void) {
         }
         GetPos()->y = _table_sinf(angle) * 5.0f + unk68;
     }
+
     // Update Quadratic equation
     if (mQuadraticTime >= 0.0f && mQuadraticTime < 1.0f) {
         if (mQuadraticTime < 1.0f) {
@@ -135,6 +144,7 @@ void Picture::Update(void) {
         mQuadratic.Update(mQuadraticTime);
         GetPos()->Copy(&mQuadratic.pos);
     }
+
     // Copy GameCamera rotation so it always faces the camera / screen
     pModel->matrices[0].CopyRotation(&GameCamera_View()->unk48);
 }
@@ -158,9 +168,15 @@ void Picture::PostDraw(void* pObj) {
 /// @param pPos Position of Object
 void Picture::Spawn(int frameNumber, Vector* pPos) {
     CollisionResult cr;
-    if (bInitialised) return;
+
+    if (bInitialised) {
+        return;
+    }
+
     mFrameNumber = frameNumber;
+
     GetPos()->Copy(pPos);
+
     Vector mid = *GetPos();
     Vector end = mid;
     mid.y += 50.0f;
@@ -169,6 +185,7 @@ void Picture::Spawn(int frameNumber, Vector* pPos) {
         end.y = cr.pos.y + 25.0f;
         unk68 = cr.pos.y + 25.0f;
     }
+
     mQuadratic.SetPoints(GetPos(), &mid, &end);
     bInitialised = true;
     mQuadraticTime = 0.0f;

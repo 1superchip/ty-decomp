@@ -20,8 +20,8 @@ struct GemParticleSysInfo {
 
 struct ElementInfo {
     char* pModelName;
-    char* pMaterialName;
-    char* pMaterialName1;
+    char* pMaterialName; // pLodParticleName
+    char* pMaterialName1; // pParticleMaterialName
     Model* pModel;
     Material* pMaterial;
     Material* pParticleMaterial;

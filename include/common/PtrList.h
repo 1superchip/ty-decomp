@@ -42,6 +42,12 @@ struct PtrList {
         }
         return NULL;
     }
+
+    void Reset(void) {
+        while (*pPointers != NULL) {
+            pPointers++;
+        }
+    }
 };
 
 template <typename T>
@@ -51,10 +57,11 @@ inline void PtrList<T>::Init(int count) {
     } else {
         pPointers = (T**)Heap_MemAlloc((count + 2) * sizeof(T*));
         *pPointers = NULL;
-        int i = 0;
-        for (i; i < count; i++) {
+
+        for (int i = 0; i < count; i++) {
             *++pPointers = (T*)0xdeadbeef;
         }
+        
         *++pPointers = NULL;
     }
 }

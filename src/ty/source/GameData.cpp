@@ -58,12 +58,12 @@ void GameData_New(void) {
     memset(gameData, 0, sizeof(SaveData));
     gameData->zoneInfo[0].bUnlocked = true;
     gameData->zoneInfo[1].bUnlocked = true;
-    gameData->levelAB0 = 0;
-    gameData->levelAB4 = 0;
+    gameData->currentLevel = LN_RAINBOW_CLIFFS;
+    gameData->previousLevel = LN_RAINBOW_CLIFFS;
     gameData->currentZone = 0;
     gameData->currentRang = 0;
     gameData->tyAttributes.bHasRangs[0] = true; // Boomerang
-    gameData->levelAB4 = 0x18;
+    gameData->previousLevel = TOTAL_LEVEL_MAX;
     gameData->unkADA[0] = false;
     gameData->settings.musicVolume = 7;
     gameData->settings.soundVolume = 10;
@@ -77,22 +77,23 @@ void GameData_New(void) {
     gameData->settings.unk9 = 1;
     gameData->size = sizeof(SaveData);
     gameData->version = GAMEDATA_VERSION;
-    gameData->prevLevelNumber1 = gameData->levelAB4;
+    gameData->prevLevelNumber1 = gameData->previousLevel;
 }
 
 void GameData::Init(void) {
     pSaveData = gameData;
     memset(&time, 0, sizeof(TimerInfo));
     time.year = -1;
-    pSaveData->levelAB4 = 0x18;
+    pSaveData->previousLevel = TOTAL_LEVEL_MAX;
 }
 
 void GameData::SynchroniseEnterLevel(void) {
-    numChargeBites = 0;
-    numChargeBites = gb.mNumChargeBites * 100;
+    SetChargeBites(0);
+    SetChargeBites(gb.mNumChargeBites);
+    
     for (int i = 0; i < Total_ThunderEggs; i++) {
         SpecialPickupStruct* pEgg = GetThunderEgg((ThunderEggType)i);
-        if (pSaveData->levels[pSaveData->levelAB0].thunderEggs[i] && pEgg) {
+        if (pSaveData->levels[pSaveData->currentLevel].thunderEggs[i] && pEgg) {
             // Set collected thunder eggs transparent
             pEgg->SetTransparent(true);
             // Hardcoded index for Time Attack ThunderEgg
@@ -108,7 +109,7 @@ void GameData::SynchroniseEnterLevel(void) {
         SpecialPickupStruct* pCog = GetGoldenCog((GoldenCogType)i);
         // if cog for index is collected and Cog pointer isn't NULL
         // Set the cog collected and place a Picnic Basket
-        if (pSaveData->levels[pSaveData->levelAB0].cogs[i] && pCog) {
+        if (pSaveData->levels[pSaveData->currentLevel].cogs[i] && pCog) {
             pCog->SetCollected(true);
             char* unkPtr = (char*)pCog->unk0[1];
             Basket_PlaceUnused((Vector*)((char*)unkPtr + 0x5C));
@@ -116,14 +117,14 @@ void GameData::SynchroniseEnterLevel(void) {
     }
     
     for (int i = 0; i < Total_Bilbies; i++) {
-        bool rescued = ((pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 2) && (GetFreeBilbyCount() == 5))
-            && !pSaveData->levels[pSaveData->levelAB0].thunderEggs[1];
-        if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
+        bool rescued = ((pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 2) && (GetFreeBilbyCount() == 5))
+            && !pSaveData->levels[pSaveData->currentLevel].thunderEggs[1];
+        if (pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 1) {
             Bilby_SetRescued((BilbyType)i, rescued);
         }
     }
 
-    if (!pSaveData->levels[pSaveData->levelAB0].thunderEggs[0]) {
+    if (!pSaveData->levels[pSaveData->currentLevel].thunderEggs[0]) {
         // if Opal ThunderEgg isn't collected, synchronize opals that have already been collected
         SetCollectedGems();
     } else {
@@ -135,9 +136,9 @@ void GameData::SynchroniseEnterLevel(void) {
 
     SetHasExtraHealth(pSaveData->tyAttributes.bHasExtraHealth);
 
-    pSaveData->lives = (pSaveData->lives >= 5) ? pSaveData->lives : 5;
+    pSaveData->lives = Max<s16>(5, pSaveData->lives);
 
-    if (pSaveData->levelAB4 != 0x18) {
+    if (pSaveData->previousLevel != TOTAL_LEVEL_MAX) {
         TyMemCard_AutoSaveGame();
     }
 
@@ -160,7 +161,7 @@ SaveData* GameData::GetSaveData(void) {
     unk0 = true;
     StopTime();
     GetCollectedGems();
-    gameData->prevLevelNumber1 = gameData->levelAB0;
+    gameData->prevLevelNumber1 = gameData->currentLevel;
     gameData->completePercent = GetGameCompletePercent();
     gameData->thunderEggCount = GetTotalThunderEggCount();
     return pSaveData;
@@ -178,9 +179,9 @@ void GameData::SetDirty(bool dirty) {
 
 void GameData::SetCurrentLevel(LevelNumber level) {
     if (pSaveData) {
-        pSaveData->levelAB4 = pSaveData->levelAB0;
-        pSaveData->levelAB0 = level;
-        pSaveData->levels[pSaveData->levelAB0].nmbrOfTimesEntered++;
+        pSaveData->previousLevel = pSaveData->currentLevel;
+        pSaveData->currentLevel = level;
+        pSaveData->levels[pSaveData->currentLevel].nmbrOfTimesEntered++;
     }
 }
 
@@ -192,17 +193,17 @@ void GameData::SetCurrentZone(ZoneNumber zone) {
 
 void GameData::SetLearntToSwim(bool learntToSwim) {
     pSaveData->tyAttributes.bLearntToSwim = learntToSwim;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::SetLearntToDive(bool learntToDive) {
     pSaveData->tyAttributes.bLearntToDive = learntToDive;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::SetBothRangs(bool bHasBothRangs) {
     pSaveData->tyAttributes.bBothRangs = bHasBothRangs;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::SetHasExtraHealth(bool bExtraHealth) {
@@ -219,15 +220,17 @@ void GameData::SetHasExtraHealth(bool bExtraHealth) {
 
 void GameData::SetHasRang(BoomerangType type, bool hasRang) {
     pSaveData->tyAttributes.bHasRangs[type] = hasRang;
-    bIsDirty = true;
+    SetDataDirty(true);
 }
+
+// SetHasThunderEgg, SetHasGoldenCog, SetHasTalisman may have been placed here
 
 void GameData::SetBossDefeated(ZoneNumber zone, bool bossDefeated) {
     pSaveData->zoneInfo[zone].bZoneCompleted = bossDefeated;
     SetDataDirty(true);
-    TalismanType index = gb.level.GetTalismanType((LevelNumber)pSaveData->levelAB0);
+    TalismanType index = gb.level.GetTalismanType(pSaveData->currentLevel);
     SetHasTalisman(index, true);
-    index = gb.level.GetTalismanType((LevelNumber)pSaveData->levelAB0);
+    index = gb.level.GetTalismanType(pSaveData->currentLevel);
     SetHasPlacedTalisman(index, true);
 }
 
@@ -263,7 +266,7 @@ void GameData::CollectGem(bool arg0) {
 // Synchronizes opals for already collected gems in the savedata
 void GameData::SetCollectedGems(void) {
     int gemCount = 0;
-    u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
+    u8* pGems = pSaveData->levels[pSaveData->currentLevel].gemArray;
     int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
 
     for (int i = 0; i < totalGems; i++) {
@@ -280,9 +283,9 @@ void GameData::SetCollectedGems(void) {
 
 // Synchronizes the savedata for already collected gems in the current level
 void GameData::GetCollectedGems(void) {
-    u8* pGems = pSaveData->levels[pSaveData->levelAB0].gemArray;
+    u8* pGems = pSaveData->levels[pSaveData->currentLevel].gemArray;
 
-    memset(pGems, 0, sizeof(pSaveData->levels[pSaveData->levelAB0].gemArray));
+    memset(pGems, 0, sizeof(pSaveData->levels[pSaveData->currentLevel].gemArray));
 
     int totalGems = Min<int>(Gem::totalGems, GEMS_MAXOPALS);
 
@@ -297,8 +300,7 @@ void GameData::GetCollectedGems(void) {
 
 int GameData::GetGameCompletePercent(void) {
     int total = GetTotalGoldenCogCount() + GetTotalThunderEggCount() + GetTotalTalismanCount();
-    total = (total * 100) / 167;
-    return (total > 100) ? 100 : total;
+    return Min<int>(100, (total * 100) / 167);
 }
 
 /// @brief Gets the number of cogs collected within a single level
@@ -346,7 +348,7 @@ int GameData::GetTotalTalismanCount(void) {
 }
 
 int GameData::GetCollectedGemCount(LevelNumber level) {
-    if (level == pSaveData->levelAB0) {
+    if (level == pSaveData->currentLevel) {
         return numCollectedGems;
     }
 
@@ -366,7 +368,7 @@ int GameData::GetFreeBilbyCount(void) {
     int count = 0;
 
     for (int i = 0; i < Total_Bilbies; i++) {
-        if (pSaveData->levels[pSaveData->levelAB0].bilbies[i] & 1) {
+        if (pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 1) {
             count++;
         }
     }
@@ -415,10 +417,9 @@ int GameData::GetTotalGalleryCount(void) {
 }
 
 void GameData::CollectCog(GoldenCogType cogType) {
-    pSaveData->levels[pSaveData->levelAB0].cogs[cogType] = true;
-    bIsDirty = true;
+    SetHasGoldenCog(cogType, true);
     Hud_ShowCogs();
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 /// @brief Counts the number of collected thundereggs of a certain type
@@ -458,9 +459,8 @@ int GameData::GetTotalThunderEggCount(void) {
 }
 
 void GameData::CollectThunderEgg(ThunderEggType type) {
-    pSaveData->levels[pSaveData->levelAB0].thunderEggs[type] = true;
-    bIsDirty = true;
-    bIsDirty = true;
+    SetHasThunderEgg(type, true);
+    SetDataDirty(true);
 }
 
 void GameData::SetHasPlacedTalisman(TalismanType type, bool bPlaced) {
@@ -469,17 +469,17 @@ void GameData::SetHasPlacedTalisman(TalismanType type, bool bPlaced) {
 
 void GameData::UnlockZone(ZoneNumber zone) {
     SetZoneUnlocked(zone, true);
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::SetTimeAttackBest(int bestTime) {
-    pSaveData->levels[pSaveData->levelAB0].bestTimeAttack = bestTime;
-    bIsDirty = true;
+    pSaveData->levels[pSaveData->currentLevel].bestTimeAttack = bestTime;
+    SetDataDirty(true);
 }
 
 void GameData::SetTimeAttackLastTime(int lastTime) {
-    pSaveData->levels[pSaveData->levelAB0].lastTimeAttackTime = lastTime;
-    bIsDirty = true;
+    pSaveData->levels[pSaveData->currentLevel].lastTimeAttackTime = lastTime;
+    SetDataDirty(true);
 }
 
 int GameData::GetTimeAttackBest(LevelNumber level) {
@@ -491,10 +491,10 @@ int GameData::GetTimeAttackLastTime(LevelNumber level) {
 }
 
 void GameData::RescueBilby(BilbyType type) {
-    pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 1;
+    pSaveData->levels[pSaveData->currentLevel].bilbies[type] |= 1;
 
     if (GetFreeBilbyCount() == 5) {
-        pSaveData->levels[pSaveData->levelAB0].bilbies[type] |= 2;
+        pSaveData->levels[pSaveData->currentLevel].bilbies[type] |= 2;
     }
 
     Hud_ShowBilbies();
@@ -502,38 +502,22 @@ void GameData::RescueBilby(BilbyType type) {
 }
 
 void GameData::AddLife(void) {
-    pSaveData->lives++;
-
-    if (pSaveData->lives > 99) {
-        pSaveData->lives = 99;
-    }
-
-    bIsDirty = true;
+    SetLives(GetLives() + 1);
     Hud_ShowLives();
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::LoseLife(void) {
     if (!gb.bE3) {
-        pSaveData->lives--;
-        if (pSaveData->lives > 99) {
-            pSaveData->lives = 99;
-        }
-        bIsDirty = true;
+        SetLives(GetLives() - 1);
     }
 
     Hud_ShowLives();
-    bIsDirty = true;
+    SetDataDirty(true);
 }
 
 void GameData::RestoreLives(void) {
-    pSaveData->lives = 5;
-
-    if (pSaveData->lives > 99) {
-        pSaveData->lives = 99;
-    }
-
-    bIsDirty = true;
+    SetLives(5);
 }
 
 void GameData::AddChargeBite(void) {
@@ -570,7 +554,7 @@ int GameData::GetTotalTime(void) {
 
 bool GameData::GetHasBeenTriggered(uint uniqueID) {
     for (int i = 0; i < Total_Triggers; i++) {
-        if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == uniqueID) {
+        if (pSaveData->levels[pSaveData->currentLevel].triggers[i] == uniqueID) {
             return true;
         }
     }
@@ -580,8 +564,8 @@ bool GameData::GetHasBeenTriggered(uint uniqueID) {
 
 void GameData::SetHasBeenTriggered(uint uniqueID) {
     for (int i = 0; i < Total_Triggers; i++) {
-        if (pSaveData->levels[pSaveData->levelAB0].triggers[i] == 0) {
-            pSaveData->levels[pSaveData->levelAB0].triggers[i] = uniqueID;
+        if (pSaveData->levels[pSaveData->currentLevel].triggers[i] == 0) {
+            pSaveData->levels[pSaveData->currentLevel].triggers[i] = uniqueID;
             return;
         }
     }

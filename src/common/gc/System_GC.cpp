@@ -49,9 +49,9 @@ MKDefaults gMKDefaults = {
     0, // screenshot
     512, // materialCount
     2, // materialTextureFilterType
-    0, // materialType
+    Type_Decal, // materialType
     0, // materialFlags
-    1, // materialBlendMode
+    Blend_Blend, // materialBlendMode
     0x80000000, // collisionFlags
     0.5f, // materialAlphaRef
     0x400, // unk38

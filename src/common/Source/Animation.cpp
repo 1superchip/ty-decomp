@@ -120,7 +120,7 @@ void Animation::Tween(float frameNmbr, float arg2) {
     float fVar1 = Clamp<float>(0.0f, arg2, 1.0f);
     Animation::FrameInstance* pFrames = frames;
     AnimationData::Node* pNodes = pTemplate->pAnimData->pNodes;
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         if (!pFrames[i].b1 && fVar1 != 1.0f) {
             Animation_CalculateFrame(&pFrames[i], &pNodes[i]);
         }
@@ -141,7 +141,7 @@ void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
     pFrame->targetWeight = weight;
     pFrame->b1 = 0;
     pFrame->b0 = 0;
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         if (pTemplate->pAnimData->pNodes[i].parent == arg3) {
             TweenNode(frameNmbr, weight, i);
         }
@@ -149,7 +149,7 @@ void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
 }
 
 void Animation::SetLocalToWorldDirty(void) {
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         frames[i].b0 = 0;
     }
 }
@@ -167,7 +167,7 @@ void Animation::SetNodeMatrix(int nodeIndex, Matrix* pMatrix, bool arg4) {
 }
 
 void Animation::CalculateMatrices(void) {
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         CalculateNodeMatrix(i);
     }
 }
@@ -236,7 +236,7 @@ int Animation::GetNmbrOfNodes(void) {
 // returns true if the node exists
 // else returns false
 bool Animation::NodeExists(char* pName, int* pNodeIndex) {
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         if (strcmpi(pTemplate->pAnimData->pNodes[i].pName, pName) == 0) {
             if (pNodeIndex != NULL) {
                 *pNodeIndex = i;
@@ -250,11 +250,12 @@ bool Animation::NodeExists(char* pName, int* pNodeIndex) {
 // returns the index of the node that has the same name of pNodeName
 // returns -1 if the node doesn't exist
 int Animation::GetNodeIndex(char* pNodeName) {
-    for(int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
+    for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         if (strcmpi(pTemplate->pAnimData->pNodes[i].pName, pNodeName) == 0) {
             return i;
         }
     }
+
     return -1;
 }
 
@@ -396,7 +397,7 @@ void FixupVec(Vector& vec) {
 }*/
 
 void FixupAnimDefs(AnimationData* pData, int addr, int& i) {
-    for(i = 0; i < pData->nmbrOfAnimDefs; i++) {
+    for (i = 0; i < pData->nmbrOfAnimDefs; i++) {
         Fixup<char>(pData->pAnimDefs[i].pName, addr);
         ByteReverse<AnimDef::Type>(pData->pAnimDefs[i].type);
         ByteReverse<short>(pData->pAnimDefs[i].unk8);
@@ -434,32 +435,34 @@ void Animation_UnpackTemplate(AnimationData* pAnimData) {
     Fixup<AnimationData::Node>(pData->pNodes, addr);
     Fixup<AnimDef>(pData->pAnimDefs, addr);*/
 //Fixup__(pData, addr, i, j);
-    for(i = 0; i < pData->nmbrOfNodes; i++) {
+    for (i = 0; i < pData->nmbrOfNodes; i++) {
         ByteReverseVector(pData->pNodes[i].origin);
         ByteReverse<int>(pData->pNodes[i].parent);
         ByteReverse<int>(pData->pNodes[i].nmbrOfKeyFrames);
         Fixup<char>(pData->pNodes[i].pName, addr);
         Fixup<AnimationData::Node::KeyFrame>(pData->pNodes[i].pKeyFrames, addr);
 
-        for(int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
+        for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
             Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk0, addr);
             Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk4, addr);
             Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk8, addr);
         }
     }
 
-    for(i = 0; i < pData->nmbrOfNodes; i++) {
-        for(int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
+    for (i = 0; i < pData->nmbrOfNodes; i++) {
+        for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
             if (((char*)pData->pNodes[i].pKeyFrames[j].unk0)[3] & 1) {
                 ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[0] |= 1;
             } else {
                 ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[0] &= 0xFE;
             }
+
             if (((char*)pData->pNodes[i].pKeyFrames[j].unk4)[3] & 1) {
                 ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[0] |= 1;
             } else {
                 ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[0] &= 0xFE;
             }
+            
             if (((char*)pData->pNodes[i].pKeyFrames[j].unk8)[3] & 1) {
                 ((char*)pData->pNodes[i].pKeyFrames[j].unk8)[0] |= 1;
             } else {
@@ -468,23 +471,23 @@ void Animation_UnpackTemplate(AnimationData* pAnimData) {
         }
     }
 
-    for(i = 0; i < pData->nmbrOfNodes; i++) {
-        for(int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
+    for (i = 0; i < pData->nmbrOfNodes; i++) {
+        for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
             FixupVec(*pData->pNodes[i].pKeyFrames[j].unk0);
             FixupVec(*pData->pNodes[i].pKeyFrames[j].unk4);
             FixupVec(*pData->pNodes[i].pKeyFrames[j].unk8);
         }
     }
     
-    for(i = 0; i < pData->nmbrOfNodes; i++) {
-        for(int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
+    for (i = 0; i < pData->nmbrOfNodes; i++) {
+        for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
             ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[3] &= 0xFE;
             ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[3] &= 0xFE;
             ((char*)pData->pNodes[i].pKeyFrames[j].unk8)[3] &= 0xFE;
         }
     }
 
-    for(i = 0; i < pData->nmbrOfAnimDefs; i++) {
+    for (i = 0; i < pData->nmbrOfAnimDefs; i++) {
         Fixup<char>(pData->pAnimDefs[i].pName, addr);
         ByteReverse<AnimDef::Type>(pData->pAnimDefs[i].type);
         ByteReverse<short>(pData->pAnimDefs[i].unk8);
@@ -544,7 +547,7 @@ __declspec(weak) void ByteReverse(type& start)\
     char* buffer = (char*)(&start);\
     int size = sizeof(type);\
     \
-    for(int i = 0; i < size / 2; i++) {\
+    for (int i = 0; i < size / 2; i++) {\
         char tmp = buffer[i];\
         buffer[i] = buffer[size - i - 1];\
         buffer[size - i - 1] = tmp;\

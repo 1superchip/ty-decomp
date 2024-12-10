@@ -120,6 +120,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
         if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
             pObj = (GameObject*)pDesc->SetUpMem((u8*)pObj);
         }
+
         pDesc = pDesc->unk80;
     }
 
@@ -213,6 +214,7 @@ GameObjDesc* GameObjectManager::FindDescriptor(char* name) {
         if (stricmp(name, pDesc->descrName) == 0) {
             return pDesc;
         }
+        
         pDesc = pDesc->unk80;
     }
     return NULL;
