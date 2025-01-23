@@ -13,6 +13,8 @@
 #include "ty/Mist.h"
 #include "ty/props/WeatherProp.h"
 #include "ty/tytypes.h"
+#include "common/MKGrass.h"
+#include "ty/Shadow.h"
 
 MKSceneManager gSceneManager;
 
@@ -156,7 +158,7 @@ LevelNumber LevelData::GetZoneFirstLevelNumber(ZoneNumber zoneNum) {
         }
     }
 
-    return (LevelNumber)3;
+    return LN_3;
 }
 
 void Portal_HideAll(void);
@@ -187,7 +189,6 @@ bool LevelData::ShowGemCount(LevelNumber levelNr) {
     return levelInfo[levelNr].bShowGemCount;
 }
 
-void Shadow_Deinit(void);
 void Ty_Deinit(void);
 void BushPig_Deinit(void);
 void GameCamera_Deinit(void);
@@ -306,7 +307,7 @@ void Setup_PreloadLevel(void) {
     Vector worldMin = {0.0f, 0.0f, 0.0f, 0.0f};
     Vector worldMax = {0.0f, 0.0f, 0.0f, 0.0f};
 
-    gb.level.collisionHeapSize[gb.level.GetCurrentLevel()] = 0x300000;
+    gb.level.collisionHeapSize[gb.level.GetCurrentLevel()] = 0x300000; // 3 MiB
 
     // read the collision heap size of the current level from collision.ini
     ini.Init("collision.ini");
@@ -318,6 +319,7 @@ void Setup_PreloadLevel(void) {
             if (stricmp(pLine->pFieldName, gb.level.GetID()) == 0) {
                 pLine->AsInt(0, &gb.level.collisionHeapSize[gb.level.GetCurrentLevel()]);
                 if (gb.level.collisionHeapSize[gb.level.GetCurrentLevel()] > 0x300000) {
+                    // Max at 3 MiB
                     gb.level.collisionHeapSize[gb.level.GetCurrentLevel()] = 0x300000;
                 }
                 break;
@@ -325,6 +327,7 @@ void Setup_PreloadLevel(void) {
         } else if (pLine->comment == NULL || pLine->section != NULL) {
             break;
         }
+        
         pLine = ini.GetNextLine();
     }
     
@@ -383,11 +386,7 @@ void Setup_PreloadLevel(void) {
     Model::Purge();
 }
 
-extern void Shadow_Init(void);
 extern void Weather_Enable(bool);
-extern void MKGrass_Init(void);
-extern void MKGrassGC_LoadTextures(char**);
-extern void MKGrass_SetPushAwayPos(Vector*, int);
 extern void Shatter_Init(void);
 extern void IceBlock_Init(void);
 extern void Critters_Init(void);

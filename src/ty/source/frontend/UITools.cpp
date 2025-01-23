@@ -13,17 +13,17 @@ extern struct {
 } gFERes;
 
 UIButtonDescriptor buttonType1 = {
-    true,
-    0x80004480,
-    0x80007A80,
-    0x80505050
+    true, // Animate text scale
+    FONT_COLOR2(255, 135, 0, 128),      // 0x80004480, Orange (Unselected)
+    FONT_COLOR2(255, 243, 0, 128),      // 0x80007A80, Bright Yellow (Selected)
+    FONT_COLOR2(160, 160, 160, 128),    // 0x80505050, Gray (Disabled)
 };
 
 UIButtonDescriptor buttonType2 = {
-    false,
-    0x80505050,
-    0x80808080,
-    0x80505050
+    false, // No text scale animation
+    FONT_COLOR2(160, 160, 160, 128),    // 0x80505050, Gray (Unselected)
+    FONT_COLOR2(255, 255, 255, 128),    // 0x80808080, White (Selected)
+    FONT_COLOR2(160, 160, 160, 128),    // 0x80505050, Gray (Disabled)
 };
 
 void UIHeading::Init(int stringIdx) {

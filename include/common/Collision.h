@@ -25,19 +25,17 @@ enum CollisionMode {
 #define ID_GRASS_THICK  (0x80000)   // Dense grass pattern
 #define ID_ROCK         (0x100000)  // Rock ground
 
-struct CollisionNode
-{
+struct CollisionNode {
     CollisionNode* pPrev; // may actually be the next node pointer?
     CollisionNode* pNext; // may actually be the previous node pointer?
     
     void* PTR_0x8;
-    void INIT()
-    {
+    void INIT() {
         PTR_0x8 = NULL;
         pPrev = pNext = this;
     }
-    void LINK(CollisionNode* pNode, void* ptr)
-    {
+
+    void LINK(CollisionNode* pNode, void* ptr) {
         pNode->PTR_0x8 = ptr;
         pNode->pNext = pNext;
         pNode->pPrev = this;
@@ -45,6 +43,7 @@ struct CollisionNode
         pNext->pPrev = pNode;
         pNext = pNode;
     }
+
     void Remove(void) {
         pNext->pPrev = pPrev;
         pPrev->pNext = pNext;
@@ -72,12 +71,15 @@ struct CollisionInfo {
         flags = _collisionFlags;
         pProp = _pProp;
     }
+
     void Enable(void) {
         bEnabled = true;
     }
+
     void Disable(void) {
         bEnabled = false;
     }
+    
     bool TestFlags(uint testFlags) {
         return (flags & testFlags) != 0;
     }
@@ -119,11 +121,13 @@ struct DynamicItem {
     bool UpdateOverlap(void);
     void Unlink(void);
     void Link(void);
+
     void GotoEnd(void) {
         while (*unk10.GetMem() != NULL) {
             unk10.pMem++;
         }
     }
+
     // Gets the matrix of the dynamic item
     Matrix* GetMatrix(void) {
         if (idx >= 0) {
@@ -132,6 +136,7 @@ struct DynamicItem {
             return &pModel->matrices[0];
         }
     }
+
     // unlinks dynamic links and deinits the item's PtrListDL
     void Deinit(void) {
         Unlink();
@@ -186,10 +191,10 @@ void Collision_Deinit(void);
 void Collision_Update(void);
 void Collision_Draw(void);
 
-void Collision_AddStaticModel(Model*, CollisionInfo*, int subobject);
-void Collision_AddDynamicModel(Model*, CollisionInfo*, int subobject);
-void Collision_AddDynamicSubobject(Model*, int subobject, CollisionInfo*);
-void Collision_DeleteDynamicModel(Model*);
+void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject);
+void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobject);
+void Collision_AddDynamicSubobject(Model* pModel, int subobject, CollisionInfo* pInfo);
+void Collision_DeleteDynamicModel(Model* pModel);
 
 int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int flags, int maxCollisions);
 bool Collision_SweepSphereCollideDynamicModel(SphereRay*, CollisionResult*, DynamicItem*);

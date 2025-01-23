@@ -35,6 +35,7 @@ void Input_Update(bool bReadInputs) {
         PADRead(pad);
         PADClampCircle(pad);
     }
+    
     static u32 connectedBits = 0;
     u32 invalidControllers = 0;
     for (int i = 0; i < JoyStickCount; i++) {
@@ -391,3 +392,4 @@ static void ClampGenericTrigger(u8* trigger, u8 min, u8 max) {
         *trigger -= min;
     }
 }
+

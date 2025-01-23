@@ -84,6 +84,7 @@ bool Parser::IsEndOfData(void) {
 // https://decomp.me/scratch/JYbFf
 bool KromeIni::Init(char* pName) {
     currentLineNum = 0;
+
     if (pName == NULL || FileSys_Exists(pName, &fileSize) == false) {
         pFileMem = NULL;
         strcpy(name, "(NULL)");
@@ -93,10 +94,15 @@ bool KromeIni::Init(char* pName) {
         unk38 = 0;
         return false;
     }
-    pFileMem = Heap_MemAllocAligned(fileSize + 1, 0x40); // only use of Heap_MemAllocAligned and it doesn't allocate aligned memory!
-    bFileMemAllocated = 1;
+
+    // only use of Heap_MemAllocAligned and it doesn't allocate aligned memory!
+    pFileMem = Heap_MemAllocAligned(fileSize + 1, 0x40);
+    bFileMemAllocated = true;
+
     FileSys_Load(pName, &fileSize, pFileMem, -1);
+
     *((char*)pFileMem + (int)fileSize) = '\0'; // null terminator at end of file
+
     char* str = strrchr(pName, '\\');
     char* foundChar = str;
     if (str == NULL) {
@@ -106,7 +112,9 @@ bool KromeIni::Init(char* pName) {
             foundChar = pName;
         }
     }
+
     strcpy(name, foundChar);
+    
     ParseData();
     return true;
 }

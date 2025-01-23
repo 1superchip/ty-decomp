@@ -29,7 +29,7 @@ BoundingVolume waterBoundingVolume = {
 };
 
 void WaterVolume_LoadResources(KromeIni* pIni) {
-    waterVolumeDesc.Init((ModuleInfoBase*)&waterVolumeModule, "WaterVolume", "WaterVolume", 0, 0);
+    waterVolumeDesc.Init(&waterVolumeModule, "WaterVolume", "WaterVolume", 0, 0);
     objectManager.AddDescriptor(&waterVolumeDesc);
 }
 

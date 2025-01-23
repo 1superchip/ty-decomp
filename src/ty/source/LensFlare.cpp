@@ -3,8 +3,9 @@
 #include "common/Material.h"
 #include "ty/LensFlare.h"
 #include "common/Blitter.h"
+#include "common/View.h"
 
-struct View;
+// https://decomp.me/scratch/DcZyE
 
 // from another file
 struct ZCheckRequest {
@@ -33,7 +34,7 @@ static ZCheckRequest zRequestLast;
 
 /*
 // these are unused variables that would have been used by code that was either stripped or unimplemented
-static Vector centre;
+static Vector centre = {320.0f, 256.0f, 0.0f, 0.0f};
 float targetBlend = 1.0f;
 static int flares[7] = { 0, 1, 2, 3, 2, 1, 0 }; // i think this are actually 7 not 8
 static Blitter_Image lensFlareImages[4];
@@ -73,5 +74,5 @@ void LensFlare_Update(void) {
 }
 
 void LensFlare_Draw(void) {
-	return;
+    return;
 }

@@ -69,6 +69,7 @@ int File_Close(int fd) {
         gcFiles[fd].callback = NULL;
         return (closeCode == 0) ? 0 : -1;
     }
+
     return -1;
 }
 
@@ -99,11 +100,13 @@ int File_Read(int fd, void* buf, int size, int arg3) {
     }
 
     entry->unk4C = arg3;
+    
     if (entry->unk54 == 0) {
         entry->unk40 = 0;
     } else {
         entry->unk40 = buf;
     }
+
     gcFiles[fd].unk50 = 3;
     Heap_Check("File.cpp", 206);
     int readPrioCode = DVDReadAsyncPrio(&entry->fileInfo, entry->unk44, alignedSize, entry->streamOffset, entry->callback, 2);

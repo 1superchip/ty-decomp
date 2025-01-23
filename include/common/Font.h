@@ -5,6 +5,46 @@
 #include "common/Vector.h"
 #include "common/Matrix.h"
 
+// #define ABGR_TO_RGBA(color) 
+
+#define COLOR_RED       (0x800000FF)
+#define COLOR_RED_2     (0xFF0000FF)
+#define COLOR_WHITE     (0x80FFFFFF) // Decodes to 0xFFFDFC00
+#define COLOR_DARK_BLUE (0xFFFF0000)
+#define COLOR_BLACK     (0xFF000000)
+#define COLOR_MAGENTA   (0xFF8000FF)
+#define COLOR_GREEN     (0xFF00FF00)
+#define COLOR_YELLOW    (0xFF00FFFF)
+#define COLOR_CYAN      (0xFFFFFF00)
+
+#define FONTCOLOR(r, g, b, a) \
+    ((r) | ((g) << 0x8) | ((b) << 0x10) | ((((a) * 128) / 255) << 0x18))
+
+// these macros seem to work?
+
+#define FONT_COLOR(r, g, b, a) (((((a) * 256) / 255) << 0x18) \
+    | (((b * (256 / 255))) << 0x10) \
+    | (((g * (256 / 255))) << 0x8) \
+    | (((r * (256 / 255))) << 0x0))
+
+#define FONT_COLOR2(r, g, b, a) (((((a) * 256) / 255) << 0x18) \
+    | ((((b) + 1) / 2) << 0x10) \
+    | ((((g) + 1) / 2) << 0x8) \
+    | ((((r) + 1) / 2) << 0x0))
+
+#define FONT_COLOR3(r, g, b, a) \
+    ((int)((r) * 128.0f) << 0x0) |  \
+    ((int)((g) * 128.0f) << 0x8) |  \
+    ((int)((b) * 128.0f) << 0x10) | \
+    ((int)((a) * 128.0f) << 0x18)
+
+// #define COLOR_U(c) ((u8)((c) * 255.0f))
+
+// #define COLOR_ELE(c) (((c) == 0.0f) ? 0 : \
+//     (COLOR_U(c) & 1 ? ((COLOR_U(c)+1)>>1) : (((COLOR_U(c)>>1)+1) | 0x80)))
+
+// #define COLOUR(r, g, b, a) ((COLOR_ELE(a) << 0x18) | (COLOR_ELE(b) << 0x10) | (COLOR_ELE(g) << 0x8) | (COLOR_ELE(r) << 0x0))
+
 struct FontData {
     int unk0;
     int unk4;

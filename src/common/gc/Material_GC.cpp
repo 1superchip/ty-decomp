@@ -23,21 +23,6 @@ extern "C" void C_MTXOrtho(Mtx44* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern "C" void C_MTXIdentity(Mtx44*);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
-// struct _GXRenderModeObj {
-//     u32 viTVMode;
-//     u16 fbWidth;
-//     u16 efbHeight;
-//     u16 xfbHeight;
-//     u16 viXOrigin;
-//     u16 viYOrigin;
-//     u16 viWidth;
-//     u16 viHeight;
-//     uint xfbMode;
-//     u8 field_rendering;
-//     u8 aa;
-//     u8 sample_pattern[2][12];
-//     u8 vfilter[7];
-// };
 extern "C" {
     u32 VIGetTvFormat(void);
     _GXRenderModeObj* DEMOGetRenderModeObj(void);

@@ -339,10 +339,12 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
     if (arg6->Dot(&pRay->mDir) < 0.0f) {
         return false;
     }
+    
     float d = SubDot(&pRay->mStart, &pVectors[indices[0]], arg5);
     if (d > pRay->mLength + pRay->radius) {
         return false;
     }
+
     if (d <= pRay->radius) {
         pos.Scale(arg6, d);
         min = 0.0f;
@@ -366,6 +368,7 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
         pos.Scale(&pRay->mDir, min);
         pos.Add(&tmp);
     }
+
     if (!PointInPoly(&pos, &pRay->mStart, pVectors, indices, numVerts)) {
         // point isn't in the polygon
         NearestPointOnPolyEdge(&pos, pVectors, indices, numVerts);
@@ -931,8 +934,13 @@ void Collision_Update(void) {
 
 void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject) {
     static Item item;
+
     ModelExplorer_GC* pExplorer = pModel->Explore(NULL, NULL, NULL);
-    if (!pExplorer) return;
+    
+    if (!pExplorer) {
+        return;
+    }
+
     CollisionTriangle* pTri = NULL;
     while (true) {
         bool ret;
@@ -977,12 +985,15 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
                 bFound = false;
                 Collision_AddItem(&item);
             }
+
             ret = pModel->ExploreNextFace((ModelExplorer*)pExplorer);
         }
+
         if (!ret) {
             break;
         }
     }
+
     pModel->ExploreClose((ModelExplorer*)pExplorer);
 }
 
@@ -1226,18 +1237,21 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
         Vector dist;
         dist.Sub(pStart, pEnd);
         float mag = dist.Magnitude();
+
         Vector min = {
             Min<float>(pStart->x, pEnd->x),
             Min<float>(pStart->y, pEnd->y),
             Min<float>(pStart->z, pEnd->z),
             1.0f
         };
+
         Vector max = {
             Max<float>(pStart->x, pEnd->x),
             Max<float>(pStart->y, pEnd->y),
             Max<float>(pStart->z, pEnd->z),
             1.0f
         };
+
         int overlapX;
         int overlapZ;
         int overlapXSize;
@@ -1309,6 +1323,7 @@ bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadi
             pCr->normal.Normalise(&pCr->normal);
         }
     }
+
     return bFound;
 }
 

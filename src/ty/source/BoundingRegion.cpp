@@ -77,7 +77,6 @@ bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
     return true;
 }
 
-
 int BoundingRegion::getIntersectCount(Vector* pPoint, Vector* pPoint1) {
     int intersectCount = 0;
     int i;
@@ -93,6 +92,11 @@ int BoundingRegion::getIntersectCount(Vector* pPoint, Vector* pPoint1) {
 }
 
 bool BoundingRegion::isIntersect(Vector* pPoint, Vector* pPoint1, Vector* pPoint2, Vector* pPoint3) {
+	/*
+	// might be cleaner than current code?
+	return isCounterClockWise(pPoint, pPoint1, pPoint2) != isCounterClockWise(pPoint, pPoint1, pPoint3) &&
+            isCounterClockWise(pPoint2, pPoint3, pPoint) != isCounterClockWise(pPoint2, pPoint3, pPoint1);
+	*/
     bool intersected = false;
     if (isCounterClockWise(pPoint, pPoint1, pPoint2) != isCounterClockWise(pPoint, pPoint1, pPoint3)) {
         if (isCounterClockWise(pPoint2, pPoint3, pPoint) != isCounterClockWise(pPoint2, pPoint3, pPoint1)) {
@@ -103,6 +107,15 @@ bool BoundingRegion::isIntersect(Vector* pPoint, Vector* pPoint1, Vector* pPoint
 }
 
 bool BoundingRegion::isCounterClockWise(Vector* pPoint, Vector* pPoint1, Vector* pPoint2) {
+    /*
+	// might be cleaner than the current code?
+	float p01x = (pPoint1->x - pPoint->x);
+    float p02x = (pPoint2->x - pPoint->x);
+    float p01z = (pPoint1->z - pPoint->z);
+    float p02z = (pPoint2->z - pPoint->z);
+    return p01x * p02z >
+            p01z * p02x ? true : false;
+			*/
     bool isCCW;
     if ((pPoint1->x - pPoint->x) * (pPoint2->z - pPoint->z) > (pPoint1->z - pPoint->z) * (pPoint2->x - pPoint->x)) {
         isCCW = true;

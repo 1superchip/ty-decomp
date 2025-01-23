@@ -37,7 +37,7 @@ void MKGrass_Draw(void);
 
 void MKGrass_Init(void);
 
-void MKGrassGC_LoadTextures(void);
+void MKGrassGC_LoadTextures(char** ppTextureNames);
 void MKGrassGC_UnloadTextures(void);
 
 void MKGrass_AddModel(Model* pModel);
