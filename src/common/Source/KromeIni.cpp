@@ -557,11 +557,13 @@ bool KromeIniLine::AsString(int dataIndex, char** arg2) {
         pChar++;
         string_r6--;
     }
+    
     dataStrLen = (int)string_r6 - (int)pChar;
     if (dataStrLen == 0) {
         *arg2 = "";
         return true;
     }
+
     *arg2 = Str_CopyString(pChar, dataStrLen);
     return true;
 }

@@ -25,6 +25,13 @@ struct PlatformRider {
     void UpdateDynamicAttach(CollisionResult* pCr, GameObject* pObj);
 };
 
+struct PlatformUpdateInfo {
+    Matrix unk0;
+    Vector currRot; // unk40
+    Vector unk50;
+    Vector unk60Vecs[1]; // at least one element but more can exist
+};
+
 struct PlatformDesc : StaticPropDescriptor {
     float maxMag;
     float radius;
@@ -37,7 +44,7 @@ struct PlatformDesc : StaticPropDescriptor {
 };
 
 struct Platform : StaticProp {
-    Vector* unk58;
+    PlatformUpdateInfo* unk58;
     Vector mDefaultRot;
     Vector scale;
     Vector mCurrRot;

@@ -212,10 +212,12 @@ void MKPackage_Update(void) {
                         if (r12 > 0x00040000) {
                             break;
                         }
+                        
                         if (nFilesInChunk != 0 &&
                             pPackageEntries[i + nmbrEntriesLoaded].fileOffset - pPackageEntries[i + nmbrEntriesLoaded - 1].fileOffset > 0x28000) {
                             break;
                         }
+
                         chunkLength = r12;
                         nFilesInChunk++;
                     }

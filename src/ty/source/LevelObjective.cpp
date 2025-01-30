@@ -158,7 +158,10 @@ void LevelObjective::Success(void) {
 }
 
 void LevelObjective::Abort(void) {
-    if (!bActive) return;
+    if (!bActive) {
+        return;
+    }
+    
     OnAbort.Send();
     bActive = false;
 }
@@ -168,17 +171,22 @@ bool LevelObjective::GetStatus(short* r3, short* r4, Material** ppOutMat, bool r
     if (!pCurObjective || pCurObjective->bComplete) {
         return false;
     }
+
     if (!r6 && gb.bOnPauseScreen && pCurObjective->unk68 == pCurObjective->unk66) {
         return false;
     }
+    
     if (r3) {
         *r3 = pCurObjective->unk68;
     }
+
     if (r4) {
         *r4 = pCurObjective->unk66;
     }
+
     if (ppOutMat) {
         *ppOutMat = pCurObjective->pMaterial;
     }
+
     return true;
 }

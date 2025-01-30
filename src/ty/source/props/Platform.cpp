@@ -24,8 +24,8 @@ extern struct Ty {
 //extern void LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
 static ModuleInfo<Platform> platformModuleInfo;
-static Vector* tempMem;
-static Vector* pCurrMem = tempMem;
+static void* tempMem;
+static void* pCurrMem = tempMem;
 
 void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* trans, Vector* rot, Vector* def, Matrix* mat) {
     pMsg->unk0 = MKMSG_UpdateAttachment;
@@ -35,14 +35,18 @@ void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* trans, Vector* ro
     pMsg->mat = mat;
 }
 
-Vector* TempAlloc(int size) {
-    Vector* m = pCurrMem;
-    pCurrMem = (Vector*)((int)pCurrMem + size);
+PlatformUpdateInfo* TempAlloc(int size) {
+    PlatformUpdateInfo* m = (PlatformUpdateInfo*)pCurrMem;
+    pCurrMem = (void*)((char*)pCurrMem + size);
     return m;
 }
 
+void TempFree(void* mem) {
+    pCurrMem = mem;
+}
+
 void Platform_LoadResources(KromeIni* pIni) {
-    pCurrMem = tempMem = (Vector*)Heap_MemAlloc(0x1000);
+    pCurrMem = tempMem = Heap_MemAlloc(0x1000);
     
     PlatformDesc defaultPlatformDesc;
     defaultPlatformDesc.Init(&platformModuleInfo, "", "", GOID_Platform, 1);
@@ -84,13 +88,17 @@ void Platform::Init(GameObjDesc* pDesc) {
     mCurrRot.Set(0.0f, 0.0f, 0.0f);
     attachments.Init(32);
     rider.Init();
+
     unkB0.SetZero();
     unkC0.SetZero();
     unkA0.SetZero();
+
     unkD0 = false;
+
     if (GetDesc()->maxShadowHeight > 0.0f) {
         UpdateShadow();
     }
+
     unk58 = NULL;
 }
 
@@ -155,22 +163,23 @@ void Platform::BeginUpdate(void) {
         return;
     }
 
-    unk58 = TempAlloc(numAttached * sizeof(Vector) + 0x70);
+    unk58 = TempAlloc(numAttached * sizeof(Vector) + sizeof(PlatformUpdateInfo));
     mat.Inverse(&pModel->matrices[0]);
-    *(Matrix*)unk58 = mat;
-    unk58[4] = mCurrRot;
-    unk58[5].Set(0.0f, 0.0f, 0.0f, 1.0f);
+    unk58->unk0 = mat;
+    unk58->currRot = mCurrRot;
+    unk58->unk50.Set(0.0f, 0.0f, 0.0f, 1.0f);
+
     int idx = 0;
     GameObject** iter = attachments.GetPointers();
     while (*iter != NULL) {
-        (&unk58[idx] + 6)->ApplyMatrix((*iter)->pLocalToWorld->Row3(), &mat);
-        unk58[5].Add(&unk58[idx] + 6);
+        unk58->unk60Vecs[idx].ApplyMatrix((*iter)->GetPos(), &mat);
+        unk58->unk50.Add(&unk58->unk60Vecs[idx]);
         idx++;
         iter++;
     }
 
     if (unk58 != NULL) {
-        unk58[5].Scale(1.0f / numAttached);
+        unk58->unk50.Scale(1.0f / numAttached);
     }
 }
 
@@ -183,7 +192,7 @@ void Platform::EndUpdate(void) {
     }
 
     if (unk58 != NULL) {
-        pCurrMem = unk58;
+        TempFree((void*)unk58);
     }
 
     unk58 = NULL;
@@ -192,14 +201,13 @@ void Platform::EndUpdate(void) {
 void Platform::UpdateTilt(void) {
     if (GetDesc()->maxTilt > 0.0f) {
         if (unk58 != NULL) {
-            //Vector* vecs = (Vector*)unk58;
-            if (unk58[5].MagSquared() > Sqr<float>(GetDesc()->radius)) {
-                Vector tmp = unk58[5];
-                tmp.y = 0.0f;
-                tmp.ClampMagnitude(GetDesc()->maxMag);
-                tmp.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
-                mCurrRot.x = AdjustFloat(mCurrRot.x, -tmp.z, 0.1f);
-                mCurrRot.z = AdjustFloat(mCurrRot.z, tmp.x, 0.1f);
+            if (unk58->unk50.MagSquared() > Sqr<float>(GetDesc()->radius)) {
+                Vector lPos = unk58->unk50;
+                lPos.y = 0.0f;
+                lPos.ClampMagnitude(GetDesc()->maxMag);
+                lPos.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
+                mCurrRot.x = AdjustFloat(mCurrRot.x, -lPos.z, 0.1f);
+                mCurrRot.z = AdjustFloat(mCurrRot.z, lPos.x, 0.1f);
                 return;
             }
         }
@@ -223,14 +231,14 @@ void Platform::UpdateAttached(void) {
     PlatformMoveMsg msg;
     Vector deltaPyr;
     if (unk58 != NULL) {
-        deltaPyr.Sub(&mCurrRot, &unk58[4]);
+        deltaPyr.Sub(&mCurrRot, &unk58->currRot);
         GameObject** iter = attachments.GetPointers();
         int idx = 0;
         // iterate through attached objects and send the Move Message to them
         while (*iter != NULL) {
-            Vector* pVec = &unk58[idx] + 6;
+            Vector* pVec = &unk58->unk60Vecs[idx];
             pVec->ApplyMatrix(&pModel->matrices[0]);
-            Create_UpdateAttachMessage(&msg, &unk58[idx] + 6, &deltaPyr, unk58, &pModel->matrices[0]);
+            Create_UpdateAttachMessage(&msg, &unk58->unk60Vecs[idx], &deltaPyr, (Vector*)unk58, &pModel->matrices[0]);
             (*iter)->Message(&msg);
             idx++;
             iter++;
@@ -289,14 +297,17 @@ void Platform::Detach(GameObject* pObj) {
 
 void Platform::PushTy(int subObjectIndex) {
     float tyRadius = ty.radius;
-    Vector vec;
-    Vector tyPos = {ty.pos.x, ty.pos.y + ty.radius, ty.pos.z, ty.pos.w};
-    if (Tools_ClipSphereToDynamicModel(tyPos, tyRadius, &vec, pModel, subObjectIndex)) {
-        vec.y -= tyRadius;
-        if (vec.y > ty.pos.y) {
-            vec.y = ty.pos.y;
+
+    Vector clippedPos;
+    Vector testPos = {ty.pos.x, ty.pos.y + ty.radius, ty.pos.z, ty.pos.w};
+
+    if (Tools_ClipSphereToDynamicModel(testPos, tyRadius, &clippedPos, pModel, subObjectIndex)) {
+        clippedPos.y -= tyRadius;
+        if (clippedPos.y > ty.pos.y) {
+            clippedPos.y = ty.pos.y;
         }
-        ty.SetAbsolutePosition(&vec, 0x19, 1.0f, true);
+
+        ty.SetAbsolutePosition(&clippedPos, 25, 1.0f, true);
     }
 }
 

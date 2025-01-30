@@ -28,8 +28,8 @@ void DDASession::Init(void) {
     pDDASaveEnabled = 0;
     pDDAConvertToReadable = 0;
     // 38 entries total
-    unk10.Init(38, sizeof(DDAUnk18));
-    unk14.Init(38, sizeof(DDAUnk14));
+    checkpointList.Init(38, sizeof(DDACheckpointInfo));
+    deathList.Init(38, sizeof(DDADeathInfo));
     dbgMsgTimer = 0;
     unk20 = 0;
     unk24[19] = 0;
@@ -41,6 +41,7 @@ void DDASession::Update(void) {
         ConvertStatsToReadable();
         bConvertToReadable = false;
     }
+
     DrawDebugMessage();
     DrawDebugStats();
 }
@@ -69,8 +70,8 @@ void DDASession::StartSession(void) {
     startHour = startTime.hours;
     startMinutes = startTime.minutes;
     startSeconds = startTime.seconds;
-    unk10.Reset();
-    unk14.Reset();
+    checkpointList.Reset();
+    deathList.Reset();
 }
 
 void DDASession::EndSession(void) {
@@ -99,13 +100,13 @@ void DDASession::NewCheckpoint(int arg1) {
         EndCheckpoint();
     }
 
-    if(unk10.IsFull()) {
+    if(checkpointList.IsFull()) {
         return;
     }
 
     // Get new checkpoint pointer
-    currentCheckpoint = unk10.GetNextEntry();
-    currentCheckpoint->unk0 = unk10.GetSize();
+    currentCheckpoint = checkpointList.GetNextEntry();
+    currentCheckpoint->unk0 = checkpointList.GetSize();
     currentCheckpoint->unk4 = 0;
     currentCheckpoint->checkpointNumber = arg1;
     currentCheckpoint->unk9 = ty[0x1178 / 4];
@@ -129,7 +130,7 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->unk28 = 0;
     currentCheckpoint->damageCause = 0;
     currentCheckpoint->unk3C = 0;
-    memset((char*)currentCheckpoint + 0x2c, 0, 0x10);
+    memset(&currentCheckpoint->cameraInfo, 0, sizeof(DDACameraInfo));
     unk24[19] = ty[0x1178 / 4];
 }
 
@@ -145,24 +146,24 @@ void DDASession::EndCheckpoint(void) {
 extern "C" float* pHero;
 
 void DDASession::StoreDeathInfo(void) {
-    DDAUnk14* pInfo;
+    DDADeathInfo* pInfo;
     TimerInfo deathTime;
 
     if (currentCheckpoint == NULL) {
         return;
     }
 
-    if (unk14.IsFull()) {
+    if (deathList.IsFull()) {
         return;
     }
 
-    pInfo = unk14.GetNextEntry();
+    pInfo = deathList.GetNextEntry();
     pInfo->unk0 = currentCheckpoint->unk0;
 
     pInfo->deathPosX = (int)pHero[0x40 / 4];
     pInfo->deathPosY = (int)pHero[0x44 / 4];
     pInfo->deathPosZ = (int)pHero[0x48 / 4];
-    pInfo->unk14 = currentCheckpoint->damageCause;
+    pInfo->damageCause = currentCheckpoint->damageCause;
     pInfo->unk18 = 0;
     Timer_GetSystemTime(&deathTime);
     pInfo->deathTimeHour = deathTime.hours;
@@ -258,49 +259,49 @@ void DDASession::StoreCameraInfo(DDACameraAction cameraAction) {
 
     switch (cameraAction) {
         case 0:
-            currentCheckpoint->unk2C++;
+            currentCheckpoint->cameraInfo.unk2C++;
             break;
         case 1:
-            currentCheckpoint->unk2E++;
+            currentCheckpoint->cameraInfo.unk2E++;
             break;
         case 2:
-            currentCheckpoint->unk2D++;
+            currentCheckpoint->cameraInfo.unk2D++;
             break;
         case 3:
-            currentCheckpoint->unk2F++;
+            currentCheckpoint->cameraInfo.unk2F++;
             break;
         case 4:
-            currentCheckpoint->unk30++;
+            currentCheckpoint->cameraInfo.unk30++;
             break;
         case 5:
-            currentCheckpoint->unk31++;
+            currentCheckpoint->cameraInfo.unk31++;
             break;
         case 6:
-            currentCheckpoint->unk32++;
+            currentCheckpoint->cameraInfo.unk32++;
             break;
         case 7:
-            currentCheckpoint->unk33++;
+            currentCheckpoint->cameraInfo.unk33++;
             break;
         case 8:
-            currentCheckpoint->unk34++;
+            currentCheckpoint->cameraInfo.unk34++;
             break;
         case 9:
-            currentCheckpoint->unk35++;
+            currentCheckpoint->cameraInfo.unk35++;
             break;
         case 10:
-            currentCheckpoint->unk36++;
+            currentCheckpoint->cameraInfo.unk36++;
             break;
         case 11:
-            currentCheckpoint->unk37++;
+            currentCheckpoint->cameraInfo.unk37++;
             break;
         case 12:
-            currentCheckpoint->unk38++;
+            currentCheckpoint->cameraInfo.unk38++;
             break;
     }
 }
 
 int DDASession::DeathCount(void) {
-    return unk14.GetSize();
+    return deathList.GetSize();
 }
 
 void DDASession::LoadStatsInfo(void) {

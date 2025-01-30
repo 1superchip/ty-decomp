@@ -227,6 +227,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                 }
             }
         }
+        
         pLine = ini.GetNextLine();
     }
     ini.Deinit();
@@ -236,6 +237,7 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     while (((char*)pTemplate->pSection)[pTemplate->templateSize] != '\0' || ((char*)pTemplate->pSection + 1)[pTemplate->templateSize] != '\0') {
         pTemplate->templateSize++;
     }
+
     pTemplate->templateSize += 2;
 }
 

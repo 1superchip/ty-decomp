@@ -54,7 +54,7 @@ struct SimpleParticleSystemType : BaseParticleSystemType {
 
     void Init(char* pName, Material* pMat, float, float, float, int);
     void SetEnvelope(int numEnvelopes, ParticleEnvelope* pEnvelopes);
-    static void Update(ParticleSystem*);
+    static void Update(ParticleSystem* pSys);
     void CalculateEnvelope(void);
 };
 
@@ -68,7 +68,7 @@ struct ParticleSystemType : SimpleParticleSystemType {
     float zVel;
     
     void Init(char* pName, Material* pMat, float, float, float, int);
-    static void Update(ParticleSystem*);
+    static void Update(ParticleSystem* pSys);
 };
 
 struct Particle {
@@ -91,13 +91,18 @@ struct Particle {
     float unk4C;
     float unk50;
     float unk54;
-    float unk58[2];
+    // unk58
+    union {
+        float floatData[2];
+        char charData[2];
+    };
 
     void SetUnk58ArrayByIndex(int index, float f1) {
-        unk58[index] = f1;
+        floatData[index] = f1;
     }
+
     float GetUnk58ArrayByIndex(int index) {
-        return unk58[index];
+        return floatData[index];
     }
 };
 

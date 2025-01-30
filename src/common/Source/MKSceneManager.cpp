@@ -493,16 +493,15 @@ void MKSceneManager::DrawRecursiveTerrain(SMNode* node, int arg2) {
     }
 
     if (node->pData != NULL) {
-        u16 object = terrainSubObjects[0];
-        object = object + 1;
-        terrainSubObjects[0] = object;
-        terrainSubObjects[object] = ((int)node->pData) - 1 | ((test == 1) ? 0x8000 : 0);
+        terrainSubObjects[0]++;
+        terrainSubObjects[terrainSubObjects[0]] = ((int)node->pData) - 1 | ((test == 1) ? 0x8000 : 0);
         return;
     }
 
     if (node->unk20[0] != NULL) {
         DrawRecursiveTerrain(node->unk20[0], arg2);
     }
+    
     if (node->unk20[1] != NULL) {
         DrawRecursiveTerrain(node->unk20[1], arg2);
     }
@@ -541,6 +540,7 @@ void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
         if (node->unk20[0] != NULL) {
             DrawRecursiveProps(node->unk20[0], arg2);
         }
+
         if (node->unk20[1] != NULL) {
             DrawRecursiveProps(node->unk20[1], arg2);
         }

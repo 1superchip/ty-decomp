@@ -35,10 +35,12 @@ void Model_DeinitModule(void) {
     Model::Purge();
     Model::Purge();
     Model::Purge();
+    
     ModelTemplate** ppTemplates = modelTemplates.pPointers;
     while (*ppTemplates != NULL) {
         ppTemplates++;
     }
+
     modelInstances.Deinit();
     modelTemplates.Deinit();
     moduleInitialised = false;
@@ -117,10 +119,12 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     pModel->flags.bits.b4 = 0;
     pModel->flags.bits.b5 = 0;
     pModel->colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
+
     for (int matrixIdx = 0; matrixIdx < pModel->pTemplate->pModelData->nmbrOfMatrices; matrixIdx++) {
         pModel->pMatrices[matrixIdx].SetIdentity();
         pModel->unkC[matrixIdx] = 1.0f;
     }
+
     memset(pModel->subobjectData, 0, pModelTemplate->pModelData->nmbrOfSubObjects);
     return pModel;
 }
@@ -225,9 +229,9 @@ void Model::SetInverseScaleValue(int idx, float arg2) {
         for (int i = 0; i < pTemplate->pModelData->nmbrOfMatrices; i++) {
             unkC[i] = arg2;
         }
-        return;
+    } else {
+        unkC[idx] = arg2;
     }
-    unkC[idx] = arg2;
 }
 
 extern "C" int strcmpi(char*, char*);
@@ -263,10 +267,12 @@ Vector* Model::GetRefPointOrigin(int refPointIndex) {
 
 void Model::GetRefPointWorldPosition(int refPointIndex, Vector* pOut) {
     *pOut = pTemplate->pModelData->pRefPoints[refPointIndex].position;
+    
     if ((int)pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 == 0) {
         pOut->ApplyMatrix(pMatrices);
         return;
     }
+
     pOut->ApplyMatrix(pAnimation->GetNodeMatrix(pTemplate->pModelData->pRefPoints[refPointIndex].matrix1 - 1));
 }
 

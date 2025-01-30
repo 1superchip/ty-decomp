@@ -30,7 +30,7 @@ void EventMessage::Init(void) {
     message = 0;
 }
 
-bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
+bool EventMessage::LoadLine(KromeIniLine* pLine, const char* str) {
     static EventMessage *pCurrentEM = NULL;
     if (this == pCurrentEM) {
         if (stricmp(pLine->pFieldName, "Message") == 0) {
@@ -39,15 +39,19 @@ bool EventMessage::LoadLine(KromeIniLine *pLine, char const *str) {
             message = GameObject::GetMessageIdFromString(pString);
             return true;
         }
+
         if (LoadLevel_LoadInt(pLine, "TargetID", &targetId) != false) {
             return true;
         }
+
         pCurrentEM = NULL;
     }
+
     if (stricmp(pLine->pFieldName, (char*)str) == 0) {
         pCurrentEM = this;
         return true;
     }
+
     return false;
 }
 

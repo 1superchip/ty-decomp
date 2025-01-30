@@ -450,10 +450,14 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
     u8* pString = *(u8**)strings;
     u8* tempString = pString;
     u8* out;
+
     bool r31 = false;
-    char* r30 = 0;
+
+    char* r30 = NULL;
+
     float f31 = 0.0f;
     float f3 = 0.0f;
+
     while (true) {
         if (((*tempString == ' ' || *tempString == '\n') || *tempString == 0) && (f3 <= f1 || !r30)) {
             f31 = f3;
@@ -463,6 +467,7 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
                 break;
             }
         }
+
         if (*tempString == 0 || (f3 > f1 && r30)) {
             if (!r30) {
                 r30 = (char*) tempString;
@@ -480,13 +485,17 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
                     pChars[*tempString].unk18 + unk8 : unkC;
         tempString++;
     }
+
     if (pString == NULL) {
         return NULL;
     }
+
     char* copy = Str_CopyString((char*)pString, (u8*)r30 - pString);
+
     if (r31) {
         r30++;
     }
+
     if (r31) {
         *strings = r30;
     } else {
@@ -494,6 +503,7 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
         while (*out == ' ') {
             out++;
         }
+
         *strings = (char*)out;
     }
 
@@ -502,6 +512,7 @@ char* Font::GetTextSegment(char** strings, float f1, TextSegmentInfo* textInfo) 
         textInfo->unk4 = f31;
         textInfo->unk8 = r31;
     }
+
     return copy;
 }
 
@@ -833,12 +844,14 @@ void Font::BuildLines(char* pString, float f1, float f2, TextLineData* lineData)
                     f9 = f4;
                     break;
                 }
+                
                 if (r11) {
                     f10 = f8;
                     f9 = f4;
                     r11 = 0;
                     r30 = text;
                 }
+
                 float m = unkC * f6;
                 f8 += m;
                 f4 += m;
@@ -849,8 +862,10 @@ void Font::BuildLines(char* pString, float f1, float f2, TextLineData* lineData)
                 f8 += m;
                 f4 += m;
             }
+
             text++;
         }
+
         if (r12) {
             lineData->data[r9].unk4 = lineData->data[r9].unk0;
             lineData->data[r9].unk8 = 0.0f;
@@ -889,6 +904,7 @@ void Font::BuildLines(char* pString, float f1, float f2, TextLineData* lineData)
             goto start;
         }
     }
+    
     lineData->y = f6;
     lineData->x = r9;
     lineData->z = f7;

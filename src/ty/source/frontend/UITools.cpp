@@ -40,6 +40,7 @@ void UIButton::Init(int stringIdx, UIButtonDescriptor* pButtonDesc, Font* pFont)
     } else {
         pDescriptor = &buttonType1;
     }
+
     mAngle = 0.0f;
     unk34 = 1.0f;
     bUpdate = true;
@@ -61,8 +62,10 @@ void UIButton::Reset(void) {
         } else {
             mText.SetColor(pDescriptor->disabledColor);
         }
+
         mText.SetScale(unk34);
     }
+
     mAngle = 0.0f;
 }
 
@@ -82,6 +85,7 @@ void UIButton::Update(void) {
             mText.SetScale((_table_sinf(mAngle) * 0.025f + 1.2f) * unk34);
             return;
         }
+        
         if (f2 >= unk34 * 1.2f) {
             if (pDescriptor->bAnimateTextScale) {
                 mAngle = 6.0f / gDisplay.displayFreq;
@@ -92,12 +96,15 @@ void UIButton::Update(void) {
         } else {
             mText.SetScale(f2 + (2.0f / gDisplay.displayFreq) * unk34);
         }
+
         return;
     }
+
     if (f2 <= unk34) {
         mText.SetScale(unk34);
         return;
     }
+
     mText.SetScale(mText.GetScale() - (2.0f / gDisplay.displayFreq) * unk34);
 }
 
@@ -111,6 +118,7 @@ void UIButton::Draw(void) {
 /// @param bSetEnabled True to enable or false to disable
 void UIButton::SetEnabled(bool bSetEnabled) {
     bEnabled = bSetEnabled;
+
     if (bEnabled) {
         // Set button to default selected state
         SetSelected(bSelected);
@@ -123,11 +131,13 @@ void UIButton::SetEnabled(bool bSetEnabled) {
 /// @param bSetSelected True to select or false to deselect
 void UIButton::SetSelected(bool bSetSelected) {
     bSelected = bSetSelected;
+    
     if (bSelected) {
         mText.SetColor(pDescriptor->selectedColor);
     } else {
         mText.SetColor(pDescriptor->unselectedColor);
     }
+
     mAngle = 0.0f;
 }
 
@@ -143,7 +153,9 @@ void SelectionRang::SetTarget(Vector* pPos, char flags, View* pView) {
     if (!pView) {
         pView = View::GetCurrent();
     }
+
     pView->TransformPoint2Dto3D(pPos->x, pPos->y, pPos->z, &mPos);
+
     if (flags & 1) {
         offset.Set(-85.0f, 0.0f, 0.0f, 0.0f);
         offset.ApplyRotMatrix(&mRangModel.pModel->matrices[0]);
@@ -182,12 +194,14 @@ void UIButtonGroup::Init(int numButtons) {
 void UIButtonGroup::Deinit(void) {
     if (mpButtons) {
         // Deinitate all buttons
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             mpButtons[i].Deinit();
         }
+
         // Free allocated memory for buttons
         Heap_MemFree((void*)mpButtons);
     }
+
     mpButtons = NULL;
     size = 0;
     selection = -1;
@@ -197,9 +211,11 @@ void UIButtonGroup::Deinit(void) {
 /// @param newSelectedButton Button to select
 void UIButtonGroup::Reset(int newSelectedButton) {
     SetSelection(newSelectedButton);
-    for(int i = 0; i < size; i++) {
+
+    for (int i = 0; i < size; i++) {
         mpButtons[i].Reset();
     }
+
     if (marker) {
         // Reset the marker if the UIButtonGroup uses one
         *marker->mRangModel.pModel->matrices[0].Row3() = marker->mPos;
@@ -233,13 +249,16 @@ bool UIButtonGroup::SetSelection(int newButtonIdx) {
                     textFlags = textFlags & ~3;
                 }
             }
+
             Vector pos;
             GetSelectedButton()->GetPosition(&pos);
             pos.z = 510.0f;
             marker->SetTarget(&pos, textFlags, &gFERes.view);
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -254,10 +273,12 @@ bool UIButtonGroup::SelectNext(void) {
         if (currSelection == originalSelection) {
             break;
         }
+
         if (SetSelection(currSelection)) {
             break;
         }
     }
+
     return originalSelection != selection;
 }
 
@@ -268,6 +289,7 @@ bool UIButtonGroup::SelectPrev(void) {
     int originalSelection = selection;
     while (true) {
         int nextSelection;
+
         if (previousSelection == 0) {
             // if the previous selection is the first button, the next will be the last button
             nextSelection = size - 1;
@@ -275,10 +297,12 @@ bool UIButtonGroup::SelectPrev(void) {
             // else, the next is previous - 1
             nextSelection = previousSelection - 1;
         }
+
         previousSelection = nextSelection;
         if (nextSelection == originalSelection || SetSelection(nextSelection)) {
             break;
         }
+
     }
     return originalSelection != selection;
 }
@@ -288,7 +312,8 @@ void UIButtonGroup::Update(void) {
     if (marker) {
         marker->Update();
     }
-    for(int i = 0; i < size; i++) {
+
+    for (int i = 0; i < size; i++) {
         mpButtons[i].Update();
     }
 }
@@ -298,7 +323,8 @@ void UIButtonGroup::Draw(void) {
     if (marker) {
         marker->mRangModel.Draw();
     }
-    for(int i = 0; i < size; i++) {
+
+    for (int i = 0; i < size; i++) {
         mpButtons[i].Draw();
     }
 }
@@ -320,11 +346,12 @@ void UIButtonPrompt::Draw(int numPrompts) {
     UIButtonPrompt* pPrompts = this;
     gFERes.untexturedImage.Draw(1);
     float f29 = 0.0f;
-    for(i = 0; i < numPrompts; i++) {
+    for (i = 0; i < numPrompts; i++) {
         promptStr[i] = Str_Printf("%s %s", buttonString[pPrompts[i].buttonIdx], pPrompts[i].str);
         strWidth[i] = gFERes.pFont0->CalcLength(promptStr[i]) + 20.0f;
         f29 += strWidth[i] * 0.75f;
     }
+
     float f31;
     if (f29 > 544.0f) {
         f31 = 0.75f * (544.0f / f29);
@@ -333,17 +360,20 @@ void UIButtonPrompt::Draw(int numPrompts) {
         f31 = 0.75f;
         f29 = (544.0f - f29) / (float)(numPrompts + 1);
     }
+
     matrix.SetIdentity();
     matrix.Scale(f31);
     matrix.Row3()->y = 458.5f;
     float f28 = 48.0f + (f29 * 0.5f);
     View::GetCurrent()->OrthoBegin();
-    for(i = 0; i < numPrompts; i++) {
+
+    for (i = 0; i < numPrompts; i++) {
         f28 += ((strWidth[i] * f31) + f29) * 0.5f;
         matrix.Row3()->x = f28;
         gFERes.pFont0->DrawString(promptStr[i], strWidth[i], gFERes.pFont0->GetHeight(),
             &matrix, 5, 0x80808080, NULL, NULL);
         f28 += ((strWidth[i] * f31) + f29) * 0.5f;
     }
+    
     View::GetCurrent()->OrthoEnd();
 }

@@ -94,6 +94,7 @@ char* DiscErr_GetErrorString(void) {
     if (nCurrErr <= -1 || nCurrErr > 5) {
         return NULL;
     }
+    
     if (Translation_GetLanguage() == -1) {
         int defaultLanguage = 0;
         switch (OSGetLanguage()) {
@@ -116,8 +117,10 @@ char* DiscErr_GetErrorString(void) {
                 defaultLanguage = Language_Dutch;
                 break;
         }
+
         return discErrStrings[defaultLanguage].errors[nCurrErr];
     }
+
     return discErrStrings[Translation_GetLanguage()].errors[nCurrErr];
 }
 
@@ -125,39 +128,60 @@ void DiscErr_DrawErrorString(void) {
     DiscErr_DrawString(DiscErr_GetErrorString());
 }
 
+#define CTYPE_PUNCT  0x8
+#define CTYPE_DIGIT  0x10
+#define CTYPE_XDIGIT 0x20
+#define CTYPE_LOWER  0x40
+#define CTYPE_UPPER  0x80
+
 void DiscErr_DrawString(char* pErrStr) {
-    char buf[0x20];
+    char buf[32];
+
     DEMODoneRender();
     DEMOBeforeRender();
     XFONTClearScreen(7);
+
     char* r31 = pErrStr;
     char* r30;
     int r29 = 14;
+
     while (true) {
         int slen = strlen(r31);
         if (slen > 0x1e) {
             r30 = r31 + 0x1e;
-            while (((__ctype_map[*r30 & 0xff] & 0xD0) || (__ctype_map[*r30 & 0xff] & 0x8) ||
-                (u8)*r30 > 0xC0) && r30 > r31) {
+            while (((__ctype_map[*r30 & 0xff] & (CTYPE_UPPER | CTYPE_LOWER | CTYPE_DIGIT)) || 
+                    (__ctype_map[*r30 & 0xff] & (CTYPE_PUNCT)) || (u8)*r30 > 0xC0) && r30 > r31) {
                 r30--;
             }
         } else {
             r30 = r31 + slen;
         }
+
         char* f = strchr(r31, '\n');
         if (f != NULL && f < r30) {
             r30 = f;
         }
+
         int r26 = r30 - r31;
         strncpy(buf, r31, r26);
         buf[r26] = '\0';
+
         strupr(buf);
+
         int buflen = (uint)strlen(buf) / 2;
+
         XFONTPrintf(0x10 - buflen, r29, buf);
-        if (r31 + slen <= r30) break;
+
+        if (r31 + slen <= r30) {
+            break;
+        }
+
         r29 += 2;
         r31 = r30 + 1;
-        if (r31 == NULL || *r31 == '\0') break;
+        if (r31 == NULL || *r31 == '\0') {
+            break;
+        }
     }
+    
     DCFlushRange(DEMOGetCurrentBuffer(), 0x84000);
 }

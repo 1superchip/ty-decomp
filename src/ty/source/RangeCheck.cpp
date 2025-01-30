@@ -139,7 +139,7 @@ void LODDescriptor::Init(KromeIni* pIni, char* arg1) {
     maxScissorDist = 1000.0f;
     flags |= 1;
     if (pIni != NULL && arg1 != NULL) {
-        Tools_StripExtension(section, (char const*)arg1);
+        Tools_StripExtension(section, (const char*)arg1);
         KromeIniLine* pLine = pIni->GotoLine(section, NULL);
         ParseIni(pIni, pLine);
     }
@@ -283,7 +283,7 @@ void LODManager::Init(Model* pModel, int arg1, LODDescriptor* d) {
     pDescriptor->ResolveSubObjects(pModel);
     
     for (i = 0; i < pModel->GetNmbrOfSubObjects(); i++) {
-        if (strnicmp((char const*)pModel->GetSubObjectName(i), "f_", 2) == 0) {
+        if (strnicmp((const char*)pModel->GetSubObjectName(i), "f_", 2) == 0) {
             pModel->EnableSubObject(i, 0);
         }
     }

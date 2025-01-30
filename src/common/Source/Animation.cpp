@@ -134,9 +134,11 @@ void Animation::Tween(float frameNmbr, float arg2) {
 void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
     Animation::FrameInstance* pFrame = &frames[arg3];
     AnimationData::Node* pNode = &pTemplate->pAnimData->pNodes[arg3];
+    
     if (!pFrame->b1 && pFrame->targetWeight != 1.0f) {
         Animation_CalculateFrame(pFrame, pNode);
     }
+
     pFrame->targetFrame = frameNmbr;
     pFrame->targetWeight = weight;
     pFrame->b1 = 0;
@@ -162,6 +164,7 @@ void Animation::SetNodeMatrix(int nodeIndex, Matrix* pMatrix, bool arg4) {
         frames[nodeIndex].b3 = arg4;
         return;
     }
+    
     frames[nodeIndex].b2 = 0;
     frames[nodeIndex].b3 = 0;
 }
@@ -263,6 +266,7 @@ Matrix* Animation::GetNodeMatrix(int nodeIndex) {
     if (!frames[nodeIndex].b0) {
         CalculateNodeMatrix(nodeIndex);
     }
+    
     return &pMatrices[nodeIndex] + 1;
 }
 
@@ -293,12 +297,15 @@ void Animation_CalculateFrame(Animation::FrameInstance* pFrame, AnimationData::N
 void Animation::CalculateNodeMatrix(int index) {
     AnimationData::Node* pNode = &pTemplate->pAnimData->pNodes[index];
     Animation::FrameInstance* pFrame = &frames[index];
+
     if (!pFrame->b1) {
         Animation_CalculateFrame(pFrame, pNode);
     }
+
     if (pNode->parent != -1 && !frames[pNode->parent].b0) {
         CalculateNodeMatrix(pNode->parent);
     }
+
     Matrix* r28 = &pMatrices[index] + 1;
     Matrix* parentMatrix = &pMatrices[pNode->parent] + 1;
     if (!pFrame->b3) {
@@ -337,22 +344,12 @@ void Animation::CalculateNodeMatrix(int index) {
         r28->data[3][2] = (-oX * sX * M02) + (-oY * sY * M12) + (-oZ * sZ * M22) + oZ;
         r28->data[3][3] = 1.0f;
         
-        if (pFrame->position.x != 0.0f || pFrame->position.y != 0.0f || pFrame->position.z != 0.0f)
-        {
-            if (pNode->parent != -1)
-            {
-                Vector vec;
-                Vector* op1 = pFrame->pOrigin;
-                Vector* parentOrigin = frames[pNode->parent].pOrigin;
-                vec.x = op1->x - parentOrigin->x;
-                vec.y = op1->y - parentOrigin->y;
-                vec.z = op1->z - parentOrigin->z;
-
-                vec.x = pFrame->position.x - vec.x;
-                vec.y = pFrame->position.y - vec.y;
-                vec.z = pFrame->position.z - vec.z;
-                
-                r28->Translate(&vec);
+        if (pFrame->position.x != 0.0f || pFrame->position.y != 0.0f || pFrame->position.z != 0.0f) {
+            if (pNode->parent != -1) {
+                Vector temp;
+                temp.Sub(pFrame->pOrigin, frames[pNode->parent].pOrigin);
+                temp.Sub(&pFrame->position, &temp);
+                r28->Translate(&temp);
             } else {
                 r28->Translate(&pFrame->position);
             }
@@ -360,12 +357,14 @@ void Animation::CalculateNodeMatrix(int index) {
         if (pFrame->b2) {
             r28->Multiply(&pFrame->unk30, r28);
         }
+        
         r28->Multiply(parentMatrix);
     } else if (pFrame->b2) {
         r28->Multiply(&pFrame->unk30, parentMatrix);
     } else {
         *r28 = *parentMatrix;
     }
+
     frames[index].b0 = 1;
 }
 

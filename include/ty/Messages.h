@@ -11,7 +11,7 @@ struct EventMessage {
     int message;
 
     void Init(void);
-    bool LoadLine(KromeIniLine*, char const*);
+    bool LoadLine(KromeIniLine*, const char*);
     void Resolve(void);
     void Send(void);
 };

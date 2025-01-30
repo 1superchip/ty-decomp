@@ -65,7 +65,7 @@ struct MKAnimScript {
     float unk14;
     short unk18;
     short unk1A;
-    short unk1C;
+    short unk1C; // inbetween frame count (1/unk1C is used as weight for animations)
     u16 unk1E;
     
     static float advanceAmount;

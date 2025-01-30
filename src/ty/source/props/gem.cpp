@@ -750,8 +750,8 @@ void Gem_ParticleSystem_Update(void) {
                 p->unk24 = 0.0f;
                 p->unk28 = 7.5f;
                 p->unk50 = 6.0f;
-                ((char*)&p->unk58)[1] = 1;
-                ((char*)&p->unk58)[0] = RandomIR(&gb.mRandSeed, 1, 3);
+                p->charData[1] = 1;
+                p->charData[0] = RandomIR(&gb.mRandSeed, 1, 3);
                 p->unk3C = 0.0f;
                 p->mAngle = RandomFR(&gb.mRandSeed, 0.0f, PI);
             }
@@ -816,13 +816,16 @@ void Gem_FireCustomUpdate(ParticleSystem* pSys) {
             float delta2 = ((delta - pEnv->unkC) / pEnv->deltaAge);
             // delta = pEnv->unk14 * ((delta - pEnv->unkC) / pEnv->deltaAge);
             pParticle->mColor.w = (delta2 * pEnv->unk14) + pEnv->unk4;
-            pParticle->unk50 += (((char*)&pParticle->unk58[0])[1]);
+
+            pParticle->unk50 += pParticle->charData[1];
+
             if (pParticle->unk50 > 20.0f) {
-                ((char*)&pParticle->unk58[0])[1] = 0xFF;
+                pParticle->charData[1] = 255;
             } else if (pParticle->unk50 < 6.0f) {
-                ((char*)&pParticle->unk58[0])[1] = 1;
+                pParticle->charData[1] = 1;
             }
-            pParticle->unk30 = ((((char*)&pParticle->unk58[0])[0]) * 0.1f) * (pParticle->unk50 * 0.05f);
+
+            pParticle->unk30 = (pParticle->charData[0] * 0.1f) * (pParticle->unk50 * 0.05f);
             pParticle->unk48 = 0.0f;
             pParticle->unk4C = 1.0f;
             pParticle++;

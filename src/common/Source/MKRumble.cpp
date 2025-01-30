@@ -53,9 +53,11 @@ void MKRumble_Update(void) {
     float smallActMag[NUM_VIBRA_EFFECTS] = {};
     bool newSmallActState[NUM_VIBRA_EFFECTS];
     int newLargeActState[NUM_VIBRA_EFFECTS];
-    for(int i = 0; i < effectsPlaying; i++) {
+
+    for (int i = 0; i < effectsPlaying; i++) {
         VibrationEffect* pEffect = &vibrationEffect[i];
         float f31;
+
         if (pEffect->flags & 1) {
             f31 = 1.0f - pEffect->unk18;
         } else if (pEffect->flags & 2) {
@@ -63,9 +65,11 @@ void MKRumble_Update(void) {
         } else {
             f31 = 1.0f;
         }
+
         if (pEffect->flags & 4) {
             f31 *= f31;
         }
+
         switch (pEffect->flags & 0xf0) {
             case 0x0:
                 break;
@@ -82,9 +86,11 @@ void MKRumble_Update(void) {
                 }
                 break;
         }
+
         pEffect->unk18 += pEffect->unk0;
         smallActMag[pEffect->unk14] += f31 * pEffect->unk4;
         largeActMag[pEffect->unk14] += f31 * pEffect->unk8;
+
         if (pEffect->unk18 >= 1.0f) {
             if (i < effectsPlaying - 1) {
                 vibrationEffect[i] = vibrationEffect[effectsPlaying - 1];
@@ -93,21 +99,27 @@ void MKRumble_Update(void) {
             effectsPlaying--;
         }
     }
-    for(int i = 0; i < MAX_CHANS; i++) {
+
+    for (int i = 0; i < MAX_CHANS; i++) {
         if (smallActMag[i] > 1.0f) {
             smallActMag[i] = 1.0f;
         }
+
         if (largeActMag[i] > 1.0f) {
             largeActMag[i] = 1.0f;
         }
+
         ves[i].unk8 += smallActMag[i];
+
         if (ves[i].unk8 > 0.0f) {
             newSmallActState[i] = true;
             ves[i].unk8 -= 1.0f;
         } else {
             newSmallActState[i] = false;
         }
+
         newLargeActState[i] = (int)(largeActMag[i] * 255.0f);
+
         if (newSmallActState[i] != ves[i].unk4 || newLargeActState[i] != ves[i].unk0) {
             Input_Vibrate((InputDevices)i, newLargeActState[i], newSmallActState[i]);
             ves[i].unk0 = newLargeActState[i];
@@ -120,7 +132,7 @@ void MKRumble_Update(void) {
 /// @param  None
 void MKRumble_Pause(void) {
     vibrationPaused = true; // Set vibrations to paused
-    for(int i = 0; i < MAX_CHANS; i++) {
+    for (int i = 0; i < MAX_CHANS; i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = false;
         ves[i].unk8 = 0.0f;
@@ -161,11 +173,12 @@ void MKRumble_Play(InputDevices param_1, float param_2, float param_3,
 /// @brief Stops all vibration effects that have their target equal to targetDevice
 /// @param targetDevice Device ID to stop all vibration effects for
 void MKRumble_Stop(InputDevices targetDevice) {
-    for(int i = 0; i < effectsPlaying; i++) {
+    for (int i = 0; i < effectsPlaying; i++) {
         if (vibrationEffect[i].unk14 == targetDevice) {
             if (i < effectsPlaying - 1) {
                 vibrationEffect[i] = vibrationEffect[effectsPlaying - 1];
             }
+            
             i--;
             effectsPlaying--;
         }

@@ -255,7 +255,7 @@ GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius
 }
 
 DescriptorIterator GameObjectManager::Begin(void) {
-    DescriptorIterator git = {(u8*)pObjectMem, (u8*)objectManager.pObjectMem + (int)objectManager.objectMemSize};
+    DescriptorIterator git = {(u8*)pObjectMem, (u8*)objectManager.pObjectMem + objectManager.objectMemSize};
     return git;
 }
 

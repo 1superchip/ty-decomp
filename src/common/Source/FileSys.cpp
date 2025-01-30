@@ -198,6 +198,7 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
                     entryLanguage = Str_Printf("%.*s.ITALIAN", nameLen, pEntry->name);
                     break;
             }
+
             RkvFileEntry* pFoundEntry = data.GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
@@ -228,7 +229,8 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
                     entryLanguage = Str_Printf("%.*sIT.%s", nameLen, pEntry, namePtr);
                     break;
             }
-            RkvFileEntry *pFoundEntry = data.GetEntry(entryLanguage);
+
+            RkvFileEntry* pFoundEntry = data.GetEntry(entryLanguage);
             if (pFoundEntry->unk3C == 0) {
                 pEntry->unk3E = 1;
                 pFoundEntry->unk3C = fileOrderId++;

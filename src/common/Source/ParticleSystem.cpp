@@ -180,12 +180,15 @@ Particle* ParticleSystem::CreateParticle(void) {
     if (!unk74) {
         return NULL;
     }
+
     if (bPaused) {
         return NULL;
     }
+
     if (!(mpType->unk2C & 0x100) && unk75) {
         return NULL;
     }
+
     Particle* p = AllocateParticle();
     if (p) {
         memset((void*)p, 0, sizeof(Particle));
@@ -202,6 +205,7 @@ Particle* ParticleSystem::CreateParticle(void) {
         p->unk4C = 1.0f;
         numLiveParticles++;
     }
+
     return p;
 }
 
@@ -232,6 +236,7 @@ bool ParticleSystem::CheckLiveness(void) {
         unk74 = true;
         return true;
     }
+
     if (unk74) {
         if (unk78 < age - 1.0f) {
             DestroyAll();
@@ -240,14 +245,17 @@ bool ParticleSystem::CheckLiveness(void) {
     } else if (unk78 == age) {
         unk74 = true;
     }
+
     return unk74;
 }
 
 void ParticleSystem::Update(void) {
     float f31 = gDisplay.frameTime;
+    
     if (bPaused) {
         return;
     }
+
     if (isDying) {
         deathTimer -= f31;
         if (deathTimer <= 0.0f) {
@@ -255,12 +263,15 @@ void ParticleSystem::Update(void) {
             pSystemManager->DestroyParticleSystem(this);
             return;
         }
+
         invDeathTimer = invDeathTimer * (deathTimer / (deathTimer + f31));
     }
+
     if (!CheckLiveness()) {
         age += f31;
         return;
     }
+
     if ((mpType->unk2C & 0x100) || !unk75) {
         age += f31;
         if (numLiveParticles != 0) {

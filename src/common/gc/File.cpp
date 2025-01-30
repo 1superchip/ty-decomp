@@ -102,7 +102,7 @@ int File_Read(int fd, void* buf, int size, int arg3) {
     entry->unk4C = arg3;
     
     if (entry->unk54 == 0) {
-        entry->unk40 = 0;
+        entry->unk40 = NULL;
     } else {
         entry->unk40 = buf;
     }
@@ -171,19 +171,23 @@ int File_IsBusy(int fd) {
         return true;
     } else {
         Heap_Check("File.cpp", 321);
+
         if (entry->unk40 != NULL) {
             memmove(entry->unk40, entry->unk44, entry->unk4C);
             DCStoreRange((uint*)entry->unk40, entry->unk4C);
         } else {
             DCStoreRange((uint*)entry->unk44, entry->unk4C);
         }
+
         Heap_Check("File.cpp", 331);
+        
         if (entry->unk54 > 0) {
             Heap_MemFree(entry->unk44);
             entry->unk44 = NULL;
             entry->unk54 = 0;
         }
         entry->unk50 = 2;
+
         Heap_Check("File.cpp", 339);
     }
     return false;
