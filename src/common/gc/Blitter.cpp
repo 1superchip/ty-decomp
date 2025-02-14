@@ -176,6 +176,8 @@ void Blitter_Particle::Draw(int count) {
     };
 	
     View* pView = View::GetCurrent();
+    Vector* pViewRow0 = pView->unk48.Row0();
+    Vector* pViewRow1 = pView->unk48.Row1();
 	
     // initiate GX
     GXClearVtxDesc();
@@ -197,32 +199,18 @@ void Blitter_Particle::Draw(int count) {
                 uv[y][1] = v;
             }
         }
-
-        float fVar10;
-        float fVar12;
-        float fVar14;
-        float fVar9;
-        float fVar11;
-        float fVar13;
         
-        fVar9 = pParticle->unk20 * pView->unk48.data[1][0];
-        fVar10 = pParticle->unk20 * pView->unk48.data[0][0];
-        fVar11 = pParticle->unk20 * pView->unk48.data[1][1];
-        fVar12 = pParticle->unk20 * pView->unk48.data[0][1];
-        fVar13 = pParticle->unk20 * pView->unk48.data[1][2];
-        fVar14 = pParticle->unk20 * pView->unk48.data[0][2];
+        float dVar29 = (pParticle->unk20 * pViewRow1->x) - (pParticle->unk20 * pViewRow0->x);
+        float dVar28 = (pParticle->unk20 * pViewRow1->y) - (pParticle->unk20 * pViewRow0->y);
+        float dVar27 = (pParticle->unk20 * pViewRow1->x) + (pParticle->unk20 * pViewRow0->x);
+        float dVar26 = (pParticle->unk20 * pViewRow1->y) + (pParticle->unk20 * pViewRow0->y);
+        float dVar25 = (pParticle->unk20 * pViewRow1->z) - (pParticle->unk20 * pViewRow0->z);
+        float dVar24 = (pParticle->unk20 * pViewRow1->z) + (pParticle->unk20 * pViewRow0->z);
         
-        u8 red = 255.0f * pParticle->color.x;
-        u8 green = 255.0f * pParticle->color.y;
-        u8 blue = 255.0f * pParticle->color.z;
-        u8 alpha = 255.0f * pParticle->color.w;
-        
-        float dVar29 = fVar9 - fVar10;
-        float dVar28 = fVar11 - fVar12;
-        float dVar27 = fVar9 + fVar10;
-        float dVar26 = fVar11 + fVar12;
-        float dVar25 = fVar13 - fVar14;
-        float dVar24 = fVar13 + fVar14;
+        u8 red = pParticle->color.x * 255.0f;
+        u8 green = pParticle->color.y * 255.0f;
+        u8 blue = pParticle->color.z * 255.0f;
+        u8 alpha = pParticle->color.w * 255.0f;
         
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         
@@ -281,10 +269,10 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
         dVar25 = pParticle->unk20 * (viewVec1->z - viewVec->z);
         dVar24 = pParticle->unk20 * (viewVec1->z + viewVec->z);
         
-        u8 red = 255.0f * pParticle->color.x;
-        u8 green = 255.0f * pParticle->color.y;
-        u8 blue = 255.0f * pParticle->color.z;
-        u8 alpha = 255.0f * pParticle->color.w;
+        u8 red = pParticle->color.x * 255.0f;
+        u8 green = pParticle->color.y * 255.0f;
+        u8 blue = pParticle->color.z * 255.0f;
+        u8 alpha = pParticle->color.w * 255.0f;
         
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         

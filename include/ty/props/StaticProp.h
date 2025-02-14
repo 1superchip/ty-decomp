@@ -50,13 +50,20 @@ struct StaticProp : GameObject {
     virtual void Draw(void);
     virtual void Init(GameObjDesc* pDesc);
     virtual void Deinit(void);
+
     StaticPropDescriptor* GetDesc(void) {
         return descr_cast<StaticPropDescriptor*>(pDescriptor);
     }
+
     Vector* GetPos(void) {
         return pModel->matrices[0].Row3();
     }
-    // TyOn is an inline?
+
+    bool TyOn(void) {
+        // bool cond = ty.mContext.mStateStruct.bUnderFeet && ty.mContext.mStateStruct.GetDiff(&ty.pos) < 10.0f ? true : false;
+        // return (ty.mContext.mStateStruct.bOn || cond) && (ty.mContext.mStateStruct.res.pInfo == &collisionInfo);
+        // TyContext inline
+    }
 
     static StaticPropLoadInfo loadInfo;
 };
@@ -135,9 +142,11 @@ struct StaticFXProp : StaticProp {
     void UpdateDropLeaf(void);
     void UpdateRotate(void);
     void Show(bool);
+
     StaticFXPropDesc* GetDesc(void) {
         return descr_cast<StaticFXPropDesc*>(pDescriptor);
     }
+
     Vector* GetPos(void) {
         // this is wrong
         // need to figure this out

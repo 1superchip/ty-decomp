@@ -2,6 +2,7 @@
 #define TYTYPES_H
 
 #include "common/Vector.h"
+#include "ty/GameObject.h"
 
 struct Rotation {
     float unk0;
@@ -28,5 +29,40 @@ struct UnknownColorVectorStruct {
         return &colorVec;
     }
 };
+
+struct FloorInfo {
+    bool bUnderFeet;
+    bool bOn;
+    bool bValid;
+    CollisionResult res;
+
+    float GetDiff(Vector* pPos) {
+        return bValid ? pPos->y - res.pos.y : 10000.0f;
+    }
+};
+
+struct TyContext {
+    struct WaterInfo {
+        bool bValid;
+        Vector pos;
+    };
+
+    WaterInfo water;
+    FloorInfo floor;
+    CollisionResult results[4];
+    int resultIndex;
+};
+
+// struct Ty : GameObject {
+//     void* pReflectionModel;
+//     Vector position;
+//     Vector lastPosition;
+
+//     // fixed velocity vector 
+//     // which points towards where ty will go when on contact with collision
+//     Vector velocity;
+
+//     Vector diveVec;
+// };
 
 #endif // TYTYPES_H

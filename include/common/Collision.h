@@ -198,7 +198,7 @@ void Collision_DeleteDynamicModel(Model* pModel);
 
 int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int flags, int maxCollisions);
 bool Collision_SweepSphereCollideDynamicModel(SphereRay*, CollisionResult*, DynamicItem*);
-bool Collision_RayCollideDynamicModel(Vector*, Vector*, CollisionResult*, Model*, int);
+bool Collision_RayCollideDynamicModel(Vector*, Vector*, CollisionResult* pCr, Model* pModel, int subobjectIdx);
 bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
 bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
     CollisionResult* pCr, CollisionMode pMode, int flags);

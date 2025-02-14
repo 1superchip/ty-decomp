@@ -906,6 +906,7 @@ int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTes
             }
         }
     }
+    
     return ret;
 }
 

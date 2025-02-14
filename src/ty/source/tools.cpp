@@ -261,6 +261,7 @@ void Tools_GetPYR(Matrix* pRotMatrix, float* pPitch, float* pYaw, float* pRoll) 
     } else {
         f1 = tempm.data[0][0];
     }
+
     if (f1 < 0.001f && Abs(tempm.data[0][1]) < 0.001f) {
         *pRoll = 0.0f;
     } else if (tempm.data[0][0] > 0.0f) {
@@ -268,9 +269,12 @@ void Tools_GetPYR(Matrix* pRotMatrix, float* pPitch, float* pYaw, float* pRoll) 
     } else if (tempm.data[0][0] < 0.0f) {
         *pRoll = atan2(tempm.data[0][1], -tempm.data[0][0]);
     }
+    
     tempm.RotateRoll(&tempm, -*pRoll);
+
     *pYaw = atan2(tempm.data[0][2], tempm.data[0][0]);
     tempm.RotateYaw(&tempm, -*pYaw);
+
     *pPitch = atan2(tempm.data[2][1], tempm.data[2][2]);
 }
 
@@ -313,6 +317,7 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
     if (f13 < 0.0f) {
         f13 = 0.0f;
     }
+
     top.y = pVec->y + (pVec1->y * f13 - f1 * 0.5f * f13 * f13);
     top.x = pVec->x + (f13 * pVec1->x);
     top.z = pVec->z + (f13 * pVec1->z);
@@ -344,6 +349,7 @@ void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, fl
     if (pMaterial) {
         pMaterial->Use();
     }
+    
     Blitter_Image bImage;
     bImage.startX = f1;
     bImage.endX = f9;
@@ -412,6 +418,7 @@ float Tools_Wobble(float f1, int r3) {
         f5 = randomFloats[(r7 + 2) & 31];
         f4 = 1.0f - f4;
     }
+    
     float t_f5 = f7 - f5;
     float x = ((((3.5f * (f7 - f6)) - ((f0 - f5) * 0.5f)) - t_f5));
     return ((x * f4) * f4) + ((f6 + f6) + (t_f5 * f4));

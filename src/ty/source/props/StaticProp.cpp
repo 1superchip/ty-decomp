@@ -261,6 +261,7 @@ void StaticFXProp::Draw(void) {
 void StaticFXProp::UpdateShake(void) {
     Vector tyShakePos = ty.pos;
     tyShakePos.y += gb.unk78C;
+    // StaticProp::TyOn is inlined here
     if (gb.unk78C != 0.0f) {
         bool unk = false;
         if (ty.unk844 != false) {
