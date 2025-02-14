@@ -9,6 +9,21 @@ extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" int sscanf(const char*, const char*, ...);
 
+#define MK_DEBUG 0
+#define BARBIE_SPARKING_ICE_SHOW 0
+
+// All assertions are from the Barbie Sparking Ice Show version
+
+#if MK_DEBUG == 1
+char* Str_Printf(const char*, ...);
+void assert(char*, char*, char*, int);
+#define ASSERT(cond, msg, file, line) if (!(cond)) assert(#cond, msg, file, line)
+#else
+#define ASSERT(cond, msg, file, line)
+#endif
+
+#define TY_GC 1
+
 void Parser::ResetCurrLine(void) {
     currLine->elementCount = 0;
     currLine->comment = NULL;
@@ -21,30 +36,56 @@ bool Parser::SkipSpaces(void) {
     while ((pData < pEndOfFile) && (*pData == ' ' || *pData == '\t' || *pData == '=' || *pData == ',')) {
         pData++;
     }
+
     return pData < pEndOfFile;
 }
 
 bool Parser::SkipData(void) {
-    while ((pData < pEndOfFile) && (*pData != ' ' && *pData != '\t' && *pData != '=' && *pData != ',') && !(*pData == '\r' || *pData == '\n')) {
+
+    #if TY_GC == 1
+
+    int found = 0;
+    while (pData < pEndOfFile) {
+        if (*pData == '\"') {
+            found = !found;
+        } else if (found || ((*pData != ' ') && (*pData != '\t') && (*pData != '=') && (*pData != ','))) {
+            if ((*pData == '\r') || (*pData == '\n')) {
+                break;
+            }
+        } else {
+            break;
+        }
+
         pData++;
     }
+
+    #else
+
+    while ((pData < pEndOfFile) && (*pData != ' ' && *pData != '\t' && *pData != '=' && *pData != ',' && *pData != '\r' && *pData != '\n')) {
+        pData++;
+    }
+
+    #endif
+    
     return pData < pEndOfFile;
 }
 
 bool Parser::IsName(void) {
-    bool isName = false;
-    if ((4 < pEndOfFile - pData) && (*pData | 0x20) == 'n' && (*(pData+1) | 0x20) == 'a' && (*(pData+2) | 0x20) == 'm' && (*(pData+3) | 0x20) == 'e' && *(pData + 4) == ' ') {
-        isName = true;
-    }
-    return isName;
+    // Check for "name "
+    return (4 < pEndOfFile - pData) &&
+        ((*pData | 0x20) == 'n') && 
+        ((*(pData+1) | 0x20) == 'a') && 
+        ((*(pData+2) | 0x20) == 'm') && 
+        ((*(pData+3) | 0x20) == 'e') && 
+        (*(pData + 4) == ' ');
 }
 
 bool Parser::IsComment(void) {
-    return (1 < (pEndOfFile - pData)) && (*pData == '/' && *(pData + 1) == '/');
+    return (1 < (pEndOfFile - pData) && (*pData == '/' && *(pData + 1) == '/'));
 }
 
 bool Parser::IsEOL(void) {
-    return *pData == '\r' || *pData == '\n';
+	return *pData == '\r' || *pData == '\n';
 }
 
 void Parser::GrabEndOfLine(void) {
@@ -53,11 +94,14 @@ void Parser::GrabEndOfLine(void) {
         r7 = *pData;
         *pData++ = '\0';
     }
+    
     if ((pData < pEndOfFile) && (((r7 == '\r') && (*pData == '\n')) || ((r7 == '\n') && (*pData == '\r')))) {
         *pData++ = '\0';
     }
+    
     lineNum++;
     currLine++;
+    
     if (lineNum < numLines) {
         ResetCurrLine();
     }
@@ -66,22 +110,110 @@ void Parser::GrabEndOfLine(void) {
 void Parser::GrabComment(void) {
     *pData = '\0';
     pData += 2;
+
     SkipSpaces();
+    
     currLine->comment = pData;
+    
     while (pData < pEndOfFile && !(*pData == '\r' || *pData == '\n')) {
+        pData++;
+    }
+}
+
+void Parser::GrabIniSection(void) {
+    pData += 1; // skip '['
+    
+    currLine->section = pData;
+    
+    while ((pData < pEndOfFile) && (*pData != '\r') && (*pData != '\n') && (*pData != ']')) {
+        pData++;
+    }
+
+    ASSERT(
+        pChar[0] == ']',
+        Str_Printf(
+            "File %s, Malformed secton name, line %d", 
+            pFilename,
+            lineNum
+        ),
+        "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp",
+        173
+    );
+    
+    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
+        *pData = '\0';
+        pData++;
+    }
+}
+
+void Parser::GrabMadSection(void) {
+    pData += 4; // skip past "name "
+
+    int more = SkipSpaces();
+    
+    currLine->section = pData;
+
+    ASSERT(
+        more && !IsEOL() && !IsComment(),
+        Str_Printf(
+            "File %s, Malformed section name, line %d", 
+            pFilename,
+            lineNum
+        ),
+        "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp",
+        193
+    );
+    
+    while (pData < pEndOfFile && (*pData != '\r') && (*pData != '\n') && (*pData != ' ') && (*pData != '\t')) {
+        pData++;
+    }
+    
+    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
+        *pData = '\0';
+        pData++;
+    }
+}
+
+void Parser::GrabFieldName(void) {
+    currLine->pFieldName = pData;
+    while (pData < pEndOfFile && ((*pData != '\r') && (*pData != '\n') && (*pData != ' ') && (*pData != '\t') && (*pData != '='))) {
+        pData++;
+    }
+    
+    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
+        *pData = '\0';
+        pData++;
+    }
+}
+
+void Parser::GrabData(void) {
+    currLine->data = pData;
+    do {
+        SkipSpaces();
+        if (!IsEndOfData()) {
+            currLine->elementCount++;
+            SkipData();
+        }
+    } while (!IsEndOfData());
+    
+    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
+        *pData = '\0';
         pData++;
     }
 }
 
 bool Parser::IsEndOfData(void) {
     char* data = pData;
+    
     while ((data < pEndOfFile) && (*data == ' ' || *data == '\t' || *data == '=' || *data == ',')) {
         data++;
     }
-    return (data == pEndOfFile) || (*data == '\r') || (*data == '\n') || (data < (pEndOfFile - 1)) && (*data == '/' && *(data + 1) == '/');
+
+    return (data == pEndOfFile) || 
+        (*data == '\r') || (*data == '\n') || 
+        ((data < (pEndOfFile - 1)) && (*data == '/' && *(data + 1) == '/'));
 }
 
-// https://decomp.me/scratch/JYbFf
 bool KromeIni::Init(char* pName) {
     currentLineNum = 0;
 
@@ -89,18 +221,17 @@ bool KromeIni::Init(char* pName) {
         pFileMem = NULL;
         strcpy(name, "(NULL)");
         fileSize = 0;
-        pLines = 0;
+        pLines = NULL;
         nmbrOfLines = 0;
         unk38 = 0;
         return false;
     }
-
+    
     // only use of Heap_MemAllocAligned and it doesn't allocate aligned memory!
-    pFileMem = Heap_MemAllocAligned(fileSize + 1, 0x40);
+    pFileMem = Heap_MemAllocAligned(fileSize + 1, 64);
     bFileMemAllocated = true;
 
     FileSys_Load(pName, &fileSize, pFileMem, -1);
-
     *((char*)pFileMem + (int)fileSize) = '\0'; // null terminator at end of file
 
     char* str = strrchr(pName, '\\');
@@ -114,118 +245,31 @@ bool KromeIni::Init(char* pName) {
     }
 
     strcpy(name, foundChar);
-    
+
     ParseData();
+
     return true;
 }
 
-
-void Parser::UnkFunc(void) {
-    int found = false;
-    while (pData < pEndOfFile) {
-        if (*pData == '\"') {
-            found = !found;
-        } else if ((found != 0) || ((*pData != ' ') && (*pData != '\t') && (*pData != '=') && (*pData != ','))) {
-            if ((*pData == '\r') || (*pData == '\n')) {
-                break;
-            }
-        } else {
-            break;
-        }
-        pData++;
-    }
-}
-
-bool Parser::UnkFunc2(void) {
-    char* tempData = pData;
-    while ((tempData < pEndOfFile) && ((*tempData == ' ') || (*tempData == '\t') || (*tempData == '=') || (*tempData == ','))) {
-        tempData++;
-    }
-    bool retval = false;
-    if ((tempData == pEndOfFile) || (*tempData == '\r') || (*tempData == '\n') || (tempData < (pEndOfFile - 1)) && (*tempData == '/' && *(tempData + 1) == '/')) {
-        retval = true;
-    }
-    return retval;
-}
-
-void Parser::GrabIniSection(void) {
-    pData++;
-    currLine->section = pData;
-    while ((pData < pEndOfFile) && (*pData != '\r') && (*pData != '\n') && (*pData != ']')) {
-        pData++;
-    }
-    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
-        *pData = '\0';
-        pData++;
-    }
-}
-
-void Parser::GrabMadSection(void) {
-    pData += 4; // skip past "name "
-    SkipSpaces();
-    currLine->section = pData;
-    while (pData < pEndOfFile && (*pData != '\r') && (*pData != '\n') && (*pData != ' ') && (*pData != '\t')) {
-        pData++;
-    }
-    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
-        *pData = 0;
-        pData++;
-    }
-}
-
-void Parser::GrabFieldName(void) {
-    currLine->pFieldName = pData;
-    while (pData < pEndOfFile && ((*pData != '\r') && (*pData != '\n') && (*pData != ' ') && (*pData != '\t') && (*pData != '='))) {
-        pData++;
-    }
-    if (!IsComment() && !IsEOL() && (pData < pEndOfFile)) {
-        *pData = '\0';
-        pData++;
-    }
-}
-
-// incorrect
-void Parser::GrabData(void) {
-    currLine->data = pData;
-    SkipData();
-    while(!UnkFunc2()) {
-        if (!UnkFunc2()) {
-            currLine->elementCount++;
-            UnkFunc();
-        }
-    }
-}
-
-bool IsEOL(char c) {
-    bool ret = 0;
-    if (c == '\r' || c == '\n') {
-        ret = 1;
-    }
-    return ret;
-}
-
-bool IsCommentInternal(char *c) {
-    bool ret = 0;
-    if (*c == '/' && *(c + 1) == '/') {
-        ret = 1;
-    }
-    return ret;
-}
-
-inline bool IsComment(char* pEnd, char* pData) {
-    bool end = 0;
-    if ((pEnd - pData > 1) && IsCommentInternal(pData)) {
-        end = 1;
-    }
-    return end;
-}
+// void KromeIni::InitFromBuffer(char* pName, char* pBuf) {
+//     bFileMemAllocated = false;
+//     pFileMem = (void*)pBuf;
+//     fileSize = strlen(pBuf);
+//     strcpy(name, pName);
+//     ParseData();
+// }
 
 void KromeIni::ParseData() {
     Parser parser;
     parser.pData = (char *)pFileMem;
     parser.pEndOfFile = parser.pData + fileSize;
+    
     nmbrOfLines = 1;
+    
+    parser.pFilename = name;
+    
     unk38 = 0;
+    
     // get line count
     while (parser.pData < parser.pEndOfFile) {
         // search for newline characters, if found increment nmbrOfLines
@@ -235,146 +279,67 @@ void KromeIni::ParseData() {
         parser.pData++;
     }
 
+
     parser.numLines = nmbrOfLines;
-    pLines = (KromeIniLine *)Heap_MemAlloc(parser.numLines * sizeof(KromeIniLine));
+    pLines = (KromeIniLine*)Heap_MemAlloc(parser.numLines * sizeof(KromeIniLine));
     parser.currLine = pLines;
-    parser.pData = (char *)pFileMem;
+    parser.pData = (char*)pFileMem;
     parser.lineNum = 0;
     parser.ResetCurrLine();
 
     while (parser.pData < parser.pEndOfFile) {
-        parser.SkipSpaces();
-        if (parser.pData >= parser.pEndOfFile) {
+        if (!parser.SkipSpaces()) {
             break;
         }
+        
         if (parser.IsEOL()) {
             parser.GrabEndOfLine();
-        } else {
+        } else if (parser.IsComment()) {
+            parser.GrabComment();
+            parser.GrabEndOfLine();
+        } else if (*parser.pData == '[') {
+            unk38++;
+            
+            parser.GrabIniSection();
+            parser.SkipSpaces();
+            
+            if (!parser.IsEndOfData()) {
+                parser.GrabFieldName();
+                parser.SkipSpaces();
+                parser.GrabData();
+                parser.SkipSpaces();
+            }
+            
             if (parser.IsComment()) {
                 parser.GrabComment();
-                parser.GrabEndOfLine();
-            } else {
-                if (*parser.pData == '[') {
-                    unk38++;
-                    parser.GrabIniSection();
-                    parser.SkipSpaces();
-                    if (!parser.IsEndOfData()) {
-                        parser.GrabFieldName();
-                        parser.SkipSpaces();
-                        // parser.GrabData();
-                        // SkipSpaces()
-                        // }
-                        // this should be GrabData()
-                        parser.currLine->data = parser.pData;
-                        do {
-                            parser.SkipSpaces();
-                            if (!parser.UnkFunc2()) {
-                                // var_r7_6 = 0;
-                                // parser.currLine->elementCount++;
-                                // while (parser.pData < parser.pEndOfFile) {
-                                //     if (*parser.pData == '\"') {
-                                //         var_r7_6 = !var_r7_6;
-                                //     } else if ((var_r7_6 != 0) || ((*parser.pData != ' ') && (*parser.pData != '\t') && (*parser.pData != '=') && (*parser.pData != ','))) {
-                                //         if ((*parser.pData == '\r') || (*parser.pData == '\n')) {
-                                //             break;
-                                //         }
-                                //     } else {
-                                //         break;
-                                //     }
-                                //     parser.pData++;
-                                // }
-                                parser.currLine->elementCount++;
-                                parser.UnkFunc();
-                            }
-                        } while (!parser.UnkFunc2());
-                        if (!IsComment(parser.pEndOfFile, parser.pData) && !IsEOL(*parser.pData) && (parser.pData < parser.pEndOfFile)) {
-                            *parser.pData = 0;
-                            parser.pData++;
-                        }
-                        parser.SkipSpaces();
-                    }
-                    if (parser.IsComment()) {
-                        parser.GrabComment();
-                    }
-                    parser.GrabEndOfLine();
-                } else {
-                    if (parser.IsName()) {
-                        parser.GrabMadSection();
-                        parser.SkipSpaces();
-                        if (!parser.UnkFunc2()) {
-                            parser.GrabFieldName();
-                            parser.SkipSpaces();
-                            // parser.GrabData();
-                            parser.currLine->data = parser.pData;
-                            do {
-                                parser.SkipSpaces();
-                                if (!parser.UnkFunc2()) {
-                                    // var_r7_11 = 0;
-                                    // parser.currLine->elementCount++;
-                                    // while (parser.pData < parser.pEndOfFile) {
-                                    //     if (*parser.pData == '\"') {
-                                    //         var_r7_11 = !var_r7_11;
-                                    //     } else if ((var_r7_11 != 0) || ((*parser.pData != ' ') && (*parser.pData != '\t') && (*parser.pData != '=') && (*parser.pData != ','))) {
-                                    //         if ((*parser.pData == '\r') || (*parser.pData == '\n')) {
-                                    //             break;
-                                    //         }
-                                    //     } else {
-                                    //         break;
-                                    //     }
-                                    //     parser.pData++;
-                                    // }
-                                    parser.currLine->elementCount++;
-                                    parser.UnkFunc();
-                                }
-                            } while (!parser.UnkFunc2());
-                            if (!IsComment(parser.pEndOfFile, parser.pData) && (!IsEOL(*parser.pData) && (parser.pData < parser.pEndOfFile))) {
-                                *parser.pData = 0;
-                                parser.pData++;
-                            }
-                            parser.SkipSpaces();
-                        }
-                        if (parser.IsComment()) {
-                            parser.GrabComment();
-                        }
-                        parser.GrabEndOfLine();
-                    } else {
-                        parser.GrabFieldName();
-                        parser.SkipSpaces();
-                        // parser.GrabData();
-                        parser.currLine->data = parser.pData;
-                        do {
-                            parser.SkipSpaces();
-                            if (!parser.UnkFunc2()) {
-                                // var_r7_15 = 0;
-                                // parser.currLine->elementCount++;
-                                // while (parser.pData < parser.pEndOfFile) {
-                                //     if (*parser.pData == '\"') {
-                                //         var_r7_15 = !var_r7_15;
-                                //     } else if ((var_r7_15 != 0) || ((*parser.pData != ' ') && (*parser.pData != '\t') && (*parser.pData != '=') && (*parser.pData != ','))) {
-                                //         if ((*parser.pData == '\r') || !(*parser.pData != '\n')) {
-                                //             break;
-                                //         }
-                                //     } else {
-                                //         break;
-                                //     }
-                                //     parser.pData++;
-                                // }
-                                parser.currLine->elementCount++;
-                                parser.UnkFunc();
-                            }
-                        } while (!parser.UnkFunc2());
-                        if (!IsComment(parser.pEndOfFile, parser.pData) && !IsEOL(*parser.pData) && (parser.pData < parser.pEndOfFile)) {
-                            *parser.pData = 0;
-                            parser.pData++;
-                        }
-                        parser.SkipSpaces();
-                        if (parser.IsComment()) {
-                            parser.GrabComment();
-                        }
-                        parser.GrabEndOfLine();
-                    }
-                }
             }
+            
+            parser.GrabEndOfLine();
+        } else if (parser.IsName()) {
+            parser.GrabMadSection();
+            parser.SkipSpaces();
+            if (!parser.IsEndOfData()) {
+                parser.GrabFieldName();
+                parser.SkipSpaces();
+                parser.GrabData();
+                parser.SkipSpaces();
+            }
+            
+            if (parser.IsComment()) {
+                parser.GrabComment();
+            }
+            
+            parser.GrabEndOfLine();
+        } else {
+            parser.GrabFieldName();
+            parser.SkipSpaces();
+            parser.GrabData();
+            parser.SkipSpaces();
+            if (parser.IsComment()) {
+                parser.GrabComment();
+            }
+            
+            parser.GrabEndOfLine();
         }
     }
 }
@@ -383,190 +348,341 @@ void KromeIni::Deinit(void) {
     if (pFileMem == NULL)  {
         return;
     }
+
     Heap_MemFree(pLines);
-    if (bFileMemAllocated != 0) {
+
+    if (bFileMemAllocated) {
         Heap_MemFreeAligned(pFileMem);
     }
+
     pFileMem = NULL;
 }
 
-/// @brief Returns the line with a field name of pField in the section with the name pName
-/// @param pName Section name e.g. "name pName"
-/// @param pField Field name within section e.g. "pos ...". Pass NULL to return section name line
-/// @return Found line or NULL
-KromeIniLine* KromeIni::GotoLine(char* pName, char* pField) {
-    // passing both pName and pField as NULL returns the very first line
-    
+// void KromeIni::Dump(void) {
+//     if (pFileMem && nmbrOfLines > 0) {
+//         int lineCount = nmbrOfLines;
+//         while(lineCount != 0) {
+//             lineCount--;
+//         }
+//     }
+// }
+
+KromeIniLine* KromeIni::GotoLine(char* pSectionName, char* pFieldName) {
     if (pFileMem == NULL) {
         return NULL;
     }
+    
+    int i = currentLineNum; // get last line processed
+    bool bFoundSection = false;
 
-    int i = currentLineNum;
-    bool temp_r27 = false;
-
-    if (pName == NULL && pField == NULL) {
+    if (pSectionName == NULL && pFieldName == NULL) {
         i = 0;
     }
-
-    if (pName != NULL) {
+    
+    // Find the start of the section of pSectionName
+    if (pSectionName != NULL) {
         i = 0;
         while (i < nmbrOfLines) {
-            if (pLines[i].section != NULL && stricmp(pName, pLines[i].section) == 0) {
-                temp_r27 = true;
+            if (pLines[i].section != NULL && stricmp(pSectionName, pLines[i].section) == 0) {
+                bFoundSection = true;
                 break;
             }
+
             i++;
         }
+
         if (i == nmbrOfLines) {
             return NULL;
         }
     }
-
-    if (pField != NULL) {
-
-        if (pName == NULL) {
+    
+    if (pFieldName != NULL) {
+        if (pSectionName == NULL) {
             while (i > 0 && pLines[i].section == NULL) {
                 i--;
             }
+            
             if (pLines[i].section != NULL) {
                 i++;
             }
-        } else {
-            if (temp_r27) {
-                i++;
-            }
+        } else if (bFoundSection) {
+            // Skip the section line
+            i++;
         }
-
+        
         while (i < nmbrOfLines) {
             if (pLines[i].section != NULL) {
                 return NULL;
             }
-            if (pLines[i].pFieldName != NULL && stricmp(pField, pLines[i].pFieldName) == 0) {
-                temp_r27 = true;
+            
+            if (pLines[i].pFieldName != NULL && stricmp(pFieldName, pLines[i].pFieldName) == 0) {
                 break;
             }
+            
             i++;
         }
+        
         if (i == nmbrOfLines) {
             return NULL;
         }
     }
-
+    
     currentLineNum = i;
-
-    if (i < nmbrOfLines) {
-        return &pLines[i];
-    }
-
-    return NULL;
+    
+    return i < nmbrOfLines ? &pLines[i] : NULL;
 }
 
-bool KromeIniLine::AsFlag(int arg1, int* pVal) {
+bool KromeIniLine::AsFlag(int elementIndex, int* pVal) {
+
+    ASSERT(pVal, "pVal pointer is NULL", "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp", 657);
+    
     char* pString;
-    bool retval = AsString(arg1, &pString);
+    bool retval = AsString(elementIndex, &pString);
+    
     if (retval != false) {
         if (stricmp(pString, "on") == 0) {
             *pVal = 1;
-            return true;
-        }
-        if (stricmp(pString, "off") == 0) {
+            retval = true;
+        } else if (stricmp(pString, "off") == 0) {
             *pVal = 0;
-            return true;
-        }
-        if (stricmp(pString, "true") == 0) {
+            retval = true;
+        } else if (stricmp(pString, "true") == 0) {
             *pVal = 1;
-            return true;
-        }
-        if (stricmp(pString, "false") == 0) {
+            retval = true;
+        } else if (stricmp(pString, "false") == 0) {
             *pVal = 0;
-            return true;
+            retval = true;
+        } else {
+            retval = sscanf(pString, "%d", pVal) == 1;
         }
-        return sscanf(pString, "%d", pVal) == 1;
+    } else {
+        *pVal = 0;
     }
-    *pVal = 0;
+    
     return retval;
 }
 
-bool KromeIniLine::AsInt(int arg1, int* pVal) {
+bool KromeIniLine::AsInt(int elementIndex, int* pVal) {
+
+    ASSERT(pVal, "pVal pointer is NULL", "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp", 707);
+    
     char* pString;
-    bool retval = AsString(arg1, &pString);
+    bool retval = AsString(elementIndex, &pString);
+    
     if (retval != false) {
-        return sscanf(pString, "%d", pVal) == 1;
+        retval = sscanf(pString, "%d", pVal) == 1;
+    } else {
+        *pVal = 0;
     }
-    *pVal = 0;
+    
     return retval;
 }
 
-bool KromeIniLine::AsFloat(int arg1, float* pVal) {
+bool KromeIniLine::AsFloat(int elementIndex, float* pVal) {
+
+    ASSERT(pVal, "pVal pointer is NULL", "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp", 735);
+    
     char* pString;
-    bool retval = AsString(arg1, &pString);
+    bool retval = AsString(elementIndex, &pString);
+    
     if (retval != false) {
-        return sscanf(pString, "%g", pVal) == 1;
+        retval = sscanf(pString, "%g", pVal) == 1;
+    } else {
+        *pVal = 0.0f;
     }
-    *pVal = 0.0f;
+    
     return retval;
 }
 
-bool KromeIniLine::AsString(int dataIndex, char** arg2) {
-    bool temp_r5;
-    int currentElement = 0;
-    int temp_r8 = 0;
-    char* string_r6;
+#if TY_GC == 0
+
+// July 1st prototype and Sparking Ice Show version
+
+bool KromeIniLine::AsString(int index, char** pString) {
+    
+    int i = 0;
     char* pChar;
-    bool temp_r4;
-    int dataStrLen;
-    if (dataIndex >= elementCount) {
+    int dataLen;
+
+    ASSERT(pString, "pString pointer is NULL", "D:\\Src\\IceSkating\\BarbieCommon\\Source\\KromeIni.cpp", 763);
+    
+    if (index >= elementCount) {
         return false;
     }
+	
+	// finds the beginning of element data
     pChar = data;
-    temp_r4 = false;
-    while (*pChar != '\0' && currentElement < dataIndex) {
-        temp_r5 = !temp_r8 && (*pChar == ',' || *pChar == ' ' || *pChar == '\t');
-        if (!temp_r5 && temp_r4) {
+    bool isPrevWhiteSpace = false; // Whether the previous character is whitespace or not
+    while (*pChar != '\0' && i < index) {
+        bool isWhiteSpace = *pChar == ',' || *pChar == ' ' || *pChar == '\t';
+        
+        if (!isWhiteSpace && isPrevWhiteSpace) {
+            i++;
+            if (i == index) {
+                break;
+            }
+        }
+        
+        isPrevWhiteSpace = isWhiteSpace;
+        pChar++;
+    }
+	
+	// find the end of the data (next whitespace character)
+    char* string_r6 = pChar;
+    isPrevWhiteSpace = false; // Whether the previous character is whitespace or not
+    
+    while (*string_r6 != '\0') {
+        bool isWhiteSpace = *string_r6 == ',' || *string_r6 == ' ' || *string_r6 == '\t';
+        
+        if (isWhiteSpace && !isPrevWhiteSpace) {
+            break;
+        }
+        
+        isPrevWhiteSpace = isWhiteSpace;
+        string_r6++;
+    }
+    
+    dataLen = string_r6 - pChar;
+    if (dataLen == 0) {
+        *pString = "";
+        return true;
+    } else {
+        *pString = Str_CopyString(pChar, dataLen);
+        return true;
+    }
+}
+
+#elif TY_GC == 1
+
+bool KromeIniLine::AsString(int elementIndex, char** pString) {
+    int currentElement = 0;
+    int temp_r8 = 0;
+    char* pEndOfData;
+    char* pData;
+    bool isPrevWhiteSpace;
+    int dataLen;
+    
+    if (elementIndex >= elementCount) {
+        return false;
+    }
+    
+    // find the beginning of the data
+    pData = data;
+    isPrevWhiteSpace = false;
+    while (*pData != '\0' && currentElement < elementIndex) {
+        bool isWhiteSpace = !temp_r8 && (*pData == ',' || *pData == ' ' || *pData == '\t');
+        
+        if (!isWhiteSpace && isPrevWhiteSpace) {
             currentElement++;
-            if (currentElement == dataIndex) {
+            if (currentElement == elementIndex) {
                 // once the correct element is found, break from this loop
                 break;
             }
         }
-        if (*pChar == '\"') {
+        
+        if (*pData == '\"') {
             temp_r8 = !temp_r8;
         }
-        temp_r4 = temp_r5;
-        pChar++;
+        
+        isPrevWhiteSpace = isWhiteSpace;
+        pData++;
     }
-    temp_r5 = false;
-    string_r6 = pChar;
-    while (*string_r6 != '\0') {
-        if (*string_r6 == '\"') {
-            string_r6++;
+
+    // find the end of the data
+    isPrevWhiteSpace = false;
+    pEndOfData = pData;
+    while (*pEndOfData != '\0') {
+        if (*pEndOfData == '\"') {
             temp_r8 = !temp_r8;
+            pEndOfData++;
         } else {
-            temp_r4 = !temp_r8 && (*string_r6 == ',' || *string_r6 == ' ' || *string_r6 == '\t');
-            if (temp_r4 && !temp_r5) {
+            bool isWhiteSpace = !temp_r8 && (*pEndOfData == ',' || *pEndOfData == ' ' || *pEndOfData == '\t');
+            if (isWhiteSpace && !isPrevWhiteSpace) {
                 break;
             }
-            temp_r5 = temp_r4;
-            string_r6++;
+            
+            isPrevWhiteSpace = isWhiteSpace;
+            pEndOfData++;
         }
+        
     }
 
-    if (*pChar == '\"' && *(string_r6 - 1) == '\"') {
-        // if the data is in quotation marks, move the pointers to the start
-        // and beginning of data (removing the quotation marks)
-        pChar++;
-        string_r6--;
+    if (*pData == '\"' && pEndOfData[-1] == '\"') {
+        pData++;
+        pEndOfData--;
     }
     
-    dataStrLen = (int)string_r6 - (int)pChar;
-    if (dataStrLen == 0) {
-        *arg2 = "";
+    
+    dataLen = (int)pEndOfData - (int)pData;
+    if (dataLen == 0) {
+        *pString = "";
+        return true;
+    } else {
+        *pString = Str_CopyString(pData, dataLen);
         return true;
     }
-
-    *arg2 = Str_CopyString(pChar, dataStrLen);
-    return true;
 }
+
+#endif
+
+// Following KromeIniLine methods were most likely stripped
+
+// bool KromeIniLine::AsStringRange(int index, char** pLow, char** pHi) {
+//     char* pString;
+    
+//     if (AsString(index, &pString) == false) {
+//         return false;
+//     }
+
+//     char* s0 = pString;
+//     char* a2 = pString;
+
+//     while (*s0 != '\0' && *s0 != '-') {
+//         s0++;
+//     }
+
+//     if (*s0 != '-') {
+//         *pLow = pString;
+//         *pHi = pString;
+
+//         return true;
+//     }
+
+//     *pLow = Str_CopyString(pString, s0 - a2 - 1);
+//     *pHi = s0 + 1;
+
+//     return true;
+// }
+
+// extern "C" int atoi(const char *str);
+
+// bool KromeIniLine::AsIntRange(int index, int* pVal, int* pVal1) {
+//     char* pLowStr;
+//     char* pHiStr;
+    
+//     if (AsStringRange(index, &pLowStr, &pHiStr) == false) {
+//         return false;
+//     }
+    
+//     *pVal = atoi(pLowStr);
+//     *pVal1 = atoi(pHiStr);
+
+//     return true;
+// }
+
+// bool KromeIniLine::AsFloatRange(int index, float* pVal, float* pVal1) {
+//     char* pLowStr;
+//     char* pHiStr;
+    
+//     if (AsStringRange(index, &pLowStr, &pHiStr) == false) {
+//         return false;
+//     }
+    
+//     sscanf(pLowStr, "%g", pVal);
+//     sscanf(pHiStr, "%g", pVal1);
+
+//     return true;
+// }
 
 void KromeIni::Warning(char* arg1) {
     if (pFileMem) return;

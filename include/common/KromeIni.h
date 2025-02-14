@@ -10,10 +10,10 @@ struct KromeIniLine {
     char* data; // Line data, "pos -1, 0, 3" -> data = "-1, 0, 3"
     int elementCount; // Number of data elements
 
-    bool AsFlag(int, int*);
-    bool AsInt(int, int*);
-    bool AsFloat(int, float*);
-    bool AsString(int, char**);
+    bool AsFlag(int elementIndex, int* pVal);
+    bool AsInt(int elementIndex, int* pVal);
+    bool AsFloat(int elementIndex, float* pVal);
+    bool AsString(int elementIndex, char** pString);
 };
 
 struct KromeIni {
@@ -34,7 +34,7 @@ struct KromeIni {
     bool Init(char* pName);
     void ParseData(void);
     void Deinit(void);
-    KromeIniLine* GotoLine(char* pName, char* pField);
+    KromeIniLine* GotoLine(char* pSectionName, char* pFieldName);
     void Warning(char*);
 };
 
@@ -80,9 +80,8 @@ struct Parser {
     char* pData;
     char* pEndOfFile;
     KromeIniLine* currLine;
+    char* pFilename;
 
-    void UnkFunc(void);
-    bool UnkFunc2(void);
     void GrabIniSection(void);
     void GrabMadSection(void);
     void GrabFieldName(void);
@@ -94,7 +93,7 @@ struct Parser {
     bool IsComment(void);
     bool IsName(void);
     bool SkipData(void);
-    bool SkipSpaces(void); // returns a bool
+    bool SkipSpaces(void);
     void ResetCurrLine(void);
 };
 
