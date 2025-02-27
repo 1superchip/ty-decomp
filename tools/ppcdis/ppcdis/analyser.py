@@ -4,8 +4,7 @@ Analyser for initial project creation
 
 from bisect import bisect_left
 from collections import defaultdict
-from dataclasses import dataclass
-from enum import Enum, IntEnum, unique
+from enum import Enum, unique
 from typing import Dict, List, Set, Tuple
 
 from capstone import CsInsn
@@ -19,7 +18,8 @@ from .fileutil import dump_to_pickle
 from .instrcats import (labelledBranchInsns, upperInsns, lowerInsns, storeLoadInsns,
                        algebraicReferencingInsns, returnBranchInsns)
 from .overrides import OverrideManager
-from .symbols import LabelManager, LabelType, get_containing_function
+from .relocs import Reloc, RelocType
+from .symbols import LabelManager, LabelType, get_containing_symbol
 
 class AnalysisOverrideManager(OverrideManager):
     """Analysis category OverrideManager"""
@@ -28,23 +28,25 @@ class AnalysisOverrideManager(OverrideManager):
         """Loads data from an analysis overrides yaml file"""
 
         # Load categories
-        self._bp = set(yml.get("blocked_pointers", []))
-        self._bpr = self._make_ranges(yml.get("blocked_pointer_ranges", []))
-        self._bt = set(yml.get("blocked_targets", []))
-        self._btr = self._make_ranges(yml.get("blocked_target_ranges", []))
-        self._sd2s = self._make_size_ranges(yml.get("sdata_sizes", []))
-        self._ft = yml.get("forced_types", {})
-        self._ful = yml.get("forced_upper_lowers", {})
+        self._blocked_pointers = set(yml.get("blocked_pointers", []))
+        self._blocked_pointer_ranges = self._make_ranges(yml.get("blocked_pointer_ranges", []))
+        self._blocked_targets = set(yml.get("blocked_targets", []))
+        self._blocked_target_ranges = self._make_ranges(yml.get("blocked_target_ranges", []))
+        self._sdata_sizes = self._make_size_ranges(yml.get("sdata_sizes", []))
+        self._forced_types = yml.get("forced_types", {})
+        self._forced_upper_lowers = yml.get("forced_upper_lowers", {})
 
     def is_blocked_pointer(self, addr: int) -> bool:
         """Checks if the potential pointer at an address is a known false positive"""
 
-        return addr in self._bp or self._check_range(self._bpr, addr)
+        return (addr in self._blocked_pointers or
+                self._check_range(self._blocked_pointer_ranges, addr))
 
     def is_blocked_target(self, addr: int) -> bool:
         """Checks if the address potentially pointed to is a known false positive"""
 
-        return addr in self._bt or self._check_range(self._btr, addr)
+        return (addr in self._blocked_targets or
+                self._check_range(self._blocked_target_ranges, addr))
     
     def is_blocked(self, addr: int, target: int) -> bool:
         """Checks if the pointer at addr to target is a known false positive"""
@@ -55,7 +57,7 @@ class AnalysisOverrideManager(OverrideManager):
         """Checks if an address is part of a bigger sdata symbol
         Returns the address of that if so"""
 
-        ranges = self._find_ranges(self._sd2s, addr)
+        ranges = self._find_ranges(self._sdata_sizes, addr)
         
         if len(ranges) == 1:
             return ranges[0].start
@@ -67,18 +69,18 @@ class AnalysisOverrideManager(OverrideManager):
     def get_forced_types(self) -> List[Tuple[int, str]]:
         """Gets the forced types for addresses"""
 
-        return list(self._ft.items())
+        return list(self._forced_types.items())
     
     def get_forced_upper_lowers(self) -> List[Dict]:
         
-        return self._ful
+        return self._forced_upper_lowers
         
 @unique
 class LabelTag(Enum):
     """Properties of a label at an address"""
 
     # Target of a bl, a b out of the binary, or a pointer from asm targetting a text section
-    # Definite function
+    # Definite function (including mid-function entry)
     CALL = 0
 
     # Target of a b
@@ -108,6 +110,9 @@ class LabelTag(Enum):
     # Data or jumptable (defaults to jumptable)
     DATA = 6
 
+    # Mid function entry point (in handwritten asm)
+    ENTRY = 7
+
 class Labeller:
     """Class to handle label creation and lookup"""
 
@@ -130,10 +135,28 @@ class Labeller:
                     if binary.addr_is_local(addr):
                         if t == LabelType.FUNCTION:
                             self.notify_tag(addr, LabelTag.CALL)
+                        elif t == LabelType.ENTRY:
+                            self.notify_tag(addr, LabelTag.ENTRY)
+                            self.notify_tag(addr, LabelTag.CALL)
                         elif t == LabelType.DATA:
                             self.notify_tag(addr, LabelTag.DATA)
                         else:
                             assert 0, f"Unexpected external label type {t} at {addr:x}"
+
+        # Apply tags for forced types, these don't need to guarantee the type
+        # since it's forced again later
+        # TODO: should that change?
+        for addr, t in self._ovr.get_forced_types():
+            if t == LabelType.FUNCTION:
+                self.notify_tag(addr, LabelTag.CALL)
+            elif t == LabelType.LABEL:
+                self.notify_tag(addr, LabelTag.CONDITIONAL)
+            elif t == LabelType.DATA:
+                self.notify_tag(addr, LabelTag.DATA)
+            elif t == LabelType.JUMPTABLE:
+                self.notify_tag(addr, LabelTag.JUMPTABLE)
+            elif t == LabelType.ENTRY:
+                self.notify_tag(addr, LabelTag.ENTRY)
 
     def _commit_function(self, addr: int):
         """Registers an address in the function list for boundary calculations"""
@@ -152,7 +175,7 @@ class Labeller:
         tags = self._tags[addr]
 
         # Add to sorted functions list if needed
-        if tag == LabelTag.CALL and LabelTag.CALL not in tags:
+        if tag == LabelTag.CALL and LabelTag.CALL not in tags and LabelTag.ENTRY not in tags:
             self._commit_function(addr)
 
         # Register tag
@@ -167,10 +190,11 @@ class Labeller:
         """Returns the start and end addresses of the function containing an address"""
 
         sec = self._bin.find_section_containing(instr_addr)
-        return get_containing_function(self._f, instr_addr, sec)
+        return get_containing_symbol(self._f, instr_addr, sec)
 
     def commit_pointed_functions(self):
         """Add functions referenced by pointers"""
+
         for addr, tags in self._tags.items():
             # Get containing section
             sec = self._bin.find_section_containing(addr)
@@ -186,14 +210,18 @@ class Labeller:
                 continue
             
             # If not given JUMP, PTR implies function
-            if LabelTag.PTR in tags:
+            if LabelTag.PTR in tags and not LabelTag.ENTRY in tags:
                 self._commit_function(addr)
 
     def _eval_tags(self, addr: int, tags: Set[LabelTag]
                   ) -> str:
         """Decides the type of a label from its tags"""
 
-        # CALL will always be a function
+        # ENTRY is always a mid-function entry
+        if LabelTag.ENTRY in tags:
+            return LabelType.ENTRY
+
+        # CALL will always be a function, if not mid-function entry
         if LabelTag.CALL in tags:
             return LabelType.FUNCTION
         
@@ -229,7 +257,7 @@ class Labeller:
         assert 0, f"No known tags {addr:x} {tags}"
 
     def output(self, path: str):
-        """Outputs all labelled addresses and their types to json"""
+        """Outputs all labelled addresses and their types to a pickle"""
 
         labels = LabelManager()
 
@@ -244,45 +272,6 @@ class Labeller:
 
         # Output
         labels.output(path)
-
-@unique
-class RelocType(IntEnum):
-    """Types of action a relocation can perform"""
-
-    NORMAL = 0 # @h, @l, or raw pointer in data
-    ALGEBRAIC = 1 # @ha
-    SDA = 2 # @sda21
-    # Branches don't need to be recorded, they're clear at disassembly anyway
-
-@dataclass
-class Reloc:
-    """Class to store a relocation on a single word"""
-
-    t: RelocType
-    target: int
-    offs: int
-
-    def format_offs(self) -> str:
-        """Gets the text representation of the offset"""
-
-        # Handle sign
-        if self.offs > 0:
-            sign = '+'
-        elif self.offs < 0:
-            sign = '-'
-        else:
-            # Don't write any offset if 0
-            return ""
-
-        # Handle magnitude
-        offs = abs(self.offs)
-        if offs >= 10:
-            return sign + hex(offs)
-        else:
-            return sign + str(offs)
-    
-    def __repr__(self):
-        return f"Reloc({self.t}, 0x{self.target:x}, 0x{self.offs:x})"
 
 class Relocator:
     """Class to handle relocation creation"""
@@ -309,7 +298,7 @@ class Relocator:
         return self._jt[addr]
 
     def output(self, path: str):
-        """Dumps all relocations and jumptables to json"""
+        """Dumps all relocations and jumptables to a pickle"""
 
         # Convert relocations to dictionaries
         references = {}
@@ -482,11 +471,20 @@ class Analyser:
 
             if (
                 not isinstance(dest_instr, DummyInstr) and
-                dest_instr.id == PPC_INS_STWU and 
-                dest_instr.operands[0].reg == PPC_REG_R1 and
-                dest_instr.operands[1].mem.base == PPC_REG_R1
+                (
+                    (
+                        dest_instr.id == PPC_INS_STWU and 
+                        dest_instr.operands[0].reg == PPC_REG_R1 and
+                        dest_instr.operands[1].mem.base == PPC_REG_R1
+                    )
+                    or
+                    (
+                        dest_instr.id == PPC_INS_MFLR and
+                        dest_instr.operands[0].reg == PPC_REG_R0
+                    )
+                )
             ):
-                # A branch to a stwu r1, x (r1) should always be a tail call
+                # A branch to a stwu r1, x (r1) or mflr r0 should always be a tail call
                 tag = LabelTag.CALL
             else:
                 # If this is later bl'd to, pointed to, or found to cross a function boundary,
@@ -580,7 +578,7 @@ class Analyser:
         """Processes a word of data"""
         
         # Treat as pointer if it's to a valid address
-        if self._bin.validate_addr(val) and not self._ovr.is_blocked(addr, val):
+        if self._bin.validate_reloc(addr, val) and not self._ovr.is_blocked(addr, val):
             # Create label if it doesn't exist
             self._lab.notify_tag(val, LabelTag.PTR)
 
@@ -602,7 +600,7 @@ class Analyser:
             text_size = sec.size
         
         # Disassemble
-        lines = cs_disasm(sec.addr, self._bin.read(sec.addr, text_size), self._quiet)
+        lines = cs_disasm(sec.addr, self._bin.read(sec.addr, text_size))
         self._disasm[sec.name] = lines
 
     def _analyse_section(self, sec: BinarySection):
@@ -752,7 +750,7 @@ class Analyser:
 
                 # Check for addresses outside any binary and known false positives
                 # Valid addresses outside binaries wouldn't shift anyway
-                if not self._bin.validate_addr(sym_addr) or self._ovr.is_blocked(addr, sym_addr):
+                if not self._bin.validate_reloc(addr, sym_addr) or self._ovr.is_blocked(addr, sym_addr):
                     # tprint(f"Ignored fixed address at {uppers[reg].instr.address:x}/{addr:x}")
                     del uppers[reg]
                 else:
@@ -1158,6 +1156,13 @@ class Analyser:
         """Finalises SDA relocations"""
 
         for addr, target in self._sda.items():
+            # Check valid
+            if not isinstance(self._bin, LECTReader) and not self._bin.addr_is_local(target):
+                print(f"Warning: ignoring SDA reference {addr:x}->{target:x}, outside of binary. "
+                      "(probably code with r2 overwritten, if so then add a blocked_pointers "
+                      "override for the instruction)")
+                continue
+
             # Handle size override
             start = self._ovr.is_resized_sdata(target)
             if start is not None:
@@ -1200,6 +1205,9 @@ class Analyser:
             rci = self._bin.get_rom_copy_info()
             if rci is not None:
                 finish = rci
+
+        # Create a function at the start if it doesn't exist
+        self._lab.notify_tag(section.addr, LabelTag.CALL)
 
         # Iterate over full section
         addr = section.addr

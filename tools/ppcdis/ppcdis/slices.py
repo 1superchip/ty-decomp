@@ -116,6 +116,32 @@ def load_slice_yaml(path: str, sections: List[BinarySection], base_path='') -> L
     # Convert back to list & return
     return sources + extra
 
+def cover_range(start: int, end: int, section: str) -> List[Source]:
+    """Make source(s) to cover a range"""
+
+    ret = []
+
+    # For some reason, mwld will align even-word-count ctors entries to 8
+    if section == ".ctors" and (end - start) % 8 == 0 and start % 8 != 0:
+        # Add an extra 4-byte slice so that both word counts are odd
+        ret.append(
+            Source(
+                None,
+                {section : Slice(start, start + 4, section)} 
+            )
+        )
+        start += 4
+    
+    # Add main range
+    ret.append(
+        Source(
+            None,
+            {section : Slice(start, end, section)}
+        )
+    )
+    
+    return ret
+
 def fill_sections(slices: Dict[str, List[Slice]], sections: List[BinarySection]) -> List[Source]:
     """Fills in the gaps in a list of slices with new sources"""
 
@@ -131,24 +157,14 @@ def fill_sections(slices: Dict[str, List[Slice]], sections: List[BinarySection])
 
             # Create slice before this one if needed
             if sl.start > pos:
-                ret.append(
-                    Source(
-                        None,
-                        {section.name : Slice(pos, sl.start, section.name)}
-                    )
-                )
+                ret.extend(cover_range(pos, sl.start, section.name))
 
             # Move to end
             pos = sl.end
 
         # Add final slice if needed
         if pos < section.addr + section.size:
-            ret.append(
-                Source(
-                    None,
-                    {section.name : Slice(pos, section.addr + section.size, section.name)}
-                )
-            )
+            ret.extend(cover_range(pos, section.addr + section.size, section.name))
 
     return ret
 

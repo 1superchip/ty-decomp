@@ -10,3 +10,6 @@ with open(args.input, encoding="utf-8") as f:
 
 with open(args.output, 'w', encoding="shift-jis") as f:
     f.write(txt)
+
+#with open(args.output, 'w', encoding="cp1252") as f:
+#    f.write(txt)

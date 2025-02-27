@@ -25,22 +25,22 @@ The format is:
 ```yml
 section_defs:
     text:
-        section1:
-            prop1: val
-            ...
+        - name: section1
+          prop1: val
+          ...
         ...
     data:
-        section1:
-            ...
         ...
     bss:
-        section1:
-            ...
         ...
 ```
 
-The properties of a section are:
-    - `attr` (optional) attributes given to the section in disassembly
+All properties other than name are optional. They are:
+- `attr`: attributes given to the section in disassembly
+- `nobits`: tags a section with `@nobits` in disassembly
+- `balign`: the number of bytes to align the start of a slice to. Defaults to 8 for data and 0 for text
+- `bss_forced_size`: forces the size of a bss section, required when two bss sections are back to back.
+- `bss_start_align`: forces the start of a bss section to be aligned by an amount
 
 ## relextern
 
@@ -173,7 +173,7 @@ When given `--function addr`, the disassembler outputs the assembly of a single 
 
 When given `--extra` with `--function`, extra data referenced by the function is included. This is currently limited to jumptables.
 
-### Inline function generation
+#### Inline function generation
 
 When given `--inline` with `--function`, the disassembler outputs the assembly of a single function in mwcc inline assembly format, for use on undecompiled functions in partially decompiled files.
 
@@ -209,6 +209,27 @@ Signals that all inline assembly should reference constant floats / doubles by t
 #### trim_ctors / trim_dtors
 
 The CW linker's behaviour with the .ctors and .dtors sections is quite weird. In some circumstances, the linker will automatically generate the zeros at the end of the .ctors and .dtors sections. These overrides allow for them to be removed from the disassembly to account for that.
+
+### symbol_aligns
+
+Sets the alignment to give the symbol at an address when disassembling it.
+
+For example,
+```yml
+symbol_aligns:
+    0x80100000: 0x20
+```
+will turn
+```
+.global lbl_80100000
+lbl_80100000:
+```
+into
+```
+.balign 0x20
+.global lbl_80100000
+lbl_80100000:
+```
 
 ### Symbol Map
 

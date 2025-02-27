@@ -59,7 +59,8 @@ def order_floats(binary: BinaryReader, start_addr: int, end_addr: int, use_asm=F
         "#endif\n"
     ))
 
-def order_strings(binary: BinaryReader, start_addr: int, end_addr: int, pool=False, enc="utf8"):
+def order_strings(binary: BinaryReader, start_addr: int, end_addr: int, pool=False, enc="utf8",
+                  use_sda=False):
     """Generates a string order dummy for a file"""
 
     curStr = bytearray()
@@ -87,6 +88,8 @@ def order_strings(binary: BinaryReader, start_addr: int, end_addr: int, pool=Fal
             curStr = bytearray()
     assert len(curStr) == 0, "Non-terminating string at end"
 
+    sda = f" - 0x{binary.r2:x}" if use_sda else ""
+
     func = f"order_strings_{start_addr:x}"
 
     if isinstance(binary, RelReader):
@@ -95,9 +98,9 @@ def order_strings(binary: BinaryReader, start_addr: int, end_addr: int, pool=Fal
             "REL_SYMBOL_AT({lab}, 0x{addr:x})"
         ))
     else:
-        fmt = "char {lab}[] : 0x{addr:x};"
+        fmt = "char {lab}[] : 0x{addr:x}{sda};"
     matching_at = '\n'.join([
-        fmt.format(lab=f"{binary.data_prefix}{addr:x}", addr=addr)
+        fmt.format(lab=f"{binary.data_prefix}{addr:x}", addr=addr, sda=sda)
         for addr in addrs
     ])
 

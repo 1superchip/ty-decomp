@@ -2,8 +2,21 @@
 Converts an ELF to a DOL file
 """
 
+from typing import Tuple
+
 from elftools.elf.constants import P_FLAGS
 from elftools.elf.elffile import ELFFile
+
+def align_to(offs: int, align: int) -> Tuple[int, int]:
+    """Aligns an offset and gets the padding required"""
+
+    mask = align - 1
+
+    new_offs = (offs + mask) & ~mask
+
+    padding = new_offs - offs
+
+    return new_offs, padding
 
 def elf_to_dol(in_path: str, out_path: str):
     """Converts an ELF file to a DOL file"""
@@ -48,9 +61,11 @@ def elf_to_dol(in_path: str, out_path: str):
                     data_n += 1
 
                 offsets[idx] = out.tell()
+                size, padding = align_to(seg["p_memsz"], 0x20)
                 addrs[idx] = seg["p_vaddr"]
-                sizes[idx] = seg["p_memsz"]
+                sizes[idx] = size
                 out.write(seg.data())
+                out.write(bytearray(padding))
             else:
                 if bss_start is None:
                     bss_start = seg["p_vaddr"]

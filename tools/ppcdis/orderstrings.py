@@ -17,11 +17,12 @@ if __name__ == "__main__":
                         help="String & output file encoding")
     parser.add_argument("--pool", "-p", action="store_true",
                         help="Expect '-str pool' format strings")
+    parser.add_argument("--sda", action='store_true', help="Signals strings should be in sdata2")
     args = parser.parse_args()
 
     binary = load_binary_yml(args.binary_path)
 
-    txt = order_strings(binary, args.start_addr, args.end_addr, args.pool, args.enc)
+    txt = order_strings(binary, args.start_addr, args.end_addr, args.pool, args.enc, args.sda)
 
     with open(args.out_path, 'w', encoding=args.enc) as f:
         f.write(txt)

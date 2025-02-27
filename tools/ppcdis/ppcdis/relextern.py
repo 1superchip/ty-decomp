@@ -7,9 +7,10 @@ from typing import List
 from .binarybase import SectionType
 from .binaryrel import RelReader, RelType
 from .symbols import LabelManager, LabelType
+from .analyser import AnalysisOverrideManager
 
 def label_rel_externs(dest: LabelManager, rel: RelReader):
-    for rlc in rel.relocs:
+    for rlc in rel.ordered_relocs:
         # Skip local relocs
         if rlc.target_module == rel.module_id:
             continue
@@ -31,11 +32,18 @@ def label_rel_externs(dest: LabelManager, rel: RelReader):
         else:
             dest.set_type(target, LabelType.DATA)
 
-def dump_rel_externs(path: str, rels: List[RelReader]):
+def dump_rel_externs(path: str, rels: List[RelReader], overrides_path=None):
+    # Get overrides
+    ovr = AnalysisOverrideManager(overrides_path)
+
     # Get labels
     labels = LabelManager()
     for rel in rels:
         label_rel_externs(labels, rel)
-    
+
+    # Apply overrides
+    for addr, t in ovr.get_forced_types():
+        labels.set_type(addr, t)
+
     # Output
     labels.output(path)

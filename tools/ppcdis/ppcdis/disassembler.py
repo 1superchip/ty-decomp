@@ -5,21 +5,21 @@ Disassembler for assembly code (re)generation
 from dataclasses import dataclass
 from hashlib import sha1
 import json
-from typing import Dict, List, Set, Tuple
+from typing import Dict, Set, Tuple
 
 import capstone
 from capstone.ppc import *
 
-from .analyser import Reloc, RelocType
+from .analyser import RelocType
 from .binarybase import BinaryReader, BinarySection, SectionType
 from .binarylect import LECTReader
 from .csutil import DummyInstr, sign_half, cs_disasm 
 from .instrcats import (labelledBranchInsns, conditionalBranchInsns, upperInsns, lowerInsns,
                        signExtendInsns, storeLoadInsns, renamedInsns)
 from .overrides import OverrideManager
-from .slices import Slice
+from .slices import Slice, Source
+from .relocs import RelocGetter
 from .symbols import SymbolGetter, has_bad_chars, is_mangled
-from .fileutil import load_from_pickle
 
 class DisassemblyOverrideManager(OverrideManager):
     """Disassembly category OverrideManager"""
@@ -28,93 +28,32 @@ class DisassemblyOverrideManager(OverrideManager):
         """Loads data from a disassembly overrides yaml file"""
 
         # Load categories
-        self._mfr = self._make_ranges(yml.get("manual_sdata2_ranges", []))
-        self._gmf = yml.get("global_manual_floats", False)
-        self._tc = yml.get("trim_ctors", False)
-        self._td = yml.get("trim_dtors", False)
+        self._manual_float_ranges = self._make_ranges(yml.get("manual_sdata2_ranges", []))
+        self._global_manual_floats = yml.get("global_manual_floats", False)
+        self._trim_ctors = yml.get("trim_ctors", False)
+        self._trim_dtors = yml.get("trim_dtors", False)
+        self._symbol_aligns = yml.get("symbol_aligns", {})
 
-    def is_manual_sdata2(self, addr: int):
+    def is_manual_sdata2(self, addr: int) -> bool:
         """Checks if the symbol at an address should be made relative to r2 for manual handling
         in inline assembly"""
 
-        return self._gmf or self._check_range(self._mfr, addr)
+        return self._global_manual_floats or self._check_range(self._manual_float_ranges, addr)
     
-    def should_trim_ctors(self):
+    def should_trim_ctors(self) -> bool:
         """Checks if terminating zeros should be removed from .ctors disassembly"""
 
-        return self._tc
+        return self._trim_ctors
 
-    def should_trim_dtors(self):
+    def should_trim_dtors(self) -> bool:
         """Checks if terminating zeros should be removed from .ctors disassembly"""
 
-        return self._td
-
-class RelocGetter:
-    """Class to handle relocation lookup"""
-
-    def __init__(self, binary: BinaryReader, sym: SymbolGetter, reloc_path: str):
-        # Backup binary reference
-        self._bin = binary
-
-        # Load from file
-        dat = load_from_pickle(reloc_path)
-
-        # Parse references
-        self._refs = {}
-        for addr, ref in dat["references"].items():
-            self._refs[addr] = Reloc(RelocType(ref["type"]), ref["target"], ref["offset"])
-
-        # Parse jump tables
-        self._jt_sizes = {}
-        self._jt = {}
-        for addr, jt in dat["jumptables"].items():
-            # Save size
-            self._jt_sizes[addr] = jt["size"]
-
-            # Get all jumps
-            entries = binary.read_word_array(addr, jt["size"] // 4)
-
-            # Update dicts
-            for i, target in enumerate(entries):
-                # Create reloc for jump table entry
-                self._jt[addr + i * 4] = addr
-
-                # Create target label
-                sym.notify_jt_target(target)
+        return self._trim_dtors
     
-    def get_jumptable_size(self, addr: int) -> int:
-        """Gets the size of a jumptable in bytes, or None if it's not known"""
+    def get_symbol_align(self, addr: int) -> int:
+        """Gets the alignment a symbol should have, or 0 if none"""
 
-        return self._jt_sizes.get(addr)
-
-    def get_reference_at(self, addr: int) -> Reloc:
-        """Checks the reference info from an address, if any"""
-
-        return self._refs.get(addr)
-    
-    def check_jt_at(self, addr: int) -> bool:
-        """Returns whether an address is in a jump table"""
-
-        return addr in self._jt
-    
-    def get_containing_jumptable(self, addr: int) -> int:
-        """Returns the address of the jumptable containing an address"""
-
-        return self._jt[addr]
-
-    def get_referencing_jumptables(self, start: int, end: int) -> List[int]:
-        """Gets the jumptables referencing a function"""
-
-        ret = []
-        for addr in self._jt_sizes:
-            # Get first target
-            target = self._bin.read_word(addr)
-
-            # Save if referencing this function
-            if start <= target < end:
-                ret.append(addr)
-        
-        return ret
+        return self._symbol_aligns.get(addr, 0)
 
 class ReferencedTracker:
     """Tracker for symbols referenced by a portion of assembly (for forward declarations)"""
@@ -158,17 +97,23 @@ class DisasmLine:
     def to_txt(self, sym: SymbolGetter, inline=False, hashable=False, referenced=None) -> str:
         """Gets the disassembly text for a line"""
 
-        # Add .global and symbol name if required
+        # Add symbol name if required
         prefix = []
         name = sym.get_name(self.instr.address, hashable, True)
         if name is not None:
             if sym.is_global(self.instr.address):
-                # Don't include function label in inline asm
-                if not inline:
-                    prefix.append(f"\n.global {name}\n{name}:")
+                # Globals other than mid function entries should already be labelled
+                if sym.is_mid_function_entry(self.instr.address):
+                    if inline:
+                        prefix.append(f"entry {name}")
+                        if referenced is not None:
+                            referenced.notify(self.instr.address, name)
+                    else:
+                        prefix.append(f".global {name}")
+                        prefix.append(f"{name}:")
             else:
                 prefix.append(f"{name}:")
-        
+
         # Add jumptable label if required
         # .global affects branch hints, so a new label is created for this
         # TODO: generate symbol names for this in hashable?
@@ -257,7 +202,7 @@ class Disassembler:
                 name = f"*{sign}0x{abs(delta):x}"
         
             # Add to referenced list
-            elif referenced is not None:
+            elif referenced is not None and self._sym.is_global(dest):
                 referenced.notify(dest, name)
 
         # Replace destination with label name
@@ -365,9 +310,6 @@ class Disassembler:
                 if isinstance(self._bin, LECTReader):
                     rel = "-_SDA2_BASE_" if reg == PPC_REG_R2 else "-_SDA_BASE_"
                 else:
-                    assert self._bin.addr_is_local(ref.target), f"SDA reference outside of binary " \
-                        f"at {instr.address:x} with {ref} (probably code with r2 overwritten, " \
-                        f"if so then add a blocked_pointers override for 0x{instr.address:x})"
                     rel = '@sda21'
                     reg_name = "0"
 
@@ -433,8 +375,8 @@ class Disassembler:
         instr = DummyInstr(addr, val)
         return DisasmLine(instr, ".4byte", ops).to_txt(self._sym)
 
-    def _process_unaligned_data(self, addr: int, dat: bytes, unaligned: List[int]) -> str:
-        """Takes bytes of data and converts them to text"""
+    def _process_unaligned_byte(self, addr: int, val: bytes) -> str:
+        """Takes a byte of data and converts it to text"""
 
         # If starting on a word, check this whole word isn't meant to be a pointer
         if addr & 3 == 0:
@@ -444,18 +386,87 @@ class Disassembler:
                         "data is split below word alignment")
         
         # Split into individual bytes if a non-aligned reference falls within this word
-        ret = []
-        for i in range(len(dat)):
-            instr = DummyInstr(addr + i, dat[i:i+1])
-            ret.append(DisasmLine(instr, ".byte", hex(dat[i])).to_txt(self._sym))
-            if unaligned[0] == addr + i:
-                unaligned.pop(0)
-
-        return ret
+        instr = DummyInstr(addr, val)
+        return DisasmLine(instr, ".byte", f"0x{val.hex()}").to_txt(self._sym)
 
     ###########
     # General #
     ###########
+
+    def _disasm_function(self, addr: int, inline=False, hashable=False, referenced=None) -> str:
+        """Disassembles a single function of text"""
+
+        # Get end address
+        size = self._sym.get_size(addr)
+
+        # Disassemble
+        lines = cs_disasm(addr, self._bin.read(addr, size))
+
+        # Apply fixes and relocations
+        return '\n'.join([
+            self._process_instr(lines[addr], inline, hashable, referenced)
+            for addr in lines
+        ])
+
+    def _disasm_data(self, sec: BinarySection, addr: int) -> str:
+        """Disassembles a single symbol of data"""
+
+        # Get end address
+        end = addr + self._sym.get_size(addr)
+
+        # Trim if required
+        if (
+            sec.name == ".ctors" and self._ovr.should_trim_ctors() or
+            sec.name == ".dtors" and self._ovr.should_trim_dtors()
+        ):
+            while self._bin.read_word(end - 4) == 0:
+                end -= 4
+
+        # Disassemble
+        ret = []
+        while addr < end:
+            if addr & 3 != 0 or end - addr < 4:
+                val = self._bin.read(addr, 1)
+                ret.append(self._process_unaligned_byte(addr, val))
+                addr += 1
+            else:
+                dat = self._bin.read(addr, 4)
+                ret.append(self._process_data(addr, dat))
+                addr += 4
+
+        return '\n'.join(ret)
+
+    def _disasm_symbol(self, sec: BinarySection, addr: int, inline=False, hashable=False,
+                       referenced=None) -> str:
+        """Disassembles a single symbol of assembly or data"""
+
+        # Add align if required
+        alignment = self._ovr.get_symbol_align(addr)
+        align = f".balign {alignment}\n" if alignment != 0 else ""
+
+        # Add .global and symbol name if required
+        name = self._sym.get_name(addr, hashable, True)
+        assert name is not None and self._sym.is_global(addr)
+        
+        suffix = ""
+        
+        if inline:
+            prefix = "nofralloc\n" if sec.type == SectionType.TEXT else ""
+        else:
+            if sec.name == ".ctors" or sec.name == ".dtors":
+                sym_type_dir = ""
+            else:
+                sym_type = "@function" if sec.type == SectionType.TEXT else "@object"
+                sym_type_dir = f"\n.type {name}, {sym_type}"
+                
+                suffix = f"\n.size {name}, . - {name}\n"
+                
+            prefix = f"\n.global {name}{sym_type_dir}\n{align}{name}:\n"
+        
+        if sec.type == SectionType.TEXT:
+            return prefix + self._disasm_function(addr, inline, hashable, referenced) + suffix
+        else:
+            return prefix + self._disasm_data(sec, addr) + suffix
 
     def _disasm_range(self, sec: BinarySection, start: int, end: int, inline=False,
                       hashable=False, referenced=None) -> str:
@@ -466,73 +477,20 @@ class Disassembler:
         assert sec.addr <= start < end <= sec.addr + sec.size, \
             f"Disassembly {start:x}-{end:x} crosses bounds of section {sec.name}"
 
-        if sec.type == SectionType.TEXT:
-            # Disassemble
-            lines = cs_disasm(start, self._bin.read(start, end - start), self._quiet)
-
-            # Apply fixes and relocations
-            nofralloc = "nofralloc\n" if inline else ""
-            return nofralloc + '\n'.join([
-                self._process_instr(lines[addr], inline, hashable, referenced)
-                for addr in lines
-            ])
-
-        elif sec.type in (SectionType.DATA, SectionType.BSS):
+        if sec.type in (SectionType.DATA, SectionType.BSS):
             assert not inline, "Only text can be disassembled for inline assembly"
             assert not hashable, "Only text can be disassembled for hashing"
-
-            # Trim if required
-            if (
-                sec.name == ".ctors" and self._ovr.should_trim_ctors() or
-                sec.name == ".dtors" and self._ovr.should_trim_dtors()
-            ):
-                while self._bin.read_word(end - 4) == 0:
-                    end -= 4
-
-            # Setup
-            ret = []
-            unaligned = self._sym.get_unaligned_in(start, end)
-            unaligned.append(0xffff_ffff) # Hack so that [0] can always be read
-
-            # The ppcdis slice system doesn't support unaligned slices, but other projects using
-            # the python api require it, so the disassembler has support for it.
-            # The balign of all data sections must be set to 0 if using this
-
-            # Disassemble starting unaligned data
-            if start & 3 != 0:
-                # Calculate length
-                rounded = (start + 3) & ~3
-                size = rounded - start
-
-                # Disassemble
-                dat = self._bin.read(start, size)
-                ret.extend(self._process_unaligned_data(start, dat, unaligned))
-
-                # Move to aligned start
-                start = rounded
-            
-            # Prepare end unaligned data
-            if end & 3 != 0:
-                rounded = end & ~3
-                end_size = end - rounded
-                end = rounded
-            else:
-                end_size = 0
-
-            # Disassemble aligned data
-            for p in range(start, end, 4):
-                dat = self._bin.read(p, 4)
-                if unaligned[0] < p + 4 or p + 4 > end:
-                    ret.extend(self._process_unaligned_data(p, dat, unaligned))
-                else:
-                    ret.append(self._process_data(p, dat))
-            
-            # Disassemble end unaligned data
-            if end_size > 0:
-                dat = self._bin.read(end, end_size)
-                ret.extend(self._process_unaligned_data(end, dat, unaligned))
-
-            return '\n'.join(ret)
+ 
+        addrs = self._sym.get_globals_in_range(start, end)
+ 
+        assert len(addrs) > 0 and addrs[0] == start, f"Expected symbol at {start:x}"
+        assert end == (sec.addr + sec.size) or self._sym.is_global(end, True), \
+            f"Expected symbol at {start:x}"
+ 
+        return '\n'.join(
+            self._disasm_symbol(sec, addr, inline, hashable, referenced)
+            for addr in addrs
+        )
 
     ##########
     # Slices #
@@ -543,9 +501,15 @@ class Disassembler:
 
         self._print(f"Disassemble slice {sl.start:x}-{sl.end:x}")
 
+        # TODO: only mkw should need these, add flag & assert otherwise?
+
         # DEVKITPPC r40+ can give issues with slices not starting with symbols
-        if self._sym.get_name(sl.start, miss_ok=True) is None:
-            self._sym.create_slice_label(sl.start)
+        if not self._sym.is_global(sl.start, miss_ok=True):
+            self._sym.create_slice_label(sl.start, section.type == SectionType.TEXT)
+
+        # Symbol based disassembly needs one at the end
+        if not self._sym.is_global(sl.end, miss_ok=True):
+            self._sym.create_slice_label(sl.end, section.type == SectionType.TEXT)
 
         return (
             ".include \"macros.inc\"\n\n" +
@@ -585,7 +549,7 @@ class Disassembler:
             self._sym.reset_hash_naming()
 
         # Get function bounds
-        start, end = self._sym.get_containing_function(addr)
+        start, end = self._sym.get_containing_symbol(addr)
         assert addr == start, f"Expected function at {addr:x}" 
 
         # Get section
@@ -687,9 +651,103 @@ class Disassembler:
                 + '\n'
             )
     
-    ##############
-    # Jumptables #
-    ##############
+    ###############
+    # C Functions #
+    ###############
+
+    def make_function_skeletons(self, start: int, end: int) -> str:
+        # Init output
+        ret = []
+
+        # Get functions
+        funcs = self._sym.get_globals_in_range(start, end)
+
+        for addr in funcs:
+            # Get size of function
+            size = self._sym.get_size(addr)
+
+            # Add jumptable includes before
+            for jt in self._rlc.get_referencing_jumptables(addr, addr + size):
+                ret.append(f"#include \"jumptable/{jt:x}.inc\"")
+
+            # Output function dummy
+            name = self._sym.get_name(addr)
+            ret.append(f"asm UNKNOWN_FUNCTION({name})\n{{\n    #include \"asm/{addr:x}.s\"\n}}\n")
+
+        return '\n'.join(ret)
+
+    ##########
+    # C Data #
+    ##########
+
+    def data_to_text_with_referenced(self, addr: int, width=4, const=False) -> \
+        Tuple[str, Set[Tuple[int, str]]]:
+
+        self._print(f"Disassemble data {addr:x}")
+
+        # Use jumptable function instead if needed
+        size = self._sym.get_size(addr)
+        if self._rlc.check_jt_at(addr):
+            assert addr & 3 == 0 and size == self._rlc.get_jumptable_size(addr), \
+                f"Invalid jumptable parameters"
+            
+            return self.jumptable_to_text_with_referenced(addr)
+
+        # Check alignment requirements
+        if addr & 3 != 0 or size & 3 != 0:
+            unit = 1
+            t = "u8"
+        else:
+            unit = 4
+            t = "u32"
+
+        # Add const if needed
+        if const:
+            t = f"const {t}"
+        
+        # Disassemble values
+        referenced = ReferencedTracker()
+        vals = []
+        for p in range(addr, addr+size, unit):
+            if unit == 4:
+                ref = self._rlc.get_reference_at(p)
+                if ref is not None:
+                    # Output reference if needed
+                    assert ref.t == RelocType.NORMAL, f"Bad reloc {p:x} -> {ref}"
+                    assert ref.offs == 0, f"Can't use pointer offsets in C {p:x} -> {ref}"
+                    name = self._sym.get_name(ref.target)
+                    val = f"(u32)&{name}"
+                    referenced.notify(ref.target, name)
+                else:
+                    # Output raw value otherwise
+                    val = f"{self._bin.read_word(p):#010x}"
+            else:
+                # Warn if ignoring references
+                ref = self._rlc.get_reference_at(p)
+                if ref is not None:
+                    print(f"Warning: reference to {ref.target:x} at {addr:x} ignored, "
+                            "data is split below word alignment")
+
+                val = f"{self._bin.read_byte(p):#04x}"
+
+            vals.append(val)
+
+        # Format
+        lines = []
+        for i in range(0, len(vals), width):
+            lines.append('    ' + ', '.join(vals[i:i+width]))
+        body = ',\n'.join(lines)
+        sym = self._sym.get_name(addr)
+        txt = f"{t} {sym}[] = {{\n{body}\n}};"
+
+        return txt, referenced.get_referenced()
+
+    def data_to_text(self, addr: int, width=4, const=False) -> str:
+        """Outputs a single data symbol as a C u32 array (or u8 if required)"""
+
+        txt, _ = self.data_to_text_with_referenced(addr, width, const)
+
+        return txt
 
     def output_jumptable(self, path: str, addr: int):
         """Outputs a jumptable C workaround to a file"""
@@ -697,26 +755,23 @@ class Disassembler:
         with open(path, 'w') as f:
             f.write(self.jumptable_to_text(addr))
     
-    def jumptable_to_text(self, addr: int) -> str:
-        """Outputs a jumptable C workaround to a text"""
+    def jumptable_to_text_with_referenced(self, addr: int) -> Tuple[str, Set[Tuple[int, str]]]:
+        """Outputs a jumptable C workaround and all labels it references"""
 
         self._print(f"Disassemble jumptable {addr:x}")
+
+        referenced = ReferencedTracker()
 
         # Get jumptable size and name
         size = self._rlc.get_jumptable_size(addr)
         jt_sym = self._sym.get_name(addr)
          
         # Get targets
-        targets = [
-            self._bin.read_word(i)
-            for i in range(addr, addr + size, 4)
-        ]
-
-        # Declare labels
-        decl = '\n'.join(
-            f"void jump_{target:x}();"
-            for target in targets
-        )
+        targets = []
+        for i in range(addr, addr + size, 4):
+            target = self._bin.read_word(i)
+            targets.append(target)
+            referenced.notify(target, f"jump_{target:x}")
 
         # For some reason, CW will align pointer arrays to 8 bytes if they have an even length,
         # but doesn't do this for jumptables
@@ -735,7 +790,6 @@ class Disassembler:
             extra = ""
 
         return '\n'.join((
-            decl,
             f"void (*{jt_sym}[])() = {{",
             '\n'.join(
                 f"    jump_{target:x},"
@@ -743,7 +797,64 @@ class Disassembler:
             ),
             "};",
             extra
-        ))
+        )), referenced.get_referenced()
+
+    def jumptable_to_text(self, addr: int) -> str:
+        """Outputs a jumptable C workaround"""
+
+        txt, targets = self.jumptable_to_text_with_referenced(addr)
+
+        # Declare labels
+        decl = '\n'.join(
+            f"void {name}();"
+            for target, name in targets
+        )
+
+        return '\n'.join((decl, txt))
+
+    def make_data_dummies(self, start: int, end: int, width=8, const=False) -> str:
+        # Init output
+        ret = []
+
+        # Get symbols
+        funcs = self._sym.get_globals_in_range(start, end)
+
+        # Output data dummies
+        for addr in funcs:
+            ret.append(self.data_to_text(addr, width, const))
+
+        return '\n'.join(ret)
+    
+    def output_data_dummies(self, path: str, start: int, end: int, width=8):
+        with open(path, 'w') as f:
+            f.write(self.make_data_dummies(start, end, width))
+
+    
+    #########################
+    # Source File Skeletons # 
+    #########################
+
+    def output_skeleton(self, path: str, src: Source, include_data=False, width=8):
+        # Initialise output
+        text_out = []
+        data_out = []
+
+        # Add sections
+        for sec_name, sl in src.slices.items():
+            # Get section
+            sec = self._bin.get_section_by_name(sec_name)
+
+            # Check type
+            if sec.type == SectionType.TEXT:
+                text_out.append(self.make_function_skeletons(sl.start, sl.end))
+            elif include_data:
+                data_out.append(f"// {sec_name}")
+                # TODO: make this a BinarySection property or something
+                const = sec_name in (".rodata", ".sdata2", ".sbss2")
+                data_out.append(self.make_data_dummies(sl.start, sl.end, width, const))
+
+        with open(path, 'w') as f:
+            f.write('\n\n'.join(data_out + text_out))
 
     ###########
     # Hashing #
@@ -767,7 +878,7 @@ class Disassembler:
         else:
             end = section.addr + section.size
         
-        funcs = self._sym.get_functions_in_range(section.addr, end)
+        funcs = self._sym.get_globals_in_range(section.addr, end)
 
         if not no_addrs:
             return json.dumps(

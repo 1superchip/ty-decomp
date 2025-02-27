@@ -29,7 +29,7 @@ def align_to(offs: int, align: int) -> Tuple[int, int]:
 class RelLinker:
     def __init__(self, dol_path: str, plf_path: str, module_id: int, ext_rels=None,
                  num_sections=None, name_offset=0, name_size=0, base_rel_path=None,
-                 ignore_missing=False, ignore_sections=[]):
+                 ignore_missing=False, ignore_sections=[], version=3):
         self._f = open(plf_path, 'rb')
         self.plf = ELFFile(self._f)
         self.module_id = module_id
@@ -37,6 +37,7 @@ class RelLinker:
         self.rel_symbols = self._map_rel_symbols(ext_rels)
         self.symbols, self.duplicates, self.symbols_id = Symbol.map_symbols(self._f, self.plf)
         self._symdefs = self._map_rel_symdefs(base_rel_path)
+        self._version = version
 
         if num_sections is None:
             num_sections = self.plf.num_sections()
@@ -285,10 +286,13 @@ class RelLinker:
                 out.seek(prev)
 
             # Write dummy header + fill known parts
-            # TODO: v1/2 support?
             header_size = 0x4c
+            if self._version < 3:
+                header_size -= 4
+            if self._version < 2:
+                header_size -= 8
             out.write(bytearray(header_size))
-            write_at(RelOffs.VERSION_OFFSET, 4, 3)
+            write_at(RelOffs.VERSION_OFFSET, 4, self._version)
             write_at(RelOffs.MODULE_ID, 4, self.module_id)
             write_at(RelOffs.NUM_SECTIONS, 4, self.num_sections)
             prolog = self._get_symbol_by_name("_prolog")
@@ -385,7 +389,7 @@ class RelLinker:
             # Write section contents
             out.write(section_contents)
 
-            # Write dummy imps
+            # Sort modules
             base = max(rel_bins.keys())
             def module_key(module):
                 # Put self second last
@@ -396,28 +400,39 @@ class RelLinker:
                     return base + 2
                 # Put others in order of module id
                 return module
-            modules = sorted(rel_bins.keys(), key=module_key)
-            imp_offset = out.tell()
+            modules = sorted(rel_bins.keys(), key=module_key if self._version >= 3 else None)
             imp_size = RelSize.IMP_ENTRY * len(modules)
+
+            # Handle v3 changes
+            if self._version >= 3:
+                # v3 places imp here
+                imp_offset = out.tell()
+                out.write(bytes(imp_size))
+
+                # Write fixSize
+                fix_size = out.tell()
+                for module, dat in rel_bins.items():
+                    if module in (0, self.module_id):
+                        continue
+                    fix_size += len(dat)
+                write_at(RelOffs.FIX_SIZE, 4, fix_size)
+
+            # Write relocations
+            write_at(RelOffs.REL_OFFSET, 4, out.tell())
+            imps = []
+            for module in modules:
+                imps.append((module, out.tell()))
+                out.write(rel_bins[module])
+
+            # Older versions place imp here
+            if self._version < 3:
+                imp_offset = out.tell()
+                out.write(bytes(imp_size))
+
+            # Write imps
             write_at(RelOffs.IMP_OFFSET, 4, imp_offset)
             write_at(RelOffs.IMP_SIZE, 4, imp_size)
-            out.write(bytes(imp_size))
-
-            # Write fixSize
-            fix_size = out.tell()
-            for module, dat in rel_bins.items():
-                if module in (0, self.module_id):
-                    continue
-                fix_size += len(dat)
-            write_at(RelOffs.FIX_SIZE, 4, fix_size)
-
-            # Write imps and relocations
-            write_at(RelOffs.REL_OFFSET, 4, out.tell())
-            for module in modules:
-                # Write imp
-                write_at(imp_offset, 4, module)
-                write_at(imp_offset + 4, 4, out.tell())
+            for imp in imps:
+                write_at(imp_offset, 4, imp[0])
+                write_at(imp_offset + 4, 4, imp[1])
                 imp_offset += RelSize.IMP_ENTRY
-
-                # Write relocations
-                out.write(rel_bins[module])

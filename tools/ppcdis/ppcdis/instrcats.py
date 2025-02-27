@@ -536,9 +536,3 @@ lastGprWriteInsns = {
     PPC_INS_LFDU,
     PPC_INS_LFDUX
 }
-
-"""Instructions that overwrite multiple gprs from an operand"""
-manyGprWriteInsns = {
-    PPC_INS_LMW,
-    PPC_INS_LSWI
-}

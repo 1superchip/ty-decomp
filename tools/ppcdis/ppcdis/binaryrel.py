@@ -89,18 +89,13 @@ class RelBinarySection(BinarySection):
 default_section_defs = load_from_yaml_str("""
 text:
   - name: .text
-
 data:
   - name: .ctors
     balign: 0
-
   - name: .dtors
     balign: 0
-
   - name: .rodata
-
   - name: .data
-
 bss:
   - name: .bss
 """)
@@ -140,8 +135,8 @@ class RelReader(BinaryReader):
         """Reads the relocation data into _relocs"""
 
         # Init dict and list
-        self._relocs: Dict[int, RelReloc] = {} # Internal map by target address
-        self.relocs: List[RelReloc] = [] # Public list in original order
+        self.addr_relocs: Dict[int, RelReloc] = {} # Map by target address
+        self.ordered_relocs: List[RelReloc] = [] # List in original order
 
         # Iterate over all imps
         imp_offs = self.read_word(RelOffs.IMP_OFFSET, True)
@@ -167,7 +162,7 @@ class RelReader(BinaryReader):
                 except ValueError:
                     assert 0, f"Unsupported relocation type {self.read_byte(rel_offs + 2, True)}"
 
-                self.relocs.append(rel)
+                self.ordered_relocs.append(rel)
 
                 # Apply offset
                 write_offs += rel.offset
@@ -183,7 +178,7 @@ class RelReader(BinaryReader):
                 elif rel.t != RelType.RVL_NONE:
                     # Save reloc for later
                     write_addr = write_sec.addr + write_offs
-                    self._relocs[write_addr] = rel
+                    self.addr_relocs[write_addr] = rel
                     rel.write_addr = write_addr
                 
                 # Move to next relocc
@@ -204,9 +199,9 @@ class RelReader(BinaryReader):
         ret = bytearray()
         while i < len(dat):
             # Apply relocation if found
-            if addr + i in self._relocs:
+            if addr + i in self.addr_relocs:
                 # Get reloc
-                rel = self._relocs[addr + i]
+                rel = self.addr_relocs[addr + i]
 
                 target = self.get_reloc_target(rel)
 
@@ -382,3 +377,11 @@ class RelReader(BinaryReader):
         assert rel.module_id not in self._rels, f"Duplicate module id {rel.module_id}"
         self._rels[rel.module_id] = rel
         self._externs.append(rel)
+
+    def validate_reloc(self, addr: int, target: int, local_only=False) -> bool:
+        """Override to only accept relocations if they're listed in the rel"""
+
+        return (
+            super().validate_reloc(addr, target, local_only) and
+            (addr in self.addr_relocs or addr + 2 in self.addr_relocs)
+        )

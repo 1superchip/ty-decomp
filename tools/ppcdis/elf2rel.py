@@ -15,6 +15,8 @@ if __name__ == "__main__":
                         help="External REL ELFs to link to, format is a list of module id, path")
     parser.add_argument("-o", "--out", type=str, help="REL output path")
     parser.add_argument("-m", "--module-id", type=int, default=1, help="Output module ID")
+    parser.add_argument("-v", "--version", type=int, choices=[1, 2, 3], default=3,
+                        help="Output REL format version")
     parser.add_argument("-n", "--num-sections", type=int, help="Forced number of sections")
     parser.add_argument("--name-offset", type=hex_int, default=0, help="Forced name offset")
     parser.add_argument("--name-size", type=hex_int, default=0, help="Forced name size")
@@ -42,5 +44,6 @@ if __name__ == "__main__":
     num_sections = args.num_sections
 
     linker = RelLinker(dol_path, in_path, module_id, args.ext_rels, num_sections,
-                       args.name_offset, args.name_size, args.base_rel, args.ignore_missing, args.ignore_sections)
+                       args.name_offset, args.name_size, args.base_rel, args.ignore_missing,
+                       args.ignore_sections, args.version)
     linker.link_rel(out_path)

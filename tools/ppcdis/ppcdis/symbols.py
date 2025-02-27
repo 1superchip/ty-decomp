@@ -15,6 +15,9 @@ class LabelType:
     LABEL = "LABEL"
     DATA = "DATA"
     JUMPTABLE = "JUMPTABLE"
+    ENTRY = "ENTRY"
+
+UNSIZED_TYPES = (LabelType.LABEL, LabelType.ENTRY)
 
 LABELS_PICKLE_VERSION = 2
 
@@ -48,6 +51,11 @@ class LabelManager:
         
         Creates the label if it doesn't exist"""
 
+        # Add to size addrs if needed
+        if self._size_addrs is not None and addr not in self._labels:
+            idx = bisect_left(self._size_addrs, addr)
+            self._size_addrs.insert(idx, addr)
+
         self._labels[addr] = t
 
     def get_type(self, addr: int) -> str:
@@ -75,7 +83,7 @@ class LabelManager:
         # Sort addresses for size calculation
         self._size_addrs = sorted([
             addr for addr, t in self._labels.items()
-            if t != LabelType.LABEL
+            if t not in UNSIZED_TYPES
         ])
 
         # Add section ends
@@ -91,7 +99,7 @@ class LabelManager:
         if self._size_addrs is None:
             self._calc_sizes()
 
-        assert self._labels[addr] != LabelType.LABEL, f"Tried to get size of label {addr:x}"
+        assert self._labels[addr] not in UNSIZED_TYPES, f"Tried to get size of label {addr:x}"
         return self._size_addrs[bisect_right(self._size_addrs, addr)] - addr
 
     def get_sizes(self) -> Dict[int, int]:
@@ -103,7 +111,7 @@ class LabelManager:
         return {
             addr : self._size_addrs[bisect_right(self._size_addrs, addr)] - addr
             for addr, t in self._labels.items()
-            if t != LabelType.LABEL
+            if t not in UNSIZED_TYPES
         }
 
 @dataclass
@@ -140,6 +148,8 @@ class SymbolGetter:
         self._bin = binary
 
         self._sym: Dict[int, Symbol] = {}
+        self._bound_addrs = []
+        self._mid_function_entries = set()
 
         # Load user symbols
         # TODO: rel offsets?
@@ -154,32 +164,31 @@ class SymbolGetter:
                 symbols[key] = name_filt(val)
 
         # Add labels from analysis
-        labels = LabelManager(labels_path)
-        self._f = []
+        self._lab = LabelManager(labels_path, binary)
         named_labels = []
-        for addr, t in labels.get_types():
-            if t == LabelType.FUNCTION:
+        for addr, t in self._lab.get_types():
+            if t in (LabelType.FUNCTION, LabelType.ENTRY):
                 name = symbols.get(addr, f"{binary.func_prefix}{addr:x}")
-                self._sym[addr] = Symbol(name, True)
-                self._f.append(addr)
+                if t == LabelType.ENTRY:
+                    self._mid_function_entries.add(addr)
+                self._add_sym(addr, name, True, t == LabelType.FUNCTION)
             elif t == LabelType.LABEL:
                 # Labels shouldn't be named, suggests analysis missed function
                 if addr in symbols:
                     named_labels.append(f"  0x{addr:x}: FUNCTION # {symbols[addr]}")
-                self._sym[addr] = Symbol(f"{binary.label_prefix}{addr:x}", False)
+                self._add_sym(addr, f"{binary.label_prefix}{addr:x}", False, False)
             elif t == LabelType.DATA:
                 name = symbols.get(addr, f"{binary.data_prefix}{addr:x}")
-                self._sym[addr] = Symbol(name, True)
+                self._add_sym(addr, name, True, True)
             elif t == LabelType.JUMPTABLE:
                 # Jumptables shouldn't be named
                 assert addr not in symbols, (
                     f"Tried to rename jumptable {addr:x} ({symbols[addr]}). "
                     "If this isn't a jumptable, please report this"
                 )
-                self._sym[addr] = Symbol(f"jtbl_{addr:x}", True)
+                self._add_sym(addr, f"jtbl_{addr:x}", True, True)
             else:
                 assert 0, f"{addr:x} has invalid type {t}"
-        self._f.sort()
 
         assert len(named_labels) == 0, (
             f"Tried to name some symbols that were detected as labels. You may want to add these "
@@ -189,10 +198,24 @@ class SymbolGetter:
 
         # Add entry points
         for addr, name in binary.get_entries():
-            self._sym[addr] = Symbol(name, True)
+            self._add_sym(addr, name, True, True)
 
         # Init jumptable target labels
         self._jt_targets = set()
+    
+    def _add_sym(self, addr: int, name: str, global_scope: bool, bounded: bool):
+        """Adds a symbol at an address"""
+
+        self._sym[addr] = Symbol(name, global_scope)
+
+        # Add to bound list
+        if bounded:
+            # Get position
+            idx = bisect_left(self._bound_addrs, addr)
+
+            # Add if not already in position
+            if idx == len(self._bound_addrs) or self._bound_addrs[idx] != addr:
+                self._bound_addrs.insert(idx, addr)
 
     def get_name(self, addr: int, hash_mode=False, miss_ok=False) -> str:
         """Checks the name of the symbol at an address
@@ -211,14 +234,26 @@ class SymbolGetter:
         else:
             return None
 
-    def is_global(self, addr: int) -> bool:
+    def is_global(self, addr: int, miss_ok=False) -> bool:
         """Checks whether the symbol at an address is global
         
-        Asserts the symbol exists"""
+        Asserts the symbol exists unless miss_ok"""
 
-        assert addr in self._sym, f"Address {addr:x} missed in analysis"
+        assert miss_ok or addr in self._sym, f"Address {addr:x} missed in analysis"
 
-        return self._sym[addr].global_scope
+        sym = self._sym.get(addr)
+
+        if sym is not None:
+            return sym.global_scope
+        else:
+            return False
+    
+    def get_size(self, addr: int) -> int:
+        """Gets the size of the symbol at an address
+
+        Must be a function or data"""
+        
+        return self._lab.get_size(addr)
 
     def get_unaligned_in(self, start: int, end: int) -> List[int]:
         """Returns all unaligned addresses in a range in order"""
@@ -238,32 +273,36 @@ class SymbolGetter:
 
         return addr in self._jt_targets
     
-    def get_containing_function(self, instr_addr: int) -> Tuple[int, int]:
+    def get_containing_symbol(self, instr_addr: int) -> Tuple[int, int]:
         """Returns the start and end addresses of the function containing an address"""
 
         sec = self._bin.find_section_containing(instr_addr)
-        return get_containing_function(self._f, instr_addr, sec)
+        return get_containing_symbol(self._bound_addrs, instr_addr, sec)
     
-    def get_functions_in_range(self, start: int, end: int) -> List[int]:
-        """Returns the start addresses of the functions in a range"""
+    def get_globals_in_range(self, start: int, end: int) -> List[int]:
+        """Returns the start addresses of the functions/data in a range (no labels or mid-function
+        entries)"""
 
-        # Find first function after start
-        idx = bisect_left(self._f, start)
-        assert idx != len(self._f) and self._f[idx] == start, f"Function was expected at {start:x}"
+        # Find first symbol after start
+        idx = bisect_left(self._bound_addrs, start)
 
         # Add functions until end is reached
         # TODO: bisect + slice?
         ret = []
-        while idx < len(self._f) and self._f[idx] < end:
-            ret.append(self._f[idx])
+        while idx < len(self._bound_addrs) and self._bound_addrs[idx] < end:
+            ret.append(self._bound_addrs[idx])
             idx += 1
 
         return ret
     
-    def create_slice_label(self, addr: int):
+    def create_slice_label(self, addr: int, is_text: bool):
         """Creates a dummy symbol for the start of a slice"""
 
-        self._sym[addr] = Symbol(f"slicedummy_{addr:x}", True)
+        # Create symbol
+        self._add_sym(addr, f"slicedummy_{addr:x}", True, True)
+
+        # Create internal label
+        self._lab.set_type(addr, LabelType.FUNCTION if is_text else LabelType.DATA)
     
     def reset_hash_naming(self):
         self._hash_names = {}
@@ -273,8 +312,13 @@ class SymbolGetter:
             self._hash_names[addr] = f"s_{len(self._hash_names)}"
 
         return self._hash_names[addr]
+    
+    def is_mid_function_entry(self, addr: int):
+        """Checks if an address is a mid-function entrypoint (in handwritten asm)"""
 
-def get_containing_function(functions: List[int], instr_addr: int, sec: BinarySection
+        return addr in self._mid_function_entries
+
+def get_containing_symbol(functions: List[int], instr_addr: int, sec: BinarySection
                            ) -> Tuple[int, int]:
     """Returns the start and end addresses of the function containing an address from a list"""
 

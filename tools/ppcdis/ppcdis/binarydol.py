@@ -10,35 +10,23 @@ from .fileutil import load_from_yaml_str
 default_section_defs = load_from_yaml_str("""
 text:
   - name: .init
-
   - name: .text
-
 data:
   - name: extab_
     attr: a
-
   - name: extabindex_
     attr: a
-
   - name: .ctors
     balign: 0
-
   - name: .dtors
     balign: 0
-
   - name: .rodata
-
   - name: .data
-
   - name: .sdata
-
   - name: .sdata2
-
 bss:
   - name: .bss
-
   - name: .sbss
-
   - name: .sbss2
 """)
 
@@ -111,29 +99,74 @@ class DolReader(BinaryReader):
         bss_size = self.read_word(OFFS_BSS_SIZE, True)
         bss_end = bss_start + bss_size
 
-        # Add unlisted bss sections
+        # Add unlisted bss sections where size can be inferred from cutting
         bss_n = 0
         sections_with_bss = []
         for section in sections:
             # Section cutting bss range into sub-section
-            if bss_start < section.addr <= bss_end:
+            if bss_start < section.addr and bss_n < len(bss_defs):
                 sdef = bss_defs[bss_n]
+
+                # TODO: support back to back bss in between sections
+                assert sdef.bss_forced_size is None, "Error: bss_forced_size is only " \
+                    "supported for sections after data currently."
+
+                # Align start
+                if sdef.bss_start_align is not None:
+                    mask = sdef.bss_start_align - 1
+                    bss_start = (bss_start + mask) & ~mask
+                
+                # Handle early end
+                end = min(section.addr, bss_end)
+
                 sections_with_bss.append(
                     BinarySection(sdef.name, SectionType.BSS, 0, bss_start,
-                                  section.addr - bss_start, sdef.attr, sdef.nobits, sdef.balign)
+                                  end - bss_start, sdef.attr, sdef.nobits, sdef.balign)
                 )
+
                 bss_n += 1
-                bss_start = section.addr + section.size
+                if end == bss_end:
+                    bss_start = end
+                else:
+                    bss_start = section.addr + section.size
+
             # Back-to-back sections cutting bss range into 1 sub-section
             elif bss_start == section.addr:
                 bss_start = section.addr + section.size
+
             sections_with_bss.append(section)
-        if bss_start < bss_end:
+
+        # Add remaining definitions
+        for bss_n in range(bss_n, len(bss_defs)):
             sdef = bss_defs[bss_n]
+
+            assert bss_start < bss_end, f"Reached end of bss with only {bss_n} sections, expected {len(bss_defs)}. " \
+                "You may want to remove some sections with section_defs. (Most common cause is .sbss2 not existing)"
+
+            # Align start
+            if sdef.bss_start_align is not None:
+                mask = sdef.bss_start_align - 1
+                bss_start = (bss_start + mask) & ~mask
+
+            # Get size
+            size = sdef.bss_forced_size
+            if size is None:
+                if bss_n + 1 == len(bss_defs):
+                    size = bss_end - bss_start
+                else:
+                    assert False, f"Unknown size for {sdef.name}, either remove the section " \
+                        "or set bss_forced_size"
+
             sections_with_bss.append(
-                BinarySection(sdef.name, SectionType.BSS, 0, bss_start, bss_end - bss_start,
+                BinarySection(sdef.name, SectionType.BSS, 0, bss_start, size,
                               sdef.attr, sdef.nobits, sdef.balign)
             )
+            bss_start += size
+
+        assert bss_start >= bss_end, f"BSS end not reached, only found up to {bss_start:x} but " \
+            f"expected {bss_end:x}"
+        assert bss_start <= bss_end, f"BSS end exceeded, found up to {bss_start:x} but " \
+            f"expected {bss_end:x}"
 
         return sections_with_bss
 

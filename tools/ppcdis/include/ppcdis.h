@@ -85,8 +85,6 @@ typedef struct
 
 #define qr0 0
 
-void __cvt_fp2unsigned(void);
-
 void _savegpr_14(void);
 void _savegpr_15(void);
 void _savegpr_16(void);
@@ -157,6 +155,9 @@ void __cvt_sll_flt(void);
 void __cvt_ull_flt(void);
 void __cvt_dbl_usll(void);
 void __cvt_dbl_ull(void);
+void __cvt_fp2unsigned(void);
+
+void __unexpected(void);
 
 #ifdef __cplusplus
     }
