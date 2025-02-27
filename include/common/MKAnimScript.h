@@ -104,6 +104,7 @@ struct MKAnimScript {
         unk1E = 0;
         unk1C = 0;
     }
+    
     void Reset(void) {
         nextAnim = NULL;
         currAnim = NULL;

@@ -633,7 +633,7 @@ void Gem::Spawning(void) {
         SetState((GemState)2);
     } else {
         mParticle.pos.InterpolateLinear(&pos, &unk94, mLerpTime);
-        mParticle.pos.y += unk84[1] * (1.0f - SqrXMinHalf(mLerpTime) * 4.0f);
+        mParticle.pos.y += unk84[1] * SmoothCenteredCurve(mLerpTime);
         mLerpTime += unk84[0];
     }
 }

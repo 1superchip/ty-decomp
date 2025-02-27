@@ -1,3 +1,6 @@
+#ifndef SCRIPT_H
+#define SCRIPT_H
+
 #include "ty/GameObject.h"
 #include "ty/Messages.h"
 
@@ -39,3 +42,5 @@ struct ConditionalScriptProp : ScriptProp {
 #define Conditon_HasBothRangs 1
 #define Conditon_GameComplete 9
 #define Conditon_DefaultTrue  16
+
+#endif // SCRIPT_H

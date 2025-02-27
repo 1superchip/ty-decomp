@@ -6,8 +6,8 @@
 
 struct Rotation {
     float unk0;
-    float unk4;
-    float unk8;
+    float unk4; // yaw?
+    float unk8; // roll?
     float unkC;
     float unk10;
 
@@ -16,10 +16,55 @@ struct Rotation {
         v.Set(unkC, 0.0f, unk10);
         return &v;
     }
+
     Vector* GetRotVector(void) {
         static Vector v;
         v.Set(unk0, unk4, unk8);
         return &v;
+    }
+
+    float GetUnk0(void) {
+        return unk0;
+    }
+
+    float GetUnk4(void) {
+        return unk4;
+    }
+
+    float GetUnk8(void) {
+        return unk8;
+    }
+
+    float GetUnkC(void) {
+        return unkC;
+    }
+
+    float GetUnk10(void) {
+        return unk10;
+    }
+
+    void UnknownInline(float f1) {
+        // unk4 = NormaliseAngle(f1)
+        // unkC = _table_cosf(unk4 - PI/2)
+        // unk10 = _table_sinf(unk4 - PI/2)
+    }
+
+    void SetUnk0(float val) {
+        unk0 = val;
+    }
+
+    void SetUnk8(float val) {
+        unk8 = val;
+    }
+
+    void SetRotByVec(Vector* pRot) {
+        SetUnk0(pRot->x);
+        UnknownInline(pRot->y);
+        SetUnk8(pRot->z);
+    }
+
+    void IncreaseUnk4(float val) {
+        UnknownInline(unk4 + val);
     }
 };
 
@@ -51,8 +96,18 @@ struct TyContext {
     FloorInfo floor;
     CollisionResult results[4];
     int resultIndex;
+
+    void Reset(void) {
+
+    }
+
+    float GetYDistanceToWater(Vector* p) {
+        return water.pos.y - p->y;
+    }
 };
 
+// Ty inherits Hero
+// Should be defined in Ty.h
 // struct Ty : GameObject {
 //     void* pReflectionModel;
 //     Vector position;

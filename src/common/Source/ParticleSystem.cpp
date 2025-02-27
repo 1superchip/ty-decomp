@@ -286,19 +286,20 @@ void ParticleSystem::Update(void) {
 
 void ParticleSystem::Draw(void) {
     unk75 = true;
-    bool r30 = false;
+    bool bAnyVisible = false;
     
     for (int i = 0; i < mNumDyn; i++) {
         if (IsVisible(&pDynamicData[i])) {
-            r30 = true;
+            bAnyVisible = true;
         }
     }
 
-    if (r30) {
+    if (bAnyVisible) {
         if (!mpType->unk30) {
             mpType->unk30 = true;
             mpType->mpMat->Use();
         }
+
         DrawCPU();
     }
     

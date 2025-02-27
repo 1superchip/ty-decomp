@@ -38,8 +38,8 @@ inline T GetSign(T x) {
     return 1.0;
 }
 
-inline float SqrXMinHalf(float x) {
-	return Sqr<float>(x - 0.5f);
+inline float SmoothCenteredCurve(float x) {
+	return 1.0f - Sqr<float>(x - 0.5f) * 4.0f;
 }
 
 int RandomIR(int* pSeed, int min, int max); // returns a ranged random number

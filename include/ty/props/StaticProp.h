@@ -79,6 +79,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
         autoRotate.SetZero();
         rotateSubObj[0] = '\0';
     }
+    
     virtual void Load(KromeIni* pIni) {
         StaticPropDescriptor::Load(pIni);
         KromeIniLine* pLine = pIni->GotoLine(modelName, NULL);
