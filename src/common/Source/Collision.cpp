@@ -209,13 +209,17 @@ void GetVertexColorFromPoly(Vector* vec1, Vector* vec2, Item* pItem) {
     Vector color0;
     Vector color1;
     Vector color2;
-    u8* colors = (u8*)pItem->collisionThing->verts[0].color;
-    ConvertRGBA(&color0, colors);
-    ConvertRGBA(&color1, colors += 0x10);
-    ConvertRGBA(&color2, colors += 0x10);
-    InterpolateVertexColor(vec2, vec1, (Vector*)pItem->collisionThing->verts[0].pos, &color0, 
-            (Vector*)pItem->collisionThing->verts[1].pos,
-            &color1, (Vector*)pItem->collisionThing->verts[2].pos, &color2);
+
+    ConvertRGBA(&color0, pItem->collisionThing->verts[0].color);
+    ConvertRGBA(&color1, pItem->collisionThing->verts[1].color);
+    ConvertRGBA(&color2, pItem->collisionThing->verts[2].color);
+
+    InterpolateVertexColor(
+        vec2, vec1, 
+        (Vector*)pItem->collisionThing->verts[0].pos, &color0, 
+        (Vector*)pItem->collisionThing->verts[1].pos, &color1, 
+        (Vector*)pItem->collisionThing->verts[2].pos, &color2
+    );
 }
 
 // pA and pB are line endpoints
@@ -323,6 +327,7 @@ static bool PointInPoly(Vector* pVec, Vector* pVec1, Vector* pVec2, int* indices
             return false;
         }
     }
+    
     return !CheckPoint(pVec, pVec1, &pVec2[indices[nmbrOfVertices - 1]], &pVec2[indices[0]]);
 }
 
@@ -504,15 +509,18 @@ void Collision_DeinitModule(void) {}
 
 static void StoreSphereResult(Item* pItem, Vector* pVec, CollisionResult* pResult, float arg4) {
     lastCollision.pos = *(Vector*)&pItem->collisionThing->verts[0].pos;
+
     lastCollision.normal = pItem->collisionThing->normal;
     if (arg4 < 0.0f) {
         lastCollision.normal.Scale(-1.0f);
     }
+
     GetVertexColorFromPoly(&lastCollision.color, &lastCollision.pos, pItem);
     lastCollision.collisionFlags = pItem->pTriangle->flags;
     lastCollision.itemIdx = pItem->pTriangle->subObjectIdx;
     lastCollision.pModel = NULL;
     lastCollision.pInfo = pItem->pTriangle->pCollisionInfo;
+
     if (pResult != NULL) {
         *pResult = lastCollision;
     }

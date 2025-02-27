@@ -103,10 +103,12 @@ void Flame_CustomUpdate(ParticleSystem* pSys) {
     float f30 = pSys->age - pSys->mpType->unk1C;
     float f28 = pSys->mpType->unk48;
     float f29 = pSys->mpType->unk64;
+
     if (!pSys->mpType->InfiniteParticles()) {
         pSys->DestroyAllParticlesCreatedBefore(f30);
     }
-    ParticleChunk* pCurrChunk = pSys->mpChunks;
+    
+    ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
         Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
         do {
@@ -139,6 +141,7 @@ void Flame_CustomUpdate(ParticleSystem* pSys) {
             
             pParticle++;
         } while (pParticle < &pCurrChunk->mChunkData[24]);
-        pCurrChunk = pCurrChunk->mpNext;
+
+        pCurrChunk = pCurrChunk->GetNext();
     }
 }

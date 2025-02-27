@@ -55,13 +55,16 @@ void BaseParticleSystemType::SetDistances(float f1, float f2, float f3) {
 
 ParticleSystem* ParticleSystem::Create(ParticleSystemType* _pType, Vector* _pPos,
         BoundingVolume* pVolume, float volumeScale, int numDyn, ParticleSystemManager* pManager) {
+    
     if (pManager == NULL) {
         pManager = &defaultParticleManager;
     }
+
     ParticleSystem* pSys = pManager->CreateParticleSystem(_pType);
     if (pSys) {
         pSys->Init(_pType, _pPos, pVolume, volumeScale, numDyn);
     }
+
     return pSys;
 }
 
@@ -226,6 +229,7 @@ void ParticleSystem::DestroyAll(void) {
         pSystemManager->FreeParticleChunk(pCurrChunk);
         pCurrChunk = pCurrChunk->mpNext;
     }
+
     mpChunks = NULL;
     numLiveParticles = 0;
     numParticleChunks = 0;
@@ -435,6 +439,7 @@ inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, 
             b = pChunk->mChunkData[i].mColor.z * 255.0f;
             a = alpha * 255.0f;
         }
+        
         GXPosition3f32(pos.x + f23, pos.y + f22, pos.z + f21);
         GXColor4u8(r, g, b, a);
         GXTexCoord2f32(f29, f28);
@@ -564,7 +569,7 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
         pSys->DestroyAllParticlesCreatedBefore(f30);
     }
 
-    ParticleChunk* pCurrChunk = pSys->mpChunks;
+    ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
         Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
         do {
@@ -616,7 +621,8 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
             pParticle->unk4C = _table_cosf(pParticle->mAngle);
             pParticle++;
         } while (pParticle < &pCurrChunk->mChunkData[24]);
-        pCurrChunk = pCurrChunk->mpNext;
+
+        pCurrChunk = pCurrChunk->GetNext();
     }
 }
 
@@ -645,6 +651,7 @@ void SimpleParticleSystemType::CalculateEnvelope(void) {
     for (int i = 0; i < mNumEnvelopes; i++) {
         mpEnvelopes[i].unkC = mpEnvelopes[i].age * unk1C;
     }
+
     int max = mNumEnvelopes - 1;
     for (int i = 0; i < max; i++) {
         int nextEnvIndex = i + 1;
@@ -652,21 +659,25 @@ void SimpleParticleSystemType::CalculateEnvelope(void) {
         mpEnvelopes[i].unk14 = mpEnvelopes[nextEnvIndex].unk4 - mpEnvelopes[i].unk4;
         mpEnvelopes[i].unk18 = mpEnvelopes[nextEnvIndex].unk8 - mpEnvelopes[i].unk8;
     }
+
     mpEnvelopes[max].deltaAge = 0.0f;
     mpEnvelopes[max].unk14 = 0.0f;
     mpEnvelopes[max].unk18 = 0.0f;
 }
 
 void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
+
     float f31 = gDisplay.frameTime;
     float f30 = pSys->age - pSys->mpType->unk1C;
     float f29 = f31 * pSys->mpType->unk44;
     float f28 = f31 * pSys->mpType->unk48;
     float f27 = f31 * pSys->mpType->unk4C;
+
     if (!pSys->mpType->InfiniteParticles()) {
         pSys->DestroyAllParticlesCreatedBefore(f30);
     }
-    ParticleChunk* pCurrChunk = pSys->mpChunks;
+
+    ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
         Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
         do {
@@ -697,7 +708,8 @@ void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
             
             pParticle++;
         } while (pParticle < &pCurrChunk->mChunkData[24]);
-        pCurrChunk = pCurrChunk->mpNext;
+        
+        pCurrChunk = pCurrChunk->GetNext();
     }
 }
 

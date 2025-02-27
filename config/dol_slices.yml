@@ -281,7 +281,7 @@ ty/source/effects/Flame.cpp:
 #   .sbss: [0x803f9d60, 0x803f9d68]
 #   .sdata2: [0x803fbf98, 0x803fbfb0]
 
-#ty/source/effects/RainbowEffect.cpp:
+# ty/source/effects/RainbowEffect.cpp:
 #   .text: [0x8003b208, 0x8003bda8]
 #   .rodata: [0x8023cfe0, 0x8023d060]
 #   .data: [0x802439e0, 0x80243a80]

@@ -25,7 +25,7 @@ void Pollen_Update(ParticleSystem* pSys) {
         pSys->DestroyAllParticlesCreatedBefore(f30);
     }
 
-    ParticleChunk* pCurrChunk = pSys->mpChunks;
+    ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
         Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
         do {
@@ -45,7 +45,8 @@ void Pollen_Update(ParticleSystem* pSys) {
             
             pParticle++;
         } while (pParticle < &pCurrChunk->mChunkData[24]);
-        pCurrChunk = pCurrChunk->mpNext;
+        
+        pCurrChunk = pCurrChunk->GetNext();
     }
 }
 

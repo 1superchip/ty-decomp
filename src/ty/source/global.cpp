@@ -156,6 +156,7 @@ void GameSubStateFSM::Deinit(void) {
     if (bInitialised) {
         CallStateDeinit();
     }
+    
     bInitialised = false;
 }
 

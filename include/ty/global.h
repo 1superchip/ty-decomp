@@ -1,7 +1,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-
 #include "common/Input.h"
 #include "common/Material.h"
 #include "ty/GameData.h"
@@ -64,6 +63,7 @@ struct GameSubStateFSM {
                 (this->*pStates[mCurrState].Deinit)();
             }
         }
+        
         mCurrState = GSS_NONE;
     }
 

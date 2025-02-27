@@ -48,12 +48,14 @@ static int EntryCompare(void* pEntry0, void* pEntry1) {
 void RkvTOC::Init(char* pName) {
     strcpy(name, pName);
     int fileLength = File_Length(pName);
+    
     int fd;
     if (fileLength != 0) {
         fd = File_Open(pName, 0);
     } else {
         fd = -1;
     }
+
     rkvFd = fd;
     unk54 = -1;
     unk58 = false;

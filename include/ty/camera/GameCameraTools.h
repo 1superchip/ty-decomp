@@ -132,6 +132,10 @@ struct GCT_WaypointPlaneManager {
     bool SetSourceLinePos(Vector*, float, int, int, Vector*);
     float GetTimeAlongPath(Vector*, int);
     bool GetPointAlongPath(float, Vector*);
+
+    Tools_WayPoints* GetWayPointManager(void) {
+        return &mWaypoints;
+    }
 };
 
 bool InPlane3D(Vector*, Vector*, Vector*, Vector*, Vector*);

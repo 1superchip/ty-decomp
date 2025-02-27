@@ -127,6 +127,7 @@ struct ParticleChunk {
         if (mDataIndex == 0) {
             return NULL;
         }
+        
         return &mChunkData[--mDataIndex];
     }
 
@@ -140,6 +141,10 @@ struct ParticleChunk {
 
     bool IsEmpty(void) {
         return mDataIndex == 24;
+    }
+
+    ParticleChunk* GetNext(void) {
+        return mpNext;
     }
 };
 
@@ -226,6 +231,10 @@ struct ParticleSystem {
 
     float GetAge(void) {
         return age;
+    }
+
+    ParticleChunk* GetChunks(void) {
+        return mpChunks;
     }
 };
 
