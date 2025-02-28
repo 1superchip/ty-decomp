@@ -72,6 +72,7 @@ struct StaticFXPropDesc : StaticPropDescriptor {
     int effectFlags;
     Vector autoRotate;
     char rotateSubObj[0x20];
+
     // might be wrong
     virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
         StaticPropDescriptor::Init(pMod, pMdlName, pDescrName, _searchMask, _flags);
@@ -86,23 +87,29 @@ struct StaticFXPropDesc : StaticPropDescriptor {
         if (pLine != NULL) {
             while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
                 if (pLine->pFieldName != NULL) {
+
                     // this matches rodata ordering at the beginning
+                    // should be 5 individual vectors somewhere else
                     const Vector unused_vectors[5] = { {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, 
                         {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f} };
-                    NameFlagPair flagsTmp[5] = {{"shake", FX_Shake}, {"waterRipple", FX_WaterRipple}, {"spawnLeaf", FX_SpawnLeaf},
-                    {"dynamic", FX_Dynamic}, {"rotate", FX_Rotate}};
+
+                    NameFlagPair flagsTmp[5] = {
+                        {"shake", FX_Shake}, 
+                        {"waterRipple", FX_WaterRipple}, 
+                        {"spawnLeaf", FX_SpawnLeaf},
+                        {"dynamic", FX_Dynamic}, 
+                        {"rotate", FX_Rotate}
+                    };
+
                     if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, 5, &effectFlags) == false) {
-                        bool foundLine = LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate);
-                        if (foundLine != false) {
-                            float speed = gDisplay.frameTime;
-                            autoRotate.x *= speed;
-                            autoRotate.y *= speed;
-                            autoRotate.z *= speed;
+                        if (LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate)) {
+                            autoRotate.Scale(gDisplay.frameTime);
                         } else {
                             LoadLevel_LoadString(pLine, "rotateSubObj", rotateSubObj, sizeof(rotateSubObj), 0);
                         }
                     }
                 }
+
                 pLine = pIni->GetLineWithLine(pLine);
             }
         }

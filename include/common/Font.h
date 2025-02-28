@@ -138,6 +138,14 @@ struct Font {
 	float DrawString(char* pText, float, float, Matrix* pMatrix, int, uint color,
         void (*)(Font::TextCharStrip*, int), void (*)(Font::TextCharStrip*, int));
     void RenderChars(Font::TextCharStrip* pCharStrips, int count);
+
+    // should exist in some header
+    // void DrawTextWrapped(char* pString, float f1, float f2, float box0, float box1, float box2,
+    //         float box3, FontJustify justify, uint color, int flags) {
+    //     Vector box = {box0, box1, box2, box3};
+
+    //     DrawTextWrapped(pString, f1, f2, &box, justify, color, flags);
+    // }
 };
 
 #endif // COMMON_FONT

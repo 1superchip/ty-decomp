@@ -48,21 +48,36 @@ static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
 bool StaticFXProp::bTempVisible = false;
 
 static bool PointInBoundingBox(Model* pModel, Vector* pPoint, float arg3) {
-    Matrix mat;
-    Vector matrixScale = {1.0f, arg3, 1.0f, 0.0f};
-    mat.Scale(&pModel->matrices[0], &matrixScale);
-    Vector inv = {
+    Matrix inverseLTW;
+
+    Vector scale3D = {1.0f, arg3, 1.0f, 0.0f};
+
+    inverseLTW.Scale(&pModel->matrices[0], &scale3D);
+
+    Vector matrixScaleSqr = {
         pModel->matrices[0].Row0()->MagSquared(),
         pModel->matrices[0].Row1()->MagSquared(),
         pModel->matrices[0].Row2()->MagSquared()
     };
-    Vector s;
+
+    Vector invScale2;
+
     Vector localPt;
-    s.Set(1.0f / inv.x, 1.0f / inv.y, 1.0f / inv.z, 1.0f);
-    mat.Scale(pModel->matrices, &s);
-    mat.InverseSimple();
-    localPt.ApplyMatrix(pPoint, &mat);
+
+    invScale2.Set(
+        1.0f / matrixScaleSqr.x, 
+        1.0f / matrixScaleSqr.y, 
+        1.0f / matrixScaleSqr.z, 
+        1.0f
+    );
+
+    inverseLTW.Scale(pModel->matrices, &invScale2);
+    inverseLTW.InverseSimple();
+
+    localPt.ApplyMatrix(pPoint, &inverseLTW);
+
     BoundingVolume* pModelVolume = pModel->GetModelVolume();
+
     return ((localPt.x >= pModelVolume->v1.x) && localPt.x < pModelVolume->v1.x + pModelVolume->v2.x) &&
         ((localPt.y >= pModelVolume->v1.y) && localPt.y < pModelVolume->v1.y + pModelVolume->v2.y) &&
         ((localPt.z >= pModelVolume->v1.z) && localPt.z < pModelVolume->v1.z + pModelVolume->v2.z);
@@ -261,6 +276,7 @@ void StaticFXProp::Draw(void) {
 void StaticFXProp::UpdateShake(void) {
     Vector tyShakePos = ty.pos;
     tyShakePos.y += gb.unk78C;
+    
     // StaticProp::TyOn is inlined here
     if (gb.unk78C != 0.0f) {
         bool unk = false;
@@ -275,11 +291,13 @@ void StaticFXProp::UpdateShake(void) {
                 unk = true;
             }
         }
+        
         if (((ty.unk845 != false || unk) && (int*)ty.unk884 == (int*)&collisionInfo) == false) {
             if (PointInBoundingBox(pModel, &tyShakePos, 1.2f) == false) {
                 return;
             }
         }
+
         if (Abs<float>(gb.unk78C) > 0.1f) {
             Vector tmp = unk58;
             tmp.y += gb.unk78C;

@@ -2,7 +2,7 @@
 #define TYTYPES_H
 
 #include "common/Vector.h"
-#include "ty/GameObject.h"
+#include "common/Collision.h"
 
 struct Rotation {
     float unk0;
@@ -104,6 +104,11 @@ struct TyContext {
     float GetYDistanceToWater(Vector* p) {
         return water.pos.y - p->y;
     }
+
+    // was this defined in the header?
+    // void VelocityInline(Vector* pVelocity, float f1) {
+    //     Vector g = {0.0f, -gb.mDataVal.jumpGravity, 0.0f, 0.0f};
+    // }
 };
 
 // Ty inherits Hero
