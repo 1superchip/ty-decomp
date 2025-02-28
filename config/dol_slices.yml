@@ -2982,54 +2982,54 @@ Dolphin/os/__ppc_eabi_init.cpp:
 #   .data: [0x80271b40, 0x80271c80]
 #   .sbss: [0x803fb010, 0x803fb028]
 
-#CARDBios.c:
-#   .text: [0x801e3974, 0x801e4b74]
-#   .data: [0x80271c80, 0x80271ca0]
-#   .bss: [0x802d5aa8, 0x802d5ce8]
+Dolphin/card/CARDBios.c:
+  .text: [0x801e3974, 0x801e4b74]
+  .data: [0x80271c80, 0x80271ca0]
+  .bss: [0x802d5aa8, 0x802d5ce8]
 
-#CARDUnlock.c:
-#   .text: [0x801e4b74, 0x801e5dd4]
-#   .data: [0x80271ca0, 0x80271e00]
-#   .sdata: [0x803f97c0, 0x803f97c8]
+Dolphin/card/CARDUnlock.c:
+  .text: [0x801e4b74, 0x801e5dd4]
+  .data: [0x80271ca0, 0x80271e00]
+  .sdata: [0x803f97c0, 0x803f97c8]
 
-#CARDRdwr.c:
-#   .text: [0x801e5dd4, 0x801e6054]
+Dolphin/card/CARDRdwr.c:
+  .text: [0x801e5dd4, 0x801e6054]
 
-#CARDBlock.c:
-#   .text: [0x801e6054, 0x801e6458]
+Dolphin/card/CARDBlock.c:
+  .text: [0x801e6054, 0x801e6458]
 
-#CARDDir.c:
-#   .text: [0x801e6458, 0x801e66bc]
+Dolphin/card/CARDDir.c:
+  .text: [0x801e6458, 0x801e66bc]
 
-#CARDCheck.c:
+# Dolphin/card/CARDCheck.c:
 #   .text: [0x801e66bc, 0x801e75f8]
 
-#CARDMount.c:
-#   .text: [0x801e75f8, 0x801e8040]
-#   .data: [0x80271e00, 0x80271e40]
+Dolphin/card/CARDMount.c:
+  .text: [0x801e75f8, 0x801e8040]
+  .data: [0x80271e00, 0x80271e40]
 
-#CARDFormat.c:
+# Dolphin/card/CARDFormat.c:
 #   .text: [0x801e8040, 0x801e8824]
 
-#CARDOpen.c:
+# Dolphin/card/CARDOpen.c:
 #   .text: [0x801e8824, 0x801e8c78]
 
-#CARDCreate.c:
+# Dolphin/card/CARDCreate.c:
 #   .text: [0x801e8c78, 0x801e8fc8]
 
-#CARDRead.c:
+# Dolphin/card/CARDRead.c:
 #   .text: [0x801e8fc8, 0x801e93f8]
 
-#CARDWrite.c:
+# Dolphin/card/CARDWrite.c:
 #   .text: [0x801e93f8, 0x801e972c]
 
-#CARDDelete.c:
+# Dolphin/card/CARDDelete.c:
 #   .text: [0x801e972c, 0x801e98e0]
 
-#CARDStat.c:
+# Dolphin/card/CARDStat.c:
 #   .text: [0x801e98e0, 0x801e9d78]
 
-#CARDNet.c:
+# Dolphin/card/CARDNet.c:
 #   .text: [0x801e9d78, 0x801e9d78]
 #   .sdata: [0x803f97c8, 0x803f97d0]
 
