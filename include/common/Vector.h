@@ -5,6 +5,7 @@
 #include "common/StdMath.h"
 
 struct Matrix;
+struct QuatRotation;
 
 // uses unions for rgba and pitch yaw roll?
 struct Vector {
@@ -25,6 +26,8 @@ struct Vector {
     void ApplyTransMatrix(Vector* pVector, Matrix* pMatrix);
     void CClamp(Vector*, float, float);
     void NormaliseRot(Vector* pVector);
+
+    void ApplyQuaternion(Vector* pVector, QuatRotation* pQuaternion); // Unused
 
     inline float MagSquared() {
         return x*x + y*y + z*z;
@@ -153,27 +156,17 @@ struct Vector {
         NormaliseRot(this);
     }
 
+    void ApplyQuaternion(QuatRotation* pQuaternion) {
+        ApplyQuaternion(this, pQuaternion);
+    }
+
     inline bool Equals(Vector* pOther) {
         return x == pOther->x && y == pOther->y && z == pOther->z;
     }
-    
-    // possible place this in another file?
-    // doesn't really need to be in the vector class
-    // Collision.h or StdMath.h?
-    bool CheckSphereRadius(Vector* pCentre, float radius) {
-        return (x - pCentre->x) * (x - pCentre->x) + 
-            (y - pCentre->y) * (y - pCentre->y) + 
-            (z - pCentre->z) * (z - pCentre->z) < radius * radius;
-    }
-    /* this might be the correct version since the July 1st build needs the inline "CheckSphereRadius" to be used in
-    // Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* pVec2) but the current doesn't match on GC
-    */
-    // bool CheckSphereRadius(Vector* pCentre, float radius) {
-    // 	// this might be closer?
-    // 	// need to check debug build
-    //     return DistSq(pCentre) < Sqr<float>(radius);
-    // }
-    // this might be the correct inline?
+
+    // is this Vector::IsNear(Vector* pVector, float distance) from Sunny Garcia? that was defined in 
+    // Vector.cpp and this is an inline. Camera::Update calls Vector::IsNear in Sunny Garcia where the debug build
+    // of Ty calls an inline that doesn't have any assertions whereas Vector::IsNear has assertions
     bool IsInsideSphere(Vector* pCentre, float radius) {
         float dx = (x - pCentre->x);
         float dy = (y - pCentre->y);
@@ -208,5 +201,9 @@ inline bool CompareVectors(Vector* pVec, Vector* pVec1) {
         return true;
     return false;
 }
+
+extern Vector gXAxis;
+extern Vector gYAxis;
+extern Vector gZAxis;
 
 #endif // COMMON_VECTOR

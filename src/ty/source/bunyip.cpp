@@ -187,12 +187,15 @@ extern "C" void Sound_SetVolume(int, char, char);
 
 void Bunyip::Disappear(void) {
     Sound_SetVolume(mSoundHelper.unk0, mScale * 255.0f, mScale * 255.0f);
+
     mScale -= (1.0f / gDisplay.displayFreq);
+
     if (mScale < 0.0f) {
         mScale = 0.0f;
         unkD9 = true;
         SetState((BunyipState)0);
     }
+
     UpdatePos(GetPos(), &mRot);
 }
 
@@ -203,6 +206,7 @@ void Bunyip::SetState(BunyipState newState) {
     if (mState == newState) {
         return;
     }
+
     if ((mState == (BunyipState)6 || mState == (BunyipState)5) && !unkD9) {
         return;
     }
@@ -311,6 +315,7 @@ bool Bunyip::HasPunched(Vector* pPoint, float radius) {
         unkD8 = true;
         return true;
     }
+    
     return false;
 }
 

@@ -38,6 +38,7 @@ void Collapsible::Update(void) {
     bool unk;
     switch (state) {
     case 0:
+        // StaticProp::TyOn
         unk = false;
         if (ty.unk844 != false) {
             float diff;
@@ -57,8 +58,9 @@ void Collapsible::Update(void) {
         break;
     case 1:
         if (--unk5C <= 0) {
-            collisionInfo.bEnabled = false;
+            collisionInfo.Disable();
             unk = false;
+            // StaticProp::TyOn
             if (ty.unk844 != false) {
                 float diff;
                 if (ty.unk846 != false) {
@@ -80,15 +82,8 @@ void Collapsible::Update(void) {
             unk5C = 30;
             state = 2;
         } else {
-            float f = 15.0f * ((float)(unk5C - 30) / 30.0f);
-            float f2 = (float)(unk5C % 10);
-            float f3;
-            if (f2 <= 2.0f) {
-                f3 = (-f2 * f) / 2.0f;
-            } else {
-                f3 = (f * (f2 - 10.0f)) / 8.0f;
-            }
-            pModel->matrices[0].Row3()->y = defaultTrans.y + f3;
+            float yDelta = Tools_Vibrate(unk5C, 10.0f, ((unk5C - 30) / 30.0f) * 15.0f);
+            pModel->matrices[0].Row3()->y = defaultTrans.y + yDelta;
         }
         break;
     case 2:
@@ -98,9 +93,8 @@ void Collapsible::Update(void) {
             pModel->SetLocalToWorldDirty();
             state = 3;
         } else {
-            float f = (float)unk5C / 60.0f;
             pModel->matrices[0].Row3()->y =
-                (defaultTrans.y - 400.0f) + (1.0f - (4.0f * Sqr<float>(f - 0.5f))) * 400.0f;
+                (defaultTrans.y - 400.0f) + SmoothCenteredCurve(unk5C / 60.0f) * 400.0f;
             pModel->SetLocalToWorldDirty();
         }
         break;
@@ -123,7 +117,7 @@ void Collapsible::Update(void) {
             scaleMatrix.SetTranslation(&defaultTrans);
             scaleMatrix.SetRotationPYR(&defaultRot);
             scaleMatrix.Scale(&scale);
-            float angle = 3.9826f * ((float)unk5C / 30.0f);
+            float angle = 3.9826f * (unk5C / 30.0f);
             pModel->matrices[0].Scale(&scaleMatrix, 0.6f * (1.0f - _table_cosf(angle)));
         }
         pModel->SetLocalToWorldDirty();

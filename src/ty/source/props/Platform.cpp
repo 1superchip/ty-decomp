@@ -248,9 +248,9 @@ void Platform::UpdateAttached(void) {
 
 void Platform::UpdateShadow(void) {
     Vector start = {
-        pModel->matrices[0].Row3()->x, 
-        pModel->matrices[0].Row3()->y - 10.0f,
-        pModel->matrices[0].Row3()->z, 
+        GetPos()->x, 
+        GetPos()->y - 10.0f,
+        GetPos()->z, 
         0.0f
     };
 

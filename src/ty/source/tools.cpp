@@ -54,15 +54,21 @@ uint Tools_ColorToABGR(Vector* pColor) {
 
 void Tools_ApplyDoppler(int arg0, Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3) {
     float f1 = 300.0f;
-    Vector sp8;
-    sp8.Sub(pVec2, pVec);
-    sp8.Normalise(&sp8);
-    Vector tmp;
-    tmp.Sub(pVec3, pVec1);
-    float f2 = tmp.Dot(&sp8);
-    if (!(f2 <= -f1)) {
-        Sound_SetPitch(arg0, f1 / (f1 + f2));
+
+    Vector toPos;
+    toPos.Sub(pVec2, pVec);
+    toPos.Normalise();
+
+    Vector relativeVel;
+    relativeVel.Sub(pVec3, pVec1);
+
+    float f2 = relativeVel.Dot(&toPos);
+
+    if (f2 <= -f1) {
+        return;
     }
+    
+    Sound_SetPitch(arg0, f1 / (f1 + f2));
 }
 
 Model* Tools_GetGroundLightModel(Vector* pVec, int* pSubObjectIndex, float maxDist) {
@@ -102,34 +108,47 @@ Model* Tools_GetGroundLightModel(Vector* pVec, int* pSubObjectIndex, float maxDi
 
 bool Tools_CollideXZ(Vector* pVec, Vector* pVec1, Vector* pVec2, Vector* pVec3,
         float f1, float radius, float f3, float f4) {
-    if (radius && !pVec->CheckSphereRadius(pVec1, radius)) {
+    
+    if (radius && !pVec->IsInsideSphere(pVec1, radius)) {
         return false;
     }
 
-    Vector sp18;
-    sp18.Sub(pVec1, pVec);
-    sp18.y = 0.0f;
-    float len = sp18.Normalise(&sp18);
-    float dot0 = pVec2->Dot(&sp18);
-    float dot1 = pVec3->Dot(&sp18);
+    Vector toPos2;
+    toPos2.Sub(pVec1, pVec);
+    toPos2.y = 0.0f;
+
+    float len = toPos2.Normalise();
+
+    float dot0 = pVec2->Dot(&toPos2);
+    float dot1 = pVec3->Dot(&toPos2);
+
     if (dot1 < dot0) {
         float f3_ = (f3 * dot0) + (f4 * dot1);
         float f0 = f1 * (dot0 - dot1);
-        Vector tmp;
-        tmp.Scale(&sp18, (f3_ + (f0 * f3)) / (f3 + f4) - dot1);
-        pVec3->x += tmp.x;
-        pVec3->z += tmp.z;
-        tmp.Scale(&sp18, (f3_ - (f0 * f4)) / (f3 + f4) - dot0);
-        pVec2->x += tmp.x;
-        pVec2->z += tmp.z;
+        
+        Vector v;
+        v.Scale(&toPos2, (f3_ + (f0 * f3)) / (f3 + f4) - dot1);
+
+        pVec3->x += v.x;
+        pVec3->z += v.z;
+
+        v.Scale(&toPos2, (f3_ - (f0 * f4)) / (f3 + f4) - dot0);
+
+        pVec2->x += v.x;
+        pVec2->z += v.z;
     }
 
     if (radius) {
-        Vector sp8 = sp18;
-        sp8.Scale(&sp18, ((radius - len) * f3) / (f3 + f4));
-        pVec1->Add(&sp8);
-        sp8.Scale(&sp18, ((radius - len) * f4) / (f3 + f4));
-        pVec->Sub(pVec, &sp8);
+        Vector temp = toPos2;
+
+        temp.Scale(&toPos2, ((radius - len) * f3) / (f3 + f4));
+
+        pVec1->Add(&temp);
+
+        temp.Scale(&toPos2, ((radius - len) * f4) / (f3 + f4));
+
+        pVec->Subtract(&temp);
+
         return true;
     }
 
@@ -234,16 +253,21 @@ void Tools_AlignDirectionToGround(Vector* pVec, Vector* pVec1) {
 }
 
 void Tools_CollisionBounce(Vector* pVec, Vector* pVec1, CollisionResult* pCr, float f1) {
-    // vector names "extra" and "reaction"
-    Vector tmp2;
-    Vector tmp;
-    tmp.Add(pVec, pVec1);
-    tmp.Subtract(&pCr->pos);
-    tmp2.Scale(&pCr->normal, -tmp.Dot(&pCr->normal) * (f1 + 1.0f));
-    tmp.Add(&tmp2);
-    pVec->Add(&pCr->pos, &tmp);
-    tmp2.Scale(&pCr->normal, -pVec1->Dot(&pCr->normal) * (f1 + 1.0f));
-    pVec1->Add(&tmp2);
+    Vector reaction;
+    Vector extra;
+
+    extra.Add(pVec, pVec1);
+    extra.Subtract(&pCr->pos);
+    
+    reaction.Scale(&pCr->normal, -extra.Dot(&pCr->normal) * (f1 + 1.0f));
+
+    extra.Add(&reaction);
+
+    pVec->Add(&pCr->pos, &extra);
+
+    reaction.Scale(&pCr->normal, -pVec1->Dot(&pCr->normal) * (f1 + 1.0f));
+
+    pVec1->Add(&reaction);
 }
 
 float Tools_SCurve(float x) {
@@ -321,10 +345,13 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
     top.y = pVec->y + (pVec1->y * f13 - f1 * 0.5f * f13 * f13);
     top.x = pVec->x + (f13 * pVec1->x);
     top.z = pVec->z + (f13 * pVec1->z);
+
     f13 += 60.0f;
+
     end.y = pVec->y + (pVec1->y * f13 - f1 * 0.5f * f13 * f13);
     end.x = pVec->x + (f13 * pVec1->x);
     end.z = pVec->z + (f13 * pVec1->z);
+
     end.Sub(&end, &top);
     end.Scale(4.0f);
     end.Add(&top);
@@ -346,6 +373,7 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
 void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, float f3, 
         float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11,
         float f12, float f13, float f14, float f15, float f16) {
+    
     if (pMaterial) {
         pMaterial->Use();
     }
@@ -429,6 +457,7 @@ int Round(float x) {
     if (x - (float)rounded > 0.5f) {
         return rounded + 1;
     }
+
     return rounded;
 }
 
@@ -437,13 +466,16 @@ float GetPitch2Points(Vector* pVec, Vector* pVec1) {
     float dx = pVec->x - pVec1->x;
     float dy = pVec->y - pVec1->y;
     float dz = pVec->z - pVec1->z;
+
     if (!dy) {
         return 0.0f;
     }
+
     float f1 = ExactMag(dx, dy, dz);
     if (f1) {
         return (float)acos(Clamp<float>(-1.0f, dy / f1, 1.0f)) - PI2;
     }
+
     return 0.0f;
 }
 
@@ -575,20 +607,29 @@ bool Tools_BuildLTWMatrix(Matrix* m, Vector* forward, Vector* pVec) {
 
 bool Tools_BuildMatrixFromFwd(Matrix* pM, Vector* pFwd, Vector* pUp) {
     static Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
+
     if (pUp == NULL) {
         pUp = &up;
     }
+
     Vector tmp = *pFwd;
     Vector cross;
     tmp.Inverse(&tmp);
     tmp.Normalise();
+
     cross.Cross(&tmp, pUp);
-    if (cross.MagSquared() == 0.0f) return false;
+
+    if (cross.MagSquared() == 0.0f) {
+        return false;
+    }
+
     cross.Normalise();
+
     pM->SetRotationToNone();
     pM->Row0()->Copy(&cross);
     pM->Row2()->Copy(&tmp);
     pM->Row1()->Cross(&cross, &tmp);
+
     return true;
 }
 
@@ -618,86 +659,98 @@ bool RayToSphere(Vector* pVec, Vector* pVec1, Vector* pVec2, float radius, float
     if (f2 == -1.0f) {
         f2 = radius;
     }
-    if (r6) {
-        if (pVec2->DistSq(pVec) < Sqr<float>(radius) || pVec2->DistSq(pVec1) < Sqr<float>(f2)) {
-            return true;
-        }
-        // if (pVec2->CheckSphereRadius(pVec, f1) || pVec2->CheckSphereRadius(pVec1, f2)) {
-        //     return true;
-        // }
+
+    if (r6 && (pVec2->IsInsideSphere(pVec, radius) || pVec2->IsInsideSphere(pVec1, f2))) {
+        return true;
     }
+
     Vector tmp;
     Vector tmp2;
     tmp2.Sub(pVec1, pVec);
     tmp.Sub(pVec2, pVec);
+
     float tmp_dot_tmp2 = tmp.Dot(&tmp2);
+
     float f5 = tmp2.MagSquared();
     if (!f5) {
         return false;
     }
+
     float t = tmp_dot_tmp2 / f5;
     if (t >= 0.0f && t <= 1.0f) {
         Vector interpolated;
         interpolated.InterpolateLinear(pVec, pVec1, t);
-        if (interpolated.CheckSphereRadius(pVec2, radius + ((f2 - radius) * t))) {
+        if (interpolated.IsInsideSphere(pVec2, radius + ((f2 - radius) * t))) {
             return true;
         }
     }
+
     return false;
 }
 
 bool Tools_ClipSphereToDynamicModel(const Vector& vec, float f1, Vector* pVec1, Model* pModel, int subobjectIdx) {
-    Matrix* pLTW = (subobjectIdx > -1) ? &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(subobjectIdx)] :
+    Matrix* pLTW = (subobjectIdx > -1) ? 
+        &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(subobjectIdx)] :
         pModel->matrices;
+
     BoundingVolume* pVolume = pModel->GetBoundingVolume(subobjectIdx);
+
     Matrix inverseLTW;
     inverseLTW.Inverse(pLTW);
-    Vector sp28;
-    sp28.ApplyMatrix((Vector*)&vec, &inverseLTW);
-    Vector boundingMin;
-    Vector boundingMax;
-    boundingMin.Copy(&pVolume->v1);
-    boundingMax.Add(&pVolume->v1, &pVolume->v2);
-    Vector sp18 = {0.0f, 0.0f, 0.0f, 1.0f};
-    sp18.x = f1 / pLTW->Row0()->Magnitude();
-    sp18.y = f1 / pLTW->Row1()->Magnitude();
-    sp18.z = f1 / pLTW->Row2()->Magnitude();
-    if ((sp28.x + sp18.x >= pVolume->v1.x && sp28.x - sp18.x < boundingMax.x) &&
-        (sp28.y + sp18.y >= pVolume->v1.y && sp28.y - sp18.y < boundingMax.y) &&
-        (sp28.z + sp18.z >= pVolume->v1.z && sp28.z - sp18.z < boundingMax.z)) {
+
+    Vector localPos;
+    localPos.ApplyMatrix((Vector*)&vec, &inverseLTW);
+
+    Vector boxMax;
+    boxMax.Add(&pVolume->v1, &pVolume->v2);
+
+    Vector radSca = {0.0f, 0.0f, 0.0f, 1.0f};
+    radSca.x = f1 / pLTW->Row0()->Magnitude();
+    radSca.y = f1 / pLTW->Row1()->Magnitude();
+    radSca.z = f1 / pLTW->Row2()->Magnitude();
+
+    if ((localPos.x + radSca.x >= pVolume->v1.x && localPos.x - radSca.x < boxMax.x) &&
+        (localPos.y + radSca.y >= pVolume->v1.y && localPos.y - radSca.y < boxMax.y) &&
+        (localPos.z + radSca.z >= pVolume->v1.z && localPos.z - radSca.z < boxMax.z)) {
         if (pVec1) {
-            Vector local_vec = {};
-            if (sp28.x > boundingMax.x * 0.5f) {
-                local_vec.x = (boundingMax.x - sp28.x) + (sp18.x + 0.001f);
+            Vector d = {};
+            if (localPos.x > boxMax.x * 0.5f) {
+                d.x = (boxMax.x - localPos.x) + (radSca.x + 0.001f);
             } else {
-                local_vec.x = (pVolume->v1.x - sp28.x) - (sp18.x + 0.001f);
+                d.x = (pVolume->v1.x - localPos.x) - (radSca.x + 0.001f);
             }
-            if (sp28.y > boundingMax.y * 0.5f) {
-                local_vec.y = (boundingMax.y - sp28.y) + (sp18.y + 0.001f);
+
+            if (localPos.y > boxMax.y * 0.5f) {
+                d.y = (boxMax.y - localPos.y) + (radSca.y + 0.001f);
             } else {
-                local_vec.y = (pVolume->v1.y - sp28.y) - (sp18.y + 0.001f);
+                d.y = (pVolume->v1.y - localPos.y) - (radSca.y + 0.001f);
             }
-            if (sp28.z > boundingMax.z * 0.5f) {
-                local_vec.z = (boundingMax.z - sp28.z) + (sp18.z + 0.001f);
+
+            if (localPos.z > boxMax.z * 0.5f) {
+                d.z = (boxMax.z - localPos.z) + (radSca.z + 0.001f);
             } else {
-                local_vec.z = (pVolume->v1.z - sp28.z) - (sp18.z + 0.001f);
+                d.z = (pVolume->v1.z - localPos.z) - (radSca.z + 0.001f);
             }
-            if (Abs<float>(local_vec.z) > Abs<float>(local_vec.x)) {
-                if (Abs<float>(local_vec.y) > Abs<float>(local_vec.x)) {
-                    local_vec.y = 0.0f;
+
+            if (Abs<float>(d.z) > Abs<float>(d.x)) {
+                if (Abs<float>(d.y) > Abs<float>(d.x)) {
+                    d.y = 0.0f;
                 } else {
-                    local_vec.x = 0.0f;
+                    d.x = 0.0f;
                 }
-                local_vec.z = 0.0f;
+
+                d.z = 0.0f;
             } else {
-                if (Abs<float>(local_vec.y) > Abs<float>(local_vec.z)) {
-                    local_vec.y = 0.0f;
+                if (Abs<float>(d.y) > Abs<float>(d.z)) {
+                    d.y = 0.0f;
                 } else {
-                    local_vec.z = 0.0f;
+                    d.z = 0.0f;
                 }
-                local_vec.x = 0.0f;
+
+                d.x = 0.0f;
             }
-            pVec1->Add(&local_vec, &sp28);
+
+            pVec1->Add(&d, &localPos);
             pVec1->ApplyMatrix(pLTW);
         }
         return true;
@@ -705,29 +758,41 @@ bool Tools_ClipSphereToDynamicModel(const Vector& vec, float f1, Vector* pVec1, 
     return false;
 }
 
+// Inlined multiple times throughout the binary
+inline float Vector_MagSquared(Vector* p) {
+    return p->x * p->x + p->y * p->y + p->z * p->z;
+}
+
 bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1, bool r6) {
-    if (r6) {
-        if (pVec->DistSq(pVec1) < Sqr<float>(f1) || pVec->DistSq(pVec2) < Sqr<float>(f1)) {
-            return true;
-        }
+    // pVec1 and pVec2 are the ends of the capsule?
+    // r6 is a bool to determine if the capsule ends should be checked as spheres
+    if (r6 && (pVec->IsInsideSphere(pVec1, f1) || pVec->IsInsideSphere(pVec2, f1))) {
+        return true;
     }
-    Vector tmp;
-    Vector tmp2;
-    tmp.Sub(pVec, pVec1);
-    tmp2.Sub(pVec2, pVec1);
-    float tmp_dot_tmp2 = tmp.Dot(&tmp2);
-    float f5 = tmp2.MagSquared();
-    if (!f5) {
+
+    Vector toPoint2;
+    Vector toSphere;
+
+    toPoint2.Sub(pVec2, pVec1);
+    toSphere.Sub(pVec, pVec1);
+
+    float dot = toSphere.Dot(&toPoint2);
+
+    float mag = Vector_MagSquared(&toPoint2);
+
+    if (!mag) {
         return false;
     }
-    float t = tmp_dot_tmp2 / f5;
+    
+    float t = dot / mag;
     if (t >= 0.0f && t <= 1.0f) {
-        Vector interpolated;
-        interpolated.InterpolateLinear(pVec1, pVec2, t);
-        if (interpolated.DistSq(pVec) < f1 * f1) {
+        Vector temp;
+        temp.InterpolateLinear(pVec1, pVec2, t);
+        if (temp.IsInsideSphere(pVec, f1)) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -756,10 +821,12 @@ bool Tools_RayToVertCyl(Vector* pRayStart, Vector* pRayEnd, Vector* pCylPos, flo
 bool Tools_PlaneTest(Vector* pStart, Vector* pEnd, Vector* pNormal, CollisionResult* pCr) {
     Vector ray;
     ray.Sub(pEnd, pStart);
+    
     float f5 = pNormal->Dot(&ray);
     if (f5 < 0.0f) {
         return false;
     }
+
     float t = (pNormal->Dot(pStart) - pNormal->w) / f5;
     if (t >= 0.0f && t <= 1.0f) {
         // Ray intersects plane
@@ -938,13 +1005,19 @@ void Tools_ParticleRef::Update(Model* pModel) {
 }
 
 void Tools_DropShadow_Init(void) {
-    if (bDropShadowsIsInit) return;
+    if (bDropShadowsIsInit) {
+        return;
+    }
+
     bDropShadowsIsInit = true;
     shadows.Init(128);
 }
 
 void Tools_DropShadow_Deinit(void) {
-    if (!bDropShadowsIsInit) return;
+    if (!bDropShadowsIsInit) {
+        return;
+    }
+
     shadows.Deinit();
     bDropShadowsIsInit = false;
 }
@@ -1431,19 +1504,11 @@ float Tools_CylinderTest(Vector* pVec, Vector* pVec1, float radius, Vector* pTes
     return f0;
 }
 
-// July 1st build needs an inline such as "CheckSphereRadius" to match but the current version of "CheckSphereRadius"
-// in the repo doesn't match GC
+
 bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* pVec2) {
-    return ((pVec->DistSq(pVec2) < Sqr<float>(f1)) || (pVec1->DistSq(pVec2) < Sqr<float>(f1))) ||
+    return pVec->IsInsideSphere(pVec2, f1) || pVec1->IsInsideSphere(pVec2, f1) ||
         Tools_CylinderTest(pVec, pVec1, f2, pVec2) >= 0.0f;
 }
-/*
-// same function as above, need to check the PC build of "Vector::CheckSphereRadius"
-bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* pVec2) {
-    return (pVec->CheckSphereRadius(pVec2, f1) || pVec1->CheckSphereRadius(pVec2, f1)) ||
-        Tools_CylinderTest(pVec, pVec1, f2, pVec2) >= 0.0f;
-}
-*/
 
 // should this be defined here?
 static PadKey padKeyMap[NUM_PADKEYS] = {
@@ -1506,6 +1571,7 @@ void Tools_ProcessString(char* pStr) {
                 *pString = Tools_MapPadToKey(tyControl.activeControls[6]);
                 break;
         }
+        
         pString++;
     }
 }
@@ -1531,6 +1597,7 @@ void FaderObject::Update(void) {
 
 void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3, bool r5) {
     float f31 = 1.0f;
+
     if (currFadeState != (FadeState)0 && unkC > 0 && r5) {
         int r0 = unkC;
         if (currFadeState == (FadeState)1) {
@@ -1540,6 +1607,7 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
         } else if (currFadeState == (FadeState)3) {
             r0 = unk18;
         }
+
         f31 = (float)unkC / (float)r0;
         // if the current state is 1 and the next state is 2 OR
         //    the current state is 2 and the next state is 1
@@ -1548,13 +1616,18 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
                 f31 = 1.0f - f31;
         }
     }
+
     unk10 = gDisplay.displayFreq * f1;
     unk14 = gDisplay.displayFreq * f2;
     unk18 = gDisplay.displayFreq * f3;
+
     fadeMode = mode;
+
     FaderObject::FadeState nextState = GetNextState((FaderObject::FadeState)0, mode);
+
     prevFadeState = currFadeState;
     currFadeState = nextState;
+
     if (currFadeState == (FadeState)1) {
         unkC = unk10;
     } else if (currFadeState == (FadeState)2) {
@@ -1564,11 +1637,13 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
     } else {
         unkC = 0;
     }
+
     unkC = (float)unkC * f31;
 }
 
 FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currState, FaderObject::FadeMode currMode) {
     FadeState nextState;
+
     switch (currState) {
         case 0:
         default:
@@ -1608,6 +1683,7 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
             }
             break;
     }
+
     switch (nextState) {
         case 1:
             unkC = unk10;
@@ -1619,6 +1695,7 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
             unkC = unk18;
             break;
     }
+    
     return nextState;
 }
 
@@ -1626,9 +1703,11 @@ float FaderObject::GetFadePercentage(void) {
     if (currFadeState == (FadeState)1 || (currFadeState == (FadeState)0 && prevFadeState == (FadeState)1)) {
         return 1.0f - ((float)unkC / (float)unk10);
     }
+
     if (currFadeState == (FadeState)2 || (currFadeState == (FadeState)0 && prevFadeState == (FadeState)2)) {
         return (float)unkC / (float)unk14;
     }
+
     return 0.0f;
 }
 

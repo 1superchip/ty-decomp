@@ -3,6 +3,8 @@
 #include "common/Matrix.h"
 #include "common/StdMath.h"
 
+// https://decomp.me/scratch/IV7t0 Sunny Garcia Vector::ApplyQuaternion
+
 Vector gXAxis = {1.0f, 0.0f, 0.0f, 0.0f};
 Vector gYAxis = {0.0f, 1.0f, 0.0f, 0.0f};
 Vector gZAxis = {0.0f, 0.0f, 1.0f, 0.0f};

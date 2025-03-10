@@ -190,16 +190,16 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
         case CHAN_2:
         case CHAN_3:
             switch (button) {
-                case 0x11:
+                case 17:
                     ret = joyPad[deviceID].mCurrStickX;
                     break;
-                case 0x10:
+                case 16:
                     ret = joyPad[deviceID].mCurrStickY;
                     break;
-                case 0x13:
+                case 19:
                     ret = joyPad[deviceID].mCurrSubStickX;
                     break;
-                case 0x12:
+                case 18:
                     ret = joyPad[deviceID].mCurrSubStickY;
                     break;
                 case 11:
@@ -213,9 +213,11 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
                     if (joyPad[deviceID].mCurrButtonFlags & ButtonMasks[button]) {
                         ret = 0xff;
                     }
+
                     break;
             }
     }
+
     return ret;
 }
 
@@ -226,17 +228,20 @@ int Input_GetButtonState(InputDevices deviceID, int button, InputDevices* pFound
 /// @return 
 bool Input_WasButtonPressed(InputDevices deviceID, int button, InputDevices* pFoundDevice) {
     deviceID = CHAN_0; // Only check Channel 0
+
     if (deviceID == ALL_CHANS) {
         // Never will happen
         // This code checks if the button was pressed by any channel
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             int wasPressed = Input_WasButtonPressed((InputDevices)i, button, pFoundDevice);
             if (wasPressed) {
                 return wasPressed;
             }
         }
+
         return false;
     }
+
     switch (deviceID) {
         case CHAN_0:
         case CHAN_1:
@@ -248,6 +253,7 @@ bool Input_WasButtonPressed(InputDevices deviceID, int button, InputDevices* pFo
             }
             break;
     }
+
     return false;
 }
 
@@ -271,6 +277,7 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
             padChan = PAD_CHAN0;
             break;
     }
+
     if (r4 != 0) {
         PADControlMotor(padChan, PAD_MOTOR_RUMBLE);
     } else {
@@ -281,7 +288,7 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
 /// @brief Clears certain data in all joypads
 /// @param  None
 void Input_ClearPadData(void) {
-    for(int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+    for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
         joyPad[i].mPrevButtonFlags = 0;
         joyPad[i].mCurrButtonFlags = 0;
         joyPad[i].mCurrStickX = 0x7f;
@@ -295,11 +302,12 @@ void Input_ClearPadData(void) {
 /// @param  None
 /// @return Whether any button has changed
 bool Input_HasAnyButtonChanged(void) {
-    for(int i = 0; i <= 15; i++) {
+    for (int i = 0; i <= 15; i++) {
         if (Input_WasButtonPressed((InputDevices)0, i, NULL)) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -343,6 +351,7 @@ void PADClampCircle(PADStatus* status) {
         if (status->err != 0) {
           continue;
         }
+
         ClampGenericStick(&status->stickX, &status->stickY, STICK_RADIUS, STICK_RADIUS * STICK_RADIUS, STICK_MIN);
         ClampGenericStick(&status->substickX, &status->substickY, SUBSTICK_RADIUS, SUBSTICK_RADIUS * SUBSTICK_RADIUS, STICK_MIN);
         ClampGenericTrigger(&status->triggerL, CLAMP_MIN_TRIGGER, CLAMP_MAX_TRIGGER);

@@ -1,62 +1,23 @@
 #ifndef COMMON_CAMERA
 #define COMMON_CAMERA
 
+#include "common/Input.h"
+#include "common/Vector.h"
+
+enum Camera_Mode {
+    CM_FIRST = 0,
+    // 
+    CM_COUNT = 3,
+};
+
+enum Camera_Direction {
+
+};
+
 struct KeyMap {
-    int unk0;
-    char unk4;
-    char unk5;
-    char unk6[7];
-    char unkD;
-    int unk10;
-    char unk14;
-    char unk15;
-    char unk16[7];
-    char unk1D;
-    char unk1E[7];
-    char unk25;
-    int unk28;
-    char unk2C;
-    char unk2D;
-    char unk2E[7];
-    char unk35;
-    char unk36[7];
-    char unk3D;
-    int unk40;
-    char unk44;
-    char unk45;
-    int unk48;
-    char unk4C;
-    char unk4D;
-    char unk4E[7];
-    char unk55;
-    char unk56[7];
-    char unk5D;
-    int unk60;
-    char unk64;
-    char unk65;
-    char unk66[7];
-    char unk6D;
-    char unk6E[7];
-    char unk75;
-    int unk78;
-    char unk7C;
-    char unk7D;
-    char unk7E[7];
-    char unk85;
-    char unk86[7];
-    char unk8D;
-    int unk90;
-    char unk94;
-    char unk95;
-    char unk96[7];
-    char unk9D;
-    char unk9E[7];
-    char unkA5;
-    int unkA8;
-    char unkAC;
-    char unkAD;
-    char unkAE;
-    char unkAF;
+    int button;
+    bool unk4; // bool?
+    bool bEnabled; // bool?
 };
 
 struct Camera {
@@ -64,29 +25,31 @@ struct Camera {
     static void DeinitModule(void);
     void Init(void);
     void Deinit(void);
+
+    void Reposition(Camera_Mode camMode, Vector* pPosition, Vector* pTarget);
+
+    float GetAnalogButtonState(InputDevices, int);
+    float CalcAnalogCameraProp(InputDevices, float, bool, int);
+    float CalcCameraProp(InputDevices, float, bool, int, int);
+
+    void SetFixedDir(Camera_Direction);
+    void SetMode(Camera_Mode);
+
+    void DrawDebug(float x, float* pY);
+
+    bool Update(InputDevices device, Vector*);
     
-    int unk0;
+    Camera_Mode mode;
     int unk4;
     KeyMap* pMap;
     float unkC;
-    float unk10;
-    float unk14;
-    float unk18;
-    float unk1C;
-    float unk20;
-    float unk24;
-    float unk28;
-    float unk2C;
-    float unk30;
-    float unk34;
-    float unk38;
-    float unk3C;
-    float unk40;
-    float unk44;
-    float unk48;
-    float unk4C;
+    Vector pos;
+    Vector target;
+    Vector dir;
+    Vector unk40;
     
-    static KeyMap keyMapDS;
+    static KeyMap keyMapDS[22];
+    static bool flipYAxis;
 };
 
 #endif // COMMON_CAMERA

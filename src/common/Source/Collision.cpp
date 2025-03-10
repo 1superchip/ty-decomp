@@ -378,7 +378,7 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
         // point isn't in the polygon
         NearestPointOnPolyEdge(&pos, pVectors, indices, numVerts);
         // pos is now the coordinate on the polygon's edge 
-        if (pos.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
+        if (pos.IsInsideSphere(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
             Collision_BInteriorPoint = true;
             min = 0.0f;
@@ -448,7 +448,7 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
         // point isn't in the triangle
         NearestPointOnTriEdge(&hitPoint, pVec, pVec1, pVec2);
         // pos is now the coordinate on the polygon's edge 
-        if (hitPoint.CheckSphereRadius(&pRay->mStart, pRay->radius)) {
+        if (hitPoint.IsInsideSphere(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
             Collision_BInteriorPoint = true;
             min = 0.0f;

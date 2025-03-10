@@ -38,22 +38,23 @@ void Friend_LoadResources(KromeIni* pIni) {
 }
 
 bool Friend::LoadLine(KromeIniLine* pLine) {
-    bool tempB;
-    if (LoadLevel_LoadBool(pLine, "bActive", &tempB)) {
-        mDefFlags = (tempB) ? mDefFlags | FSF_Active :
-            mDefFlags & ~FSF_Active;
+    bool b;
+
+    if (LoadLevel_LoadBool(pLine, "bActive", &b)) {
+        mDefFlags = b ? mDefFlags | FSF_Active : mDefFlags & ~FSF_Active;
         return true;
     }
-    if (LoadLevel_LoadBool(pLine, "bVisible", &tempB)) {
-        mDefFlags = (tempB) ? mDefFlags | FSF_Visible :
-            mDefFlags & ~FSF_Visible;
+
+    if (LoadLevel_LoadBool(pLine, "bVisible", &b)) {
+        mDefFlags = b ? mDefFlags | FSF_Visible : mDefFlags & ~FSF_Visible;
         return true;
     }
-    if (LoadLevel_LoadBool(pLine, "bEnabled", &tempB)) {
-        mDefFlags = (tempB) ? mDefFlags | FSF_Enabled :
-            mDefFlags & ~FSF_Enabled;
+
+    if (LoadLevel_LoadBool(pLine, "bEnabled", &b)) {
+        mDefFlags = b ? mDefFlags | FSF_Enabled : mDefFlags & ~FSF_Enabled;
         return true;
     }
+
     return GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", &mPos) ||
         LoadLevel_LoadVector(pLine, "rot", &mRot) || mPlatformRider.LoadLine(pLine);
 }
@@ -61,14 +62,20 @@ bool Friend::LoadLine(KromeIniLine* pLine) {
 void Friend::LoadDone(void) {
     mStartPos = mPos;
     mSaveRot = mRot;
+    
     Reset();
+
     Collision_AddDynamicModel(pModel, &mCollisionInfo, -1);
     objectManager.AddObject(this, pModel);
+
     if (unkActorIdx > 0) {
         actorInfo[unkActorIdx].pModel = pModel;
     }
+
     mDefFlags |= FSF_Unknown8;
+
     mFlags = mDefFlags;
+
     if (!(mFlags & FSF_Visible)) {
         mCollisionInfo.Disable();
     }

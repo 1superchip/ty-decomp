@@ -8,6 +8,22 @@
 #include "common/View.h"
 #include "common/Blitter.h"
 
+inline float Tools_Vibrate(int val, float period, float f2) {
+    // ASSERT(period)
+
+    float temp = val % (int)period;
+    if (temp <= (period * 0.2f)) {
+        return (-temp * f2) / (period * 0.2f);
+    } else {
+        return ((temp - period) * f2) / (period * 0.8f);
+    }
+}
+
+inline void Tools_ReverseMatrixXZ(Matrix* pMatrix) {
+    pMatrix->Row0()->Inverse();
+    pMatrix->Row2()->Inverse();
+}
+
 void Tools_ApplyDoppler(int, Vector*, Vector*, Vector*, Vector*);
 Model* Tools_GetGroundLightModel(Vector*, int* pSubObjectIndex, float maxDist);
 bool Tools_CollideXZ(Vector*, Vector*, Vector*, Vector*, float, float, float, float);
