@@ -20,13 +20,16 @@ inline void Swap(T& p, T& p1) {
 template <typename T>
 struct PtrListDL {
     T **pMem;
+
     void Init(int count, int size);
     void Deinit(void);
     void Destroy(T** p);
     void Destroy(T* p);
+
     T** GetMem(void) {
         return pMem;
     }
+
     void* GetEnd(void) {
         T** ptr = pMem;
         while (*ptr != NULL) {
@@ -34,12 +37,15 @@ struct PtrListDL {
         }
         return (void*)ptr;
     }
+
     inline int GetSize(void) {
         return ((int)GetEnd() - (int)pMem) / 4;
     }
+
     inline bool IsFull(void) {
         return pMem[-1] == NULL;
     }
+    
     inline T* GetNextEntry(void) {
         return *--pMem;
     }

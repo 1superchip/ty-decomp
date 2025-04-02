@@ -6,6 +6,7 @@
 #include "ty/RangeCheck.h"
 #include "common/Vector.h"
 #include "common/Collision.h"
+#include "ty/Ty.h"
 
 /*struct NameFlagPair {
     char* name;
@@ -16,11 +17,11 @@ bool LoadLevel_LoadFlags(KromeIniLine*, char*, NameFlagPair*, int, int*);
 bool LoadLevel_LoadVector(KromeIniLine*, char*, Vector*);
 bool LoadLevel_LoadString(KromeIniLine*, char*, char*, int, int);*/
 
-#define FX_Shake 1
-#define FX_WaterRipple 2
-#define FX_SpawnLeaf 4
-#define FX_Dynamic 8
-#define FX_Rotate 16
+#define FX_Shake        (1)
+#define FX_WaterRipple  (2)
+#define FX_SpawnLeaf    (4)
+#define FX_Dynamic      (8)
+#define FX_Rotate       (16)
 
 struct StaticPropDescriptor : GameObjDesc {
     char subObjectName[0x20]; // subobject used for collision
@@ -60,8 +61,8 @@ struct StaticProp : GameObject {
     }
 
     bool TyOn(void) {
-        // bool cond = ty.mContext.mStateStruct.bUnderFeet && ty.mContext.mStateStruct.GetDiff(&ty.pos) < 10.0f ? true : false;
-        // return (ty.mContext.mStateStruct.bOn || cond) && (ty.mContext.mStateStruct.res.pInfo == &collisionInfo);
+        bool cond = ty.mContext.floor.bUnderFeet && ty.mContext.floor.GetDiff(&ty.pos) < 10.0f;
+        return (ty.mContext.floor.bOn || cond) && (ty.mContext.floor.res.pInfo == &collisionInfo);
         // TyContext inline
     }
 
@@ -89,9 +90,12 @@ struct StaticFXPropDesc : StaticPropDescriptor {
                 if (pLine->pFieldName != NULL) {
 
                     // this matches rodata ordering at the beginning
-                    // should be 5 individual vectors somewhere else
-                    const Vector unused_vectors[5] = { {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, 
-                        {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f} };
+                    // should be 3 individual vectors somewhere else
+                    const Vector unused_vectors[3] = { 
+                        {0.0f, 0.0f, 0.0f, 0.0f}, 
+                        {0.0f, 0.0f, 0.0f, 0.0f}, 
+                        {0.0f, 0.0f, 0.0f, 0.0f},
+                    };
 
                     NameFlagPair flagsTmp[5] = {
                         {"shake", FX_Shake}, 

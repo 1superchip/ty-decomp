@@ -753,8 +753,10 @@ bool Tools_ClipSphereToDynamicModel(const Vector& vec, float f1, Vector* pVec1, 
             pVec1->Add(&d, &localPos);
             pVec1->ApplyMatrix(pLTW);
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -849,10 +851,13 @@ bool Tools_SweepSphereToPlane(Vector* pStart, Vector* pEnd, float radius, Vector
     Vector ray;
     Vector spherePos;
     Vector sphereRayEnd;
+
     ray.Sub(pEnd, pStart);
+
     if (ray.Dot(pPlane) < 0.0f) {
         return false;
     }
+
     float f5 = pPlane->Dot(pStart) - pPlane->w;
     if (f5 < radius) {
         // inside the sphere?
@@ -863,11 +868,14 @@ bool Tools_SweepSphereToPlane(Vector* pStart, Vector* pEnd, float radius, Vector
             pCr->pos.Scale(pPlane, -f5);
             pCr->pos.Add(pStart);
         }
+
         return true;
     }
+
     spherePos.Scale(pPlane, -radius);
     spherePos.Add(pStart);
     sphereRayEnd.Add(&spherePos, &ray);
+
     return Tools_PlaneTest(&spherePos, &sphereRayEnd, pPlane, pCr);
 }
 
@@ -911,15 +919,20 @@ bool Tools_CapsuleTestMagSq(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1
             Vec_VolatileFakeDistSqFunction____(vec_x, vec_y, vec_z, pVec2) < f1) {
         return true;
     }
+
     Vector tmp;
     Vector tmp2;
+    
     tmp.Sub(pVec, pVec1);
     tmp2.Sub(pVec2, pVec1);
+
     float tmp_dot_tmp2 = tmp.Dot(&tmp2);
+
     float f5 = tmp2.MagSquared();
     if (!f5) {
         return false;
     }
+
     float t = tmp_dot_tmp2 / f5;
     if (t >= 0.0f && t <= 1.0f) {
         Vector interpolated;
@@ -928,6 +941,7 @@ bool Tools_CapsuleTestMagSq(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1
             return true;
         }
     }
+
     return false;
 }
 
@@ -1071,13 +1085,13 @@ void Tools_DropShadow_Draw(void) {
     if (shadows.CheckMemory2()) return;
     gb.pShadowMat->Use();
     ShadowInfo* pInfo = shadows.GetCurrEntry();
-    for (int i = 0; i < (shadows.pEnd2 - shadows.pEnd); i++) {
+    for (int i = 0; i < shadows.GetCount(); i++) {
         pInfo[i].Draw();
     }
 }
 
 void Tools_DropShadow_Update(void) {
-    shadows.pEnd = shadows.pEnd2;
+    shadows.UnknownSetPointer();
 }
 
 void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL if unneeded */, float f1,
@@ -1252,18 +1266,25 @@ Vector* Tools_GetRefPointPos(Model* pModel, char* pRefName) {
 }
 
 void Tools_ApplyFrictionAndGravity(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1) {
-    Vector sp18 = *pVec1;
-    Vector sp8;
-    if (pVec->MagSquared() > (1.0f / 16.0f)) {
+    Vector force = *pVec1;
+    Vector r;
+
+    if (pVec->MagSquared() > Sqr<float>(0.25f)) {
         f1 = f1 / 2.0f;
     }
-    sp8.Scale(pVec2, -pVec1->Dot(pVec2));
-    sp18.Add(pVec1, &sp8);
-    float f30 = f1 * sp8.Magnitude();
-    float f5 = (sp18.Magnitude() == 0.0f) ? 0.0f : sp18.Normalise() - f30;
-    sp18.Scale(Max<float>(f5, 0.0f));
+
+    r.Scale(pVec2, -pVec1->Dot(pVec2));
+
+    force.Add(pVec1, &r);
+
+    float f30 = f1 * r.Magnitude();
+    float f5 = (force.Magnitude() == 0.0f) ? 0.0f : force.Normalise() - f30;
+
+    force.Scale(Max<float>(f5, 0.0f));
+
     pVec->Scale(1.0f - (f1 / 2.0f));
-    pVec->Add(&sp18);
+
+    pVec->Add(&force);
 }
 
 // Generates a Random Radial Vector X/Z Components

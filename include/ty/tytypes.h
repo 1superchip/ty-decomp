@@ -1,6 +1,7 @@
 #ifndef TYTYPES_H
 #define TYTYPES_H
 
+#include "ty/tools.h"
 #include "common/Vector.h"
 #include "common/Collision.h"
 
@@ -68,6 +69,8 @@ struct Rotation {
     }
 };
 
+#ifndef KEEP_DATA_POOLING
+
 struct UnknownColorVectorStruct {
     Vector* GetColor(void) {
         static Vector colorVec = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -75,54 +78,6 @@ struct UnknownColorVectorStruct {
     }
 };
 
-struct FloorInfo {
-    bool bUnderFeet;
-    bool bOn;
-    bool bValid;
-    CollisionResult res;
-
-    float GetDiff(Vector* pPos) {
-        return bValid ? pPos->y - res.pos.y : 10000.0f;
-    }
-};
-
-struct TyContext {
-    struct WaterInfo {
-        bool bValid;
-        Vector pos;
-    };
-
-    WaterInfo water;
-    FloorInfo floor;
-    CollisionResult results[4];
-    int resultIndex;
-
-    void Reset(void) {
-
-    }
-
-    float GetYDistanceToWater(Vector* p) {
-        return water.pos.y - p->y;
-    }
-
-    // was this defined in the header?
-    // void VelocityInline(Vector* pVelocity, float f1) {
-    //     Vector g = {0.0f, -gb.mDataVal.jumpGravity, 0.0f, 0.0f};
-    // }
-};
-
-// Ty inherits Hero
-// Should be defined in Ty.h
-// struct Ty : GameObject {
-//     void* pReflectionModel;
-//     Vector position;
-//     Vector lastPosition;
-
-//     // fixed velocity vector 
-//     // which points towards where ty will go when on contact with collision
-//     Vector velocity;
-
-//     Vector diveVec;
-// };
+#endif // KEEP_DATA_POOLING
 
 #endif // TYTYPES_H

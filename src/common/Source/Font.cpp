@@ -310,13 +310,20 @@ float Font::GetHeight(void) {
 int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, FontJustify justify,
         Vector* pCharPositions, int numCharPositions, int charPosIndex, uint* pCharColors, 
         int numCharColors, int charColorIndex) {
+    
     Vector topLeft;
     Vector charPos[4];
+
     float uv[8];
+
     int numContribChars = 0;
+
     pFontMaterial->Use();
+
 	float sx = 0.0f;
+
     u8* text = (u8*)pText;
+
 	while (*text != '\0') {
         int c = *text;
 		if (c > ' ' && c < 256) {
@@ -330,11 +337,14 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
 		} else {
 			sx += unkC;
 		}
+
 		text++;
 	}
+
     if (numContribChars == 0) {
         return 0;
     }
+
     sx *= scaleX;
     float sy = mHeight * scaleY;
     Vector sp8;
@@ -415,6 +425,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
                 } else {
                     colorR = colorG = colorB = colorA = 0x80;
                 }
+                
                 GXClearVtxDesc();
                 GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
                 GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);

@@ -32,12 +32,15 @@ struct UIButton {
     void Reset(void);
     void SetEnabled(bool);
     void SetSelected(bool);
+
     void Deinit(void) {
         mText.Deinit();
     }
+
     void GetPosition(Vector* pPos) {
         mText.GetPosition(pPos);
     }
+
     bool IsEnabled(void) {
         return bEnabled;
     }
@@ -77,6 +80,7 @@ struct UIButtonGroup {
     UIButton* GetSelectedButton(void) {
         return &mpButtons[selection];
     }
+    
     UIButton* GetButton(int index) {
         return &mpButtons[index];
     }

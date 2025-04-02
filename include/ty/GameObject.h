@@ -68,7 +68,8 @@ struct ModuleInfoBase {
 struct DescriptorIterator;
 
 enum GameObjDescFlags {
-    MODULE_ALLOCATION_OVERRIDE = 0x100000,
+    GODF_DYNAMIC                = 1 << 0, // 0x1
+    MODULE_ALLOCATION_OVERRIDE  = 1 << 20, // 0x100000
 };
 
 struct GameObjDesc : MKPropDescriptor {
@@ -113,6 +114,10 @@ struct GameObject : MKProp {
     virtual void Message(MKMessage* pMsg);
     virtual void Init(GameObjDesc* pDesc);
     virtual void Deinit(void);
+
+    bool IsInWater(void) {
+        return flags & In_WaterVolume;
+    }
 
     Vector* GetPos(void) {
         return pLocalToWorld->Row3();

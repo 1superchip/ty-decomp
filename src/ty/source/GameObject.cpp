@@ -157,22 +157,31 @@ int GameObject::GetMessageIdFromString(char* string) {
 
 void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
     pMod->Init();
+
     unk80 = NULL;
     flags = _flags;
     searchMask = _searchMask;
     pModule = pMod;
+
     if (pMod->pData->flags & Module_AllocateOverride) {
         // if the module has a custom Allocation function, set the flags in the object descriptor
-        flags |= 0x100000;
+        flags |= MODULE_ALLOCATION_OVERRIDE;
     }
-    flags |= 0xC;
+
+    flags |= 0x8 | 0x4; // (1 << 3) || (1 << 2)
+
     maxUpdateDist = 6000.0f;
     maxDrawDist = 6000.0f;
     maxScissorDist = 1000.0f;
+
     drawLayer = 1;
+
     strncpy(descrName, pDescrName, sizeof(descrName));
+
     Tools_StripExtension(modelName, pMdlName);
+
     pName = descrName;
+
     pProps = NULL;
 }
 

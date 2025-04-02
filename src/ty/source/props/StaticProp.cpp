@@ -1,6 +1,8 @@
+#define KEEP_DATA_POOLING (1)
+
 #include "types.h"
-#include "ty/GameObjectManager.h"
 #include "ty/props/StaticProp.h"
+#include "ty/GameObjectManager.h"
 #include "ty/global.h"
 #include "common/StdMath.h"
 #include "common/Str.h"
@@ -13,19 +15,6 @@ struct TyParticleManager {
 };
 
 extern TyParticleManager* particleManager;
-
-extern struct Ty {
-    char padding[0x40];
-    Vector pos;
-    char unk[0x7F4];
-    bool unk844;
-    bool unk845;
-    bool unk846;
-    float unk848;
-    float unk84C;
-    char unk1[0x34];
-    int unk884;
-} ty;
 
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
@@ -199,6 +188,7 @@ void StaticProp::LoadDone(void) {
 
 void StaticProp::Draw(void) {
     lodManager.Draw(pModel, detailLevel, unk1C, distSquared, flags & 0x40000000);
+    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, IsInWater());
 }
 
 void StaticFXProp::Init(GameObjDesc* pDesc) {
@@ -276,23 +266,10 @@ void StaticFXProp::Draw(void) {
 void StaticFXProp::UpdateShake(void) {
     Vector tyShakePos = ty.pos;
     tyShakePos.y += gb.unk78C;
-    
-    // StaticProp::TyOn is inlined here
+
     if (gb.unk78C != 0.0f) {
-        bool unk = false;
-        if (ty.unk844 != false) {
-            float diff;
-            if (ty.unk846 != false) {
-                diff = ty.pos.y - ty.unk84C;
-            } else {
-                diff = 10000.0f;
-            }
-            if (diff < 10.0f) {
-                unk = true;
-            }
-        }
         
-        if (((ty.unk845 != false || unk) && (int*)ty.unk884 == (int*)&collisionInfo) == false) {
+        if (!TyOn()) {
             if (PointInBoundingBox(pModel, &tyShakePos, 1.2f) == false) {
                 return;
             }

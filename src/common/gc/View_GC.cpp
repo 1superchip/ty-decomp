@@ -1,7 +1,6 @@
 #include "types.h"
 #include "common/System_GC.h"
 #include "common/View.h"
-// #include "Dolphin/gx.h"
 #include "common/Heap.h"
 #include "common/Material.h"
 #include "common/StdMath.h"
@@ -17,20 +16,28 @@ View* View::pDefaultView;
 void View::Init(void) {
     Vector camPos;
     Vector camTarget;
+
     unk2AC = 1.0f;
     unk2B0 = 1.0f;
+
     camPos.Set(0.0f, 0.0f, 0.0f);
     camTarget.Set(0.0f, 0.0f, 1.0f);
+
     unk88.SetIdentity();
     unkC8.SetIdentity();
     unk108.SetIdentity();
+
     SetCameraLookAt(&camPos, &camTarget);
-    SetProjection(PI2, 0.5f, 1000.0f);
+
+    SetProjection(DegToRad(90.0f), 0.5f, 1000.0f);
+
     closeFogPlane = 500.0f;
     farFogPlane = 900.0f;
+    
     SetFogIntensity(0.0f, 255.0f);
     SetFogColour(0x808080);
     SetDirectLight(DirectLight::GetDefault());
+
     unk2E8 = 0;
     unk29C = NULL;
     bDisableZWrite = false;
@@ -44,20 +51,27 @@ void View::Init(void) {
 void View::Init(float arg1, float arg2, float arg3, float arg4) {
     Vector camPos;
     Vector camTarget;
+
     unk2AC = 1.0f;
     unk2B0 = 1.0f;
+
     camPos.Set(0.0f, 0.0f, 0.0f);
     camTarget.Set(0.0f, 0.0f, 1.0f);
+
     unk88.SetIdentity();
     unkC8.SetIdentity();
     unk108.SetIdentity();
+
     SetCameraLookAt(&camPos, &camTarget);
-    SetProjection(PI2, 0.5f, 1000.0f);
+
+    SetProjection(DegToRad(90.0f), 0.5f, 1000.0f);
+
     closeFogPlane = 500.0f;
     farFogPlane = 900.0f;
     SetFogIntensity(0.0f, 255.0f);
     SetFogColour(0x808080);
     SetDirectLight(DirectLight::GetDefault());
+
     unk2E8 = 0;
     unk2B4 = 1.0f;
     unk2B8 = 1.0f;
@@ -200,7 +214,9 @@ void View::SetProjection(float fov, float arg2, float arg3) {
 void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
     Vector trans;
     Matrix matrix;
+
     trans.SetZero();
+
     if (pMatrix != NULL) {
         unk88 = *pMatrix;
         unk148.Multiply4x4(&unk88, &unk1C8);
@@ -208,14 +224,18 @@ void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
         unk88.SetIdentity();
         unk148 = unk1C8;
     }
+
     if (pLight != NULL) {
         unk208.Multiply3x3(&unk88, &pLight->mDirMatrix);
         unk208.SetTranslation(&trans);
     }
+
     matrix.Multiply(&unk88, &unkC8);
+
     if (unk288 != false) {
         matrix.Multiply(&matrix, &unk248);
     }
+
     matrix.data[0][2] *= -1.0f;
     matrix.data[1][2] *= -1.0f;
     matrix.data[2][2] *= -1.0f;
@@ -228,9 +248,11 @@ void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
 void View::SetDirectLight(DirectLight* pDirectLight) {
     static GXLightObj lo;
     static Vector lightPos;
+    
     if (pDirectLight != NULL) {
         pLight = pDirectLight;
     }
+
     if (pLight != NULL) {
         
         for (int i = 0; i < 3; i++) {
@@ -280,16 +302,19 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
 void View::Use(void) {
     Matrix matrix;
     pCurrentView = this;
-    if (unk29C != NULL) {
-        unk38 = NULL;
-        unk3C = NULL;
-        unk40 = unk29C[8] - 1;
-        unk44 = unk29C[9] - 1;
+
+    if (unk29C) {
+        unk38 = 0;
+        unk3C = 0;
+        unk40 = unk29C->width - 1;
+        unk44 = unk29C->height - 1;
     } else {
         matrix.Multiply(&unk88, &unkC8);
-        if (unk288 != false) {
+
+        if (unk288) {
             matrix.Multiply(&matrix, &unk248);
         }
+
         matrix.data[0][2] *= -1.0f;
         matrix.data[1][2] *= -1.0f;
         matrix.data[2][2] *= -1.0f;

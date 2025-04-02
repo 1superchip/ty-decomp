@@ -2105,9 +2105,9 @@ ty/source/DDA.cpp:
 #   .sbss: [0x803fa8b8, 0x803fa8d0]
 #   .sdata2: [0x804005d8, 0x804006b8]
 
-#ty/source/ExtendedAnalogControl.cpp:
-#   .text: [0x8015d78c, 0x8015d998]
-#   .sdata2: [0x804006b8, 0x804006e0]
+ty/source/ExtendedAnalogControl.cpp:
+  .text: [0x8015d78c, 0x8015d998]
+  .sdata2: [0x804006b8, 0x804006e0]
 
 #ty/source/finishline.cpp:
 #   .text: [0x8015d998, 0x8015e2fc]

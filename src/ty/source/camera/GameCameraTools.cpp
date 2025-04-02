@@ -258,15 +258,17 @@ void GCT_Trigger::Load(CameraOverrideTriggerLoadInfo* pTriggerLoadInfo) {
     }
 }
 
-// inlined
 void CameraOverride_CreateScaledDirectionMatrix(Matrix* pMtx, Vector* pFrom, Vector* pTo, float xScale, float yScale) {
     Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
     Vector x;
     Vector y;
     Vector z;
+
     z.Sub(pTo, pFrom);
     float zLen = z.Normalise();
+
     float zDotUp = __fabs(z.Dot(&up));
+
     if (zDotUp > 0.99f) {
         x.Set(1.0f, 0.0f, 0.0f);
         y.Cross(&x, &z);
@@ -275,10 +277,13 @@ void CameraOverride_CreateScaledDirectionMatrix(Matrix* pMtx, Vector* pFrom, Vec
         x.Normalise();
         y.Cross(&x, &z);
     }
+
     pMtx->SetIdentity();
+
     pMtx->Row0()->Scale(&x, xScale);
     pMtx->Row1()->Scale(&y, yScale);
     pMtx->Row2()->Scale(&z, zLen);
+
     pMtx->Row3()->Copy(pFrom);
 }
 
@@ -300,6 +305,7 @@ bool GCT_Trigger::TestPoint(Vector* pPoint) {
             return true;
         }
     }
+    
     return false;
 }
 
@@ -363,34 +369,42 @@ void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].unk10);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].unk20);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].unk30);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].mpNextPlane->unk0);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].mpNextPlane->unk10);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].mpNextPlane->unk20);
         if (dist > temp) {
             temp = dist;
         }
+
         dist = CameraTools_VectorDist(&mpPlanes[i].unk40, &mpPlanes[i].mpNextPlane->unk30);
         if (dist > temp) {
             temp = dist;
         }
+
         mpPlanes[i].unk40.w = temp;
     }
 
@@ -427,12 +441,19 @@ bool InPlane3D(Vector* p0, Vector* p1, Vector* p2, Vector* p3, Vector* p4) {
         TestPlane(p0, p3, p4, p1)) {
         return true;
     }
+
     return false;
 }
 
 bool GCT_WaypointPlaneManager::IsWithinContainer(Vector* pVector, GCT_WaypointPlane* pPlane) {
-    if (pPlane->mpNextPlane == NULL) return false;
-    if (CameraTools_VectorDistSq(pVector, &pPlane->unk40) > pPlane->unk40.w * pPlane->unk40.w) return false;
+    if (pPlane->mpNextPlane == NULL) {
+        return false;
+    }
+
+    if (CameraTools_VectorDistSq(pVector, &pPlane->unk40) > pPlane->unk40.w * pPlane->unk40.w) {
+        return false;
+    }
+
     if (InPlane3D(pVector, &pPlane->unk10, &pPlane->unk30,
             &pPlane->mpNextPlane->unk30, &pPlane->mpNextPlane->unk10) &&
         InPlane3D(pVector, &pPlane->mpNextPlane->unk0, &pPlane->mpNextPlane->unk20,
@@ -447,6 +468,7 @@ bool GCT_WaypointPlaneManager::IsWithinContainer(Vector* pVector, GCT_WaypointPl
             &pPlane->mpNextPlane->unk30, &pPlane->unk30)) {
         return true;
     }
+
     return false;
 }
 
@@ -461,6 +483,7 @@ int GCT_WaypointPlaneManager::TestPoint(Vector* pPoint) {
             }
         }
     }
+
     return -1;
 }
 
@@ -481,15 +504,18 @@ bool GCT_WaypointPlaneManager::SetTargetLinePos(Vector* r4, int r5, int r6, Vect
     line1EndPrev.Scale(&pathDir, -len);
     line1EndPrev.Add(r4);
     bool c = GCT_IntersectingPoint2D(r4, &line1EndPrev, &mpPlanes[r6].unk0, &mpPlanes[r6].unk20, &prevPlanePos);
+
     if (!c && !b) {
         return false;
     }
+
     prevPlanePos.y = r4->y;
     currPlanePos.y = r4->y;
     float b8 = CameraTools_VectorDistXZ(&currPlanePos, &prevPlanePos);
     float bC = CameraTools_VectorDistXZ(r4, &prevPlanePos);
     r7->Scale(&pathDir, len * (bC / b8));
     r7->Add(p1);
+
     return true;
 }
 
@@ -546,7 +572,9 @@ bool GCT_WaypointPlaneManager::SetSourceLinePos(Vector* r4, float f1, int r5, in
             f1 -= len;
         }
     }
+
     r7->Copy(&safePos);
+
     return true;
 }
 
@@ -554,11 +582,15 @@ float GCT_WaypointPlaneManager::GetTimeAlongPath(Vector* pPoint, int r5) {
     if (r5 <= 1) {
         return 0.0f;
     }
+
     int prev = r5 - 1;
+
     float dist = CameraTools_VectorDist(pPoint, &mWaypoints.vecs[prev]);
+
     for (int i = 1; i < prev; i++) {
         dist += mpPlanes[i].unk50;
     }
+
     return dist / unk120;
 }
 
@@ -566,8 +598,10 @@ bool GCT_WaypointPlaneManager::GetPointAlongPath(float f1, Vector* pPoint) {
     if (f1 < 0.0f || f1 > 1.0f) {
         return false;
     }
+
     f1 = unk120 * f1;
     float f2 = 0.0f;
+    
     for (int i = 1; i < mWaypoints.unk104 - 2; i++) {
         float f0 = f2 + mpPlanes[i].unk50;
         if (f0 > f1) {
@@ -581,8 +615,10 @@ bool GCT_WaypointPlaneManager::GetPointAlongPath(float f1, Vector* pPoint) {
             pPoint->Add(currPoint, &dir);
             return true;
         }
+
         f2 = f0;
     }
+
     return false;
 }
 

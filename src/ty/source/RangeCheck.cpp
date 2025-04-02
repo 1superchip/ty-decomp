@@ -4,6 +4,7 @@
 #include "ty/tools.h"
 #include "common/Str.h"
 #include "common/Heap.h"
+#include "ty/Ty.h"
 
 Vector* GameCamera_GetPos(void);
 Vector* GameCamera_GetDir(void);
@@ -13,18 +14,6 @@ extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
 int strnicmp(char const*, char const*, int);
 void Draw_AddPostDrawModel(Model*, float, bool);
-
-struct Hero {
-    int junk[0xe0 / 4];
-    int currentHero;
-};
-
-extern Hero* pHero;
-
-extern struct Ty {
-    int junk[0xa48 / 4];
-    int state;
-} ty;
 
 static int nextAvailableLODEntryIndex;
 static LODEntry* lodEntryPool = NULL;
@@ -61,9 +50,11 @@ int Range_WhichZone(Vector* point, float* arg1) {
             if (arg1 == NULL) {
                 return zoneId;
             }
+            
             *arg1 = (dist - fVar1) / (zone - fVar1);
             return zoneId;
         }
+        
         fVar1 = zone;
     }
 
@@ -80,31 +71,31 @@ bool Range_IsVisible(Vector* point) {
 void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float arg4, float arg5, int arg6) {
     if (arg1 == arg6 - 1) {
         pModel->colour.w = Min<float>(2.0f * (1.0f - arg2), 1.0f);
-        return;
-    }
-    if (arg1 == 0) {
+    } else if (arg1 == 0) {
         Vector center = *pModel->matrices[0].Row3();
         Vector target;
         Vector source;
         center.y += arg3 / 2.0f;
+
         GameCamera_GetVectors(&source, &target, NULL);
-        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.state != 0x2d) {
+
+        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.mFsm.GetStateEx() != 0x2d) {
             pModel->colour.w = Max<float>(arg5, pModel->colour.w - 0.05625f);
-            return;
+        } else {
+            pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
         }
+    } else {
         pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
-        return;
     }
-    pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
-    return;
 }
 
 void Range_Update(void) {
-    if (pHero->currentHero == 0) {
-        heroState = ty.state; // calls TyFSM::GetState()
+    if (pHero->IsTy()) {
+        heroState = ty.mFsm.GetStateEx();
     } else {
         heroState = 0;
     }
+
     cameraPos = *GameCamera_GetPos();
     cameraVector = *GameCamera_GetDir();
 }
@@ -152,9 +143,11 @@ void LODDescriptor::ReplicateLODData(int arg0, int arg1) {
         bits |= (1 << arg0);
         arg0++;
     }
+
     for (int i = 0; i < nmbrOfEntries; i++) {
         pEntries[i].subObjectFlags |= (pEntries[i].CheckFlags(shift)) ? bits : 0;
     }
+
     shadowFlags |= (shadowFlags & shift) ? bits : 0;
     particleFlags |= (particleFlags & shift) ? bits : 0;
     soundFlags |= (soundFlags & shift) ? bits : 0;
@@ -242,6 +235,7 @@ void LODDescriptor::ParseIni(KromeIni* pIni, KromeIniLine* pLine) {
                 pLine->AsInt(0, &invisibleZone);
             }
         }
+
         pLine = pIni->GetNextLine();
     }
 
@@ -315,9 +309,7 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
     if (pDescriptor->flags & LODFlags_CameraFade) {
         if (subobjectEnableFlags == pDescriptor->invisibleZone - 1) {
             pModel->colour.w = arg2;
-            return;
-        }
-        if (subobjectEnableFlags <= 0 && pDescriptor->flags & LODFlags_CameraFade) {
+        } else if (subobjectEnableFlags <= 0 && pDescriptor->flags & LODFlags_CameraFade) {
             Vector center = *pModel->matrices[0].Row3();
             Vector target;
             Vector source;
@@ -325,26 +317,27 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
             GameCamera_GetVectors(&source, &target, NULL);
             if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != 0x2d) {
                 pModel->colour.w = Max<float>(pDescriptor->minalpha, pModel->colour.w - 0.05625f);
-                return;
+            } else {
+                pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
             }
+        } else {
             pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
-            return;
         }
-        pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
-        return;
-    }
-    if (pDescriptor->flags & LODFlags_Alpha) {
+    } else if (pDescriptor->flags & LODFlags_Alpha) {
         pModel->colour.w = arg2;
     }
-    return;
+
 }
 
 bool LODManager::Draw(Model* pModel, int arg1, float arg2, float arg3, bool arg4) {
     bool ret;
+    
     InternalUpdate(pModel, arg1, arg2);
+
     if ((pDescriptor->flags & LODFlags_Scissor) && pDescriptor->maxScissorDist > 0.0f) {
         pModel->flags.bits.b3 = arg3 < Sqr<float>(pDescriptor->maxScissorDist);
     }
+
     if (pModel->colour.w < 1.0f || pDescriptor->flags & LODFlags_AlphaProp) {
         if (subobjectEnableFlags <= 0 || (subobjectEnableFlags >= 7 || pDescriptor->flags & LODFlags_AlphaProp)) {
             Draw_AddPostDrawModel(pModel, arg3, arg4);
@@ -355,5 +348,6 @@ bool LODManager::Draw(Model* pModel, int arg1, float arg2, float arg3, bool arg4
     } else {
         ret = pModel->Draw(NULL);
     }
+
     return ret;
 }

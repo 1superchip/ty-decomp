@@ -1,38 +1,8 @@
-// Assembly file in asm/Projectile.s
-
 #include "ty/props/Projectile.h"
 #include "ty/Kinematics.h"
 #include "ty/global.h"
 #include "ty/GameObjectManager.h"
-
-
-struct TyFSM {
-    char padding[0x10];
-    int state;
-    // https://decomp.me/scratch/wZJsi
-    bool BiteState(int);
-    bool KnockBackState(int);
-
-    bool BiteState(void) {
-        return BiteState(state);
-    }
-    bool KnockBackState(void) {
-        return KnockBackState(state);
-    }
-};
-
-enum HurtType {};
-enum DDADamageCause {};
-enum KnockBackType {};
-struct Ty {
-    char padding[0x40];
-    Vector mPos;
-    char padding2[0xa38 - 0x50];
-    TyFSM fsm;
-    void Hurt(HurtType, DDADamageCause, bool, Vector*, float);
-    void SetKnockBackFromDir(Vector*, float, KnockBackType);
-};
-extern Ty ty;
+#include "ty/Ty.h"
 
 ModuleInfo<Projectile> projectileModule;
 
@@ -106,7 +76,7 @@ extern void SoundBank_Play(int, Vector*, uint);
 
 void Projectile::CheckForHit(void) {
     Vector* pPos = pModel->matrices[0].Row3();
-    Vector sp18 = ty.mPos;
+    Vector sp18 = ty.pos;
     sp18.y += 50.0f;
 
     if (!unk74 && sp18.IsInsideSphere(pPos, GetDesc()->unk8C)) {
@@ -115,9 +85,10 @@ void Projectile::CheckForHit(void) {
         ResolveHit();
         if (unk75) {
             DamageTy();
-        } else if (!ty.fsm.KnockBackState() && !ty.fsm.BiteState()) {
+        } else if (!ty.mFsm.KnockBackState() && !ty.mFsm.BiteState()) {
             KnockBackTy();
         }
+
         return;
     }
 
@@ -157,12 +128,15 @@ bool Projectile::ResolveHit(void) {
 void Projectile::Fire(Vector* pVec) {
     pModel->matrices[0].SetTranslation(pVec);
     SetState((ProjectileState)2);
+
     unk70 = GetDesc()->unk84;
+
     mRot.Set(
         RandomFR(&gb.mRandSeed, -0.3f, 0.3f),
         RandomFR(&gb.mRandSeed, -0.2f, 0.2f),
         RandomFR(&gb.mRandSeed, -0.2f, 0.2f)
     );
+
     mRot.w = 0.0f;
     unk74 = false;
     unk6C = 0;
@@ -191,6 +165,7 @@ bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
         if (f4 < 0.0f) {
             return false;
         }
+
         float f30 = sqrtf(f4);
         float f1 = Min<float>((f30 - GetDesc()->unk88) / sp10, 
             (-GetDesc()->unk88 - f30) / sp10);
@@ -211,13 +186,14 @@ bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
         mPosDiff.Scale(f29);
         mPosDiff.y = GetDesc()->unk88;
     }
+    
     return true;
 }
 
 void Projectile::SetState(ProjectileState newState) {
-    if (mState == 0 && newState != 0) {
+    if (mState == (ProjectileState)0 && newState != (ProjectileState)0) {
         objectManager.AddObject(this, pModel);
-    } else if (mState != 0 && newState == 0) {
+    } else if (mState != (ProjectileState)0 && newState == (ProjectileState)0) {
         objectManager.RemoveObject(this);
     }
 

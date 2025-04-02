@@ -303,7 +303,7 @@ void Input_ClearPadData(void) {
 /// @return Whether any button has changed
 bool Input_HasAnyButtonChanged(void) {
     for (int i = 0; i <= 15; i++) {
-        if (Input_WasButtonPressed((InputDevices)0, i, NULL)) {
+        if (Input_WasButtonPressed(CHAN_0, i, NULL)) {
             return true;
         }
     }

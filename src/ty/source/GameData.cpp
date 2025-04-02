@@ -5,6 +5,7 @@
 #include "common/StdMath.h"
 #include "ty/props/gem.h"
 #include "common/View.h"
+#include "ty/Ty.h"
 
 // EXTERNS
 void Hud_SetGems(int);
@@ -31,14 +32,6 @@ void SoundBank_SetVolume(float, int);
 View* GameCamera_View(void);
 void Hud_ShowLives(void);
 void Hud_ShowBilbies(void);
-struct TyHealth {
-    char unk[0x10];
-    void SetNumSymbols(int);
-};
-extern struct Ty {
-    char unk[0x1d8];
-    TyHealth health;
-} ty;
 extern "C" void memset(void*, int, int);
 // End EXTERNS
 
@@ -210,9 +203,9 @@ void GameData::SetHasExtraHealth(bool bExtraHealth) {
     pSaveData->tyAttributes.bHasExtraHealth = bExtraHealth;
 
     if (bExtraHealth) {
-        ty.health.SetNumSymbols(2);
+        ty.tyHealth.SetNumSymbols(2);
     } else {
-        ty.health.SetNumSymbols(1);
+        ty.tyHealth.SetNumSymbols(1);
     }
 
     bIsDirty = true;

@@ -86,7 +86,7 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
         p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
         p->unk48 = _table_sinf(p->mAngle);
         p->unk4C = _table_cosf(p->mAngle);
-        p->floatData[0] = unk4;
+        p->SetUnk58ArrayByIndex(0, unk4);
     }
 }
 
@@ -132,8 +132,8 @@ void Flame_CustomUpdate(ParticleSystem* pSys) {
             pParticle->mColor.w = pSys->mpType->mpEnvelopes[prevEnvIndex].unk4 + 
                 (f4 * pSys->mpType->mpEnvelopes[prevEnvIndex].unk14);
 
-            if (pParticle->floatData[0] > 1.0f) {
-                pParticle->unk30 = pParticle->floatData[0];
+            if (pParticle->GetUnk58ArrayByIndex(0) > 1.0f) {
+                pParticle->unk30 = pParticle->GetUnk58ArrayByIndex(0);
             } else {
                 pParticle->unk30 = pSys->mpType->mpEnvelopes[prevEnvIndex].unk8 + 
                     (f4 * pSys->mpType->mpEnvelopes[prevEnvIndex].unk18);

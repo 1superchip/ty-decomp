@@ -129,7 +129,7 @@ struct Model {
             u8 b0 : 2;
             u8 bHasAnimation : 1;
             bool b3 : 1; // "bScissoring"?
-            u8 b4 : 1;
+            u8 b4 : 1; // collisionTracking most likely?
             u8 b5 : 1;
             u8 b6 : 1;
             u8 b7 : 1;

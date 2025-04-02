@@ -12,8 +12,16 @@ struct ShatterStruct {
 };
 ShatterStruct* Shatter_Add(Model*, float, float, int);
 
+enum CollapsibleState {
+    COLLAPSIBLE_STATE_0 = 0,
+    COLLAPSIBLE_STATE_1 = 1,
+    COLLAPSIBLE_STATE_2 = 2,
+    COLLAPSIBLE_STATE_3 = 3,
+    COLLAPSIBLE_STATE_4 = 4,
+};
+
 struct Collapsible : StaticProp {
-    int state;
+    CollapsibleState state;
     int unk5C;
     Vector defaultTrans; // model translation
     Vector scale;
@@ -21,17 +29,20 @@ struct Collapsible : StaticProp {
     ShatterStruct* shatter;
     
     virtual void LoadDone(void);
+
     virtual void Reset(void) {
         pModel->matrices[0].SetTranslation(&defaultTrans);
         pModel->matrices[0].SetRotationPYR(&defaultRot);
         pModel->matrices[0].Scale(&scale);
-        state = 0;
+        state = COLLAPSIBLE_STATE_0;
         unk5C = 0;
         collisionInfo.bEnabled = true;
         collisionInfo.flags = 0;
         collisionInfo.pProp = NULL;
     }
+
     virtual void Update(void);
+
     virtual void Draw(void) {
         if (!Hidden()) {
             // if the Collapsible isn't hidden, draw it
@@ -41,13 +52,13 @@ struct Collapsible : StaticProp {
     
     virtual void Init(GameObjDesc* pDesc) {
         StaticProp::Init(pDesc);
-        state = 0;
+        state = COLLAPSIBLE_STATE_0;
         shatter = Shatter_Add(pModel, 1.0f, 0.7f, 0x78);
         Reset();
     }
     
     bool Hidden(void) {
-        return state == 3 || state == 2;
+        return state == COLLAPSIBLE_STATE_3 || state == COLLAPSIBLE_STATE_2;
     }
 };
 

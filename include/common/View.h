@@ -2,7 +2,7 @@
 #define COMMON_VIEW
 
 #include "types.h"
-#include "Dolphin/gx.h"
+#include "common/Texture.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
 #include "common/DirectLight.h"
@@ -39,14 +39,14 @@ struct View {
     float unk28C;
     float unk290;
     char unk294[8];
-    uint* unk29C;
+    Texture* unk29C;
     char unk2A0[12];
     float unk2AC;
     float unk2B0;
     float unk2B4;
     float unk2B8;
-    float unk2BC;
-    float unk2C0;
+    float unk2BC; // farZ
+    float unk2C0; // nearZ
     float unk2C4;
     float unk2C8;
     float unk2CC;

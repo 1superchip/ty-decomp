@@ -13,12 +13,15 @@ struct PtrList {
     void Init(int);
     void Destroy(T*);
     void Deinit(void);
+
     T* AddEntry(T* p) {
         return *--pPointers = p;
     }
+
     T* GetUnkEntry(void) {
         return *pPointers++;
     }
+    
     T** GetPointers(void) {
         return pPointers;
     }

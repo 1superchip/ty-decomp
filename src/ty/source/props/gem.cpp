@@ -371,7 +371,7 @@ void Gem::Draw(void) {
     elementInfo[gemElement].pModel->colour.Set(1.0f, 1.0f, 1.0f, unk1C);
 
     if (distSquared < draw) {
-        Draw_AddPostDrawElement((void*)this, &PostDraw, distSquared, GetDrawFlag() ? true : false);
+        Draw_AddPostDrawElement((void*)this, &PostDraw, distSquared, IsInWater() ? true : false);
     } else {
         View::GetCurrent()->SetLocalToWorldMatrix(NULL);
         mParticle.color.w = unk1C;

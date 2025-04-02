@@ -4,23 +4,6 @@
 #include "common/StdMath.h"
 #include "ty/GameObjectManager.h"
 
-extern struct Ty {
-    char padding[0x40];
-    Vector pos;
-    char padding2[0xD8 - 0x50];
-    float radius;
-    char unk[0x7F4];
-    bool unk844;
-    bool unk845;
-    bool unk846;
-    float unk848;
-    float unk84C;
-    char unk1[0x34];
-    int unk884;
-    
-    void SetAbsolutePosition(Vector*, int, float, bool);
-} ty;
-
 //extern void LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
 static ModuleInfo<Platform> platformModuleInfo;

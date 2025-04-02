@@ -63,16 +63,20 @@ void UIModel::SetPosition(Vector* pPos, char r5, View* pView) {
 
 void UIImage::Init(char* pMatName) {
     pMaterial = Material::Create(pMatName);
+
     img.startX = 0.0f;
     img.startY = 0.0f;
-    // this inline doesn't exist in the debug build so it might be fake?
-    img.endX = getTexture(pMaterial)->width;
-    img.endY = getTexture(pMaterial)->height;
+
+    img.endX = pMaterial->GetTexture()->width;
+    img.endY = pMaterial->GetTexture()->height;
+
     img.z = 0.0f;
+
     img.uv0 = 0.0f;
     img.uv1 = 0.0f;
     img.uv2 = 1.0f;
     img.uv3 = 1.0f;
+
     img.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -81,6 +85,7 @@ void UIImage::Init(Material* t_pMaterial) {
         if (pMaterial != NULL) {
             Deinit();
         }
+
         t_pMaterial->referenceCount++;
         pMaterial = t_pMaterial;
     }
@@ -95,13 +100,17 @@ void UIImage::Init(float endX, float endY) {
     // Initialize Blitter_Image
     img.startX = 0.0f;
     img.startY = 0.0f;
+
     img.endX = endX;
     img.endY = endY;
+
     img.z = 0.0f;
+
     img.uv0 = 0.0f;
     img.uv1 = 0.0f;
     img.uv2 = 1.0f;
     img.uv3 = 1.0f;
+    
     img.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 

@@ -140,7 +140,7 @@ void Torch::Update(void) {
         bEmitFire2 = true;
     }
 
-    float colorWobble = 1.0f + (Tools_Wobble((float)unkAC * 0.08f, 0x3039) * 0.2f);
+    float colorWobble = 1.0f + (Tools_Wobble((float)unkAC * 0.08f, 12345) * 0.2f);
     mLightCol.Scale(&lightCol, colorWobble);
 
     switch (mState) {
@@ -164,7 +164,7 @@ void Torch::Update(void) {
 }
 
 void Torch::Draw(void) {
-    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
+    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, IsInWater());
 
     pModel->GetRefPointWorldPosition(flameRefIndex, &mFlamePos);
 
@@ -201,6 +201,7 @@ void Torch::Hit(void) {
         case 1:
             mRot.x += mRotInc;
             mRot.z += mRotInc;
+            
             if (mRot.x > mDefaultRot.x + mRotInc) {
                 unkB0 = 2;
             }
@@ -208,6 +209,7 @@ void Torch::Hit(void) {
         case 2:
             mRot.x -= mRotInc;
             mRot.z -= mRotInc;
+
             if (mRot.x < mDefaultRot.x - mRotInc) {
                 unkB0 = 3;
             }
@@ -215,6 +217,7 @@ void Torch::Hit(void) {
         case 3:
             mRot.x += mRotInc;
             mRot.z += mRotInc;
+
             if (mRot.x >= mDefaultRot.x) {
                 mRotSpeedSetting++;
                 if (mRotSpeedSetting == 2) {
@@ -224,6 +227,7 @@ void Torch::Hit(void) {
                 }
                 unkB0 = 1;
             }
+            
             if (mRotSpeedSetting == 4) {
                 unkB0 = 4;
             }
@@ -270,15 +274,6 @@ void Torch::EmitFire(void) {
     }
 }
 
-
-struct Ty {
-    char padding[0x338];
-    Vector unk338;
-    void AddShadowLight(Vector*, float);
-};
-
-extern Ty ty;
-
 // void DebugInfo_Sphere(char*, Vector*, float, int, Vector*);
 
 /// @brief Adds a shadow to Ty when Ty is near a lit torch
@@ -295,8 +290,8 @@ void Torch::UpdateShadow(void) {
     }
 }
 
-void* Boomerang_CheckForHit(Model*, int, CollisionResult*);
-void* Boomerang_CheckForHitSphere(Vector*, float, bool);
+// void* Boomerang_CheckForHit(Model*, int, CollisionResult*);
+// void* Boomerang_CheckForHitSphere(Vector*, float, bool);
 void SoundBank_Play(int, Vector*, uint);
 
 /// @brief Checks if the Torch is hit by a boomerang

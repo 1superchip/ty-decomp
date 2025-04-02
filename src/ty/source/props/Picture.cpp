@@ -4,7 +4,6 @@
 
 extern void SoundBank_Play(int, Vector*, uint);
 extern View* GameCamera_View(void);
-extern GameObject* pHero;
 
 static StaticPropDescriptor pictureDesc;
 static ModuleInfo<Picture> pictureModule;
@@ -155,7 +154,8 @@ void Picture::Draw(void) {
     if (!bInitialised || (bShow && pModel->matrices[0].Row0()->MagSquared() < 0.01f)) {
         return;
     }
-    Draw_AddPostDrawElement((void*)this, Picture::PostDraw, distSquared, GetDrawFlag());
+    
+    Draw_AddPostDrawElement((void*)this, Picture::PostDraw, distSquared, IsInWater());
 }
 
 void Picture::PostDraw(void* pObj) {

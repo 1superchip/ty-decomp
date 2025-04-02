@@ -6,6 +6,7 @@
 
 struct DirectLight {
     Matrix mDirMatrix;
+    
     Vector mNewColors[3];
     Vector mNewAmbient;
 

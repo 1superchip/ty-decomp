@@ -7,6 +7,7 @@
 #include "ty/DataVal.h"
 #include "common/DirectLight.h"
 #include "common/Font.h"
+#include "ty/ExtendedAnalogControl.h"
 
 enum GameSubState {
     GSS_NONE        = -1,
@@ -130,8 +131,90 @@ void ManuallyScrollTextures(void);
 void FreeManuallyScrollingTexturePointers(void);
 
 struct JoyPad {
-    char padding0x0[0x74];
+    ExtendedAnalogControl mAnalogControl;
+
+    int mButtonsPressed;
+    int mPrevButtonsPressed;
+
+    float unk38;
+    float unk3C;
+    float unk40;
+    float unk44;
+    float unk48;
+    float unk4C;
+    float unk50;
+    float unk54;
+    float unk58;
+    float unk5C;
+    float unk60;
+    float unk64;
+    float unk68;
+
+    int mPrevNewButtons;
+    int mNewButtonsPressedThisFrame;
+
     InputDevices mInputDeviceID;
+
+    // inlines to get if buttons have been pressed or not
+
+    ExtendedAnalogControl* GetAnalogControl(void) {
+        return &mAnalogControl;
+    }
+
+    InputDevices GetDeviceID(void) {
+        return mInputDeviceID;
+    }
+
+    void DeinitButtons(void) {
+        mButtonsPressed = -1;
+        mPrevButtonsPressed = -1;
+    }
+
+    void SetNewFrame(void) {
+        mPrevButtonsPressed = mButtonsPressed;
+        mNewButtonsPressedThisFrame = 0;
+    }
+
+    float GetUnk38(void) {
+        return unk38;
+    }
+
+    float GetUnk3C(void) {
+        return unk3C;
+    }
+
+    float GetUnk48(void) {
+        return unk48;
+    }
+
+    float GetUnk4C(void) {
+        return unk4C;
+    }
+
+    float GetUnk58(void) {
+        return unk58;
+    }
+
+    float GetUnk5C(void) {
+        return unk5C;
+    }
+
+    float GetUnk60(void) {
+        return unk60;
+    }
+
+    float GetUnk64(void) {
+        return unk64;
+    }
+
+    void Reset_Unk58_Unk5C(void) {
+        unk58 = 0.0f;
+        unk5C = 0.0f;
+    }
+
+    void ResetButtonsPressed(void) {
+        mButtonsPressed = 0;
+    }
 };
 
 enum GameState {

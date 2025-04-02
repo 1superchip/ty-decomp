@@ -5,7 +5,6 @@
 #include "common/Model.h"
 #include "common/Matrix.h"
 
-// TODO: Finish this. This is actually 0x90 bytes long
 struct NodeOverride {
     // these could be int bitfields
     u8 b1 : 1;

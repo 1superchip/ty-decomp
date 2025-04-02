@@ -1,19 +1,7 @@
 #include "ty/props/SpawnPoint.h"
 #include "ty/GameObjectManager.h"
 #include "ty/global.h"
-
-extern struct Ty {
-    char padding[0xa58];
-    Vector spawnPos;
-    Vector spawnRot;
-    bool unk844;
-    bool unk845;
-    bool unk846;
-    float unk848;
-    float unk84C;
-    char unk1[0x34];
-    int unk884;
-} ty;
+#include "ty/Ty.h"
 
 static GameObjDesc spawnDesc;
 static ModuleInfo<SpawnPoint> spawnModInfo;
@@ -46,8 +34,8 @@ void SpawnPoint::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case 1:
             if (fromLevel == gb.mGameData.pSaveData->previousLevel) {
-                ty.spawnPos = tySpawnPos;
-                ty.spawnRot = tySpawnRot;
+                ty.mSpawnPos = tySpawnPos;
+                ty.mSpawnRot = tySpawnRot;
             }
             break;
     }

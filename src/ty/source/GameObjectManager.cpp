@@ -107,7 +107,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
     }
 
     if (objectMemSize != 0) {
-        pObjectMem = Heap_MemAlloc(objectMemSize + 4);
+        pObjectMem = Heap_MemAlloc(objectMemSize + 4); // + strlen("end")
         memset(pObjectMem, 0xCF, objectMemSize);
         strcpy((char*)pObjectMem + objectMemSize, "end");
     } else {
@@ -117,7 +117,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
     GameObject* pObj = static_cast<GameObject*>(pObjectMem);
     GameObjDesc* pDesc = pDescs;
     while (pDesc != NULL) {
-        if (!pDesc->TestFlag((GameObjDescFlags)0x100000)) {
+        if (!pDesc->TestFlag(MODULE_ALLOCATION_OVERRIDE)) {
             pObj = (GameObject*)pDesc->SetUpMem((u8*)pObj);
         }
 
@@ -217,6 +217,7 @@ GameObjDesc* GameObjectManager::FindDescriptor(char* name) {
         
         pDesc = pDesc->unk80;
     }
+    
     return NULL;
 }
 
@@ -229,10 +230,10 @@ int GameObjectManager::GetObjectsInRange(GameObject** ppObjects, int maxCount, V
 #define MAX_SEARCH_GOBJS (0x400)
 
 // Returns the closest object in range
-GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius, int param_2) {
+GameObject* GameObjectManager::GetClosestObjectInRange(Vector* pPt, float radius, int searchMask) {
     GameObject* objects[MAX_SEARCH_GOBJS];
 
-    int count = GetObjectsInRange(objects, MAX_SEARCH_GOBJS, pPt, radius, param_2); // Total GOBJS = 0x400
+    int count = GetObjectsInRange(objects, MAX_SEARCH_GOBJS, pPt, radius, searchMask); // Total GOBJS = 0x400
 
     GameObject* pClosestObj = NULL;
 

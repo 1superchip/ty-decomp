@@ -59,16 +59,16 @@ MKDefaults gMKDefaults = {
     0x20, // unk40
     2500, // numModelInstances
     256, // numModelTemplateInstances
-    0x4000, // unk4C, gMKDefaults.mdl.maxVerticesArray
+    16384, // unk4C, gMKDefaults.mdl.maxVerticesArray
     5500, // unk50, some heap variable which went unused
     0, // unk54
     0x100000, // unk58
-    0xC8, // debugLine3D_count
-    0x12C, // debugParticle_count
-    0x64, // debugBox_count
-    0x32, // debugSphere_count
-    0x1E, // debugMessage_count
-    0x64, // debugMessage3D_count
+    200, // debugLine3D_count
+    300, // debugParticle_count
+    100, // debugBox_count
+    50, // debugSphere_count
+    30, // debugMessage_count
+    100, // debugMessage3D_count
     2, // unk74
     5, // grassPtrListDLCount
     0, // unk7C
@@ -155,17 +155,24 @@ void System_InitModule(void*, char* pCmdLineArgs) {
     Sound_InitModule();
     Water_InitModule();
     Video_InitModule();
+
     gSysOptions = 0;
+
     gFrameCounter = 0;
+
     gDrawCounter = 0;
+
     debugCamera.Init();
+    
     Debug_SetFont(
         Font::Create("DebugFont1",
             "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
             1.0f, 1.8f, 0.0f
         )
     );
+
     MKShadow_InitModule();
+
     MKGrass_InitTypes("grass_types.ini");
 }
 
@@ -242,8 +249,8 @@ void System_DoGameLoop(void) {
         MKMemoryCard_Update();
 
         if (bDebugEnabled != false) {
-            if (Input_WasButtonPressed((InputDevices)0, 3, NULL)) {
-                if (bDebugMenuActive || Input_GetButtonState((InputDevices)0, 6, NULL)) {
+            if (Input_WasButtonPressed(CHAN_0, 3, NULL)) {
+                if (bDebugMenuActive || Input_GetButtonState(CHAN_0, 6, NULL)) {
                     bDebugMenuActive = !bDebugMenuActive;
                     if (!bDebugMenuActive) {
                         Input_ClearPadData();
@@ -393,10 +400,16 @@ void System_InitCommandLineArgs(char* pCmdLineArgs) {
         }
 
         ppCmdLineArgStrings[cmdLineArgCount] = (char*)malloc(len + 1);
+
         strncpy(ppCmdLineArgStrings[cmdLineArgCount], r30, len);
+
         ppCmdLineArgStrings[cmdLineArgCount][len] = '\0';
+
         cmdLineArgCount++;
-        if (pCmdLine == NULL) break;
+
+        if (pCmdLine == NULL) {
+            break;
+        }
     }
 }
 
@@ -406,6 +419,7 @@ void System_DeinitCommandLineArgs(void) {
     for (int i = 0; i < cmdLineArgCount; i++) {
         free(ppCmdLineArgStrings[i]);
     }
+
     cmdLineArgCount = 0;
 }
 
@@ -427,6 +441,7 @@ char* System_GetCommandLineParameter(char* cmd) {
             }
         }
     }
+
     return NULL;
 }
 
@@ -533,6 +548,7 @@ void* operator new(size_t size) {
     if (bHeapAllocated) {
         return OSAllocFromHeap(__OSCurrHeap, size);
     }
+
     return malloc(size);
 }
 
@@ -583,7 +599,9 @@ extern "C" int main(int argc, char* argv[]) {
     // probably just copy and pasting?
     OSSetErrorHandler(OS_ERROR_ALIGNMENT, MyErrorHandler); // @bug Should this be 4 instead of 5?
     OSSetErrorHandler(OS_ERROR_ALIGNMENT, MyErrorHandler);
+    
     DEMOInit(NULL);
+
     bHeapAllocated = true;
 
     // Initiate XFONT
@@ -591,6 +609,7 @@ extern "C" int main(int argc, char* argv[]) {
     XFONTInit(384, ((u16)ALIGN_UP((u16)pRModeObj->fbWidth, 16) * pRModeObj->xfbHeight) * sizeof(u16));
     XFONTSetFrameBuffer(DEMOGetCurrentBuffer());
     XFONTSetFgColor(0);
+
     zCheckRequests.Init(4, sizeof(ZCheckRequest));
     
     if (VIGetTvFormat() == VI_PAL) {
@@ -792,11 +811,13 @@ void System_IdleFunction(void* r3) {
         } else if (resetState == 1 || resetState == 3) {
             if (!System_AnyMemCardBusy()) {
                 resetState = 2;
-                if (DiscErr_IsError() != 0 || bDiscJustClosed) {
+
+                if (DiscErr_IsError() || bDiscJustClosed) {
                     System_DoReset(true, false, false);
                 } else {
                     System_DoReset(false, false, true);
                 }
+
                 resetState = 4;
                 timePadLast = OSGetTime();
             } else {

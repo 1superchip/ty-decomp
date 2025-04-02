@@ -15,6 +15,7 @@
 #include "ty/tytypes.h"
 #include "common/MKGrass.h"
 #include "ty/Shadow.h"
+#include "ty/Ty.h"
 
 MKSceneManager gSceneManager;
 
@@ -413,14 +414,6 @@ extern Vector* pCameraGrassPoint;
 extern bool bEnableGallery;
 extern bool bEnableMovies;
 
-struct Ty {
-    char padding[0x40];
-    Vector unk40;
-
-    void PostLoadInit(void);
-};
-extern Ty ty;
-
 struct GameCameraHeroInfo;
 extern GameCameraHeroInfo* Main_UpdateGlobalGameCameraHeroInfo(void);
 
@@ -440,7 +433,7 @@ void Setup_LoadLevel(void) {
     MKGrass_Init();
     MKGrassGC_LoadTextures(Setup_GetGrassForLevel());
     GrassGCMaxRadius = gb.level.GetCurrentLevel() == LN_LYRE_LYRE ? 5000.0f : 12000.0f;
-    MKGrass_SetPushAwayPos(&ty.unk40, 0);
+    MKGrass_SetPushAwayPos(&ty.pos, 0);
     MKGrass_SetPushAwayPos(pCameraGrassPoint, 2);
     
     particleManager->Init();
@@ -526,10 +519,6 @@ void Setup_LoadLevel(void) {
 }
 
 void SoundBank_PlayExclusiveAmbientSound(bool);
-
-struct Hero : GameObject {};
-
-extern Hero* pHero;
 
 void Setup_PostLoadLevel(void) {
     SoundBank_PlayExclusiveAmbientSound(true);

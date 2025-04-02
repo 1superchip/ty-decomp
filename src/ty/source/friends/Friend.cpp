@@ -86,35 +86,21 @@ void Friend::LoadDone(void) {
 void Friend::Draw(void) {
     // If bFlashSkeleton is true, set the default material to the Shock Material
     if (bFlashSkeleton) {
-        SetDefaultMaterial_UseNone(pShockMaterial);
+        SetRenderStateData(RENDERSTATE_MATERIAL, pShockMaterial);
     }
+
     if ((mFlags & FSF_Visible) && !gb.unkFE && gb.pDialogPlayer == NULL) {
-        mLodManager.Draw(pModel, detailLevel, unk1C, distSquared, GetDrawFlag());
+        mLodManager.Draw(pModel, detailLevel, unk1C, distSquared, IsInWater());
     }
+
     // If bFlashSkeleton is true, set the default material to NULL
     if (bFlashSkeleton) {
-        SetDefaultMaterial_UseNone(NULL);
+        SetRenderStateData(RENDERSTATE_MATERIAL, NULL);
     }
 }
 
 extern "C" int Sound_IsVoicePlaying(int);
 extern int SoundBank_Play(int, Vector*, uint);
-// struct Boomerang {
-//     char padding[0x50];
-//     int rangType;
-//     void PlaySound(BoomerangSound, int);
-// };
-
-// BoomerangMessage is a real structure
-// Furnace::HandleRangMsg(BoomerangMessage*)
-struct BoomerangMessage : MKMessage {
-    Boomerang* pBoomerang;
-    bool unk8;
-
-    void SetUnk8(bool b) {
-        unk8 = b;
-    }
-};
 
 void Friend::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
@@ -129,16 +115,17 @@ void Friend::Message(MKMessage* pMsg) {
             pModel->matrices[0].SetRotationPYR(&mRot);
             pModel->matrices[0].SetTranslation(&mPos);
             break;
-        case 8: // BoomerangMessage id
-            // BoomerangMessage?
+        case MKMSG_BoomerangMsg:
             BoomerangMessage* pBoomerangMsg = (BoomerangMessage*)pMsg;
             if (mFlags & FSF_Visible) {
                 if (pBoomerangMsg->pBoomerang->mRangType != (BoomerangType)3) {
                     pBoomerangMsg->SetUnk8(true);
                 }
+
                 if (unk100 == -1 || Sound_IsVoicePlaying(unk100) == 0) {
                     unk100 = SoundBank_Play(GetDesc()->unkD4, NULL, 0);
                 }
+                
                 if (pBoomerangMsg->pBoomerang->mRangType == BR_Zappyrang) {
                     // if a Zappyrang hit a Friend, set the flash timer to 40
                     // and have the boomerang play a sound
@@ -204,9 +191,11 @@ void Friend::Init(GameObjDesc* pDesc) {
 /// @param  None
 void Friend::Deinit(void) {
     mStateManager.Deinit(this);
+    
     if (pModel && pModel->flags.bits.b4) {
         Collision_DeleteDynamicModel(pModel);
     }
+
     GameObject::Deinit();
 }
 
@@ -271,38 +260,6 @@ void Friend::Update(void) {
     }
 }
 
-struct TyFSM {
-    char padding[0x10];
-    int state;
-    bool SolidSurfaceState(int);
-    int GetState(void) {
-        return state;
-    }
-
-    // Not sure about this function
-    bool ExternalSolidSurfaceState(void) {
-        return SolidSurfaceState(GetState());
-    }
-};
-
-enum TargetPriority {};
-
-struct AutoTargetStruct {
-    void Set(TargetPriority, Vector*, Vector*, Vector*, Model*);
-};
-
-struct Ty {
-    char padding[0x40];
-    Vector mPos;
-    char padding1[0x9E8];
-    TyFSM mFsm;
-    char padding2[0xC5C];
-    AutoTargetStruct mAutoTargetStruct;
-
-    void SetBounceOffFromPos(Vector*, float, bool);
-};
-extern Ty ty;
-
 void Friend::PreUpdate(void) {
 
     if (!(mFlags & FSF_Active)) {
@@ -311,17 +268,17 @@ void Friend::PreUpdate(void) {
 
     mAnimScript.Animate();
     
-    mTyDistSq = mPos.DistSq(&ty.mPos);
+    mTyDistSq = mPos.DistSq(&ty.pos);
     Vector tyDir;
     Vector dot = {0.0f, 1.0f, 0.0f, 0.0f};
-    tyDir.Sub(&ty.mPos, &mPos);
+    tyDir.Sub(&ty.pos, &mPos);
     float length = tyDir.Normalise();
 
     if (!(mFlags & FSF_Visible)) {
         return;
     }
     
-    if (ty.mFsm.ExternalSolidSurfaceState()) {
+    if (ty.mFsm.SolidSurfaceState()) {
         if (dot.Dot(&tyDir) > 0.7f) {
             tyDir.Scale(length);
             if (Abs<float>(tyDir.y) < mLodManager.pDescriptor->height) {
@@ -348,7 +305,7 @@ void Friend::PostUpdate(void) {
 
     if (mTyDistSq < FRIEND_AUTOTARGET_RANGE_SQ && (mFlags & FSF_Visible)) {
         Vector sp8 = {mPos.x, mPos.y + (GetDesc()->mLodDesc.height / 2.0f), mPos.z};
-        ty.mAutoTargetStruct.Set((TargetPriority)3, NULL, NULL, &sp8, pModel);
+        ty.mAutoTarget.Set((TargetPriority)3, NULL, NULL, &sp8, pModel);
     }
 
     IceBlock_TestCollision(GetPos(), mLodManager.pDescriptor->radius, true, false, false);

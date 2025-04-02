@@ -64,10 +64,7 @@ struct MKProp {
     virtual void Update(void);
     virtual void Draw(void);
     virtual void Message(MKMessage*);
-
-    bool GetDrawFlag(void) {
-        return flags & 0x40000000;
-    }
+    
     MKPropDescriptor* GetDesc(void) {
         return pDescriptor;
     }

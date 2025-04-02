@@ -3,12 +3,6 @@
 #include "ty/bunyip.h"
 #include "common/Str.h"
 
-struct Hero : GameObject {
-    int unk3C;
-    Vector mPos;
-};
-extern Hero* pHero;
-
 static StaticPropDescriptor bunyipStoneDesc;
 static ModuleInfo<BunyipStone> bunyipStoneModule;
 

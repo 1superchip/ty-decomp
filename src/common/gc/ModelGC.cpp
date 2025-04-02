@@ -227,12 +227,14 @@ int Model::Draw(u16* pSubObjs) {
     int size = (pSubObjs != NULL) ? *pSubObjs++ : pTemplate->pModelData->nmbrOfSubObjects; // get number of subobjects to run through
     while (size-- != 0) {
         EffectDat* pEffect = effectData;
+
         int subobjectIndex;
         if (pSubObjs != NULL) {
             subobjectIndex = *pSubObjs++ & 0x7FFF; // if subObject array isn't null, get the current index
         } else {
             subobjectIndex = pTemplate->pModelData->nmbrOfSubObjects - (size + 1);
         }
+
         SubObject* pSubObj = &pTemplate->pModelData->pSubObjects[subobjectIndex];
         if (!(subobjectData[subobjectIndex] & 1)) {
             if (pAnimation == NULL && (pSubObj->matrixIndex != matrixIdx)) {
@@ -255,15 +257,19 @@ int Model::Draw(u16* pSubObjs) {
                     GXLoadNrmMtxImm(localMatrix.data, GX_PNMTX0);
                 } else {
                     Matrix mat1;
+
                     View* pView = View::GetCurrent();
+
                     if ((&matrices[0]) != NULL) {
                         mat1.Multiply(&matrices[0], &pView->unkC8);
                     } else {
                         mat1 = pView->unkC8;
                     }
+
                     if (pView->unk288) {
                         mat1.Multiply(&mat1, &pView->unk248);
                     }
+
                     mat1.data[0][2] *= -1.0f;
                     mat1.data[1][2] *= -1.0f;
                     mat1.data[2][2] *= -1.0f;
@@ -273,11 +279,14 @@ int Model::Draw(u16* pSubObjs) {
                     GXLoadNrmMtxImm(mat1.data, GX_PNMTX0);
                 }
             }
+
             EffectDat* effect = pEffect;
 			// iterate through all subobject materials
-            for(int i = 0; i < pSubObj->nmbrOfMaterials; i++) {
+            for (int i = 0; i < pSubObj->nmbrOfMaterials; i++) {
                 SubObjectMaterial* pObjMaterial = &pSubObj->pMaterials[i];
-                Material* pDefMat = gRenderState.pDefaultMaterial;
+
+                Material* pDefMat = (Material*)GetRenderStateData(RENDERSTATE_MATERIAL);
+
                 Material* pMat;
                 if (pDefMat != NULL) {
                     pMat = pDefMat;

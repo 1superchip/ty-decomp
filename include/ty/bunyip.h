@@ -11,10 +11,15 @@ int Bunyip_GetLastEvent(void);
 bool Bunyip_IsLastEventGroundHit(void);
 
 enum BunyipState {
-    BUNYIP_APPEAR   = 1,
-    BUNYIP_IDLE     = 2,
-    BUNYIP_ROAR     = 5,
-    BUNYIP_PUNCH    = 6,
+    BUNYIP_STATE_0      = 0,
+    BUNYIP_APPEAR       = 1,
+    BUNYIP_IDLE         = 2,
+    BUNYIP_STATE_3      = 3,
+    BUNYIP_STATE_4      = 4,
+    BUNYIP_ROAR         = 5,
+    BUNYIP_PUNCH        = 6,
+    BUNYIP_STATE_7      = 7,
+    BUNYIP_DISAPPEAR    = 8,
 };
 
 struct Bunyip : AnimatingProp {
@@ -57,7 +62,7 @@ struct Bunyip : AnimatingProp {
     bool HasPunched(Vector* pPoint, float radius);
 
     int StateInline(void) {
-        return (mState > 1 && mState != 8) ? true : false;
+        return (mState > 1 && mState != BUNYIP_DISAPPEAR) ? true : false;
     }
 };
 

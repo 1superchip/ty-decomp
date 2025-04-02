@@ -81,7 +81,8 @@ extern MKDefaults gMKDefaults;
 struct RenderState {
     Material* pDefaultMaterial;
     int fillState; // shadow related?
-    char padding_0x8[0x8];
+    int unk8;
+    int unkC;
     Texture* pDefaultTexture;
     int unk14;
     int alpha;
@@ -89,10 +90,20 @@ struct RenderState {
 
 extern RenderState gRenderState;
 
+enum RENDERSTATE_DATA_TYPE {
+    RENDERSTATE_MATERIAL    = 0,
+    RENDERSTATE_FILLSTATE   = 1,
+    RENDERSTATE_TEXTURE     = 4,
+};
+
+inline int GetRenderStateData(RENDERSTATE_DATA_TYPE type) {
+    return ((int*)&gRenderState.pDefaultMaterial)[type];
+}
+
 // not sure where to put this
-inline void SetDefaultMaterial_UseNone(Material* pMat) {
+inline void SetRenderStateData(RENDERSTATE_DATA_TYPE type, void* data) {
     Material::UseNone(-1);
-    gRenderState.pDefaultMaterial = pMat;
+    ((int*)&gRenderState.pDefaultMaterial)[type] = (int)data;
 }
 
 struct Display {
