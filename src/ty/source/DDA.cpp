@@ -3,9 +3,9 @@
 #include "common/Heap.h"
 #include "common/Timer.h"
 #include "ty/global.h"
+#include "ty/Ty.h"
 
 extern "C" void memset(void*, int, int);
-extern "C" int ty[0x1178]; // from Ty.cpp
 
 bool DDASession::bInitialised = false;
 bool DDASession::bSessionStarted = false;
@@ -109,7 +109,7 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->unk0 = checkpointList.GetSize();
     currentCheckpoint->unk4 = 0;
     currentCheckpoint->checkpointNumber = arg1;
-    currentCheckpoint->unk9 = ty[0x1178 / 4];
+    currentCheckpoint->unk9 = ty.mBoomerangManager.GetUnk60();
     Timer_GetSystemTime(&startTime);
     currentCheckpoint->checkpointStartHours = startTime.hours;
     currentCheckpoint->checkpointStartMinutes = startTime.minutes;
@@ -131,7 +131,7 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->damageCause = 0;
     currentCheckpoint->unk3C = 0;
     memset(&currentCheckpoint->cameraInfo, 0, sizeof(DDACameraInfo));
-    unk24[19] = ty[0x1178 / 4];
+    unk24[19] = ty.mBoomerangManager.GetUnk60();
 }
 
 void DDASession::EndCheckpoint(void) {
@@ -142,8 +142,6 @@ void DDASession::EndCheckpoint(void) {
     currentCheckpoint->checkpointEndSeconds = endTime.seconds;
     currentCheckpoint = NULL;
 }
-
-extern "C" float* pHero;
 
 void DDASession::StoreDeathInfo(void) {
     DDADeathInfo* pInfo;
@@ -160,9 +158,9 @@ void DDASession::StoreDeathInfo(void) {
     pInfo = deathList.GetNextEntry();
     pInfo->unk0 = currentCheckpoint->unk0;
 
-    pInfo->deathPosX = (int)pHero[0x40 / 4];
-    pInfo->deathPosY = (int)pHero[0x44 / 4];
-    pInfo->deathPosZ = (int)pHero[0x48 / 4];
+    pInfo->deathPosX = pHero->pos.x;
+    pInfo->deathPosY = pHero->pos.y;
+    pInfo->deathPosZ = pHero->pos.z;
     pInfo->damageCause = currentCheckpoint->damageCause;
     pInfo->unk18 = 0;
     Timer_GetSystemTime(&deathTime);
@@ -243,11 +241,11 @@ void DDASession::StoreRangChanged(void) {
         return;
     }
 
-    if (unk24[19] == ty[0x1178 / 4]) {
+    if (unk24[19] == ty.mBoomerangManager.GetUnk60()) {
         return;
     }
 
-    unk24[19] = ty[0x1178 / 4];
+    unk24[19] = ty.mBoomerangManager.GetUnk60();
 
     currentCheckpoint->unk10++;
 }

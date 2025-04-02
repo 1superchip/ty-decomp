@@ -409,11 +409,8 @@ void Boomerang::Fire(Vector* pVec1, Vector* pVec2) {
     Matrix rotation;
 
     Tools_BuildMatrixFromFwd(&rotation, &dir, &up);
-
-    mPos = *GetCatchPos();
-    mOldPos = mPos;
-
-    *rotation.Row3() = mOldPos;
+    
+    *rotation.Row3() = mOldPos = mPos = *GetCatchPos();
 
     Vector splinePoints[4];
 
@@ -1231,8 +1228,7 @@ void Kaboomerang::Fire(Vector* pVec1, Vector* pVec2) {
 
     mKaboomerangFlightTime = 0.0f;
 
-    mOldPos = *GetCatchPos();
-    mPos = mOldPos;
+    mPos = mOldPos = *GetCatchPos();
 
     boomerangs.AddEntry(this);
 
@@ -1276,6 +1272,7 @@ void Kaboomerang::UpdateFired(void) {
 
     float angle = mpWeapon->mSide == 0 ? kAngle : kAngle + (126.0f * (PI / 180.0f));
 
+    // operator order ps2?
     Vector localPos = {
         _table_sinf(angle) * radius,
         _table_cosf(angle) * (radius * 0.5f),
@@ -1288,7 +1285,7 @@ void Kaboomerang::UpdateFired(void) {
     Vector oldCentrePos = mCentrePos;
 
     mCentrePos.Set(
-        0.0f, 0.0f, GetDesc()->range * mKaboomerangFlightTime
+        0.0f, 0.0f, GetDesc()->range * mKaboomerangFlightTime // operation order ps2?
     );
 
     mCentrePos.ApplyMatrix(&kMatrix);
@@ -1531,8 +1528,7 @@ void Megarang::Fire(Vector* pVec1, Vector* pVec2) {
         mSpline.Reset();
         mSpline.AddNode(GetCatchPos());
 
-        mPos = *GetCatchPos();
-        mOldPos = mPos;
+        mOldPos = mPos = *GetCatchPos();
 
         Vector sp98 = *unk108;
         sp98.y += unk100;
@@ -1796,8 +1792,7 @@ void Doomerang::Fire(Vector* pVel, Vector* p1) {
     unk12C = atan2(velocity.y, sqrtf(Sqr<float>(velocity.x) + Sqr<float>(velocity.z)));
     velocity.Scale(GetDesc()->speed * speedScale);
 
-    mPos = *GetCatchPos();
-    mOldPos = mPos;
+    mOldPos = mPos = *GetCatchPos();
 
     if (ty.mFsm.GetStateEx() != 0x1C) {
         ty.mFsm.SetState((HeroActorState)0x32, false);
@@ -1850,7 +1845,8 @@ void Doomerang::UpdateFired(void) {
 
             unk12C = Clamp<float>(
                 -1.3f, 
-                (gb.mJoyPad1.GetUnk5C() * 0.001f) * GetDesc()->pitchSpeed * speedScale + unk12C, 
+                (gb.mJoyPad1.GetUnk5C() * 0.001f) * GetDesc()->pitchSpeed * speedScale + unk12C, // some diff here in aug 8
+                // unk12C + GetDesc()->pitchSpeed * speedScale * (gb.mJoyPad1.GetUnk5C() * 0.001f),
                 1.3f
             );
 
@@ -1943,8 +1939,8 @@ void Doomerang::UpdateFired(void) {
 // Don't have a symbol for this but it is inlined in
 // EndGameObjective::Message
 void Doomerang::ResetEndGame(void) {
-    mOldPos = unk10C;
-    mPos = mOldPos;
+    mPos = mOldPos = unk10C;
+    
     unk12C = 0.0f;
 
     velocity.Set(0.0f, 0.0f, -GetDesc()->speed);

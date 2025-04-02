@@ -1964,15 +1964,15 @@ ty/source/props/Z1_RainbowScales.cpp:
 #   .sbss: [0x803fa788, 0x803fa798]
 #   .sdata2: [0x803ffeb0, 0x803fff28]
 
-# ty/source/boomerang.cpp:
-#   .text: [0x80137fc8, 0x80140484]
-#   .ctors: [0x8023ca14, 0x8023ca18]
-#   .rodata: [0x8023e4c8, 0x8023e528]
-#   .data: [0x8025f998, 0x80260508]
-#   .bss: [0x802ae938, 0x802af7d0]
-#   .sdata: [0x803f80e8, 0x803f81e8]
-#   .sbss: [0x803fa798, 0x803fa800]
-#   .sdata2: [0x803fff28, 0x80400068]
+ty/source/boomerang.cpp:
+  .text: [0x80137fc8, 0x80140484]
+  .ctors: [0x8023ca14, 0x8023ca18]
+  .rodata: [0x8023e4c8, 0x8023e528]
+  .data: [0x8025f998, 0x80260508]
+  .bss: [0x802ae938, 0x802af7d0]
+  .sdata: [0x803f80e8, 0x803f81e8]
+  .sbss: [0x803fa798, 0x803fa800]
+  .sdata2: [0x803fff28, 0x80400068]
 
 #ty/source/BoomerangHud.cpp:
 #   .text: [0x80140484, 0x80140b2c]

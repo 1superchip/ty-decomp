@@ -102,12 +102,12 @@ struct Boomerang : GameObject {
     Model* pModelUnkF4;
     ParticleSystem* pFireSys;
 
-    virtual void Update(void);
-    virtual void Draw(void);
-    virtual void Reset(void);
     virtual void HitWorld(Vector* pPos, int collisionFlags);
     virtual void Init(GameObjDesc* pDesc, BoomerangWeapon* pWeapon);
     virtual void Deinit(void);
+    virtual void Update(void);
+    virtual void Draw(void);
+    virtual void Reset(void);
     virtual void Load(void);
     virtual void Fire(Vector*, Vector*);
     virtual void Deactivate(void);

@@ -51,6 +51,10 @@ struct PtrList {
             pPointers++;
         }
     }
+
+    void UnknownInline(T** p) {
+        *p = *pPointers++;
+    }
 };
 
 template <typename T>
@@ -83,7 +87,7 @@ void PtrList<T>::Destroy(T* pTemplate) {
     T** ptrs = pPointers;
     while (*ptrs != NULL) {
         if (*ptrs == pTemplate) {
-            *ptrs = GetUnkEntry();
+            UnknownInline(ptrs);
             return;
         }
         ptrs++;
