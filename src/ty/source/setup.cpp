@@ -620,8 +620,8 @@ void InitializeGame(void) {
     if (System_GetCommandLineParameter("-tydev") != NULL) {
         gb.mGameData.SetLearntToSwim(true);
         gb.mGameData.SetLearntToDive(true);
-        gb.mGameData.SetHasRang((BoomerangType)2, true);
-        gb.mGameData.SetHasRang((BoomerangType)1, true);
+        gb.mGameData.SetHasRang(BR_Flamerang, true);
+        gb.mGameData.SetHasRang(BR_Frostyrang, true);
         gb.mGameData.SetBothRangs(true);
     } else {
         gb.mGameData.SetLearntToSwim(false);

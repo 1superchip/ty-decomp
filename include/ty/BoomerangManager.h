@@ -3,7 +3,10 @@
 
 #include "ty/boomerang.h"
 
-enum BoomerangSide {};
+enum BoomerangSide {
+    BOOMERANG_SIDE_LEFT     = 0,
+    BOOMERANG_SIDE_RIGHT    = 1,
+};
 
 struct BoomerangWeapon {
     int unk0;

@@ -118,7 +118,7 @@ void Friend::Message(MKMessage* pMsg) {
         case MKMSG_BoomerangMsg:
             BoomerangMessage* pBoomerangMsg = (BoomerangMessage*)pMsg;
             if (mFlags & FSF_Visible) {
-                if (pBoomerangMsg->pBoomerang->mRangType != (BoomerangType)3) {
+                if (pBoomerangMsg->pBoomerang->mRangType != BR_Kaboomerang) {
                     pBoomerangMsg->SetUnk8(true);
                 }
 

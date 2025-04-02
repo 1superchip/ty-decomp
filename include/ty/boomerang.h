@@ -21,18 +21,18 @@ struct BoomerangStaticInfo {
 };
 
 enum BoomerangType {
-    BR_Standard     = 0,
-    BR_1            = 1,
-    BR_2            = 2,
-    BR_3            = 3,
+    BR_Standard     = 0, // Boomerang
+    BR_Frostyrang   = 1,
+    BR_Flamerang    = 2,
+    BR_Kaboomerang  = 3,
     BR_4            = 4,
-    BR_5            = 5,
-    BR_6            = 6,
-    BR_7            = 7,
+    BR_Megarang     = 5,
+    BR_Zoomerang    = 6,
+    BR_Infrarang    = 7,
     BR_Zappyrang    = 8,
-    BR_9            = 9,
-    BR_10           = 10,
-    BR_11           = 11,
+    BR_Aquarang     = 9,
+    BR_Multirang    = 10,
+    BR_Chronorang   = 11,
     BR_MAX
 };
 
@@ -74,13 +74,13 @@ enum BoomerangState {
 };
 
 struct Boomerang : GameObject {
-    Vector mOldPos;
+    Vector mOldPos; // Previous position
     int mFireTimer; // Fire particle timer
     BoomerangType mRangType;
     bool unk54; // bHitWorld?
     bool bParticlesEnabled;
     bool unk56;
-    Vector mPos;
+    Vector mPos; // Current position
     BoomerangWeapon* mpWeapon;
     BoomerangState unk6C;
     Spline mSpline;

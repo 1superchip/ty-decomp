@@ -19,18 +19,18 @@ static ModuleInfo<EndGameObjective> endGameObjectiveModuleInfo;
 static GameObjDesc endGameObjectiveDesc;
 
 static BoomerangType boomerangChangeOrder[NUM_BOOMERANGS] = {
-    (BoomerangType)0, 
-    (BoomerangType)2, 
-    (BoomerangType)1, 
-    (BoomerangType)8, 
-    (BoomerangType)6, 
-    (BoomerangType)10, 
-    (BoomerangType)7, 
-    (BoomerangType)5, 
-    (BoomerangType)3, 
-    (BoomerangType)11, 
+    BR_Standard, 
+    BR_Flamerang, 
+    BR_Frostyrang, 
+    BR_Zappyrang, 
+    BR_Zoomerang, 
+    BR_Multirang, 
+    BR_Infrarang, 
+    BR_Megarang, 
+    BR_Kaboomerang, 
+    BR_Chronorang, 
     (BoomerangType)4, 
-    (BoomerangType)9,
+    BR_Aquarang,
 };
 
 static char* BOOMERANG_DEFAULT_TRAIL_MAT = "RANGTRAIL_01";
@@ -58,61 +58,61 @@ static BoomerangStaticInfo boomerangInfo[NUM_BOOMERANGS] = {
     },
     {
         "prop_0486_rang_03",
-        32,
-        46,
+        0x20,
+        0x2E,
         {0x176, 0x177, 0x1C, 0x178}
     },
     {
         "prop_0538_rang_23",
-        40,
-        54,
+        0x28,
+        0x36,
         {0x17D, 0x17E, 0x17F, 0x180}
     },
     {
         "prop_0487_rang_06",
-        42,
-        56,
+        0x2A,
+        0x38,
         {0x181, 0x182, 0x183, 0x184}
     },
     {
         "prop_0539_rang_22",
-        39,
-        53,
+        0x27,
+        0x35,
         {0x185, 0x186, 0x187, 0x188}
     },
     {
         "prop_0489_rang_08",
-        36,
-        50,
+        0x24,
+        0x32,
         {0x189, 0x18A, 0x18B, 0x18C}
     },
     {
         "prop_0492_rang_11",
-        38,
-        52,
+        0x26,
+        0x34,
         {0x18D, 0x18E, 0x18F, 0x190}
     },
     {
         "prop_0493_rang_20",
-        35,
+        0x23,
         0x31,
         {0x192, 0x193, 0x194, 0x195}
     },
     {
         "prop_0488_rang_07",
-        31,
+        0x1F,
         0x2D,
         {0x17, 0x18, 0x19, 0x196}
     },
     {
         "prop_0491_rang_10",
-        37,
+        0x25,
         0x33,
         {0x197, 0x198, 0x199, 0x19A}
     },
     {
         "prop_0537_rang_21",
-        41,
+        0x29,
         0x37,
         {0x14, 0x15, 0x16, 0x268}
     },
@@ -249,7 +249,7 @@ void Boomerang::Init(GameObjDesc* pDesc, BoomerangWeapon* pWeapon) {
     Reset();
     unk94 = 0x35;
 
-    if (mRangType == (BoomerangType)6) {
+    if (mRangType == BR_Zoomerang) {
         unk56 = false;
     }
 }
@@ -276,7 +276,7 @@ void Boomerang::Deinit(void) {
 }
 
 void Boomerang::Update(void) {
-    if (mpWeapon->mSide == 0) {
+    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         pModel->matrices[0].Row1()->Inverse();
     }
 
@@ -302,12 +302,12 @@ void Boomerang::Update(void) {
 
     pModel->matrices[0].SetTranslation(&mPos);
 
-    if (mpWeapon->mSide == 0) {
+    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         pModel->matrices[0].Row1()->Inverse();
     }
 
     if (unk6C != BOOMERANG_STATE_0) {
-        if (mpWeapon->mSide == 0) {
+        if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
             MKGrass_SetPushAwayPos(&mPos, 1);
         } else {
             MKGrass_SetPushAwayPos(&mPos, 2);
@@ -414,7 +414,7 @@ void Boomerang::Fire(Vector* pVec1, Vector* pVec2) {
 
     Vector splinePoints[4];
 
-    if (mpWeapon->mSide == 0) {
+    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         splinePoints[0].Set(0.0f, 0.0f, 0.0f);
         splinePoints[1].Set(-0.1333f, 0.0f, 1.0f);
         splinePoints[2].Set(-0.66f, 0.0666f, 0.2f);
@@ -567,7 +567,7 @@ void Boomerang::SetOrientation(float f1, float f2, float f3) {
 
     pModel->matrices[0].SetRotationYaw(f3 * gb.logicGameCount);
 
-    pModel->matrices[0].RotateRoll((mpWeapon->mSide == 0 ? f1 : -f1) + -PI2);
+    pModel->matrices[0].RotateRoll(((mpWeapon->mSide == BOOMERANG_SIDE_LEFT) ? f1 : -f1) + -PI2);
 
     Vector dir;
     dir.Sub(&mOldPos, &mPos);
@@ -1093,7 +1093,7 @@ void Flamerang::UpdateParticleEffect(void) {
         Particle_Fire_Create(&pFireSys, &ttt, 1.0f, true);
     }
 
-    if (mpWeapon->mSide == (BoomerangSide)0) {
+    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         ty.rangLight0 = endPos;
     } else {
         ty.rangLight1 = endPos;
@@ -1169,7 +1169,7 @@ void Frostyrang::UpdateParticleEffect(void) {
             Particle_Ice_Create(&mpParticleSys, &endPos, &vel, RandomFR(&gb.mRandSeed, 6.0f, 14.0f), 1.8f);
         }
 
-        // if (mpWeapon->mSide == (BoomerangSide)0) {
+        // if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         //     ty.rangLight0 = endPos;
         // } else {
         //     ty.rangLight1 = endPos;
@@ -1265,12 +1265,16 @@ void Kaboomerang::UpdateFired(void) {
         Sound_Update3d(unkA8.unk0, -1, &mPos);
     }
 
+    // Both kaboomerangs move with each other 
+    // and rotate around their center position
+
     float radius = (boomerangCatchDistance * (1.0f - mKaboomerangFlightTime));
     radius += SmoothCenteredCurve(mKaboomerangFlightTime) * 100.0f;
     
     kAngle += 0.06f;
 
-    float angle = mpWeapon->mSide == 0 ? kAngle : kAngle + (126.0f * (PI / 180.0f));
+    // offset the rotation of the right kaboomerang by 126 degrees
+    float angle = mpWeapon->mSide == BOOMERANG_SIDE_LEFT ? kAngle : kAngle + (126.0f * (PI / 180.0f));
 
     // operator order ps2?
     Vector localPos = {
@@ -1418,7 +1422,7 @@ void Aquarang::UpdateFired(void) {
 
             Vector returnPos;
 
-            if (mpWeapon->mSide == (BoomerangSide)1) {
+            if (mpWeapon->mSide == BOOMERANG_SIDE_RIGHT) {
                 returnPos.Scale(ty.pModel->matrices[0].Row0(), -350.0f);
                 returnPos.Add(GetCatchPos());
             } else {
@@ -1478,7 +1482,7 @@ void Megarang::Init(GameObjDesc* pDesc, BoomerangWeapon* pWeapon) {
 void Megarang::UpdateLoaded(void) {
     Boomerang::UpdateLoaded();
 
-    if (mpWeapon->mSide == (BoomerangSide)0) {
+    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
         ty.mAutoTarget.unk74.unk54.Scale(&ty.mAutoTarget.tyRot, 750.0f);
         ty.mAutoTarget.unk74.unk54.Add(&ty.pos);
         ty.mAutoTarget.unk74.unk54.y += ty.radius;
@@ -1491,7 +1495,7 @@ void Megarang::UpdateLoaded(void) {
 
 void Megarang::Fire(Vector* pVec1, Vector* pVec2) {
 
-    AutoVisible vis = mpWeapon->mSide == (BoomerangSide)0 ?
+    AutoVisible vis = mpWeapon->mSide == BOOMERANG_SIDE_LEFT ?
         ty.mAutoTarget.unk74 : ty.mAutoTarget.unkD8;
 
     if (vis.numItems != 0) {
@@ -1558,7 +1562,7 @@ View* GameCamera_View(void);
 
 void Megarang::UpdateFired(void) {
 
-    AutoVisible vis = mpWeapon->mSide == (BoomerangSide)0 ?
+    AutoVisible vis = mpWeapon->mSide == BOOMERANG_SIDE_LEFT ?
         ty.mAutoTarget.unk74 : ty.mAutoTarget.unkD8;
     
     if (unkA8.unk0 != -1) {
@@ -1618,7 +1622,7 @@ void Megarang::UpdateFired(void) {
                     unk100 = vis.unk28[i];
                     pFoundVec = vis.unk0[i];
 
-                    if (mpWeapon->mSide == (BoomerangSide)0) {
+                    if (mpWeapon->mSide == BOOMERANG_SIDE_LEFT) {
                         break;
                     }
                 }

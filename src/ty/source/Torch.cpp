@@ -160,7 +160,7 @@ void Torch::Update(void) {
     }
 
     bEmitFire2 = bEmitFire;
-    mSoundHelper.Update(199, 0, bEmitFire, 0, &mFlamePos, distSquared, 0);
+    mSoundHelper.Update(199, 0, bEmitFire, NULL, &mFlamePos, distSquared, 0);
 }
 
 void Torch::Draw(void) {
@@ -300,9 +300,9 @@ void Torch::CheckForHit(void) {
     // possibly should have been the field at 0xC8 which is the state field?
     if (unkCC != 2) {
         // Check if a boomerang collides with the (Dynamic) Torch Model
-        void* pBoomerang = Boomerang_CheckForHit(pModel, -1, &cr);
+        Boomerang* pBoomerang = Boomerang_CheckForHit(pModel, -1, &cr);
         if (pBoomerang) {
-            ((bool*)pBoomerang)[0x54] = true;
+            pBoomerang->unk54 = true;
             // if the Torch was hit by a boomerang and 
             // the torch wasn't in the hit state
             // set the state to TORCH_HIT
@@ -319,14 +319,14 @@ void Torch::CheckForHit(void) {
         if (pBoomerang) {
             // if the Boomerang was the Frostyrang
             // Set the torch frozen timer and play a sound if it was emitting fire
-            if (((int*)pBoomerang)[0x50 / 0x4] == 1) {
+            if (pBoomerang->mRangType == BR_Frostyrang) {
                 mFrozenTimer = 300;
                 if (bEmitFire) {
                     SoundBank_Play(200, GetPos(), 0);
                     mSoundHelper.Stop(); // Stop playing the fire crackling sound
                 }
             } else if (bEmitFire) {
-                ((int*)pBoomerang)[0x4C / 0x4] = 0x1E;
+                pBoomerang->mFireTimer = 30;
             }
         }
     }
