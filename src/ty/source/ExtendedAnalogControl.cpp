@@ -61,3 +61,43 @@ void ExtendedAnalogControl::Update(float f1, float f2) {
     unk1C = f2 * scale;
 }
 
+void ExtendedAnalogControl::Draw(void) {
+    Vector xAxis;
+    Vector yAxis;
+    Vector zAxis;
+    Vector pos;
+
+    View* pView = View::GetCurrent();
+
+    pos = *pView->unk48.Row3();
+    
+    zAxis = *pView->unk48.Row2();
+    zAxis.Scale(pView->unk2C0 + 400.0f + 2.0f);
+    pos.Add(&zAxis);
+
+    xAxis = *pView->unk48.Row0();
+    xAxis.Scale(unk0 * 50.0f);
+    pos.Add(&xAxis);
+
+    yAxis = *pView->unk48.Row1();
+    yAxis.Scale(unk4 * -50.0f);
+    pos.Add(&yAxis);
+
+    // DebugInfo_Sphere_Add(&pos, 10.0f, 1, NULL);
+
+    pos = *pView->unk48.Row3();
+    
+    zAxis = *pView->unk48.Row2();
+    zAxis.Scale(pView->unk2C0 + 400.0f + 2.0f);
+    pos.Add(&zAxis);
+
+    xAxis = *pView->unk48.Row0();
+    xAxis.Scale(unkC * 50.0f);
+    pos.Add(&xAxis);
+
+    yAxis = *pView->unk48.Row1();
+    yAxis.Scale(unk10 * -50.0f);
+    pos.Add(&yAxis);
+
+    // DebugInfo_Sphere_Add(&pos, 5.0f, 1, NULL);
+}
