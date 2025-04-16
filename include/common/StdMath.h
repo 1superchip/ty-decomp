@@ -7,14 +7,17 @@ template <typename T>
 inline T Min(T x, T y) {
     return (x < y) ? x : y;
 }
+
 template <typename T>
 inline T Max(T x, T y) {
     return (x > y) ? x : y;
 }
+
 template <typename T>
 inline T Sqr(T x) {
     return x * x;
 }
+
 template <typename T>
 inline T Abs(T x) {
     return (x < 0) ? -x : x;

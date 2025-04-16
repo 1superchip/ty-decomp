@@ -26,7 +26,7 @@ void Blitter_Box::Draw(int count) {
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
-    while(count-- > 0) {
+    while (count-- > 0) {
 		
         int red = (int)(pBox->color.x * 255.0f);
         int green = (int)(pBox->color.y * 255.0f);

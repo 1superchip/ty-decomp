@@ -50,16 +50,35 @@ struct PlatformMoveMsg : MKMessage {
     Matrix* mat;
 };
 
-struct ModuleInfoBaseObject;
+struct ModuleInfoBase;
+
+struct ModuleInfoBaseObject {
+    void (*InitModule)(void);
+    void (*DeinitModule)(void);
+    void (*pUpdateModule)(void);
+    void (*pDrawModule)(void);
+    int* (*pAllocate)(void);
+    void (*pDeallocate)(GameObject*);
+    int unk18; // entity count?
+    int instanceSize;
+    bool bUpdate;
+    int flags;
+    ModuleInfoBase* pNext;
+};
 
 struct ModuleInfoBase {
     ModuleInfoBase() {
         pData = NULL;
     }
+
     virtual void Init(void) = 0;
     virtual void* ConstructObject(void*) = 0;
     void Reset(void);
     static void AddToModuleList(ModuleInfoBase*);
+
+    int GetInstanceSize(void) {
+        return pData->instanceSize;
+    }
 
     ModuleInfoBaseObject* pData;
     static ModuleInfoBase* pList;
@@ -124,21 +143,6 @@ struct GameObject : MKProp {
     }
 };
 
-
-struct ModuleInfoBaseObject {
-    void (*InitModule)(void);
-    void (*DeinitModule)(void);
-    void (*pUpdateModule)(void);
-    void (*pDrawModule)(void);
-    int* (*pAllocate)(void);
-    void (*pDeallocate)(GameObject*);
-    int unk18; // entity count?
-    int instanceSize;
-    bool bUpdate;
-    int flags;
-    ModuleInfoBase* pNext;
-};
-
 inline void* operator new(size_t size, void* mem) {
     return (void*)mem;
 }
@@ -199,13 +203,16 @@ struct DescriptorIterator {
     /// @brief Returns a pointer to a GameObject (May return NULL)!
     /// @param None
     /// @return GameObject pointer or NULL
-    GameObject* GetPointers(void) {
-        return (pCurr < pEnd) ? (GameObject*)pCurr : NULL;
+    GameObject* operator*(void) {
+        if (pCurr < pEnd) {
+            return (GameObject*)pCurr;
+        } else {
+            return NULL;
+        }
     }
 
     /// @brief Updates the current memory pointer to move to the next GameObject
-    /// @param None
-    void UpdatePointers(void) {
+    void operator++(int) {
         pCurr += static_cast<GameObjDesc*>(((GameObject *)pCurr)->pDescriptor)->pModule->pData->instanceSize;
     }
 };

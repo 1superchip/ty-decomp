@@ -14,7 +14,7 @@ extern bool gAssertBool;
 extern "C" void strcpy(char*, char*);
 int SoundBank_Play(int, Vector*, uint);
 
-static Doomerang* pInAirDoomerang = NULL; // Doomerang?
+static Doomerang* pInAirDoomerang = NULL;
 static ModuleInfo<EndGameObjective> endGameObjectiveModuleInfo;
 static GameObjDesc endGameObjectiveDesc;
 
@@ -29,7 +29,7 @@ static BoomerangType boomerangChangeOrder[NUM_BOOMERANGS] = {
     BR_Megarang, 
     BR_Kaboomerang, 
     BR_Chronorang, 
-    (BoomerangType)4, 
+    BR_Doomerang, 
     BR_Aquarang,
 };
 
@@ -41,7 +41,6 @@ static BoundingVolume rangVol = {
     {-3000.0f, -3000.0f, -3000.0f, 0.0f},
     {6000.0f, 6000.0f, 6000.0f, 0.0f}
 };
-
 
 static BoomerangStaticInfo boomerangInfo[NUM_BOOMERANGS] = {
     {
@@ -136,18 +135,18 @@ static ModuleInfo<Aquarang> aquarangModule;
 static ModuleInfo<Chronorang> chronorangModule;
 
 static ModuleInfo<Boomerang>* pBoomerangModules[NUM_BOOMERANGS] = {
-    &boomerangModule,
+    &boomerangModule, // Boomerang
     (ModuleInfo<Boomerang>*)&frostyrangModule,
     (ModuleInfo<Boomerang>*)&flamerangModule,
     (ModuleInfo<Boomerang>*)&kaboomerangModule,
     (ModuleInfo<Boomerang>*)&doomerangModule,
     (ModuleInfo<Boomerang>*)&megarangModule,
-    &boomerangModule,
-    &boomerangModule,
+    &boomerangModule, // Zoomerang
+    &boomerangModule, // Infrarang
     (ModuleInfo<Boomerang>*)&zappyrangModule,
     (ModuleInfo<Boomerang>*)&aquarangModule,
-    &boomerangModule,
-    (ModuleInfo<Boomerang>*)&chronorangModule
+    &boomerangModule, // Mutirang
+    (ModuleInfo<Boomerang>*)&chronorangModule,
 };
 
 void GameCamera_SnapDoomarangCamera(Vector*, Vector*, Vector*, float);
@@ -338,7 +337,7 @@ void Boomerang::DrawReflection(void) {
 }
 
 void Boomerang::DrawShadow(Vector* pVec) {
-    if (unk6C == BOOMERANG_STATE_0 || (mRangType == (BoomerangType)4 && unk89)) {
+    if (unk6C == BOOMERANG_STATE_0 || (mRangType == BR_Doomerang && unk89)) {
         return;
     }
 
@@ -947,7 +946,9 @@ BoomerangType GetNextRang(BoomerangType type) {
         }
         
         type = boomerangChangeOrder[i];
-        if (type != (BoomerangType)4 || gb.level.GetCurrentLevel() == LN_FINAL_BATTLE) { // Doomerang check?
+
+        // Prevent switching the the doomerang outside of the final battle
+        if (type != BR_Doomerang || gb.level.GetCurrentLevel() == LN_FINAL_BATTLE) {
             if (gb.mGameData.HasBoomerang(type)) {
                 // Only allow changing to boomerangs which have been unlocked in the save file
                 bFoundValidRang = true;
@@ -980,7 +981,9 @@ BoomerangType GetPrevRang(BoomerangType type) {
         }
 
         type = boomerangChangeOrder[i];
-        if (type != (BoomerangType)4 || gb.level.GetCurrentLevel() == LN_FINAL_BATTLE) { // Doomerang check?
+        
+        // Prevent switching to the doomerang outside of the final battle
+        if (type != BR_Doomerang || gb.level.GetCurrentLevel() == LN_FINAL_BATTLE) {
             if (gb.mGameData.HasBoomerang(type)) {
                 // Only allow changing to boomerangs which have been unlocked in the save file
                 bFoundValidRang = true;
@@ -992,14 +995,35 @@ BoomerangType GetPrevRang(BoomerangType type) {
 }
 
 char* Boomerang_GetName(BoomerangType type) {
+    // ASSERT(
+    //     type >= 0 && type < BR_Max,
+    //     "This is not an actual boomerang type!!",
+    //     "Source\\boomerang.cpp",
+    //     1373,
+    // );
+
     return gpTranslation_StringArray[boomerangInfo[type].nameTranslationId];
 }
 
 char* Boomerang_GetModelName(BoomerangType type) {
+    // ASSERT(
+    //     type >= 0 && type < BR_Max,
+    //     "This is not an actual boomerang type!!",
+    //     "Source\\boomerang.cpp",
+    //     1389,
+    // );
+
     return boomerangInfo[type].pModelName;
 }
 
 char* Boomerang_GetDescription(BoomerangType type) {
+    // ASSERT(
+    //     type >= 0 && type < BR_Max,
+    //     "This is not an actual boomerang type!!",
+    //     "Source\\boomerang.cpp",
+    //     1404
+    // );
+
     return gpTranslation_StringArray[boomerangInfo[type].descriptionTranslationId];
 }
 
@@ -1971,10 +1995,10 @@ void Doomerang::CheckForEnteringRegions(void) {
     if (mPos.IsInsideSphere(&unkFC, 170.0f)) {
         DescriptorIterator it = endGameObjectiveDesc.Begin();
 
-        while (it.GetPointers()) {
-            static_cast<EndGameObjective*>(it.GetPointers())->OnStart.Send();
+        while (*it) {
+            static_cast<EndGameObjective*>(*it)->OnStart.Send();
 
-            it.UpdatePointers();
+            it++;
         }
 
         unk538 = true;
@@ -1990,10 +2014,10 @@ void Doomerang::CheckForEnteringRegions(void) {
 
     DescriptorIterator it = endGameObjectiveDesc.Begin();
 
-    while (it.GetPointers()) {
-        static_cast<EndGameObjective*>(it.GetPointers())->OnSuccess.Send();
+    while (*it) {
+        static_cast<EndGameObjective*>(*it)->OnSuccess.Send();
 
-        it.UpdatePointers();
+        it++;
     }
 
     gb.mGameData.SetBossDefeated((ZoneNumber)5, true);

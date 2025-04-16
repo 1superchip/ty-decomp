@@ -8,8 +8,16 @@ static ModuleInfo<AnimatingProp> animPropModInfo;
 
 void AnimatingProp_LoadResources(KromeIni* pIni) {
     AnimatingPropDesc animPropDescDefault;
-    animPropDescDefault.Init(&animPropModInfo, "", "", 1, 0, (Tools_AnimEntry*)NULL,
-            0, (Tools_AnimEvent*)NULL, 0, 1, GameObjFlags_All);
+
+    animPropDescDefault.Init(
+        &animPropModInfo, 
+        "", "", 
+        1, 0, 
+        (Tools_AnimEntry*)NULL, 0, 
+        (Tools_AnimEvent*)NULL, 0, 
+        1, GameObjFlags_All
+    );
+
     LoadAnimPropDescriptors<AnimatingPropDesc>(pIni, "AnimatingProps", &animPropDescDefault);
 }
 
@@ -59,9 +67,14 @@ void AnimatingPropDesc::Load(KromeIni* pIni) {
 
 void AnimatingProp::Init(GameObjDesc* pDesc) {
     GameObject::Init(pDesc);
-    pModel = Model::Create(GetDesc()->mAnimScript.GetMeshName(), 
-        GetDesc()->mAnimScript.GetAnimName());
+
+    pModel = Model::Create(
+        GetDesc()->mAnimScript.GetMeshName(), 
+        GetDesc()->mAnimScript.GetAnimName()
+    );
+
     pModel->renderType = 3;
+
     collisionInfo.Init(true, GetDesc()->collisionInfoFlags, this);
     lodManager.Init(pModel, 0, &GetDesc()->lodDesc);
     collide = true;
@@ -78,11 +91,15 @@ bool AnimatingProp::LoadLine(KromeIniLine* pLine) {
 
 void AnimatingProp::LoadDone(void) {
     StaticProp::LoadDone();
+    
     if (GetDesc()->unk10C) {
         // set initial animation to idling animation
         MKAnim* pIdleAnim = mAnimScript.GetAnim("idle");
-        if (pIdleAnim) mAnimScript.SetAnim(pIdleAnim);
+        if (pIdleAnim) {
+            mAnimScript.SetAnim(pIdleAnim);
+        }
     }
+
     gameObjFlags.SetDefaultFlags();
 }
 

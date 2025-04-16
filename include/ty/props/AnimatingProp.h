@@ -48,6 +48,7 @@ struct AnimatingProp : StaticProp {
     virtual void Show(bool bShow);
     virtual void Activate(bool bActivate);
     virtual void Enable(bool bEnable);
+    
     void SetAnim(uint index) { // this function could be wrong, need to decomp code that uses it
         mAnimScript.SetAnim(mAnimManager.GetAnim(index));
     }
@@ -63,29 +64,39 @@ template <typename T>
 void LoadAnimPropDescriptors(KromeIni* pIni, char* name, T* pDesc) {
     GameObjDesc* desc = NULL;
     KromeIniLine* pLine = pIni->GotoLine(name, NULL);
+
     while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
         char* pExactName = NULL;
+
         if (pLine->pFieldName != NULL && pLine->AsString(0, &pExactName) != false) {
+
             T* pCurrDesc = (T*)Heap_MemAlloc(sizeof(T));
+
             memset(pCurrDesc, 0, sizeof(T));
+
             new ((void*)pCurrDesc) T;
+
             Tools_AnimEntry* pAnimEntries = NULL;
             if (pDesc->mAnimDesc.unk4) {
                 pAnimEntries = (Tools_AnimEntry*)Heap_MemAlloc(pDesc->mAnimDesc.unk4 * sizeof(Tools_AnimEntry));
                 memcpy(pAnimEntries, (void*)pDesc->mAnimDesc.pEntries, pDesc->mAnimDesc.unk4 * sizeof(Tools_AnimEntry));
             }
+
             Tools_AnimEvent* pAnimEventEntries = NULL;
             if (pDesc->mAnimEventDesc.mCount) {
                 pAnimEventEntries = (Tools_AnimEvent*)Heap_MemAlloc(pDesc->mAnimEventDesc.mCount * sizeof(Tools_AnimEvent));
                 memcpy(pAnimEventEntries, (void*)pDesc->mAnimEventDesc.pEvents, pDesc->mAnimEventDesc.mCount * sizeof(Tools_AnimEvent));
             }
+
             pCurrDesc->Init(pDesc->pModule, pExactName, pLine->pFieldName, pDesc->searchMask, pDesc->flags,
                 pAnimEntries, pDesc->mAnimDesc.unk4, pAnimEventEntries, pDesc->mAnimEventDesc.mCount, pDesc->unk10C, pDesc->defaultGameObjFlags);
             pCurrDesc->unk80 = desc;
             desc = (GameObjDesc*)pCurrDesc;
         }
+
         pLine = pIni->GetLineWithLine(pLine);
     }
+    
     while (desc != NULL) {
         GameObjDesc* p = desc;
         desc = p->unk80;

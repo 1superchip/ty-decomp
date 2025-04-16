@@ -14,28 +14,34 @@ enum CollisionMode {
     COLLISION_MODE_POLY      = 2, // Ground?
 };
 
-#define ID_WALL         (0x1)       // regular walls we can collide with
-#define ID_ICE          (0x8)       // will give ty inertia. For ice and oil
-#define ID_SAND         (0x10)      // sandy floor
-#define ID_QUICKSAND    (0x80)      // quicksand
-#define ID_WATER_BLUE   (0x400)     // Blue water
-#define ID_SNOW         (0x800)     // snow
-#define ID_WOOD         (0x1000)    // bridge
-#define ID_WATER_SLIDE  (0x20000)   // material ID for the water slide
-#define ID_GRASS_THICK  (0x80000)   // Dense grass pattern
-#define ID_ROCK         (0x100000)  // Rock ground
+#define ID_WALL             (0x1)       // regular walls we can collide with
+#define ID_ICE              (0x8)       // will give ty inertia. For ice and oil
+#define ID_SAND             (0x10)      // sandy floor
+#define ID_QUICKSAND        (0x80)      // quicksand
+#define ID_boomerang_ignore (0x100)
+#define ID_LAVA             (0x200)     // hot stuff. For lava and coals
+#define ID_WATER_BLUE       (0x400)     // Blue water
+#define ID_SNOW             (0x800)     // snow
+#define ID_WOOD             (0x1000)    // bridge
+#define ID_TUNNEL           (0x2000)    // a tunnel
+#define ID_INVISCOLLIDE     (0x4000)    // invisible texture used for collision (like the vertical collision on the bridge)
+#define ID_WATER_SLIDE      (0x20000)   // material ID for the water slide
+#define ID_GRASS_THICK      (0x80000)   // Dense grass pattern
+#define ID_ROCK             (0x100000)  // Rock ground
+
+struct DynamicItem;
 
 struct CollisionNode {
     CollisionNode* pPrev; // may actually be the next node pointer?
     CollisionNode* pNext; // may actually be the previous node pointer?
-    
-    void* PTR_0x8;
+    DynamicItem* PTR_0x8;
+
     void INIT() {
         PTR_0x8 = NULL;
         pPrev = pNext = this;
     }
 
-    void LINK(CollisionNode* pNode, void* ptr) {
+    void LINK(CollisionNode* pNode, DynamicItem* ptr) {
         pNode->PTR_0x8 = ptr;
         pNode->pNext = pNext;
         pNode->pPrev = this;

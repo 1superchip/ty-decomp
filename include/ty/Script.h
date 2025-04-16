@@ -38,9 +38,10 @@ struct ConditionalScriptProp : ScriptProp {
     // size 0xA4
 };
 
-#define Conditon_LearntToSwim 0
-#define Conditon_HasBothRangs 1
-#define Conditon_GameComplete 9
-#define Conditon_DefaultTrue  16
+#define Conditon_LearntToSwim   (0)
+#define Conditon_HasBothRangs   (1)
+#define Conditon_GameComplete   (9)
+#define Conditon_GotAquarang    (10)
+#define Conditon_DefaultTrue    (16)
 
 #endif // SCRIPT_H

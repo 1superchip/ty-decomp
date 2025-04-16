@@ -514,6 +514,7 @@ void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
     float distSq = 0.0f;
     MKProp* data = (MKProp*)node->pData;
     float fVar19 = 0.0f;
+    
     if (node->pData != NULL) {
         Vector* pLTWTrans = data->pLocalToWorld->Row3();
         Vector* pViewTrans = View::GetCurrent()->unk48.Row3();
@@ -525,6 +526,7 @@ void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
             return;
         }
     }
+
     if (!(arg2 & 1)) {
         test = Model_TrivialRejectTest(&node->volume, &View::GetCurrent()->unk1C8);
         if (test == 0) {
@@ -534,6 +536,7 @@ void MKSceneManager::DrawRecursiveProps(SMNode* node, int arg2) {
             arg2 |= 1;
         }
     }
+
     if (node->pData != NULL) {
         SMDrawProp(node->pData, arg2, distSq, fVar19);
     } else {

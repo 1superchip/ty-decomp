@@ -222,9 +222,9 @@ enum GameState {
 };
 
 struct LogicState {
-    int unk0;
-    int unk4;
-    GameState nextGameState;
+    GameState currState;
+    GameState prevState;
+    GameState nextGameState; // Official name
     int unkC;
 
     void Init(GameState);
@@ -232,8 +232,16 @@ struct LogicState {
     void Update(void);
     bool DebugState(GameState);
 
-    int GetUnk0(void) {
-        return unk0;
+    GameState GetCurr(void) {
+        return currState;
+    }
+
+    GameState GetPrev(void) {
+        return prevState;
+    }
+
+    GameState GetNext(void) {
+        return nextGameState;
     }
 };
 

@@ -109,7 +109,7 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->unk0 = checkpointList.GetSize();
     currentCheckpoint->unk4 = 0;
     currentCheckpoint->checkpointNumber = arg1;
-    currentCheckpoint->unk9 = ty.mBoomerangManager.GetUnk60();
+    currentCheckpoint->unk9 = ty.mBoomerangManager.GetCurrentType();
     Timer_GetSystemTime(&startTime);
     currentCheckpoint->checkpointStartHours = startTime.hours;
     currentCheckpoint->checkpointStartMinutes = startTime.minutes;
@@ -131,7 +131,7 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->damageCause = 0;
     currentCheckpoint->unk3C = 0;
     memset(&currentCheckpoint->cameraInfo, 0, sizeof(DDACameraInfo));
-    unk24[19] = ty.mBoomerangManager.GetUnk60();
+    unk24[19] = ty.mBoomerangManager.GetCurrentType();
 }
 
 void DDASession::EndCheckpoint(void) {
@@ -241,11 +241,11 @@ void DDASession::StoreRangChanged(void) {
         return;
     }
 
-    if (unk24[19] == ty.mBoomerangManager.GetUnk60()) {
+    if (unk24[19] == ty.mBoomerangManager.GetCurrentType()) {
         return;
     }
 
-    unk24[19] = ty.mBoomerangManager.GetUnk60();
+    unk24[19] = ty.mBoomerangManager.GetCurrentType();
 
     currentCheckpoint->unk10++;
 }

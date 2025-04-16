@@ -205,29 +205,29 @@ bool ConditionalScriptProp::CheckConditions(void) {
                 bConditionMet = true;
             }
             break;
-        case 10:
+        case Conditon_GotAquarang:
             if (gb.mGameData.HasBoomerang(BR_Aquarang)) {
                 bConditionMet = true;
             }
             break;
         case 11:
             // check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
-            if (gb.mGameData.GetLevelEnterCount(7) && !gb.mGameData.IsZoneCompleted(1)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_BULLS_PEN) != 0 && !gb.mGameData.IsZoneCompleted(1)) {
                 bConditionMet = true;
             }
             break;
         case 12:
-            if (gb.mGameData.GetLevelEnterCount(0x13) && !gb.mGameData.IsZoneCompleted(2)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_CRIKEYS_COVE) != 0 && !gb.mGameData.IsZoneCompleted(2)) {
                 bConditionMet = true;
             }
             break;
         case 13:
-            if (gb.mGameData.GetLevelEnterCount(15) && !gb.mGameData.IsZoneCompleted(3)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_FLUFFYS_FJORD) != 0 && !gb.mGameData.IsZoneCompleted(3)) {
                 bConditionMet = true;
             }
             break;
         case 14:
-            if (gb.mGameData.GetLevelEnterCount(0x17) && !gb.mGameData.IsZoneCompleted(5)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_FINAL_BATTLE) != 0 && !gb.mGameData.IsZoneCompleted(5)) {
                 bConditionMet = true;
             }
             break;
@@ -243,8 +243,10 @@ bool ConditionalScriptProp::CheckConditions(void) {
         case 18:
             break;
     }
+
     if ((bConditionMet && !bNegative) || (!bConditionMet && bNegative)) {
         return true;
     }
+    
     return false;
 }

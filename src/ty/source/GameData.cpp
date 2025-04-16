@@ -49,15 +49,23 @@ void GameData_Init(void) {
 
 void GameData_New(void) {
     memset(gameData, 0, sizeof(SaveData));
+
     gameData->zoneInfo[0].bUnlocked = true;
     gameData->zoneInfo[1].bUnlocked = true;
+
     gameData->currentLevel = LN_RAINBOW_CLIFFS;
     gameData->previousLevel = LN_RAINBOW_CLIFFS;
+
     gameData->currentZone = 0;
-    gameData->currentRang = 0;
-    gameData->tyAttributes.bHasRangs[0] = true; // Boomerang
+
+    gameData->currentRang = BR_Standard;
+
+    gameData->tyAttributes.bHasRangs[BR_Standard] = true;
+
     gameData->previousLevel = TOTAL_LEVEL_MAX;
+
     gameData->unkADA[0] = false;
+
     gameData->settings.musicVolume = 7;
     gameData->settings.soundVolume = 10;
     gameData->settings.unk2 = 1;
@@ -68,8 +76,11 @@ void GameData_New(void) {
     gameData->settings.unk6 = 1;
     gameData->settings.unk7 = 1;
     gameData->settings.unk9 = 1;
+
     gameData->size = sizeof(SaveData);
+
     gameData->version = GAMEDATA_VERSION;
+
     gameData->prevLevelNumber1 = gameData->previousLevel;
 }
 
@@ -135,7 +146,7 @@ void GameData::SynchroniseEnterLevel(void) {
         TyMemCard_AutoSaveGame();
     }
 
-    SetHasRang((BoomerangType)4, false);
+    SetHasRang(BR_Doomerang, false);
     SoundBank_SetVolume(1.0f, 3);
     Tools_EnableWideScreen(GameCamera_View(), (pGameSettings->unk5 == 1) ? true : false);
     float char3 = (float)pGameSettings->unk3;

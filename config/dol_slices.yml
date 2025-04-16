@@ -1979,11 +1979,11 @@ ty/source/boomerang.cpp:
 #   .rodata: [0x8023e528, 0x8023e548]
 #   .sdata2: [0x80400068, 0x804000a0]
 
-#ty/source/boomerangManager.cpp:
-#   .text: [0x80140b2c, 0x80143eb8]
-#   .ctors: [0x8023ca18, 0x8023ca1c]
-#   .data: [0x80260508, 0x80260610]
-#   .sdata2: [0x804000a0, 0x804000b0]
+ty/source/boomerangManager.cpp:
+  .text: [0x80140b2c, 0x80143eb8]
+  .ctors: [0x8023ca18, 0x8023ca1c]
+  .data: [0x80260508, 0x80260610]
+  .sdata2: [0x804000a0, 0x804000b0]
 
 #ty/source/BouncingBoulder.cpp:
 #   .text: [0x80143eb8, 0x80147018]

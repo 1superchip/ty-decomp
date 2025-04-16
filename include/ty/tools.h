@@ -90,12 +90,15 @@ struct Tools_AnimEntry {
 struct Tools_AnimDesc {
     Tools_AnimEntry* pEntries;
     int unk4;
+    
     void Init(Tools_AnimEntry* _pAnims, int _count, MKAnimScript*);
 };
 
 struct Tools_AnimManager {
     Tools_AnimDesc* pDescriptor;
+
     void Init(Tools_AnimDesc*);
+
     MKAnim* GetAnim(int index) {
         return pDescriptor->pEntries[index].pAnim;
     }
@@ -109,6 +112,7 @@ struct Tools_AnimEvent {
 struct Tools_AnimEventDesc {
     Tools_AnimEvent* pEvents;
     int mCount;
+
     void Init(Tools_AnimEvent*, int, MKAnimScript*);
 };
 
@@ -116,11 +120,13 @@ struct Tools_AnimEventManager {
     Tools_AnimEventDesc* pDescriptor;
     int unk4;
     int unk8;
+
     void Init(Tools_AnimEventDesc*);
     void Update(MKAnimScript*);
 
     bool CheckUnk4Flags(int value) {
-        return unk4 & value;
+        // this function takes a bool and has more logic with that
+        return unk4 & (1 << value);
     }
 };
 
@@ -303,9 +309,11 @@ struct CircularQueue {
     void UnkInline(void) {
         if (unk4 > 0) {
             unk8++;
+            
             if (unk8 >= numMax) {
                 unk8 -= numMax;
             }
+
             unk4--;
         }
     }
@@ -340,6 +348,10 @@ struct CircularQueue {
         }
 
         return &data[newIndex];
+    }
+
+    T* GetCurr(void) {
+        return unk4 > 0 ? &data[unk8] : NULL;
     }
 };
 

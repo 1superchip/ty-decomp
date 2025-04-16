@@ -63,7 +63,7 @@ char* Str_CopyString(char* string, int len) {
 }
 
 char* Str_FindChar(char* str, int val) {
-    while(*str != '\0') {
+    while (*str != '\0') {
         if (*str == val) {
             return str;
         }

@@ -388,7 +388,7 @@ inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, 
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 
-    for (int i = pChunk->mDataIndex; i < 24; i++) {
+    for (int i = pChunk->mDataIndex; i < MAX_PARTICLES; i++) {
         float f11 = ((int)(pChunk->mChunkData[i].unk34 + textureIndexOffset) & r26);
         f29 = (pChunk->mChunkData[i].unk40 + uOffset) + f11 * mpType->unk18;
         f28 = pChunk->mChunkData[i].unk44 + vOffset;

@@ -49,6 +49,7 @@ struct ImmediateFSM {
                 (pActor->*pStates[prevState].func2)();
             }
         }
+
         prevState = -1;
     }
 
@@ -57,13 +58,16 @@ struct ImmediateFSM {
             if (prevState != -1 && pStates[prevState].func2) {
                 (pActor->*pStates[prevState].func2)();
             }
+
             mPrevPrevState = prevState;
             prevState = newState;
             newState = -1;
+
             if (prevState != -1 && pStates[prevState].func1) {
                 (pActor->*pStates[prevState].func1)();
             }
         }
+        
         if (prevState != -1 && pStates[prevState].func3) {
             (pActor->*pStates[prevState].func3)();
         }

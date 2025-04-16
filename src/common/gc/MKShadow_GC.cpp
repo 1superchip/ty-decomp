@@ -363,14 +363,14 @@ void MKShadow_Animated::Build(char* pName) {
                 (char*)pDList += sizeof(pDList->primitive) + sizeof(pDList->vertexCount);
                 // now the display list pointer points to indices
                 
-                for(int k = 0; k < totalVertices - 2; k++) {
+                for (int k = 0; k < totalVertices - 2; k++) {
                     MKShadowVert verts[3];
                     u16* displayListIndices = (u16*)pDList;
                     Vertex* pModelVertices =
                         pModel->pTemplate->pModelData->pVertices;
                     int x = 0;
                     
-                    for(int v = 0; v < 3; v++) {
+                    for (int v = 0; v < 3; v++) {
                         verts[v].matrixIndex = pModelVertices[((u16*)pDList)[x]].matrix1;
                         verts[v].mNormal.Set(
                             pModelVertices[((u16*)pDList)[x + 1]].normal[0] / 64.0f,
@@ -388,30 +388,38 @@ void MKShadow_Animated::Build(char* pName) {
                     sp38.Add(&verts[2].mNormal);
 
                     sp38.Normalise();
+
                     Vector computedNorm;
+
                     Vector diff0 = {
                         verts[2].x - verts[0].x,
                         verts[2].y - verts[0].y,
                         verts[2].z - verts[0].z
                     };
+
                     Vector diff1 = {
                         verts[1].x - verts[0].x,
                         verts[1].y - verts[0].y,
                         verts[1].z - verts[0].z
                     };
+
                     computedNorm.Cross(&diff0, &diff1);
                     computedNorm.Normalise();
+
                     if (computedNorm.Dot(&sp38) > 0.0f) {
                         AddPoly(&verts[0], &verts[1], &verts[2]);
                     } else {
                         AddPoly(&verts[2], &verts[1], &verts[0]);
                     }
+
                     (char*)pDList += 8;
                 }
+
                 (char*)pDList += 0x10;
             }
         }
     }
+    
     pModel->Destroy();
 }
 

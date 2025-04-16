@@ -15,6 +15,13 @@ struct WakeStruct;
 
 struct OpalMagnetData {
     char padding[0x3C];
+
+    void Init(void);
+    void Deinit(void);
+    void Reset(void);
+    void Draw(void);
+    void Activate(void);
+    bool IsActive(void);
 };
 
 struct GlowParticleData {

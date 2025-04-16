@@ -1,7 +1,7 @@
 #ifndef BOOMERANG_H
 #define BOOMERANG_H
 
-#include "ty/props/Projectile.h"
+#include "ty/GameObject.h"
 #include "common/ParticleSystem.h"
 #include "ty/LevelObjective.h"
 #include "common/PtrList.h"
@@ -25,7 +25,7 @@ enum BoomerangType {
     BR_Frostyrang   = 1,
     BR_Flamerang    = 2,
     BR_Kaboomerang  = 3,
-    BR_4            = 4,
+    BR_Doomerang    = 4,
     BR_Megarang     = 5,
     BR_Zoomerang    = 6,
     BR_Infrarang    = 7,
@@ -33,10 +33,10 @@ enum BoomerangType {
     BR_Aquarang     = 9,
     BR_Multirang    = 10,
     BR_Chronorang   = 11,
-    BR_MAX
+    BR_Max
 };
 
-#define NUM_BOOMERANGS (BR_MAX)
+#define NUM_BOOMERANGS (BR_Max)
 
 enum BoomerangSound {};
 

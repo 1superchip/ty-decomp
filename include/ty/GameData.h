@@ -49,7 +49,10 @@ enum LevelNumber {
     TOTAL_LEVEL_MAX     = 24,
 };
 
-enum ZoneNumber {};
+enum ZoneNumber {
+    TOTAL_ZONES = 6
+};
+
 enum GoldenCogType {};
 enum ThunderEggType {};
 enum TalismanType {};
@@ -77,7 +80,7 @@ struct Attributes {
     bool bLearntToDive;
     bool bBothRangs;
     bool bHasExtraHealth;
-    bool bHasRangs[12];
+    bool bHasRangs[BR_Max];
 };
 
 #define CHAR_BIT (8)
@@ -111,7 +114,7 @@ struct SaveData {
     bool bCheatsEnabled;
     GameDataSettings settings;
     SaveLevelEntry levels[Total_Levels];
-    ZoneStruct zoneInfo[6];
+    ZoneStruct zoneInfo[TOTAL_ZONES];
     LevelNumber currentLevel;
     LevelNumber previousLevel;
     int currentZone;

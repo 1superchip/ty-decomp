@@ -176,29 +176,34 @@ void InterpolateVertexColor(Vector* pVec, Vector* pVec1, Vector* pos0, Vector* c
     Vector cProduct;
     Vector toPoint;
     Vector cProduct2;
+
     side1.Sub(pos1, pos0);
     side2.Sub(pos2, pos0);
+
     cProduct.Cross(&side1, &side2);
+
     toPoint.Sub(pVec, pos0);
     cProduct2.Cross(&cProduct, &toPoint);
+
     float dot = cProduct2.Dot(&side1);
-    float dot1 = dot - cProduct2.Dot(&side2);
-    float y = 0.0f;
-    if (dot1) {
-        y = dot / dot1;
-    }
-    dot = Clamp<float>(0.0f, y, 1.0f);
-    pVec1->InterpolateLinear(color1, color2, dot);
+    float dot1 = cProduct2.Dot(&side2);
+
+    float y = dot - dot1 ? dot / (dot - dot1) : 0.0f;
+    y = Clamp<float>(0.0f, y, 1.0f);
+
+    pVec1->InterpolateLinear(color1, color2, y);
+
     Vector midPoint;
-    midPoint.InterpolateLinear(pos1, pos2, dot);
+    midPoint.InterpolateLinear(pos1, pos2, y);
     midPoint.Subtract(pos0);
+
     float t = midPoint.Dot(&toPoint);
     float mag = midPoint.MagSquared();
-    float x = 0.0f;
-    if (mag) {
-        x = t / mag;
-    }
-    pVec1->InterpolateLinear(color0, pVec1, Clamp<float>(0.0f, x, 1.0f));
+
+    float x = mag ? t / mag : 0.0f;
+    x = Clamp<float>(0.0f, x, 1.0f);
+
+    pVec1->InterpolateLinear(color0, pVec1, x);
 }
 
 void ConvertRGBA(Vector* pOut, u8* pColors) {
@@ -338,8 +343,9 @@ float SubDot(Vector* vec, Vector* vec1, Vector* vec2) {
 }
 
 static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, int numVerts, Vector* arg5, Vector* arg6, CollisionResult* pResult) {
-    Vector pos = pRay->mStart;
-    Vector vec = *arg5;
+    Vector hitPoint = pRay->mStart;
+    Vector hitNormal = *arg5;
+
     float min;
     if (arg6->Dot(&pRay->mDir) < 0.0f) {
         return false;
@@ -351,60 +357,64 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
     }
 
     if (d <= pRay->radius) {
-        pos.Scale(arg6, d);
+        hitPoint.Scale(arg6, d);
         min = 0.0f;
-        pos.Add(&pRay->mStart);
+        hitPoint.Add(&pRay->mStart);
     } else {
-        Vector tmp;
-        tmp.Scale(arg6, pRay->radius);
-        tmp.Add(&tmp, &pRay->mStart);
+        Vector sP;
+        sP.Scale(arg6, pRay->radius);
+        sP.Add(&sP, &pRay->mStart);
+        
         float t;
         if (arg5->Dot(&pRay->mDir) == 0.0f) {
             t = -1e+12f;
         } else {
-            t = -(arg5->x * (tmp.x - pVectors[indices[0]].x) + 
-                arg5->y * (tmp.y - pVectors[indices[0]].y) + 
-                arg5->z * (tmp.z - pVectors[indices[0]].z)) / arg5->Dot(&pRay->mDir);
+            t = -(arg5->x * (sP.x - pVectors[indices[0]].x) + 
+                arg5->y * (sP.y - pVectors[indices[0]].y) + 
+                arg5->z * (sP.z - pVectors[indices[0]].z)) / arg5->Dot(&pRay->mDir);
         }
+
         min = t;
         if (t <= 0.0f || t > pRay->mLength) {
             return false;
         }
-        pos.Scale(&pRay->mDir, min);
-        pos.Add(&tmp);
+
+        hitPoint.Scale(&pRay->mDir, min);
+        hitPoint.Add(&sP);
     }
 
-    if (!PointInPoly(&pos, &pRay->mStart, pVectors, indices, numVerts)) {
+    if (!PointInPoly(&hitPoint, &pRay->mStart, pVectors, indices, numVerts)) {
         // point isn't in the polygon
-        NearestPointOnPolyEdge(&pos, pVectors, indices, numVerts);
+        NearestPointOnPolyEdge(&hitPoint, pVectors, indices, numVerts);
         // pos is now the coordinate on the polygon's edge 
-        if (pos.IsInsideSphere(&pRay->mStart, pRay->radius)) {
+        if (hitPoint.IsInsideSphere(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
             Collision_BInteriorPoint = true;
             min = 0.0f;
-            vec.Sub(&pRay->mStart, &pos);
-            if (vec.Dot(&pRay->mDir) > 0.0f) {
+            hitNormal.Sub(&pRay->mStart, &hitPoint);
+            if (hitNormal.Dot(&pRay->mDir) > 0.0f) {
                 return false;
             }
         } else {
             // position is in polygon
-            min = GetDiv(&pos, &pRay->mStart, &pRay->negDXYZ, pRay->radius);
+            min = GetDiv(&hitPoint, &pRay->mStart, &pRay->negDXYZ, pRay->radius);
             if (min <= 0.0f || min > pRay->mLength) {
                 return false;
             }
+
             Vector tmp;
             tmp.Scale(&pRay->negDXYZ, min);
-            tmp.Add(&tmp, &pos);
-            vec.x = pRay->mStart.x - tmp.x;
-            vec.y = pRay->mStart.y - tmp.y;
-            vec.z = pRay->mStart.z - tmp.z;
+            tmp.Add(&tmp, &hitPoint);
+            hitNormal.Sub(&pRay->mStart, &tmp);
         }
     } else {
         Collision_BInteriorPoint = 0.0f == min;
     }
-    pResult->normal = vec;
-    pResult->pos = pos;
+
+    pResult->normal = hitNormal;
+    pResult->pos = hitPoint;
     pResult->unk40 = min;
+
     return true;
 }
 
@@ -547,6 +557,7 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL || pItem->pTriangle->pCollisionInfo->bEnabled) &&
                     (pItem->pTriangle->flags & flags) == 0) {
+                    // need radiusSq
                     CollisionVertex* pVerts = pItem->collisionThing->verts;
                     Vector* triVert0 = (Vector*)&pItem->collisionThing->verts[0];
                     Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
@@ -1270,7 +1281,7 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
             for (int j = overlapX; j < overlapX + overlapXSize; j++) {
                 CollisionNode* currNode = dynGrid[i * 0x20 + j].pNext;
                 while (currNode != &dynGrid[i * 0x20 + j]) {
-                    DynamicItem* currItem = (DynamicItem*)currNode->PTR_0x8;
+                    DynamicItem* currItem = currNode->PTR_0x8;
                     // potentially fix CollisionNode fields
                     if (currItem->pInfo == NULL || currItem->pInfo->bEnabled) {
                         bool collideItem = Collision_RayCollideDynamicItem(pStart, pEnd, pCr, currItem, mag);
@@ -1279,6 +1290,7 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
                         } 
                         bFound = collideItem;
                     }
+
                     currNode = currNode->pNext;
                 }
             }
@@ -1299,30 +1311,35 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
 
 bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
     CollisionResult* pCr, CollisionMode pMode, int flags) {
-    // create SphereRay
     SphereRay ray;
+
     bFound = false;
+
     ray.Create(pStart, pEnd, sphereRadius);
+
     if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_DYNAMIC) {
         int startX;
         int startZ;
         int lengthX;
         int lengthZ;
         Collision_FindSphereDynamicGrid(&ray.mMinPos, &ray.mMaxPos, &startX, &startZ, &lengthX, &lengthZ);
+
         for (int i = startZ; i < startZ + lengthZ; i++) {
             for (int j = startX; j < startX + lengthX; j++) {
                 CollisionNode* currNode = dynGrid[i * 0x20 + j].pNext;
                 while (currNode != &dynGrid[i * 0x20 + j]) {
-                    DynamicItem* currItem = (DynamicItem*)currNode->PTR_0x8;
+                    DynamicItem* currItem = currNode->PTR_0x8;
                     // potentially fix CollisionNode fields
                     if (currItem->pInfo == NULL || currItem->pInfo->bEnabled) {
-                        bFound = Collision_SweepSphereCollideDynamicModel(&ray, pCr, (DynamicItem*)currNode->PTR_0x8) || bFound;
+                        bFound = Collision_SweepSphereCollideDynamicModel(&ray, pCr, currNode->PTR_0x8) || bFound;
                     }
+                    
                     currNode = currNode->pNext; // next might be at 0x4?
                 }
             }
         }
     }
+
     if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_POLY) {
         Collision_PolySweepSphereCollide(&ray, pCr, flags);
         // if a collision is found and the collision result parameter isn't NULL

@@ -63,7 +63,7 @@ bool Util_WildcardPatternMatch(char* str, char* pattern) {
         if (pattern[var_r5] == '*') {
             var_r23 = &pattern[var_r5] + 1;
             // this loop finds the end of the wildcard pattern
-            while(var_r23[var_r29] != '\0' && var_r23[var_r29] != ';') {
+            while (var_r23[var_r29] != '\0' && var_r23[var_r29] != ';') {
                 var_r29++; // index of pattern delimiter
             }
         } else {

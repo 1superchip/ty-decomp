@@ -274,7 +274,8 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
     Vector pos;
     float f24 = pType->radius * 2.0f;
     float f23 = 1.0f / f24;
-    if (gbMakeParticlesStandOut != false) {
+
+    if (gbMakeParticlesStandOut) {
         color[0].Set(1.0f, 1.0f, 1.0f, 1.0f);
         color[1].Set(1.0f, 1.0f, 1.0f, 1.0f);
         color[2].Set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -285,17 +286,23 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
         color[2] = pType->color2;
         color[3] = pType->color3;
     }
+
     float sp_f54 = pType->unk78 - pView->unk88.Row3()->y;
     float sp_f50 = pType->unk74 - pView->unk88.Row3()->y;
+
     if (mSrcPos.y < pType->unk78 - pType->radius ||
         mSrcPos.y > pType->unk74 + pType->radius) {
         return;
     }
+
     pMat->Use();
+
     Vector cameraX = *pView->unk48.Row0();
     Vector cameraY = *pView->unk48.Row1();
+
     cameraY.Scale(pType->halfHeight);
     cameraX.Scale(pType->halfWidth);
+
     float f22 = cameraY.x - cameraX.x;
     float f21 = cameraY.y - cameraX.y;
     float f20 = cameraY.z - cameraX.z;
@@ -353,10 +360,12 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
         
         float min = Min<float>(radiusSq, f15);
         float alphaScale = 1.0f - (min * sp130);
+
         strip[0].color = color[0];
         strip[1].color = color[1];
         strip[2].color = color[2];
         strip[3].color = color[3];
+
         if (pMat != NULL && (pMat->blendMode == 3 || pMat->blendMode == 4)) {
             strip[0].color.Scale(alphaScale);
             strip[1].color.Scale(alphaScale);
@@ -368,6 +377,7 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
             strip[2].color.w *= alphaScale;
             strip[3].color.w *= alphaScale;
         }
+
         if (!(pos.y < sp_f54) && !(pos.y > sp_f50)) {
             strip[0].pos.Set(pos.x + f22, pos.y + f21, pos.z + f20);
             strip[1].pos.Set(pos.x + f19, pos.y + f18, pos.z + f17);
@@ -376,6 +386,7 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
             
             strip[0].Draw(ARRAY_SIZE(strip), 1.0f);
         }
+        
         numParticles--;
     }
 }

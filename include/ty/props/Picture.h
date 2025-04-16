@@ -1,3 +1,6 @@
+#ifndef PICTURE_H
+#define PICTURE_H
+
 #include "ty/props/StaticProp.h"
 #include "ty/Quadratic.h"
 
@@ -30,4 +33,10 @@ struct Picture : StaticProp {
     void Destroy(void);
 
     static void PostDraw(void*);
+
+    bool IsShowing(void) {
+        return bShow;
+    }
 };
+
+#endif // PICTURE_H

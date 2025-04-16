@@ -59,11 +59,13 @@ void RainbowScaleObjective::Message(MKMessage* pMessage) {
             // Get Opal Descriptor and iterate over all Opals
             GameObjDesc* pOpalDesc = objectManager.FindDescriptor("Opal");
             DescriptorIterator itr = pOpalDesc->Begin();
-            while (itr.GetPointers()) {
+            while (*itr) {
                 // Count all of the opals in the level
                 unk66++;
-                itr.UpdatePointers();
+                
+                itr++;
             }
+
             break;
     }
     LevelObjective::Message(pMessage);

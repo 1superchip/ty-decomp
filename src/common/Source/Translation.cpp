@@ -21,7 +21,7 @@ static char* gpTranslationBuffer = NULL;
 static char* pDOLanguage;
 static int gLanguageDebugOption;
 
-static Language gLanguageInfo[8] = {
+static Language gLanguageInfo[LANGUAGE_NMBR_OF_LANGUAGES] = {
 	{"English (UK)", "English", "EN", "Translations.English.txt", 0},
 	{"English (US)", "American", "EN", "Translations.American.txt", 0},
 	{"Francais", "French", "FR", "Translations.French.txt", 0},
@@ -41,7 +41,8 @@ void Translation_InitModule(void) {
     int i;
     int maxSize = 0;
     int var_r25 = 0;
-    for (i = 0; i < 8; i++) {
+    
+    for (i = 0; i < LANGUAGE_NMBR_OF_LANGUAGES; i++) {
         if (!FileSys_Exists(gLanguageInfo[i].fileName, &gLanguageInfo[i].size)) {
             gLanguageInfo[i].size = 0;
         } else {
@@ -53,6 +54,7 @@ void Translation_InitModule(void) {
             }
         }
     }
+
     gpLanguageOptionStrings[var_r25] = NULL;
     gpTranslationBuffer = (char*)Heap_MemAlloc(maxSize + 1);
     gNmbrOfStrings = 0;
@@ -199,6 +201,7 @@ void Translation_SetLanguage(TranslationLanguage language) {
             }
         }
     }
+    
     for (gLanguageDebugOption = 0; gLanguageOptionLanguages[gLanguageDebugOption] != gCurrentLanguage; 
     gLanguageDebugOption++) {};
 }

@@ -80,8 +80,8 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
     
     DescriptorIterator itr = waterVolumeDesc.Begin();
 
-    while (itr.GetPointers()) {
-        WaterVolume *volume = (WaterVolume *)itr.GetPointers();
+    while (*itr) {
+        WaterVolume *volume = (WaterVolume *)*itr;
         // initial check to see if the point y position is less than the maximum y and
         // greater than the minimum y of the current WaterVolume
         if (point->y < volume->mMaxY && point->y > volume->mMinY) {
@@ -99,7 +99,8 @@ bool WaterVolume_IsWithin(Vector *point, float *arg1) {
             }
 
         }
-        itr.UpdatePointers();
+        
+        itr++;
     }
 
     return isWithin;

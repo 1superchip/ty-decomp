@@ -45,9 +45,10 @@ void GameObjectManager::DeinitLevel(void) {
     }
 
     DescriptorIterator it = Begin();
-    while (it.GetPointers()) {
-        it.GetPointers()->Deinit();
-        it.UpdatePointers();
+    while (*it) {
+        (*it)->Deinit();
+
+        it++;
     }
 
     gSceneManager.Deinit();
@@ -194,12 +195,15 @@ void GameObjectManager::SendMessageToAll(MKMessage* pMsg, int mask) {
 
 GameObject* GameObjectManager::GetObjectFromID(uint id) {
     DescriptorIterator it = Begin();
-    while (it.GetPointers()) {
-        if (it.GetPointers()->uniqueID == id) {
-            return it.GetPointers();
+    
+    while (*it) {
+        if ((*it)->uniqueID == id) {
+            return *it;
         }
-        it.UpdatePointers();
+
+        it++;
     }
+
     return NULL;
 }
 

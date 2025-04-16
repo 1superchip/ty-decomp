@@ -41,7 +41,7 @@ void ParticleSystemManager::Deinit(void) {
     mParticleSysList.Deinit();
 
     // Free all groups in the list
-    while(mpGroups) {
+    while (mpGroups) {
         ParticleSystemGroup* pCurr = mpGroups;
         mpGroups = mpGroups->pNext;
         Heap_MemFree(pCurr);

@@ -456,12 +456,12 @@ void Setup_LoadLevel(void) {
     static int modelCount = 0;
 
     if (modelCount != 0) {
-        if (modelInstances.GetCount() != modelCount) {
+        if (modelInstances.GetLength() != modelCount) {
             Model::List();
         }
     }
     
-    modelCount = modelInstances.GetCount();
+    modelCount = modelInstances.GetLength();
 
     Ty_Init();
 

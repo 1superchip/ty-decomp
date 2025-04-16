@@ -116,9 +116,7 @@ struct Vector {
     }
 
     void Inverse(Vector* pOther) {
-        x = pOther->x * -1.0f;
-        y = pOther->y * -1.0f;
-        z = pOther->z * -1.0f;
+        this->Scale(pOther, -1.0f);
     }
 
     void Inverse(void) {

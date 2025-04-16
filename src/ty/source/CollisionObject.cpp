@@ -28,13 +28,18 @@ void CollisionObject::Deinit(void) {
 
 int CollisionObject::Update(Vector* pVec, float f1) {
     unk1D0.Add(pVec);
+
     float magSq = unk1D0.MagSquared();
+
     if (magSq < Sqr<float>(f1)) {
         Vector tmpVel = *pVec;
+
         if (contexts[0].numValid > 0) {
             Vector testPos = pos;
             testPos.y += pColObjDesc->yOffset;
+
             CollisionResult cr = *contexts[0].LastResult();
+
             Vector* crPos = &contexts[0].LastResult()->pos;
             Vector plane = Tools_MakePlane(&contexts[0].LastResult()->normal, crPos);
             Vector end;
@@ -43,6 +48,7 @@ int CollisionObject::Update(Vector* pVec, float f1) {
                 CalculateNewVelocity(&tmpVel, &tmpVel, cr.unk40, contexts, NULL);
             }
         }
+
         pos.Add(&tmpVel);
     } else {
         if (f1 > 0.0f) {
@@ -52,11 +58,16 @@ int CollisionObject::Update(Vector* pVec, float f1) {
             pVec->y -= sqrtf(magSq) * 0.3f;
             pos = pos1;
         }
+
         unk1D0.SetZero();
+
         Vector testPos = pos;
         testPos.y += pColObjDesc->yOffset;
+
         ResolveCollisions(&testPos, pVec, pColObjDesc->numResolveIterations);
+
         testPos.y -= pColObjDesc->yOffset;
+
         pos = testPos;
         pos1 = pos;
     }
@@ -73,6 +84,7 @@ int CollisionObject::Update(Vector* pVec, float f1) {
 bool CollisionObject::Teleport(Vector* pDestination, float f1, int iterations) {
     Vector tmp = *pDestination;
     tmp.y += pColObjDesc->yOffset;
+
     while (Collision_SphereCollide(&tmp, pColObjDesc->radius, NULL, pColObjDesc->ignoreMatID, NULL) && iterations != 0) {
         tmp.y += f1;
         iterations--;
@@ -80,14 +92,19 @@ bool CollisionObject::Teleport(Vector* pDestination, float f1, int iterations) {
             return false;
         }
     }
+
     pos = tmp;
     pos.y -= pColObjDesc->yOffset;
+
     Vector vel = {0.0f, -f1, 0.0f, 0.0f};
+
     ResolveCollisions(&tmp, &vel, 1);
+
     if (contexts[0].numValid > 0) {
         tmp.y -= pColObjDesc->yOffset;
         pos = tmp;
     }
+    
     *pDestination = pos;
     pos1 = pos;
     unk1D0.SetZero();
@@ -96,13 +113,7 @@ bool CollisionObject::Teleport(Vector* pDestination, float f1, int iterations) {
 
 // Checks whether this CollisionObject is enabled or not
 bool CollisionObject::IsEnabled(void) {
-    bool ret;
-    if (pTyColInfo != NULL) {
-        ret = pTyColInfo->bEnabled;
-    } else {
-        ret = true;
-    }
-    return ret;
+    return pTyColInfo ? pTyColInfo->bEnabled : true;
 }
 
 void CollisionObject::SetColObjList(u8 _colObjCount, CollisionObject** _ppColObjects) {
@@ -112,9 +123,13 @@ void CollisionObject::SetColObjList(u8 _colObjCount, CollisionObject** _ppColObj
 
 ContextInfo* CollisionObject::StoreResult(CollisionResult* pCr, Vector* pVec) {
     ContextInfo* pCtxInfo = &contexts[1];
+
     Vector* pUp = &upVector;
+
     float upDot = pUp->Dot(&pCr->normal);
+
     ColObjDescriptorSubStruct* pf = &pColObjDesc->unk1C[1];
+
     if (upDot > pColObjDesc->unk1C[0].unk0) {
         pCtxInfo = &contexts[0];
         pf = &pColObjDesc->unk1C[0];
@@ -122,10 +137,13 @@ ContextInfo* CollisionObject::StoreResult(CollisionResult* pCr, Vector* pVec) {
         pCtxInfo = &contexts[2];
         pf = &pColObjDesc->unk1C[2];
     }
+
     pCtxInfo->velocitySetting = pColObjDesc->velocityCalculation;
+    
     if (pVec->Dot(&pCr->normal) < pf->unk4) {
         pCtxInfo->velocitySetting = pf->unk8;
     }
+
     pCtxInfo->CopyResult(pCr);
     return pCtxInfo;
 }
@@ -143,15 +161,20 @@ void CollisionObject::ResolveCollisions(Vector* pVec, Vector* pVec1, int arg3) {
     for (int i = 0; i < arg3; i++) {
         Vector rayNormal;
         Vector end;
+
         if (pVec1->MagSquared() < Sqr<float>(0.05f)) {
             return;
         }
+
         float len = rayNormal.Normalise(pVec1);
+
         end.Add(pVec, pVec1);
+
         if (!CheckCollisions(pVec, &end, &cr)) {
             pVec->Add(pVec1);
             return;
         }
+
         ContextInfo* pCtx = StoreResult(&cr, &rayNormal);
         float neg_dot = -rayNormal.Dot(&cr.normal);
         float dVar7 = Max<float>(neg_dot, 0.000001f);
@@ -161,10 +184,12 @@ void CollisionObject::ResolveCollisions(Vector* pVec, Vector* pVec1, int arg3) {
             move.Scale(&rayNormal, dVar6);
             pVec->Add(&move);
         }
+
         float f1 = len - dVar6;
         if (f1 < 0.05f) {
             return;
         }
+
         CalculateNewVelocity(pVec1, &rayNormal, f1, pCtx, bHasLastCr ? &lastCr : NULL);
         bHasLastCr = true;
         lastCr = cr;
@@ -222,10 +247,12 @@ bool CollisionObject::CheckCollisions(Vector* pVec, Vector* pVec1, CollisionResu
             }
         }
     }
+
     // Check collisions with objects and polys
     if (Collision_SweepSphereCollide(pVec, pVec1, pColObjDesc->radius, pCr, pColObjDesc->collisionMode, pColObjDesc->ignoreMatID)) {
         return true;
     }
+
     return false;
 }
 
@@ -238,18 +265,23 @@ bool CollisionObject::CheckCollisions(Vector* pVec, Vector* pVec1, CollisionResu
 bool CollisionObject::CheckObjectCollision(Vector* pVec, Vector* pVec1, CollisionObject* pOtherObj, CollisionResult* pCr) {
     Vector otherPos = pOtherObj->pos;
     otherPos.y += pOtherObj->pColObjDesc->yOffset;
+
     Vector rayDir;
     Vector sphereDir;
     rayDir.Sub(pVec1, pVec);
     sphereDir.Sub(&otherPos, pVec);
+
     if (rayDir.Dot(&sphereDir) < 0.0f) {
         return false;
     }
+
     if (RayToSphere(pVec, pVec1, &otherPos, pColObjDesc->radius + pOtherObj->pColObjDesc->radius, -1.0f, true)) {
         pCr->normal.Sub(pVec, &otherPos);
+
         if (pCr->normal.MagSquared() == 0.0f) {
             pCr->normal.Sub(pVec, pVec1);
         }
+
         pCr->normal.Normalise();
         pCr->unk40 = 0.0f;
         pCr->pos.Scale(&pCr->normal, -pOtherObj->pColObjDesc->radius);
@@ -260,5 +292,6 @@ bool CollisionObject::CheckObjectCollision(Vector* pVec, Vector* pVec1, Collisio
         pCr->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
         return true;
     }
+
     return false;
 }

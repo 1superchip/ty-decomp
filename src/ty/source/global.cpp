@@ -191,27 +191,25 @@ void GlobalVar::ResetLight(void) {
 }
 
 void LogicState::Init(GameState state) {
-    gb.mLogicState.unk0 = 0;
-    gb.mLogicState.unk4 = 0;
+    gb.mLogicState.currState = STATE_NONE;
+    gb.mLogicState.prevState = STATE_NONE;
     gb.mLogicState.nextGameState = state;
     gb.mLogicState.unkC = 1;
 }
 
 void LogicState::Set(GameState newState) {
-    if (newState != gb.mLogicState.unk0 || gb.mLogicState.nextGameState) {
+    if (newState != gb.mLogicState.currState || gb.mLogicState.nextGameState) {
         if (!DebugState(gb.mLogicState.nextGameState)) {
-            DebugState((GameState)gb.mLogicState.unk0);
+            DebugState(gb.mLogicState.currState);
         }
+
         gb.mLogicState.nextGameState = newState;
     }
 }
 
 void LogicState::Update(void) {
-    // set previous state?
-    gb.mLogicState.unk4 = gb.mLogicState.unk0;
-    // set new/current from the next
-    gb.mLogicState.unk0 = gb.mLogicState.nextGameState;
-    // set next state to NONE
+    gb.mLogicState.prevState = gb.mLogicState.currState;
+    gb.mLogicState.currState = gb.mLogicState.nextGameState;
     gb.mLogicState.nextGameState = STATE_NONE;
 }
 

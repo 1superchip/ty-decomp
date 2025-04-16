@@ -22,10 +22,11 @@ void WeatherProp_LoadResources(KromeIni* pIni) {
 
 void WeatherProp_Init(void) {
     DescriptorIterator it = desc.Begin();
-    while (it.GetPointers()) {
-        WeatherProp* pProp = static_cast<WeatherProp*>(it.GetPointers());
+    while (*it) {
+        WeatherProp* pProp = static_cast<WeatherProp*>(*it);
         Weather_InitType(pProp->type);
-        it.UpdatePointers();
+        
+        it++;
     }
 }
 

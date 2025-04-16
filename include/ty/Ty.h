@@ -143,6 +143,10 @@ struct TyFSM {
         }
     }
 
+    void Set(HeroActorState heroState) {
+        SetState(heroState, false);
+    }
+
     int GetUnk0(void) {
         return unk0;
     }
@@ -193,10 +197,6 @@ struct TyFSM {
 
     bool FirstPersonState(void) {
         return FirstPersonState(GetState());
-    }
-
-    void Set(HeroActorState heroState) {
-        SetState(heroState, false);
     }
 
     // needs to be defined before GetState?

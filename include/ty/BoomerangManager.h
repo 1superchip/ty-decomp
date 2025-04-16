@@ -2,37 +2,52 @@
 #define BOOMERANGMANAGER_H
 
 #include "ty/boomerang.h"
+#include "ty/StateMachine.h"
+#include "ty/tools.h"
+
+struct BoomerangManager;
+
+enum BoomerangLauncherState {
+    BLS_Idle        = 0,
+    BLS_Firing      = 1,
+    BLS_Catching    = 2,
+};
 
 enum BoomerangSide {
     BOOMERANG_SIDE_LEFT     = 0,
     BOOMERANG_SIDE_RIGHT    = 1,
+    BOOMERANG_SIDE_COUNT
 };
 
 struct BoomerangWeapon {
-    int unk0;
-    int unk4;
-    int unk8;
-    void* pStates;
+    StateMachine<BoomerangWeapon> mFsm;
+    
     Matrix catchMatrix;
     Vector direction;
     Vector pos;
     Vector colour;
-    int unk80;
-    int unk84;
-    int unk88;
-    Boomerang** ppBoomerangs;
-    BoomerangWeapon* pWeapon;
+
+    CircularQueue<Boomerang*> ammoQueue; // ammoQueue.numMax is ammoCount
+
+    Boomerang* mpRangs;
     BoomerangDesc* pBoomerangDesc;
     Boomerang* pBoomerang;
     BoomerangSide mSide;
-    void* pManager; // BoomerangManager*
+    BoomerangManager* pManager;
+
     bool unkA4;
     bool unkA5;
     bool unkA6;
     bool unkA7;
+    
     float unkA8;
 
-    void Init(BoomerangSide side, BoomerangDesc* pDesc, BoomerangManager* pManager);
+    void Init(BoomerangSide side, BoomerangDesc* pDesc, BoomerangManager* _pManager);
+    void Deinit(void);
+    void Reset(void);
+    void Draw(void);
+    void DrawShadow(Vector* p);
+    void DrawReflection();
     void Idle(void);
     void InitFiring(void);
     void Firing(void);
@@ -41,68 +56,78 @@ struct BoomerangWeapon {
     void Catching(void);
     void DeinitCatching(void);
     void DoFire(void);
-    void DoCatch(Boomerang*);
-    BoomerangWeapon* BeginAmmo(void); // check return type
-    void StartCatch(Boomerang*);
+    void DoCatch(Boomerang* pRang);
+    DescriptorIterator BeginAmmo(void);
+    void StartCatch(Boomerang* pRang);
+
+    bool IsOwnRang(Boomerang* pRang);
+    bool IsReady(void);
+
+    bool Fire(Vector* p, Vector* p1);
+    void Update(Matrix*, Vector*);
 
     void Disable(void);
     void Enable(void);
+
+    void EnableParticles(void); // No symbol
+    void DisableParticles(void); // No symbol
+    void DisableSounds(void); // No symbol
 };
 
 struct BoomerangManagerAnims {
-
+    bool unk0;
+    MKAnim* unk4;
+    MKAnim* unk8[2];
+    MKAnim* unk10[2];
 };
 
 struct BoomerangManagerInit {
-
+    BoomerangDesc** ppBoomerangDescs;
+    uint maxTypes;
+    BoomerangType defaultType;
+    bool unkC;
+    MKAnimScript* pAnimScript;
+    MKAnim* pAnim;
+    MKAnim* unk18[2]; // check type
+    Tools_AnimEvent animEvents[5];
+    BoomerangManagerAnims mAnims;
 };
 
 struct BoomerangManager {
-    BoomerangWeapon* pWeapons[2];
-    bool bHasRangs[2];
-    MKAnimScript unkC[2];
-    int unk4C[2];
-    int unk54;
+    BoomerangWeapon* mpWeapons[BOOMERANG_SIDE_COUNT];
+    bool bShowRangs[BOOMERANG_SIDE_COUNT];
+    MKAnimScript unkC[BOOMERANG_SIDE_COUNT];
+    MKAnim* unk4C[BOOMERANG_SIDE_COUNT]; // check type
+    BoomerangSide mCurrentSide;
     bool bEnabled;
     bool unk59;
-    BoomerangType mType;
-    BoomerangType mType2;
+    BoomerangType mNextType; // Next type to switch to
+    BoomerangType mType; // Current type
     int numFired;
-    void* unk68;
-    uint weaponCount;
-    BoomerangType unk70;
-    int unk74;
-    MKAnimScript* pAnimScript;
-    int unk7C;
-    int unk80[2];
-    Tools_AnimEvent mAnimEvents[5];
-    bool unkB0;
-    MKAnim* unkB4;
-    MKAnim* unkB8[2];
-    MKAnim* unkC0[2];
+    BoomerangManagerInit init;
     BoomerangSide unkC8;
     Tools_AnimEventDesc mAnimEventDesc;
     Tools_AnimEventManager mAnimEventManager;
 
-    void Init(BoomerangManagerInit*);
+    void Init(BoomerangManagerInit* pInitInfo);
     void Deinit(void);
     void Reset(void);
     void Update(Matrix*, Matrix*, Vector*);
     void Draw(void);
     void DrawShadow(Vector*);
     void DrawReflection(void);
-    void Fire(Vector*, Vector*, bool);
-    void StartThrowAnim(BoomerangSide);
-    void StartCatchAnim(BoomerangSide);
-    bool IsOwnRang(Boomerang*);
-    void UpdateAnimation(Model*);
-    void SetType(BoomerangType);
+    bool Fire(Vector*, Vector*, bool bFireBoth);
+    void StartThrowAnim(BoomerangSide side);
+    void StartCatchAnim(BoomerangSide side);
+    bool IsOwnRang(Boomerang* pRang);
+    void UpdateAnimation(Model* pModel);
+    void SetType(BoomerangType newType);
     void SetHasBoth(bool);
     bool HasFired(void);
-    void SetHasRang(BoomerangType, bool);
-    bool IsReady(BoomerangSide);
-    void Show(BoomerangSide);
-    void Hide(BoomerangSide);
+    void SetHasRang(BoomerangType rangType, bool);
+    bool IsReady(BoomerangSide side);
+    void Show(BoomerangSide side);
+    void Hide(BoomerangSide side);
     void Disable(void);
     void Enable(void);
     void SetAnims(BoomerangManagerAnims*);
@@ -110,18 +135,22 @@ struct BoomerangManager {
     void DisableBoomerangParticles(void);
     void DisableBoomerangSounds(void);
 
-    BoomerangType GetUnk60(void) {
-        return mType2;
+    BoomerangType GetCurrentType(void) {
+        return mType;
     }
 
     void HideAll(void) {
-        Hide((BoomerangSide)0);
-        Hide((BoomerangSide)1);
+        Hide(BOOMERANG_SIDE_LEFT);
+        Hide(BOOMERANG_SIDE_RIGHT);
     }
 
     void ShowAll(void) {
-        Show((BoomerangSide)0);
-        Show((BoomerangSide)1);
+        Show(BOOMERANG_SIDE_LEFT);
+        Show(BOOMERANG_SIDE_RIGHT);
+    }
+
+    bool AreBothReady(void) {
+        return bEnabled && IsReady(BOOMERANG_SIDE_LEFT) && IsReady(BOOMERANG_SIDE_RIGHT);
     }
 };
 

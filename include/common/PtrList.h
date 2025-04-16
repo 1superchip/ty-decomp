@@ -26,11 +26,12 @@ struct PtrList {
         return pPointers;
     }
 
-    int GetCount(void) {
+    int GetLength(void) {
         T** p = pPointers;
         while (*p) {
             p++;
         }
+        
         return (p - pPointers);
     }
 
@@ -54,6 +55,10 @@ struct PtrList {
 
     void UnknownInline(T** p) {
         *p = *pPointers++;
+    }
+
+    bool IsEmpty(void) {
+        return *pPointers == NULL;
     }
 };
 

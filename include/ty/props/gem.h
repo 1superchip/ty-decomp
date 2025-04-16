@@ -55,7 +55,7 @@ struct GemModelDrawData {
     float unk24;
     float unk28; // some transform point value
     Blitter_Image imgs[NUM_GEMMODELDATA_IMAGES];
-    float unk180_array[5][2];
+    float unk180_array[NUM_GEMMODELDATA_IMAGES][2];
 };
 
 void Gem_LoadResources(KromeIni* pIni);

@@ -940,16 +940,20 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
     float f29;
     float f28;
     float f27;
+
     if (View::GetCurrent()->bOrtho) {
         f29 = 1.0f;
     } else {
         f29 = -1.0f;
     }
+
     pFontMaterial->Use();
     
     BuildLines(pText, f1, f2, &tld);
+
     f28 = (mHeight * tld.y) * f29;
     f27 = (-f2 * 0.5f) * f29;
+
     switch (r6) {
         case 4:
         case 5:
@@ -962,12 +966,14 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
             f27 += (f2 - tld.z) * f29;
             break;
     }
+
     for (int i = 0; i < tld.x; i++) {
         LineDataSub* pSubData = &tld.data[i];
         if (pSubData->unk0 != pSubData->unk4) {
             float f5;
             float f6;
             float f0 = -f1 * 0.5f;
+            
             switch (r6) {
                 case 1:
                 case 5:
@@ -980,6 +986,7 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
                     f0 += (f1 - pSubData->unk8);
                     break;
             }
+
             f5 = f27 + f28;
             int r27 = 0;
 

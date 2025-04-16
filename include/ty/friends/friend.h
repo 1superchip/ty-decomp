@@ -62,10 +62,12 @@ struct Friend : GameObject {
     inline virtual Vector* GetPos(void) {
         return &mPos;
     }
+    
     // Returns original position
     inline virtual Vector* GetStartPos(void) {
         return &mStartPos;
     }
+
     // Returns velocity
     inline virtual Vector* GetVel(void) {
         return &mVel;
@@ -78,9 +80,11 @@ struct Friend : GameObject {
     inline void SetState(int state, bool bAlways) {
         mStateManager.SetState(state, bAlways);
     }
+
     inline int GetState(void) {
         return mStateManager.prevState;
     }
+
     inline FriendDescriptor* GetDesc(void) {
         return descr_cast<FriendDescriptor*>(pDescriptor);
     }

@@ -42,13 +42,16 @@ void Picture::Destroy(void) {
 
 void Picture::Init(GameObjDesc* pDesc) {
     StaticProp::Init(pDesc);
+    
     bShow = false;
     bInitialised = true;
     unk80 = true;
     unk83 = false;
+    
     mQuadraticTime = -1.0f;
     mFrameNumber = -1;
     unk74 = 0.0f;
+
     angle = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
 }
 
@@ -71,13 +74,17 @@ void Picture::Reset(void) {
     GameObject::Reset();
     pModel->matrices[0].SetIdentity();
     pModel->matrices[0].SetTranslation(&pos);
+
     if (mFrameNumber >= 0) {
         bShow = gb.mGameData.GetHasGalleryImage(mFrameNumber);
     }
+
     bInitialised = unk80;
+    
     unk83 = false;
     mQuadraticTime = -1.0f;
     unk74 = 0.0f;
+
     angle = RandomFR(&gb.mRandSeed, 0.0f, 2 * PI);
 }
 

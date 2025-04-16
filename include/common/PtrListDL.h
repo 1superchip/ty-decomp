@@ -96,7 +96,7 @@ inline void PtrListDL<T>::Deinit(void) {
 
     if (temp != (T**)&gEmptyPtrListDL[0]) {
         T** ptrs = pMem;
-        while(*ptrs != NULL) {
+        while (*ptrs != NULL) {
             if (*ptrs < memory) {
                 memory = *ptrs;
             }

@@ -143,26 +143,30 @@ void Model::Destroy(void) {
 }
 
 void Model::Purge(void) {
-    Model **ppModels = modelInstances.pPointers;
+    Model** ppModels = modelInstances.GetPointers();
 
     while (*ppModels != NULL) {
-        Model *pModel = *ppModels;
+        Model* pModel = *ppModels;
         if (pModel->flags.bits.b0 != 0 && --pModel->flags.bits.b0 == 0) {
             if ((*ppModels)->pTemplate != NULL && --(*ppModels)->pTemplate->referenceCount == 0) {
+
                 for (int i = 0; i < (*ppModels)->pTemplate->pModelData->nmbrOfSubObjects; i++) {
                     for (int j = 0; j < (*ppModels)->pTemplate->pModelData->pSubObjects[i].nmbrOfMaterials; j++) {
                         // destroy all subobject materials
                         (*ppModels)->pTemplate->pModelData->pSubObjects[i].pMaterials[j].pMaterial->Destroy();
                     }
                 }
+
                 modelTemplates.Destroy((*ppModels)->pTemplate);
                 Heap_MemFree((*ppModels)->pTemplate->pModelData);
                 Heap_MemFree((*ppModels)->pTemplate);
                 (*ppModels)->pTemplate = NULL;
             }
+
             Heap_MemFree(*ppModels);
-            *ppModels = modelInstances.GetUnkEntry();
+            modelInstances.UnknownInline(ppModels);
         }
+        
         ppModels++;
     }
     
@@ -310,8 +314,8 @@ Vector* Model::GetSubObjectOrigin(int subObjectIndex) {
 }
 
 void Model::List(void) {
-    ModelTemplate** ppTemplates = modelTemplates.pPointers;
-    if (*ppTemplates != NULL) {
+    if (!modelTemplates.IsEmpty()) {
+        ModelTemplate** ppTemplates = modelTemplates.pPointers;
         while (*ppTemplates != NULL) {
             ppTemplates++;
         }
@@ -386,12 +390,12 @@ char* Model::GetName(void){
 void Model::SetAlphaLightIntensity(int subObjectIndex, float intensity) {
     if (subObjectIndex == -1) {
         // set intensity for all subobjects if index is -1
-        for(int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
+        for (int i = 0; i < pTemplate->pModelData->nmbrOfSubObjects; i++) {
             pTemplate->pModelData->pSubObjects[i].alphaLightIntensity = intensity;
         }
-        return;
+    } else {
+        pTemplate->pModelData->pSubObjects[subObjectIndex].alphaLightIntensity = intensity;
     }
-    pTemplate->pModelData->pSubObjects[subObjectIndex].alphaLightIntensity = intensity;
 }
 
 void Model::SetRenderTypeOverride(int renderTypeOverride) {

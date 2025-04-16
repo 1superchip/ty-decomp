@@ -91,11 +91,13 @@ Vector Spline_GetVelocity(Vector* r4, Vector* r5, Vector* r6, Vector* r7, float 
 /// @param numPoints Number of points the spline will have
 /// @param r5 Some setting for normalization?
 void Spline::Init(int numPoints, bool r5) {
+
     if (numPoints > 0) {
         mpPoints = (SplinePoint*)Heap_MemAlloc(numPoints * sizeof(SplinePoint));
     } else {
         mpPoints = NULL;
     }
+
     mNumPoints = numPoints;
     nodeIndex = 0;
     unkC = r5;
@@ -104,10 +106,11 @@ void Spline::Init(int numPoints, bool r5) {
 /// @brief Resets all spline points and sets nodeIndex to 0
 /// @param None
 void Spline::Reset(void) {
-    for(int i = 0; i < mNumPoints; i++) {
+    for (int i = 0; i < mNumPoints; i++) {
         mpPoints[i].mPos.SetZero();
         mpPoints[i].unk10.SetZero();
     }
+
     nodeIndex = 0;
 }
 
@@ -118,18 +121,23 @@ bool Spline::AddNode(Vector* pVec) {
     if (nodeIndex == mNumPoints) {
         return false;
     }
+
     mpPoints[nodeIndex].mPos = *pVec;
+
     if (nodeIndex == 0) {
         mpPoints[nodeIndex].unk10.SetZero();
         nodeIndex++;
         return true;
     }
+
     mpPoints[nodeIndex].unk10.Sub(pVec, &mpPoints[nodeIndex - 1].mPos);
+
     if (nodeIndex == 1) {
         mpPoints[0].unk10.Sub(pVec, &mpPoints[0].mPos);
         nodeIndex++;
         return true;
     }
+
     if (unkC) {
         Vector temp1;
         temp1.Sub(&mpPoints[nodeIndex - 1].mPos, &mpPoints[nodeIndex - 2].mPos);
@@ -144,8 +152,10 @@ bool Spline::AddNode(Vector* pVec) {
         mpPoints[nodeIndex - 1].unk10.Sub(pVec, &mpPoints[nodeIndex - 2].mPos);
         mpPoints[nodeIndex - 1].unk10.Scale(0.5f);
     }
+
     mpPoints[nodeIndex].unk10.Scale(3.0f);
     mpPoints[nodeIndex].unk10.Subtract(&mpPoints[nodeIndex - 1].unk10);
+    
     if (unkC) {
         Vector temp1;
         temp1.Sub(&mpPoints[nodeIndex].mPos, &mpPoints[nodeIndex - 1].mPos);
@@ -155,9 +165,11 @@ bool Spline::AddNode(Vector* pVec) {
     } else {
         mpPoints[nodeIndex].unk10.Scale(0.5f);
     }
+
     if (nodeIndex == 2) {
         mpPoints[0].unk10.Scale(3.0f);
         mpPoints[0].unk10.Subtract(&mpPoints[1].unk10);
+
         if (unkC) {
             Vector temp1;
             temp1.Sub(&mpPoints[1].mPos, &mpPoints[0].mPos);
@@ -168,6 +180,7 @@ bool Spline::AddNode(Vector* pVec) {
             mpPoints[0].unk10.Scale(0.5f);
         }
     }
+
     nodeIndex++;
     return true;
 }
@@ -182,11 +195,16 @@ Vector Spline::GetPosition(float time) {
     f31 *= idx;
     int cmp = (int)f31;
     f31 -= cmp;
+
     if (cmp == idx) {
         return mpPoints[cmp].mPos;
     }
-    return Spline_GetPosition(&mpPoints[cmp].mPos, &mpPoints[cmp].unk10,
-        &mpPoints[cmp + 1].mPos, &mpPoints[cmp + 1].unk10, f31);
+
+    return Spline_GetPosition(
+        &mpPoints[cmp].mPos, &mpPoints[cmp].unk10,
+        &mpPoints[cmp + 1].mPos, &mpPoints[cmp + 1].unk10, 
+        f31
+    );
 }
 
 /// @brief Gets the velocity at a specific time
@@ -199,11 +217,16 @@ Vector Spline::GetVelocity(float time) {
     f31 *= idx;
     int cmp = (int)f31;
     f31 -= cmp;
+
     if (cmp == idx) {
         return mpPoints[cmp].unk10;
     }
-    return Spline_GetVelocity(&mpPoints[cmp].mPos, &mpPoints[cmp].unk10,
-        &mpPoints[cmp + 1].mPos, &mpPoints[cmp + 1].unk10, f31);
+
+    return Spline_GetVelocity(
+        &mpPoints[cmp].mPos, &mpPoints[cmp].unk10,
+        &mpPoints[cmp + 1].mPos, &mpPoints[cmp + 1].unk10, 
+        f31
+    );
 }
 
 /// @brief Frees memory of this Spline
@@ -212,6 +235,7 @@ void Spline::Deinit(void) {
     if (mpPoints) {
         Heap_MemFree(mpPoints);
     }
+
     mpPoints = NULL;
     mNumPoints = 0;
 }
@@ -220,12 +244,15 @@ bool Spline::MergeEnds(void) {
     if (!mpPoints[0].mPos.Equals(&mpPoints[nodeIndex - 1].mPos)) {
         return false;
     }
+
     if (nodeIndex < 3) {
         return false;
     }
+
     Vector loopVel;
     loopVel.Sub(&mpPoints[1].mPos, &mpPoints[nodeIndex - 2].mPos);
     loopVel.Scale(0.5f);
+
     if (unkC) {
         Vector temp;
         temp.Sub(&mpPoints[1].mPos, &mpPoints[0].mPos);
@@ -235,8 +262,10 @@ bool Spline::MergeEnds(void) {
         loopVel.Normalise();
         loopVel.Scale((mag + mag2) * 0.5f);
     }
+
     mpPoints[0].unk10 = loopVel;
     mpPoints[nodeIndex - 1].unk10 = loopVel;
+
     return true;
 }
 
@@ -244,12 +273,14 @@ void Spline::Smooth(void) {
     Vector oldVel;
     Vector newVel;
     Vector tmp;
+
     if (nodeIndex > 1) {
         bool areEqual = false;
         if (mpPoints[0].mPos.Equals(&mpPoints[nodeIndex - 1].mPos) &&
             mpPoints[0].unk10.Equals(&mpPoints[nodeIndex - 1].unk10)) {
             areEqual = true;
         }
+
         // checking if end points aren't equal?
         if (!areEqual) {
             oldVel.Scale(&mpPoints[1].mPos, 3.0f);
@@ -257,7 +288,7 @@ void Spline::Smooth(void) {
             oldVel.Subtract(&tmp);
             oldVel.Subtract(&mpPoints[1].unk10);
             oldVel.Scale(0.5f);
-            for(int i = 1; i < nodeIndex - 1; i++) {
+            for (int i = 1; i < nodeIndex - 1; i++) {
                 newVel.Scale(&mpPoints[i + 1].mPos, 3.0f);
                 newVel.Subtract(&mpPoints[i + 1].unk10);
                 tmp.Scale(&mpPoints[i - 1].mPos, 3.0f);
@@ -276,6 +307,7 @@ void Spline::Smooth(void) {
                 mpPoints[i - 1].unk10 = oldVel;
                 oldVel = newVel;
             }
+
             newVel.Scale(&mpPoints[nodeIndex - 1].mPos, 3.0f);
             tmp.Scale(&mpPoints[nodeIndex - 2].mPos, 3.0f);
             newVel.Subtract(&tmp);
@@ -285,9 +317,10 @@ void Spline::Smooth(void) {
             mpPoints[nodeIndex - 1].unk10 = newVel;
             return;
         }
+
         oldVel.SetZero();
         Vector startVel = mpPoints[1].unk10;
-        for(int i = 1; i < nodeIndex; i++) {
+        for (int i = 1; i < nodeIndex; i++) {
             if (i == nodeIndex - 1) {
                 newVel.Scale(&mpPoints[1].mPos, 3.0f);
                 newVel.Subtract(&startVel);
@@ -295,10 +328,12 @@ void Spline::Smooth(void) {
                 newVel.Scale(&mpPoints[i + 1].mPos, 3.0f);
                 newVel.Subtract(&mpPoints[i + 1].unk10);
             }
+
             tmp.Scale(&mpPoints[i - 1].mPos, 3.0f);
             newVel.Subtract(&tmp);
             newVel.Subtract(&mpPoints[i - 1].unk10);
             newVel.Scale(0.25f);
+
             if (unkC) {
                 Vector temp;
                 temp.Sub(&mpPoints[i].mPos, &mpPoints[i - 1].mPos);
@@ -312,11 +347,14 @@ void Spline::Smooth(void) {
                 newVel.Normalise();
                 newVel.Scale((f23 + f22) * 0.5f);
             }
+
             if (i != 1) {
                 mpPoints[i - 1].unk10 = oldVel;
             }
+
             oldVel = newVel;
         }
+
         mpPoints[nodeIndex - 1].unk10 = oldVel;
         mpPoints[0].unk10 = mpPoints[nodeIndex - 1].unk10;
     }
@@ -331,6 +369,7 @@ void UniformSpline::Init(int numPoints, bool r5) {
     } else {
         mpPoints = NULL;
     }
+
     mNumPoints = numPoints;
     nodeIndex = 0;
     unk8 = 0.0f;
@@ -340,11 +379,12 @@ void UniformSpline::Init(int numPoints, bool r5) {
 /// @brief Resets points of a UniformSpline
 /// @param None
 void UniformSpline::Reset(void) {
-    for(int i = 0; i < mNumPoints; i++) {
+    for (int i = 0; i < mNumPoints; i++) {
         mpPoints[i].unk20 = 0.0f;
         mpPoints[i].mPos.SetZero();
         mpPoints[i].unk10.SetZero();
     }
+
     nodeIndex = 0;
     unk8 = 0.0f;
 }
@@ -353,10 +393,13 @@ void UniformSpline::Reset(void) {
 /// @param pVec Position of point on spline?
 /// @return True if the node was added, false otherwise
 bool UniformSpline::AddNode(Vector* pVec) {
+
     if (nodeIndex == mNumPoints) {
         return false;
     }
+
     mpPoints[nodeIndex].mPos = *pVec;
+
     if (nodeIndex == 0) {
         mpPoints[nodeIndex].unk10.SetZero();
         mpPoints[nodeIndex].unk20 = 1.0f;
@@ -364,31 +407,40 @@ bool UniformSpline::AddNode(Vector* pVec) {
         nodeIndex++;
         return true;
     }
+
     mpPoints[nodeIndex].unk10.Sub(pVec, &mpPoints[nodeIndex - 1].mPos);
     mpPoints[nodeIndex - 1].unk20 = mpPoints[nodeIndex].unk10.Normalise();
     unk8 += mpPoints[nodeIndex - 1].unk20;
+
     if (nodeIndex == 1) {
         mpPoints[0].unk10 = mpPoints[nodeIndex].unk10;
         nodeIndex++;
         return true;
     }
+
     Vector temp;
     temp.Sub(&mpPoints[nodeIndex - 1].mPos, &mpPoints[nodeIndex - 2].mPos);
+
     if (mpPoints[nodeIndex - 2].unk20) {
         temp.Scale(1.0f / mpPoints[nodeIndex - 2].unk20);
     }
+
     mpPoints[nodeIndex - 1].unk10.Add(&mpPoints[nodeIndex].unk10, &temp);
     mpPoints[nodeIndex - 1].unk10.Scale(0.5f);
+
     if (unk10) {
         mpPoints[nodeIndex - 1].unk10.Normalise();
     }
+
     mpPoints[nodeIndex].unk10.Scale(3.0f);
     mpPoints[nodeIndex].unk10.Subtract(&mpPoints[nodeIndex - 1].unk10);
+
     if (unk10) {
         mpPoints[nodeIndex].unk10.Normalise();
     } else {
         mpPoints[nodeIndex].unk10.Scale(0.5f);
     }
+
     if (nodeIndex == 2) {
         mpPoints[0].unk10.Scale(3.0f);
         mpPoints[0].unk10.Subtract(&mpPoints[1].unk10);
@@ -398,7 +450,9 @@ bool UniformSpline::AddNode(Vector* pVec) {
             mpPoints[0].unk10.Scale(0.5f);
         }
     }
+
     nodeIndex++;
+
     return true;
 }
 
@@ -409,22 +463,31 @@ Vector UniformSpline::GetPosition(float time) {
     float time_ = time * unk8;
     int i = 0;
     float f2 = 0.0f;
-    for(i; mpPoints[i].unk20 + f2 < time_ && i < nodeIndex - 1; i++) {
+
+    for (i; mpPoints[i].unk20 + f2 < time_ && i < nodeIndex - 1; i++) {
         f2 += mpPoints[i].unk20;
     }
+
     float f31 = time_ - f2;
     if (mpPoints[i].unk20) {
         f31 /= mpPoints[i].unk20;
     }
+
     if (i == (nodeIndex - 1)) {
         return mpPoints[i].mPos;
     }
+
     Vector sp30;
     sp30.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
+
     Vector sp48;
     sp48.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
-    return Spline_GetPosition(&mpPoints[i].mPos, &sp30,
-        &mpPoints[i + 1].mPos, &sp48, f31);
+
+    return Spline_GetPosition(
+        &mpPoints[i].mPos, &sp30,
+        &mpPoints[i + 1].mPos, &sp48, 
+        f31
+    );
 }
 
 /// @brief Gets the velocity at a specific time
@@ -434,26 +497,36 @@ Vector UniformSpline::GetVelocity(float time) {
     float time_ = time * unk8;
     int i = 0;
     float f2 = 0.0f;
-    for(i; mpPoints[i].unk20 + f2 < time_ && i < nodeIndex - 1; i++) {
+    for (i; mpPoints[i].unk20 + f2 < time_ && i < nodeIndex - 1; i++) {
         f2 += mpPoints[i].unk20;
     }
+
     float f31 = time_ - f2;
     if (mpPoints[i].unk20) {
         f31 /= mpPoints[i].unk20;
     }
+
     if (i == (nodeIndex - 1)) {
         return mpPoints[i].mPos;
     }
+
     Vector sp30;
     Vector sp48;
     Vector ret;
+
     sp30.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
     sp48.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
-    ret = Spline_GetVelocity(&mpPoints[i].mPos, &sp30,
-        &mpPoints[i + 1].mPos, &sp48, f31);
+
+    ret = Spline_GetVelocity(
+        &mpPoints[i].mPos, &sp30,
+        &mpPoints[i + 1].mPos, &sp48, 
+        f31
+    );
+
     if (mpPoints[i].unk20) {
         ret.Scale(1.0f / mpPoints[i].unk20);
     }
+
     return ret;
 }
 
@@ -463,6 +536,7 @@ void UniformSpline::Deinit(void) {
     if (mpPoints) {
         Heap_MemFree(mpPoints);
     }
+
     mpPoints = NULL;
     mNumPoints = 0;
 }
@@ -471,30 +545,39 @@ bool UniformSpline::MergeEnds(void) {
     Vector loopVel1;
     Vector loopVel2;
     Vector loopVel;
+
     if (!mpPoints[0].mPos.Equals(&mpPoints[nodeIndex - 1].mPos)) {
         return false;
     }
+
     if (nodeIndex < 3) {
         return false;
     }
+
     loopVel1.Sub(&mpPoints[1].mPos, &mpPoints[0].mPos);
     loopVel1.Scale(1.0f / mpPoints[0].unk20);
+
     loopVel2.Sub(&mpPoints[nodeIndex - 1].mPos, &mpPoints[nodeIndex - 2].mPos);
     loopVel2.Scale(1.0f / mpPoints[nodeIndex - 2].unk20);
+
     loopVel.Add(&loopVel1, &loopVel2);
     loopVel.Scale(0.5f);
+
     if (unk10) {
         loopVel.Normalise();
     }
+
     mpPoints[0].unk10 = loopVel;
     mpPoints[nodeIndex - 1].unk10 = loopVel;
+
     return true;
 }
 
 void UniformSpline::RegulateSpeed(void) {
     float f29 = mpPoints[0].unk10.Magnitude();
     unk8 = 0.0f;
-    for(int i = 0; i < nodeIndex - 1; i++) {
+
+    for (int i = 0; i < nodeIndex - 1; i++) {
         float f20 = f29;
         f29 = mpPoints[i + 1].unk10.Magnitude();
         float f2 = Sqr<float>((f20 + f29) * 0.5f);
@@ -512,4 +595,5 @@ void UniformSpline::RegulateSpeed(void) {
             unk8 += mpPoints[i].unk20;
         }
     }
+
 }

@@ -288,7 +288,7 @@ void Bunyip::CheckEvents(void) {
     unkE4 = 5;
 
     for (int i = 0; mAnimScript.GetEvent(i++) != NULL;) {
-        if (mAnimEventManager.CheckUnk4Flags(1)) {
+        if (mAnimEventManager.CheckUnk4Flags(0)) {
             Vector shake = {0.0f, 15.0f, 0.0f, 0.0f};
             unkE4 = 0;
             GameCamera_Shake(&shake);
@@ -297,13 +297,13 @@ void Bunyip::CheckEvents(void) {
                 SoundBank_Play(0x94, NULL, 0);
             }
             unkDA = !unkDA;
-        } else if (mAnimEventManager.CheckUnk4Flags(2)) {
+        } else if (mAnimEventManager.CheckUnk4Flags(1)) {
             SoundBank_Play(0x21c, NULL, 0);
             unkE4 = 1;
-        } else if (mAnimEventManager.CheckUnk4Flags(4)) {
+        } else if (mAnimEventManager.CheckUnk4Flags(2)) {
             SoundBank_Play(0x92, NULL, 0);
             VibrateJoystick(0.4f, 0.0f, 0.17f, 0, 4.0f);
-        } else if (mAnimEventManager.CheckUnk4Flags(8)) {
+        } else if (mAnimEventManager.CheckUnk4Flags(3)) {
             SoundBank_Play(0x93, NULL, 0);
             VibrateJoystick(0.4f, 0.0f, 0.17f, 0, 4.0f);
         }
@@ -322,14 +322,14 @@ bool Bunyip::HasPunched(Vector* pPoint, float radius) {
 bool Bunyip_On(void) {
     DescriptorIterator it = bunyipDesc.Begin();
     
-    while (it.GetPointers()) {
-        Bunyip* pBunyip = static_cast<Bunyip*>(it.GetPointers());
+    while (*it) {
+        Bunyip* pBunyip = static_cast<Bunyip*>(*it);
 
         if (pBunyip->StateInline()) {
             return true;
         }
 
-        it.UpdatePointers();
+        it++;
     }
 
     return false;
@@ -338,11 +338,11 @@ bool Bunyip_On(void) {
 bool Bunyip_Activate(void) {
     DescriptorIterator it = bunyipDesc.Begin();
 
-    if (it.GetPointers()) {
-        if (static_cast<Bunyip*>(it.GetPointers())->mState == BUNYIP_STATE_0 && pHero->IsTy()) {
-            static_cast<Bunyip*>(it.GetPointers())->SetState(BUNYIP_APPEAR);
+    if (*it) {
+        if (static_cast<Bunyip*>(*it)->mState == BUNYIP_STATE_0 && pHero->IsTy()) {
+            static_cast<Bunyip*>(*it)->SetState(BUNYIP_APPEAR);
 
-            ty.SetBunyip(static_cast<Bunyip*>(it.GetPointers()));
+            ty.SetBunyip(static_cast<Bunyip*>(*it));
             return true;
         }
     }
@@ -353,13 +353,13 @@ bool Bunyip_Activate(void) {
 int Bunyip_GetLastEvent(void) {
     DescriptorIterator it = bunyipDesc.Begin();
 
-    while (it.GetPointers()) {
+    while (*it) {
 
-        if (static_cast<Bunyip*>(it.GetPointers())->StateInline()) {
-            return static_cast<Bunyip*>(it.GetPointers())->unkE4;
+        if (static_cast<Bunyip*>(*it)->StateInline()) {
+            return static_cast<Bunyip*>(*it)->unkE4;
         }
 
-        it.UpdatePointers();
+        it++;
     }
 
     return 5;
@@ -368,13 +368,13 @@ int Bunyip_GetLastEvent(void) {
 bool Bunyip_IsLastEventGroundHit(void) {
     DescriptorIterator it = bunyipDesc.Begin();
 
-    while (it.GetPointers()) {
+    while (*it) {
 
-        if (static_cast<Bunyip*>(it.GetPointers())->StateInline()) {
-            return static_cast<Bunyip*>(it.GetPointers())->unkE4 == 0;
+        if (static_cast<Bunyip*>(*it)->StateInline()) {
+            return static_cast<Bunyip*>(*it)->unkE4 == 0;
         }
 
-        it.UpdatePointers();
+        it++;
     }
 
     return false;

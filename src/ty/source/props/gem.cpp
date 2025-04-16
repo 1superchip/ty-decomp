@@ -505,13 +505,17 @@ void Gem::SpawnStatic(void) {
     Vector spC;
     spC.Sub(&unk94, &pos);
     float mag = spC.Magnitude();
+    
     unk84[0] = RandomFR(&gb.mRandSeed, 0.2f, 0.4f);
     unk84[0] = unk84[0] / sqrtf(mag);
     unk84[1] = mag * 0.8f;
+
     if (unk84[1] < 200.0f) {
         unk84[1] = 200.0f;
     }
+
     unk84[2] = spC.y / spC.x;
+
     mLerpTime = 0.0f;
 }
 

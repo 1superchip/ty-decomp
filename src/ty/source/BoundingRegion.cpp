@@ -48,7 +48,7 @@ bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
     xMax = -10000000.0f;
     
     // find min/max
-    while(pPoints <= pLastVector) {
+    while (pPoints <= pLastVector) {
         if (pPoints->x < xMin) {
             xMin = pPoints->x;
         }
