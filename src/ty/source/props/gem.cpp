@@ -670,8 +670,6 @@ void Gem::SetState(GemState newState) {
     }
 }
 
-extern void SoundBank_Play(int, Vector*, unsigned int);
-
 void Gem::Collect(void) {
     SetState((GemState)4);
     Gem_PickupParticle_SpawnParticles(&mParticle.pos);

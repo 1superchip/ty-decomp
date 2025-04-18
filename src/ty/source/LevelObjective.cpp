@@ -100,7 +100,6 @@ void LevelObjective::Deactivate(void) {
 }
 
 extern void Hud_ShowSpecialPickups(void);
-extern void SoundBank_Play(int, Vector*, uint);
 
 void LevelObjective::Increment(void) {
     OnIncrement.Send();

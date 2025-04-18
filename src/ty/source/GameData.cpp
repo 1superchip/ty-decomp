@@ -21,7 +21,6 @@ void Basket_PlaceUnused(Vector*);
 void Stopwatch_Enable(bool);
 void Stopwatch_Show(void);
 void Hud_SetGems(int);
-void SoundBank_Play(int, Vector*, uint);
 void Hud_ShowOpals(void);
 void Crate_CheckGems(void);
 void TyMemCard_AutoSaveGame(void);

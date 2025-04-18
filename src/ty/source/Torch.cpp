@@ -290,8 +290,6 @@ void Torch::UpdateShadow(void) {
     }
 }
 
-void SoundBank_Play(int, Vector*, uint);
-
 /// @brief Checks if the Torch is hit by a boomerang
 /// @param  None
 void Torch::CheckForHit(void) {

@@ -2,7 +2,6 @@
 #include "ty/GameObjectManager.h"
 #include "ty/global.h"
 
-extern void SoundBank_Play(int, Vector*, uint);
 extern View* GameCamera_View(void);
 
 static StaticPropDescriptor pictureDesc;

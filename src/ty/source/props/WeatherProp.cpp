@@ -1,5 +1,6 @@
 #include "types.h"
 #include "ty/props/WeatherProp.h"
+#include "ty/soundbank.h"
 
 int Weather_GetType(void);
 void Weather_Enable(bool);
@@ -7,9 +8,6 @@ void Weather_SetType(int);
 void Weather_InitType(int);
 
 int GameCamera_IsUnderwater(void);
-
-int SoundBank_Play(int, Vector*, uint);
-void SoundBank_Stop(int*);
 
 static ModuleInfo<WeatherProp> module;
 static GameObjDesc desc;

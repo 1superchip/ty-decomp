@@ -200,7 +200,6 @@ void Bunyip::Disappear(void) {
 }
 
 void SoundBank_PauseMusic(bool, float);
-void SoundBank_Play(int, Vector*, uint);
 
 void Bunyip::SetState(BunyipState newState) {
     if (mState == newState) {

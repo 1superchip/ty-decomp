@@ -365,7 +365,7 @@ void Tendril::Setup(float yaw, Vector* pPos) {
 }
 
 void Tendril::Update(float f1, Vector* pPos, float f2) {
-    unk24 = unk2C - unk28 * (unk2C - unk24);
+    unk24 = unk2C - ((unk2C - unk24) * unk28);
     mRoll += unk34;
     unk34 *= 0.96f;
 

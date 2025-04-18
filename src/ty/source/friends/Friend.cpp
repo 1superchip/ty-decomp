@@ -100,7 +100,6 @@ void Friend::Draw(void) {
 }
 
 extern "C" int Sound_IsVoicePlaying(int);
-extern int SoundBank_Play(int, Vector*, uint);
 
 void Friend::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {

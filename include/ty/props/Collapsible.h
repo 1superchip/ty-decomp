@@ -62,6 +62,6 @@ struct Collapsible : StaticProp {
     }
 };
 
-void Collapsible_LoadResources(KromeIni*);
+void Collapsible_LoadResources(KromeIni* pIni);
 
 #endif // COLLAPSIBLE_H

@@ -72,8 +72,6 @@ void Projectile::AddSpin(void) {
     pModel->matrices[0] = rotMatrix;
 }
 
-extern void SoundBank_Play(int, Vector*, uint);
-
 void Projectile::CheckForHit(void) {
     Vector* pPos = pModel->matrices[0].Row3();
     Vector sp18 = ty.pos;

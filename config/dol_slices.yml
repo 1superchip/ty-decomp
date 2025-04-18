@@ -1643,15 +1643,15 @@ ty/source/props/RangStone.cpp:
 #   .sbss: [0x803fa598, 0x803fa5a8]
 #   .sdata2: [0x803ff480, 0x803ff4b0]
 
-# ty/source/props/Shatterable.cpp:
-#   .text: [0x8010b518, 0x8010cc90]
-#   .ctors: [0x8023c998, 0x8023c99c]
-#   .rodata: [0x8023deb8, 0x8023dec8]
-#   .data: [0x8025c1d0, 0x8025c5c8]
-#   .bss: [0x802ab6e8, 0x802ab850]
-#   .sdata: [0x803f7770, 0x803f7848]
-#   .sbss: [0x803fa5a8, 0x803fa5c0]
-#   .sdata2: [0x803ff4b0, 0x803ff4f0]
+ty/source/props/Shatterable.cpp:
+  .text: [0x8010b518, 0x8010cc90]
+  .ctors: [0x8023c998, 0x8023c99c]
+  .rodata: [0x8023deb8, 0x8023dec8]
+  .data: [0x8025c1d0, 0x8025c5c8]
+  .bss: [0x802ab6e8, 0x802ab850]
+  .sdata: [0x803f7770, 0x803f7848]
+  .sbss: [0x803fa5a8, 0x803fa5c0]
+  .sdata2: [0x803ff4b0, 0x803ff4f0]
 
 #ty/source/props/SnowPile.cpp:
 #   .text: [0x8010cc90, 0x8010d5dc]

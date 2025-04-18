@@ -12,7 +12,6 @@
 
 extern bool gAssertBool;
 extern "C" void strcpy(char*, char*);
-int SoundBank_Play(int, Vector*, uint);
 
 static Doomerang* pInAirDoomerang = NULL;
 static ModuleInfo<EndGameObjective> endGameObjectiveModuleInfo;
