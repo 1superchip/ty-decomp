@@ -14,19 +14,22 @@ void Explosion_Draw(void);
 
 struct Tendril {
     Vector unk0;
+
     int refPointIndex;
     Model* pModel;
-    float unk18;
-    float unk1C;
-    float unk20;
+
+    float mPitch;
+    float mYaw;
+    float mRoll;
+    
     float unk24;
     float unk28;
     float unk2C;
     float unk30;
     float unk34;
 
-    void Setup(float, Vector*);
-    void Update(float, Vector*, float);
+    void Setup(float yaw, Vector* pPos);
+    void Update(float, Vector* pPos, float);
 };
 
 struct Cloud {
@@ -63,7 +66,7 @@ struct Explosion {
     float unk3D0;
     float mParticleColor;
     float unk3D8;
-    Vector unk3DC;
+    Vector mRingRot;
     bool unk3EC;
 
     void Init(Vector* pPos, bool, float);

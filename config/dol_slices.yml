@@ -245,12 +245,12 @@ ty/source/effects/ChronorangEffects.cpp:
   .sbss: [0x803f9d38, 0x803f9d40]
   .sdata2: [0x803fbe30, 0x803fbe78]
 
-# ty/source/effects/Explosion.cpp:
-#   .text: [0x8003877c, 0x80039c3c]
-#   .data: [0x80243690, 0x80243710]
-#   .bss: [0x8029c638, 0x8029c648]
-#   .sdata: [0x803f41c0, 0x803f41d0]
-#   .sdata2: [0x803fbe78, 0x803fbf30]
+ty/source/effects/Explosion.cpp:
+  .text: [0x8003877c, 0x80039c3c]
+  .data: [0x80243690, 0x80243710]
+  .bss: [0x8029c638, 0x8029c648]
+  .sdata: [0x803f41c0, 0x803f41d0]
+  .sdata2: [0x803fbe78, 0x803fbf30]
 
 ty/source/effects/Flame.cpp:
   .text: [0x80039c3c, 0x8003a1f8]
