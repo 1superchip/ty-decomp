@@ -1,15 +1,6 @@
 #include "ty/UserInterface.h"
 #include "common/Translation.h"
 
-// probably a fake inline
-static inline Texture* getTexture(Material* material) {
-    if (material->unk58 != NULL) {
-        return material->unk58;
-    } else {
-        return material->unk54;
-    }
-}
-
 void UIModel::Init(char* pModelName, char* pAnimName) {
     pModel = Model::Create(pModelName, pAnimName);
     pModel->matrices[0].SetIdentity();

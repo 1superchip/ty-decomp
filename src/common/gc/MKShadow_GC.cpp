@@ -475,7 +475,7 @@ static void MKShadow_ApplyAlphaTint(u8 color) {
     newProj[3][2] = 0.0f;
     newProj[3][3] = 1.0f;
     GXSetProjection(newProj, GX_ORTHOGRAPHIC);
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
 
     // initiate GX
     GXClearVtxDesc();
@@ -497,7 +497,7 @@ static void MKShadow_ApplyAlphaTint(u8 color) {
 
     // Restore old projection
     GXSetProjectionv((float*)&projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 
 static void MKShadow_VolumeRenderStage1(void) {

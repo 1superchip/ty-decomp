@@ -508,7 +508,7 @@ void Setup_LoadLevel(void) {
     MiniGame_Init();
 
     if (gb.mGameData.pSaveData->bCheatsEnabled) {
-        gb.infinitePie = 1;
+        gb.infinitePie = true;
         EnableTechnoRangs();
         EnableElementalRangs();
         EnableChangeLevel(true);

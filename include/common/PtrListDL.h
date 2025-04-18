@@ -19,7 +19,7 @@ inline void Swap(T& p, T& p1) {
 
 template <typename T>
 struct PtrListDL {
-    T **pMem;
+    T** pMem;
 
     void Init(int count, int size);
     void Deinit(void);
@@ -69,13 +69,18 @@ inline void PtrListDL<T>::Init(int count, int size) {
         pMem = (T**)&gEmptyPtrListDL[1];
         return;
     }
+    
     // count * size = structure array size
     // count * 4 = pointer array size
     pMem = (T**)Heap_MemAlloc(count * size + (count + 2) * sizeof(T*));
+
     T* memory = (T*)pMem;
+
     /*pMem = (T**)((int)pMem + count * size);
     *pMem = NULL;*/
+
     *(pMem = (T**)((int)pMem + count * size)) = NULL; // set mem pointer to end of array
+    
     for (int i = 0; i < count; i++) {
         *++pMem = memory;
         memory = ((T*)memory + 1);

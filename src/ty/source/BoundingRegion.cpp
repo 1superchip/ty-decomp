@@ -52,15 +52,19 @@ bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
         if (pPoints->x < xMin) {
             xMin = pPoints->x;
         }
+
         if (pPoints->x > xMax) {
             xMax = pPoints->x;
         }
+
         if (pPoints->z < zMin) {
             zMin = pPoints->z;
         }
+
         if (pPoints->z > zMax) {
             zMax = pPoints->z;
         }
+        
         pPoints++;
     }
     
@@ -80,14 +84,17 @@ bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
 int BoundingRegion::getIntersectCount(Vector* pPoint, Vector* pPoint1) {
     int intersectCount = 0;
     int i;
+
     for (i = 0; i < pPath->count - 1; i++) {
-        if(isIntersect(pPoint, pPoint1, &pPath->points[i], &pPath->points[i + 1]) != false) {
+        if (isIntersect(pPoint, pPoint1, &pPath->points[i], &pPath->points[i + 1]) != false) {
             intersectCount++;
         }
     }
+
     if (isIntersect(pPoint, pPoint1, &pPath->points[pPath->count - 1], &pPath->points[0]) != false) {
         intersectCount++;
     }
+    
     return intersectCount;
 }
 
@@ -98,11 +105,13 @@ bool BoundingRegion::isIntersect(Vector* pPoint, Vector* pPoint1, Vector* pPoint
             isCounterClockWise(pPoint2, pPoint3, pPoint) != isCounterClockWise(pPoint2, pPoint3, pPoint1);
 	*/
     bool intersected = false;
+
     if (isCounterClockWise(pPoint, pPoint1, pPoint2) != isCounterClockWise(pPoint, pPoint1, pPoint3)) {
         if (isCounterClockWise(pPoint2, pPoint3, pPoint) != isCounterClockWise(pPoint2, pPoint3, pPoint1)) {
             intersected = true;
         }
     }
+
     return intersected;
 }
 
@@ -116,11 +125,13 @@ bool BoundingRegion::isCounterClockWise(Vector* pPoint, Vector* pPoint1, Vector*
     return p01x * p02z >
             p01z * p02x ? true : false;
 			*/
+    
     bool isCCW;
     if ((pPoint1->x - pPoint->x) * (pPoint2->z - pPoint->z) > (pPoint1->z - pPoint->z) * (pPoint2->x - pPoint->x)) {
         isCCW = true;
     } else {
         isCCW = false;
     }
+
     return isCCW;
 }

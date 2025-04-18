@@ -6,7 +6,6 @@
 #include "Dolphin/gx.h"
 
 extern "C" void DCStoreRange(uint*, int);
-extern GXColor Material_MixedColor;
 void Grass_DrawGC(Model*, u8*, int, int, float, float);
 
 static inline void Vector_ApplyMatrix(Vector* pOut, Vector* pVector, Matrix* pMatrix) {
@@ -315,55 +314,75 @@ int Model::Draw(u16* pSubObjs) {
                             int green = (int)(colour.y * pMat->color.y * 255.0f);
                             int blue = (int)(colour.z * pMat->color.z * 255.0f);
                             int alpha = (int)(colour.w * pMat->color.w * 255.0f);
+
                             if (red < 0) {
                                 red = 0;
                             } else if (red > 0xff) {
                                 red = 0xff;
                             }
+
                             if (green < 0) {
                                 green = 0;
                             } else if (green > 0xff) {
                                 green = 0xff;
                             }
+
                             if (blue < 0) {
                                 blue = 0;
                             } else if (blue > 0xff) {
                                 blue = 0xff;
                             }
+
                             if (alpha < 0) {
                                 alpha = 0;
                             } else if (alpha > 0xff) {
                                 alpha = 0xff;
                             }
+                            
                             *(int*)&Material_MixedColor = (red << 24) | (green << 16) | (blue << 8) | alpha;
+
                             int r15;
                             if (renderType == -1) {
                                 r15 = pMat->type;
-                            } else if (renderType == 3 && pMat->type == 2) {
+                            } else if (renderType == 3 && pMat->type == Type_EnvMap) {
                                 r15 = 2;
                             } else {
                                 r15 = renderType;
                             }
+
                             if (gRenderState.fillState != 2) {
                                 pMat->Use();
+
                                 GXSetChanCtrl(
                                     GX_COLOR0A0,
-                                    (r15 == false ? 1 : 0), 
+                                    (r15 == 0 ? 1 : 0), 
                                     GX_SRC_REG, GX_SRC_VTX, 
                                     GX_LIGHT0 | GX_LIGHT1 | GX_LIGHT2, 
                                     GX_DF_CLAMP, 
                                     GX_AF_NONE
                                 );
+
                                 if (renderType == 7) {
                                     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
                                     GXSetNumTevStages(2);
     
-                                    float red = colour.x * pSubObj->alphaLightIntensity * 255.0f;
-                                    red = (red < 0.0f) ? 0.0f : (red > 255.0f) ? 255.0f : red;
-                                    float green = colour.y * pSubObj->alphaLightIntensity * 255.0f;
-                                    green = (green < 0.0f) ? 0.0f : (green > 255.0f) ? 255.0f : green;
-                                    float blue = colour.z * pSubObj->alphaLightIntensity * 255.0f;
-                                    blue = (blue < 0.0f) ? 0.0f : (blue > 255.0f) ? 255.0f : blue;
+                                    float red = Clamp<float>(
+                                        0.0f,
+                                        colour.x * pSubObj->alphaLightIntensity * 255.0f,
+                                        255.0f
+                                    );
+    
+                                    float green = Clamp<float>(
+                                        0.0f,
+                                        colour.y * pSubObj->alphaLightIntensity * 255.0f,
+                                        255.0f
+                                    );
+    
+                                    float blue = Clamp<float>(
+                                        0.0f,
+                                        colour.z * pSubObj->alphaLightIntensity * 255.0f,
+                                        255.0f
+                                    );
 
                                     GXColor tevColor = (GXColor){0, 0, 0, 255};
 
@@ -371,20 +390,23 @@ int Model::Draw(u16* pSubObjs) {
                                     tevColor.g = green;
                                     tevColor.b = blue;
                                     GXSetTevColor(GX_TEVREG0, tevColor);
+
                                     // setup Tev stage 0
                                     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_ZERO, GX_CC_RASA, GX_CC_RASC);
-                                    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
                                     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
-                                    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+
                                     // setup Tev stage 1
                                     GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV, GX_CC_ZERO);
-                                    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
                                     GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-                                    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+                                    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     
                                     GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                                 }
                             }
+
                             GXCallDisplayList((void*)pObjMaterial->pStripData, pObjMaterial->maxOffset * 16);
                             Material* pTmp = (pMat != pMat->pOverlayMat) ? pMat->pOverlayMat : NULL;
                             pMat = pTmp;
@@ -393,7 +415,9 @@ int Model::Draw(u16* pSubObjs) {
             }
         }
     }
+
     GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+    
     *(int*)&Material_MixedColor = -1;
     
     if (effectIdx != 0) {

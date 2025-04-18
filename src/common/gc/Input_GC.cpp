@@ -401,4 +401,3 @@ static void ClampGenericTrigger(u8* trigger, u8 min, u8 max) {
         *trigger -= min;
     }
 }
-

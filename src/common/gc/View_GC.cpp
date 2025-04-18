@@ -374,7 +374,7 @@ void View::ClearZBuffer(void) {
     proj[3][2] = 0.0f;
     proj[3][3] = 1.0f;
     GXSetProjection(proj, GX_ORTHOGRAPHIC);
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
     Material::UseNone(-1);
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
     GXSetAlphaUpdate(GX_FALSE);
@@ -404,7 +404,7 @@ void View::ClearZBuffer(void) {
     GXTexCoord2f32(0.0f, 0.0f);
 
     GXSetProjectionv(projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
     GXSetAlphaUpdate(GX_TRUE);
 }
@@ -433,7 +433,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     proj[3][2] = 0.0f;
     proj[3][3] = 1.0f;
     GXSetProjection(proj, GX_ORTHOGRAPHIC);
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
 
     Material::UseNone(-1);
 
@@ -473,7 +473,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
     
     // Restore projection
     GXSetProjectionv(oldProj);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 }
 
@@ -539,12 +539,12 @@ void View::OrthoBegin(void) {
     ortho.data[3][2] = 0.0f;
     ortho.data[3][3] = 1.0f;
     GXSetProjection(ortho.data, GX_ORTHOGRAPHIC);
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
     bOrtho = true;
 }
 
 void View::OrthoEnd(void) {
     GXSetProjectionv(ortho_old);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
     bOrtho = false;
 }

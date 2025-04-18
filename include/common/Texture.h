@@ -14,7 +14,7 @@ struct TexFile {
     int fmt;
     int width;
     int height;
-    int padding[5];
+    char padding[20];
     u16 unk20;
 };
 

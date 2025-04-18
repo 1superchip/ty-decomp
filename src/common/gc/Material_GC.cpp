@@ -31,6 +31,8 @@ extern "C" {
 
 // End EXTERNS
 
+// # include "assets/Material_GC/rawCaptureTexData.inc"
+
 char rawCaptureTexData[0x20000] __attribute__ ((aligned (32))) = {
 	#include "assets/materialgc_rawCaptureData.inc"
 };
@@ -553,9 +555,9 @@ void Material::InitModule(void) {
 
     CreateFromRawData("capture", (void*)&captureTexData, 2, 128, 128); // GX_TF_RGB565
     
-    GXInitTexObj(&restorationTexObj, (void*)&restorationTexData, 128, 128, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
-    GXInitTexObjLOD(&restorationTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
-    GXInitTexObj(&rawCaptureTexObj, (void*)&rawCaptureTexData, 256, 256, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, 0);
+    GXInitTexObj(&restorationTexObj, (void*)&restorationTexData, 128, 128, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, GX_FALSE);
+    GXInitTexObjLOD(&restorationTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
+    GXInitTexObj(&rawCaptureTexObj, (void*)&rawCaptureTexData, 256, 256, GX_TF_RGB565, GX_REPEAT, GX_REPEAT, GX_FALSE);
 }
 
 void Material::DeinitModule(void) {
@@ -610,7 +612,7 @@ void Material::SetTextureAlias(Texture* pTexAlias) {
 }
 
 Material** Material::GetMaterialList(void) {
-	return (Material**)materials.pMem;
+	return materials.GetMem();
 }
 
 Material* Material::CreateMpegTarget(char* pName, void* pData, int width, int height) {
@@ -691,9 +693,9 @@ void Material::Use(void) {
         // setup Tev stage 0
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C0);
-        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 0, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_A0);
-        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, 0, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
         GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -701,9 +703,9 @@ void Material::Use(void) {
         // setup Tev stage 1
         GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP2, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV);
-        GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, 0, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_FALSE, GX_TEVPREV);
         GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_APREV);
-        GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, 0, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K1);
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K1_A);
         GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -711,17 +713,17 @@ void Material::Use(void) {
         // setup Tev stage 2
         GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, GX_CC_CPREV);
-        GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
 
         // setup Tev stage 3
         GXSetTevOrder(GX_TEVSTAGE3, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE3, GX_CC_APREV, GX_CC_CPREV, GX_CC_KONST, GX_CC_ZERO);
-        GXSetTevColorOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaIn(GX_TEVSTAGE3, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevAlphaOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevSwapMode(GX_TEVSTAGE3, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevKColorSel(GX_TEVSTAGE3, GX_TEV_KCSEL_K2);
 		
@@ -731,15 +733,15 @@ void Material::Use(void) {
         GXSetTevKColor(GX_KCOLOR1, (GXColor){179, 0, 0, 182});
         GXSetTevKColor(GX_KCOLOR2, (GXColor){255, 0, 255, 128});
 		
-        GXInitTexObj(&texObj, pTex->pYData, pTex->width, pTex->height, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObj(&texObj, pTex->pYData, pTex->width, pTex->height, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
         GXInitTexObjLOD(&texObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj, GX_TEXMAP0);
         
-        GXInitTexObj(&texObj1, pTex->pUData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObj(&texObj1, pTex->pUData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
         GXInitTexObjLOD(&texObj1, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj1, GX_TEXMAP1);
         
-        GXInitTexObj(&texObj2, pTex->pVData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObj(&texObj2, pTex->pVData, pTex->width >> 1, pTex->height >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
         GXInitTexObjLOD(&texObj2, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
         GXLoadTexObj(&texObj2, GX_TEXMAP2);
     } else {
@@ -986,7 +988,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     proj[3][2] = 0.0f;
     proj[3][3] = 1.0f;
     GXSetProjection(proj, GX_ORTHOGRAPHIC); // Use Orthographic projection matrix
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1064,7 +1066,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXTexCoord2f32(1.0f, 1.0f);
 
     GXSetProjectionv(projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 
     Material::UseNone(-1);
 
@@ -1161,4 +1163,3 @@ void Material::UpdateCounter(void) {
         frameCounter++;
     }
 }
-

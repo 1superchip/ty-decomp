@@ -15,7 +15,6 @@
 #define COLOR_MAGENTA   (0xFF8000FF)
 #define COLOR_GREEN     (0xFF00FF00)
 #define COLOR_YELLOW    (0xFF00FFFF)
-#define COLOR_CYAN      (0xFFFFFF00)
 
 #define FONTCOLOR(r, g, b, a) \
     ((r) | ((g) << 0x8) | ((b) << 0x10) | ((((a) * 128) / 255) << 0x18))

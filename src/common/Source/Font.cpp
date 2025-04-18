@@ -64,6 +64,7 @@ Font* Font::Find(char* pName) {
         if (stricmp((*ppFonts)->name, pName) == 0) {
             return *ppFonts;
         }
+
         ppFonts++;
     }
 
@@ -130,9 +131,6 @@ int GetScreenData(float x) {
     return (int)(16.0f * x);
 }
 
-float ConvertLongLong2Float(s64 x) {
-    return (float)x;
-}
 
 /// @brief 2D - Draws a string on the screen 
 /// @param pString String to draw
@@ -220,9 +218,9 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
     OrthoProject();
 
     float dVar19;
-    float dVar17 = ConvertLongLong2Float((s64)posX >> 4);
-    float dVar18 = ConvertLongLong2Float((s64)posY >> 4);
-    dVar19 = dVar18 + ConvertLongLong2Float((s64)scaleY >> 4);
+    float dVar17 = (s64)posX >> 4;
+    float dVar18 = (s64)posY >> 4;
+    dVar19 = dVar18 + (float)((s64)scaleY >> 4);
 
     u8* text = (u8*)pString;
     while (*text != '\0') {
@@ -240,9 +238,7 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
 
                 GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
-                GXWGFifo.f32 = dVar17;
-                GXWGFifo.f32 = dVar18;
-                GXWGFifo.f32 = 0.0f;
+                GXPosition3f32(dVar17, dVar18, 0.0f);
                 GXWGFifo.u8 = colorData[3];
                 GXWGFifo.u8 = colorData[2];
                 GXWGFifo.u8 = colorData[1];
@@ -283,11 +279,13 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
         } else {
             dVar17 += unkC * xScale;
         }
+        
         text++;
     }
+
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE); // reset Z mode
     GXSetProjectionv((float*)&projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 
 float Font::GetHeight(void) {
@@ -393,7 +391,9 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
             int index = *text;
             FontCharData* charData = &pChars[index];
             if (charData->unk1C) {
+
                 float scale = charData->unk18 * scaleX;
+
                 if (pCharPositions != NULL) {
                     charIndex %= numCharPositions;
                     charPos[0].Add(&topLeft, &pCharPositions[charIndex]);
@@ -401,6 +401,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
                 } else {
                     charPos[0] = topLeft;
                 }
+
                 charPos[1].Set(charPos[0].x + scale, charPos[0].y, charPos[0].z);
                 charPos[2].Set(charPos[0].x, charPos[0].y - sy, charPos[0].z);
                 charPos[3].Set(charPos[1].x, charPos[2].y, charPos[0].z);
@@ -431,7 +432,7 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
                 GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
                 GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
                 GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
-                // float* uvs = (float*)uv;
+
                 u8 colors[4];
                 colors[0] = (colorR * 255) >> 7;
                 colors[1] = (colorG * 255) >> 7;
@@ -442,7 +443,6 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
                     GXPosition3f32(charPos[i].x, charPos[i].y, charPos[i].z);
                     GXColor4u8(colors[0], colors[1], colors[2], colors[3]);
                     GXTexCoord2f32(uv[(i * 2)], uv[(i * 2) + 1]);
-                    // uvs += 2;
                 }
 
                 topLeft.x += scale + f26;
@@ -587,49 +587,49 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
     bool bSave_fieldC = false;
     float dVar16 = mHeight;
     float dVar18;
-    switch(justify) {
-        case 3:
+    switch (justify) {
+        case (FontJustify)3:
             bSave_fieldC = 1;
             justify = (FontJustify)0;
-        case 0:
+        case (FontJustify)0:
             dVar16 = 0.0f;
             wPos = 0.0f;
             break;
-        case 1:
+        case (FontJustify)1:
             wPos = 0.0f;
             dVar16 = zPos / 2.0f;
             break;
-        case 2:
+        case (FontJustify)2:
             dVar16 = zPos;
             wPos = 0.0f;
             break;
-        case 7:
+        case (FontJustify)7:
             bSave_fieldC = 1;
             justify = (FontJustify)4;
-        case 4:
+        case (FontJustify)4:
             dVar16 = 0.0f;
             wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 5:
+        case (FontJustify)5:
             dVar16 = zPos / 2.0f;
             wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 6:
+        case (FontJustify)6:
             dVar16 = zPos;
             wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 11:
+        case (FontJustify)11:
             bSave_fieldC = 1;
             justify = (FontJustify)8;
-        case 8:
+        case (FontJustify)8:
             dVar16 = 0.0f;
             wPos = wPos - (((r29 + 1) * dVar17));
             break;
-        case 9:
+        case (FontJustify)9:
             dVar16 = zPos / 2.0f;
             wPos = wPos - (((r29 + 1) * dVar17));
             break;
-        case 10:
+        case (FontJustify)10:
             dVar16 = zPos;
             wPos = wPos - (((r29 + 1) * dVar17));
             break;
@@ -655,10 +655,13 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
                 unkC += ((zPos - info[i].unk4) / (float)spaceCount) / xScale;
             }
         }
+
         DrawText(info[i].unk0, xPos, yPos + wPos, xScale, yScale, justify, color);
+
         if (bSave_fieldC && !info[i].unk8) {
             unkC = unkC_save;
         }
+
         yPos += dVar17;
     }
 }
@@ -680,12 +683,19 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
                 max = segs[r29].unk4;
             }
         }
-        if (!r24) break;
+
+        if (!r24) {
+            break;
+        }
+
         if (max > f3) {
             f1 *= f3 / max;
             f2 *= f3 / max;
         } else {
-            if (!((r29 * mHeight) * f2 > f4)) break;
+            if (!((r29 * mHeight) * f2 > f4)) {
+                break;
+            }
+
             f1 *= 0.975f;
             f2 *= 0.975f;
         }
@@ -695,49 +705,50 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
     bool r27 = false;
     float dVar16 = f1;
     float dVar18;
-    switch(justify) {
-        case 3:
+
+    switch (justify) {
+        case (FontJustify)3:
             r27 = true;
             justify = (FontJustify)0;
-        case 0:
+        case (FontJustify)0:
             dVar16 = 0.0f;
             dVar18 = 0.0f;
             break;
-        case 1:
+        case (FontJustify)1:
             dVar18 = 0.0f;
             dVar16 = f3 / 2.0f;
             break;
-        case 2:
+        case (FontJustify)2:
             dVar16 = f3;
             dVar18 = 0.0f;
             break;
-        case 7:
+        case (FontJustify)7:
             r27 = true;
             justify = (FontJustify)4;
-        case 4:
+        case (FontJustify)4:
             dVar16 = 0.0f;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 5:
+        case (FontJustify)5:
             dVar16 = f3 / 2.0f;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 6:
+        case (FontJustify)6:
             dVar16 = f3;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case 11:
+        case (FontJustify)11:
             r27 = 1;
             justify = (FontJustify)8;
-        case 8:
+        case (FontJustify)8:
             dVar16 = 0.0f;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
-        case 9:
+        case (FontJustify)9:
             dVar16 = f3 / 2.0f;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
-        case 10:
+        case (FontJustify)10:
             dVar16 = f3;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
@@ -790,10 +801,13 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
                 unkC += ((f3 - segs[i].unk4) / (float)spaceCount) / f1;
             }
         }
+
         DrawText3d(segs[i].unk0, &pos, f1, f2, justify, NULL, 0, 0, &color, 1, 0);
+
         if (r27 && !segs[i].unk8) {
             unkC = unkC_save;
         }
+        
         pos.y -= dVar17;
     }
 }
@@ -1057,7 +1071,9 @@ float Font::DrawString(char* pText, float f1, float f2, Matrix* pMatrix, int r6,
 
             RenderChars(chars, r27);
         }
+        
         f27 += f28;
     }
+
     return tld.z;
 }

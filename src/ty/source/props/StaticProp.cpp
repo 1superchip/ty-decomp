@@ -187,7 +187,6 @@ void StaticProp::LoadDone(void) {
 }
 
 void StaticProp::Draw(void) {
-    lodManager.Draw(pModel, detailLevel, unk1C, distSquared, flags & 0x40000000);
     lodManager.Draw(pModel, detailLevel, unk1C, distSquared, IsInWater());
 }
 
@@ -246,12 +245,15 @@ void StaticFXProp::Update(void) {
     if (GetDesc()->effectFlags & FX_WaterRipple) {
         UpdateWaterRipple();
     }
+
     if (GetDesc()->effectFlags & FX_Shake) {
         UpdateShake();
     }
+
     if (GetDesc()->effectFlags & FX_SpawnLeaf) {
         UpdateDropLeaf();
     }
+
     if (GetDesc()->effectFlags & FX_Rotate) {
         UpdateRotate();
     }
@@ -269,10 +271,8 @@ void StaticFXProp::UpdateShake(void) {
 
     if (gb.unk78C != 0.0f) {
         
-        if (!TyOn()) {
-            if (PointInBoundingBox(pModel, &tyShakePos, 1.2f) == false) {
-                return;
-            }
+        if (!TyOn() && !PointInBoundingBox(pModel, &tyShakePos, 1.2f)) {
+            return;
         }
 
         if (Abs<float>(gb.unk78C) > 0.1f) {
@@ -327,17 +327,17 @@ void StaticFXProp::UpdateRotate(void) {
     autoRotation.NormaliseRot();
 
     if (rotateSubObjIndex < 0) {
-        Vector modelRot = mDefaultRot;
-        modelRot.Add(&autoRotation);
-        pModel->matrices[0].SetRotationPYR(&modelRot);
+        Vector r = mDefaultRot;
+        r.Add(&autoRotation);
+        pModel->matrices[0].SetRotationPYR(&r);
         pModel->SetLocalToWorldDirty();
     } else {
         Matrix* subObjMatrix = &pModel->pMatrices[pModel->GetSubObjectMatrixIndex(rotateSubObjIndex)];
         Vector* subObjectOrigin = pModel->GetSubObjectOrigin(rotateSubObjIndex);
-        Vector origin;
-        origin.Inverse(subObjectOrigin);
+        Vector invOrigin;
+        invOrigin.Inverse(subObjectOrigin);
         subObjMatrix->SetIdentity();
-        subObjMatrix->Translate(&origin);
+        subObjMatrix->Translate(&invOrigin);
         subObjMatrix->RotatePYR(&autoRotation);
         subObjMatrix->Translate(subObjectOrigin);
     }

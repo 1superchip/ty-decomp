@@ -114,7 +114,7 @@ inline void OrthoProject(void) {
     projection[3][2] = 0.0f;
     projection[3][3] = 1.0f;
     GXSetProjection(projection, GX_ORTHOGRAPHIC);
-    GXSetCurrentMtx(3);
+    GXSetCurrentMtx(GX_PNMTX1);
 }
 
 #endif // COMMON_VIEW

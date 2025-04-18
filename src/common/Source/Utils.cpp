@@ -3,8 +3,8 @@
 extern "C" int strlen(char*);
 int strnicmp(const char*, const char*, int);
 
-int gEmptyPtrList[2] = {0x00000000, 0x00000000};
-int gEmptyPtrListDL[2] = {0x00000000, 0x00000000};
+int gEmptyPtrList[2] = {NULL, NULL};
+int gEmptyPtrListDL[2] = {NULL, NULL};
 
 void* Util_BinarySearch(void* valueToFind, void* arr, int count, int elemSize, int (*compareFunc)(void *, void *)) {
     int cmpResult;

@@ -41,24 +41,38 @@ Texture* Texture::Create(char* pName) {
     } else {
         pTex = textures.GetNextEntry();
         strcpy(pTex->name, Str_CopyString(pName, sizeof(pTex->name) - 1));
+
         pTex->bMpegTarget = false;
+
         TexFile* texFile = (TexFile*)FileSys_Load(Str_Printf("%s.gtx", pName), &size, NULL, -1);
-        DCStoreRange((uint *)texFile, size);
+
+        DCStoreRange((uint*)texFile, size);
         pTex->pFileData = texFile;
         pTex->width = texFile->width;
         pTex->height = texFile->height;
+
         switch (texFile->fmt) {
         case 0:
             // RGB5A3
             pTex->bTlut = false;
-            memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height,
-                GX_TF_RGB5A3, GX_REPEAT, GX_REPEAT, GX_FALSE);
+
+            memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
+
+            GXInitTexObj(
+                &pTex->texObj, 
+                (char*)texFile + 0x20, 
+                pTex->width, pTex->height,
+                GX_TF_RGB5A3, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_FALSE
+            );
             break;
         case 1:
             // Indexed
             pTex->bTlut = true;
+
             memset((void *)&pTex->tlutObj, 0, sizeof(GXTlutObj));
+
             if (Texture_bColourKey != false) {
                 if (!(texFile->unk20 & 0x8000)) {
                     texFile->unk20 &= 0x0FFF;
@@ -66,24 +80,49 @@ Texture* Texture::Create(char* pName) {
                     texFile->unk20 = (texFile->unk20 >> 1) & 0xFFF;
                 }
             }
+
             // file + 0x20 is lookup table, format 2, 256 entries
-            GXInitTlutObj(&pTex->tlutObj, (void *)((int)texFile + 0x20), GX_TL_RGB5A3, 256);
-            memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObjCI(&pTex->texObj, (void *)((int)texFile + 0x220), pTex->width, pTex->height, 
-                GX_TF_C8, GX_REPEAT, GX_REPEAT, GX_FALSE, 0);
+            GXInitTlutObj(
+                &pTex->tlutObj, 
+                (void *)((int)texFile + 0x20), 
+                GX_TL_RGB5A3, 
+                256
+            );
+
+            memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
+
+            GXInitTexObjCI(
+                &pTex->texObj, 
+                (void*)((int)texFile + 0x220), 
+                pTex->width, pTex->height, 
+                GX_TF_C8, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_FALSE, 
+                0
+            );
             break;
         case 2:
             // CMPR
             pTex->bTlut = false;
-            memset((void *)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, (int *)texFile + 8, pTex->width, pTex->height,
-                GX_TF_CMPR, GX_REPEAT, GX_REPEAT, GX_TRUE);
+
+            memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
+            
+            GXInitTexObj(
+                &pTex->texObj, 
+                (char*)texFile + 0x20, 
+                pTex->width, pTex->height,
+                GX_TF_CMPR, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_TRUE
+            );
+
             int bits = pTex->width < pTex->height ? pTex->width : pTex->height;
             int i;
             for (i = 31; i >= 0; i--) {
                 if (bits & (1 << i))
                         break;
             }
+
             float maxLod = (float)i - 3.0f;
             int minFilter;
             switch (Texture_filterType) {
@@ -98,18 +137,37 @@ Texture* Texture::Create(char* pName) {
                     minFilter = 5; // GX_LIN_MIP_LIN
                     break;
             }
-            GXInitTexObjLOD(&pTex->texObj, (GXTexFilter)minFilter,
-                GX_LINEAR, 0.0f, maxLod, -4.0f, GX_TRUE, GX_FALSE, GX_ANISO_1);
+
+            GXInitTexObjLOD(
+                &pTex->texObj, 
+                (GXTexFilter)minFilter, GX_LINEAR, 
+                0.0f, maxLod, -4.0f, 
+                GX_TRUE, 
+                GX_FALSE, 
+                GX_ANISO_1
+            );
+
             if (Texture_filterType >= 2 && pTex->width > 64) {
                 break;
             }
+
             int memSize = ((pTex->width * pTex->height) / 2) + 0x20;
             void* mem = Heap_MemAlloc(memSize); // allocate memory for header + image
+
             memcpy(mem, texFile, memSize);
             DCStoreRange((uint *)mem, memSize);
+
             pTex->pFileData = mem;
-            GXInitTexObj(&pTex->texObj, (void *)((int)mem + 0x20), pTex->width, pTex->height,
-                GX_TF_CMPR, GX_REPEAT, GX_REPEAT, GX_FALSE);
+
+            GXInitTexObj(
+                &pTex->texObj, 
+                (void*)((char*)mem + 0x20), 
+                pTex->width, pTex->height,
+                GX_TF_CMPR, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_FALSE
+            );
+
             Heap_MemFree(texFile);
             break;
         }
@@ -138,13 +196,17 @@ void Texture::Destroy(void) {
 Texture* Texture::Find(char* pName) {
     Texture** list;
     char* str = Str_CopyString(pName, 0x1f);
+    
     list = (Texture**)textures.pMem;
+
     while (*list != NULL) {
         if (stricmp((*list)->name, str) == 0) {
             return *list;
         }
+
         list++;
     }
+
     return NULL;
 }
 
@@ -173,14 +235,26 @@ Texture* Texture::CreateFromRawData(char* pName, void* pRawData, int format, int
         case 0:
             pTex->bTlut = false;
             memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, 
-                GX_TF_RGBA8, GX_REPEAT, GX_REPEAT, GX_FALSE);
+            GXInitTexObj(
+                &pTex->texObj, 
+                pRawData, 
+                pTex->width, pTex->height, 
+                GX_TF_RGBA8, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_FALSE
+            );
             break;
         case 2:
             pTex->bTlut = false;
             memset((void*)&pTex->texObj, 0, sizeof(GXTexObj));
-            GXInitTexObj(&pTex->texObj, pRawData, pTex->width, pTex->height, 
-                GX_TF_RGB565, GX_REPEAT, GX_REPEAT, GX_FALSE);
+            GXInitTexObj(
+                &pTex->texObj, 
+                pRawData, 
+                pTex->width, pTex->height, 
+                GX_TF_RGB565, 
+                GX_REPEAT, GX_REPEAT, 
+                GX_FALSE
+            );
             break;
     }
 

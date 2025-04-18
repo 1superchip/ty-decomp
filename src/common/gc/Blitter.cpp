@@ -349,7 +349,7 @@ void Blitter_Image::Draw(int count) {
     }
 
     GXSetProjectionv((float*)&projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 
 void Blitter_UntexturedImage::Draw(int count) {
@@ -394,7 +394,7 @@ void Blitter_UntexturedImage::Draw(int count) {
     }
 
     GXSetProjectionv((float*)&projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }
 
 void Blitter_TriStrip::Draw(int count, float arg2) {
@@ -443,11 +443,12 @@ void Blitter_TriFan::Draw2D(int count, float arg2) {
         int green = (int)(pTriStrip[i].color.y * 255.0f);
         int blue = (int)(pTriStrip[i].color.z * 255.0f);
         int alpha = (int)(pTriStrip[i].color.w * 255.0f);
+        
         GXPosition3f32(pTriStrip[i].pos.x, pTriStrip[i].pos.y, pTriStrip[i].pos.z);
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(pTriStrip[i].uv.x, pTriStrip[i].uv.y);
     }
 
     GXSetProjectionv((float*)&projection);
-    GXSetCurrentMtx(0);
+    GXSetCurrentMtx(GX_PNMTX0);
 }

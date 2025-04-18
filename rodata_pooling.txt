@@ -1,0 +1,238 @@
+
+Files that have rodata pooled:
+FishShoal.cpp
+RainbowEffect.cpp
+bull.cpp
+RhinoGround.cpp
+Roach.cpp
+SnowSpider.cpp
+TrapdoorSpider.cpp
+PauseScreen_Map.cpp
+StaticProp.cpp
+AS_BiteStates.cpp
+AS_LandStates.cpp
+BouncingBoulder.cpp
+BushPig.cpp
+draw.cpp
+lasso.cpp
+SpikeyIce.cpp
+Ty.cpp
+WobbleTexture.cpp
+
+// SDK
+e_pow.c
+s_atan.c
+THPDec.c
+
+// Common
+Material_GC.cpp
+
+
+// Game files (ignoring sdk):
+
+FishShoal.cpp
+RainbowEffect.cpp
+bull.cpp
+RhinoGround.cpp
+Roach.cpp
+SnowSpider.cpp
+TrapdoorSpider.cpp
+PauseScreen_Map.cpp
+StaticProp.cpp
+AS_BiteStates.cpp
+AS_LandStates.cpp
+BouncingBoulder.cpp
+BushPig.cpp
+draw.cpp
+lasso.cpp
+SpikeyIce.cpp
+Ty.cpp
+WobbleTexture.cpp
+
+Material_GC.cpp
+
+FishShoal.cpp:
+// All unreferenced
+8023cd88    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023cd88     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023cd98    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023cda8    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023cdb8    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023cdc8    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+RainbowEffect.cpp:
+// All unreferenced
+8023cfe0    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023cfe0     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023cff0    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d000    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d010    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d020    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+bull.cpp:
+// All unreferenced
+8023d0a0    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d0a0     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d0b0    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d0c0    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d0d0    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d0e0    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d0f0    40 OBJECT  LOCAL  DEFAULT    7 @295 // NameFlagPair flagsTmp[5] from StaticProp.h
+8023d118    16 OBJECT  LOCAL  DEFAULT    7 @309 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+RhinoGround.cpp:
+// All unreferenced
+8023d3a8    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d3a8     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d3b8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d3c8    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d3d8    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d3e8    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+Roach.cpp:
+// ALl unreferenced
+8023d448    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d448     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d458    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d468    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d478    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d488    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d498    40 OBJECT  LOCAL  DEFAULT    7 @277 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+SnowSpider.cpp:
+// All unreferenced
+8023d600    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d600     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d610    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d620    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d630    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d640    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d650    40 OBJECT  LOCAL  DEFAULT    7 @277 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+TrapdoorSpider.cpp:
+// All unreferenced
+8023d6e8    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d6e8     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d6f8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d708    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d718    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d728    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d738    40 OBJECT  LOCAL  DEFAULT    7 @277 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+PauseScreen_Map.cpp:
+// All unreferenced
+8023d950    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d950     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023d960    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d970    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d980    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d990    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023d9a0    40 OBJECT  LOCAL  DEFAULT    7 @277 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+StaticProp.cpp:
+// All unreferenced
+8023dee8    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023dee8     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023def8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023df08    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023df18    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023df28    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023df38    40 OBJECT  LOCAL  DEFAULT    7 @277 // NameFlagPair flagsTmp[5] from StaticProp.h
+8023df60    16 OBJECT  LOCAL  DEFAULT    7 @290 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+AS_BiteStates.cpp:
+// All unreferenced except @219 by TyBite::DiveBiteToFall(void) (inlines TyContext::VelocityInline)
+8023e0c0    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e0c0     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e0d0    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e0e0    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e0f0    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e100    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f} referenced by TyBite::DiveBiteToFall(void)
+8023e110    16 OBJECT  LOCAL  DEFAULT    7 @285 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+AS_LandStates.cpp:
+// Most are unreferenced by @117 and @219 are referenced (@219 is referenced by the inlining of TyContext::VelocityInline)
+8023e200    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e200     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e210    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f} Referenced in Ty::NormaliseToSlope(void) (inline)
+8023e220    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e230    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e240    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f} referenced multiple times
+8023e250    16 OBJECT  LOCAL  DEFAULT    7 @264 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e260    40 OBJECT  LOCAL  DEFAULT    7 @278 // NameFlagPair flagsTmp[5] from StaticProp.h
+8023e288    16 OBJECT  LOCAL  DEFAULT    7 @309 // {0.0f, 0.0f, 0.0f, 1.0f} Don't know if this is shared in other files
+
+BouncingBoulder.cpp:
+// All unreferenced
+8023e548    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e548     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e558    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e568    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e578    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e588    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e598    16 OBJECT  LOCAL  DEFAULT    7 @264 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+BushPig.cpp:
+// All unreferenced
+8023e648    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e648     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e658    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e668    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e678    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e688    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e698    40 OBJECT  LOCAL  DEFAULT    7 @295 // NameFlagPair flagsTmp[5] from StaticProp.h
+8023e6c0    16 OBJECT  LOCAL  DEFAULT    7 @311 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+draw.cpp:
+// All unreferenced
+8023e800    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e800     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e810    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e820    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e830    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e840    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e850    16 OBJECT  LOCAL  DEFAULT    7 @265 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e860    40 OBJECT  LOCAL  DEFAULT    7 @279 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+lasso.cpp:
+// All unreferenced
+8023e9a8    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e9a8     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023e9b8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e9c8    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e9d8    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023e9e8    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+SpikeyIce.cpp:
+// All unreferenced
+8023eb98    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023eb98     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023eba8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ebb8    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ebc8    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ebd8    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f}
+
+Ty.cpp:
+// All unreferenced except for @219 by bool Ty::FallMove(float, float, float) (inlines TyContext::VelocityInline)
+8023ecc8    16 OBJECT  LOCAL  DEFAULT    7 @116 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ecc8     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023ecd8    16 OBJECT  LOCAL  DEFAULT    7 @117 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ece8    16 OBJECT  LOCAL  DEFAULT    7 @142 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ecf8    16 OBJECT  LOCAL  DEFAULT    7 @143 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ed08    16 OBJECT  LOCAL  DEFAULT    7 @219 // {0.0f, 0.0f, 0.0f, 0.0f} // Referenced by Ty::FallMove
+8023ed18    16 OBJECT  LOCAL  DEFAULT    7 @264 // {0.0f, 0.0f, 0.0f, 0.0f}
+8023ed28    40 OBJECT  LOCAL  DEFAULT    7 @278 // NameFlagPair flagsTmp[5] from StaticProp.h
+
+WobbleTexture.cpp:
+// All unreferenced
+8023f060    16 OBJECT  LOCAL  DEFAULT    7 @116
+8023f060     0 NOTYPE  LOCAL  DEFAULT    7 ...rodata.0
+8023f070    16 OBJECT  LOCAL  DEFAULT    7 @117
+8023f080    16 OBJECT  LOCAL  DEFAULT    7 @142
+8023f090    16 OBJECT  LOCAL  DEFAULT    7 @143
+8023f0a0    16 OBJECT  LOCAL  DEFAULT    7 @219
+
+Material_GC.cpp:
+// Unreferened
+8023fec8    16 OBJECT  LOCAL  DEFAULT    7 @294 // {0.0f, 0.0f, 0.0f, 0.0f}
+

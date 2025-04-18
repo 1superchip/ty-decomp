@@ -6,6 +6,8 @@
 #include "common/Vector.h"
 #include "common/Matrix.h"
 
+extern GXColor Material_MixedColor;
+
 #define Blend_Opaque        0
 #define Blend_Blend         1
 #define Blend_Alpha         2

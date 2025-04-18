@@ -425,6 +425,7 @@ inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, 
         if (pDynamic->pMatrix != &ParticleSystem::identityMatrix) {
             pos.ApplyMatrix(pDynamic->pMatrix);
         }
+        
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
         int r, g, b, a;
 
