@@ -249,6 +249,7 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
 /// @param spaceAllocated Optional parameter for space allocated. If less than 0, size in file entry is used
 /// @return Pointer to file in memory, NULL if error
 void* FileSys_Load(char* pFilename, int* pOutLen, void* pMemoryAllocated, int spaceAllocated) {
+
     int foundFd = -1;
 
     RkvFileEntry *pFoundEntry = patch.GetEntry(pFilename);
@@ -337,13 +338,14 @@ void FileSys_OutputFileOrder(void) {
     qsort(sortedEntries, data.nmbrOfEntries, 4, FileOrderSortCompare);
     
     index = 0;
-    while(index < data.nmbrOfEntries) {
+    while (index < data.nmbrOfEntries) {
         if (sortedEntries[index]->unk3E != 0) {
             int c = 1;
             // fix this up?
-            while(index + c < data.nmbrOfEntries && sortedEntries[index + c]->unk3E != 0) {
+            while (index + c < data.nmbrOfEntries && sortedEntries[index + c]->unk3E != 0) {
                 c++;
             }
+
             if (c > 1) {
                 // only sort if there are 2 or more entries
                 // sort by language?
@@ -361,7 +363,7 @@ void FileSys_OutputFileOrder(void) {
         index = 0;
         *stringBuf = 0;
         bufferIndex = 0;
-        while(index < data.nmbrOfEntries) {
+        while (index < data.nmbrOfEntries) {
             RkvFileEntry* pCurrEntry = sortedEntries[index];
             if (pCurrEntry->offset != -1) {
                 strcat(stringBuf, Str_Printf("%s\r\n", pCurrEntry->name));
@@ -374,13 +376,16 @@ void FileSys_OutputFileOrder(void) {
             }
             index++;
         }
+
         if (bufferIndex != 0) {
             // write file if string size is not 0
             File_Write(openFd, stringBuf, strlen(stringBuf));
         }
+
         // close file
         File_Close(openFd);
     }
+    
     // free allocated memory for entries and string buffer
     Heap_MemFree(stringBuf);
     Heap_MemFree(sortedEntries);
