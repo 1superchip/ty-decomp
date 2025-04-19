@@ -65,11 +65,11 @@ void D1Prop::Draw(void) {
 
 void D1Prop::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_Resolve:
+        case MSG_Resolve:
             OnCompletion.Resolve();
             OnCompletion100.Resolve();
             break;
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             if (System_GetCommandLineParameter("-introonly") == NULL && gb.autoLevelSwitch == false) {
                 SoundBank_PlayMusic((MusicType)7, 0.5f, 0.0f);
                 gb.bOnPauseScreen = true;

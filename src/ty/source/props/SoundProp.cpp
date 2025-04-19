@@ -110,18 +110,20 @@ void SoundProp::Message(MKMessage* pMsg) {
                 unk80 = 1;
             }
             break;
-        case 2:
+        case MSG_UNK_2:
             Reset();
             break;
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             unk80 = 1;
             gameObjFlags.Set(GameObjFlags_Active);
             break;
-        case MKMSG_DEACTIVATE:
+        case MSG_Deactivate:
             gameObjFlags.Clear(GameObjFlags_Active);
             break;
     }
+
     gameObjFlags.Message(pMsg);
+    
     GameObject::Message(pMsg);
 }
 

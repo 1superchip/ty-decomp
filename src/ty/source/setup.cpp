@@ -522,11 +522,17 @@ void SoundBank_PlayExclusiveAmbientSound(bool);
 
 void Setup_PostLoadLevel(void) {
     SoundBank_PlayExclusiveAmbientSound(true);
+
     pHero->Reset();
-    MKMessage msg = {2};
+
+    // Send some init/start? message to all props
+    MKMessage msg = {MSG_UNK_2};
     objectManager.SendMessageToAll(&msg, 0);
+
     LoadManuallyScrollingTextures();
+
     gb.unkE88 = 15;
+
     gb.mGameData.StartTime();
 }
 

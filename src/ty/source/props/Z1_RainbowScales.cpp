@@ -52,10 +52,10 @@ void RainbowScaleObjective::Update(void) {
     }
 }
 
-void RainbowScaleObjective::Message(MKMessage* pMessage) {
-    switch (pMessage->unk0) {
+void RainbowScaleObjective::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
         // 2 = start?
-        case 2:
+        case MSG_UNK_2:
             // Get Opal Descriptor and iterate over all Opals
             GameObjDesc* pOpalDesc = objectManager.FindDescriptor("Opal");
             DescriptorIterator itr = pOpalDesc->Begin();
@@ -68,5 +68,6 @@ void RainbowScaleObjective::Message(MKMessage* pMessage) {
 
             break;
     }
-    LevelObjective::Message(pMessage);
+
+    LevelObjective::Message(pMsg);
 }

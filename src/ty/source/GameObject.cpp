@@ -82,7 +82,7 @@ void GameObject::Message(MKMessage* pMsg) {
         case MKMSG_Deinit:
             Deinit();
             break;
-        case 2:
+        case MSG_UNK_2:
             if (pLocalToWorld != NULL) {
                 Vector centre = {0.0f, 0.0f, 0.0f, 1.0f};
                 if (pDescriptor->pVolume != NULL) {

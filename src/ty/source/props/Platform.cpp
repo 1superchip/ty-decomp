@@ -11,7 +11,7 @@ static void* tempMem;
 static void* pCurrMem = tempMem;
 
 void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* trans, Vector* rot, Vector* def, Matrix* mat) {
-    pMsg->unk0 = MKMSG_UpdateAttachment;
+    pMsg->unk0 = MSG_UpdateAttachment;
     pMsg->trans = trans;
     pMsg->rot = rot;
     pMsg->vec = def;
@@ -118,24 +118,25 @@ void Platform::Reset(void) {
 
 void Platform::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 1:
+        case MSG_Resolve:
             rider.Resolve();
             rider.Attach(this);
             break;
-        case MKMSG_UpdateAttachment:
+        case MSG_UpdateAttachment:
             BeginUpdate();
             PlatformMoveMsg* updateMsg = (PlatformMoveMsg*)pMsg;
             GetPos()->Copy(updateMsg->trans);
             mCurrRot.Add(updateMsg->rot);
             EndUpdate();
             break;
-        case MKMSG_AttachObject:
+        case MSG_AttachObject:
             Attach(reinterpret_cast<MKMessage_GOBJ*>(pMsg)->pObj);
             break;
-        case MKMSG_DetachObject:
+        case MSG_DetachObject:
             Detach(reinterpret_cast<MKMessage_GOBJ*>(pMsg)->pObj);
             break;
     }
+
     GameObject::Message(pMsg);
 }
 

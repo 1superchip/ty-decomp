@@ -28,28 +28,31 @@ bool RangStone::LoadLine(KromeIniLine* pLine) {
 
 void RangStone::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 1:
+        case MSG_Resolve:
             OnSuccess.Resolve();
             break;
-        case 2:
+        case MSG_UNK_2:
             if (gb.mGameData.HasBothRangs()) {
                 HideRang();
             }
             break;
-        case 0x19:
+        case MSG_GotBothRangs:
             if (rangHidden == 0) {
                 HideRang();
                 OnSuccess.Send();
             }
             break;
     }
+
     GameObject::Message(pMsg);
 }
 
 void RangStone::HideRang(void) {
     int n; // subobject index
+    
     if (pModel->SubObjectExists(szRangObj, &n)) {
         pModel->EnableSubObject(n, false);
     }
+
     rangHidden = 1;
 }

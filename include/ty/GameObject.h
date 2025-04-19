@@ -7,34 +7,15 @@
 #include "common/MKSceneManager.h"
 #include "ty/tools.h"
 #include "ty/tytypes.h"
+#include "ty/MessageIds.h"
 
-#define GOMSG_Last 0x10
+#define GOMSG_Last 10
 #define In_WaterVolume 0x40000000
 
 // Search Mask Flags
 #define GOID_Platform 0x40
 
 struct GameObject;
-
-// MKMessage IDs
-#define MKMSG_Resolve 1
-
-// GameObject MKMessage overrides
-#define MKMSG_UpdateAttachment 3
-#define MKMSG_AttachObject 4
-#define MKMSG_DetachObject 5
-
-// Activate/Deactivate message ids
-#define MKMSG_ACTIVATE      (10)
-#define MKMSG_DEACTIVATE    (11)
-
-// Enable/Disable message ids
-#define MKMSG_ENABLE        (12)
-#define MKMSG_DISABLE       (13)
-
-// Visibility message ids
-#define MKMSG_SHOW      (14) // Should set the visibility to true
-#define MKMSG_HIDE      (15) // Should set the visibility to false
 
 struct MKMessage_GOBJ : MKMessage {
 	GameObject* pObj;

@@ -73,10 +73,10 @@ void AquarangProp::Draw(void) {
 
 void AquarangProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_HIDE:
+        case MSG_Hide:
             bCurrVisible = false;
             break;
-        case MKMSG_SHOW:
+        case MSG_Show:
             bCurrVisible = true;
             break;
     }

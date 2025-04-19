@@ -644,7 +644,7 @@ bool Boomerang::SendHitMessage(CollisionResult* pCr) {
 
         MKProp* pProp = pCr->pInfo->pProp;
 
-        msg.unk0 = MKMSG_BoomerangMsg;
+        msg.unk0 = MSG_BoomerangMsg;
         msg.pBoomerang = this;
         msg.SetUnk8(false);
 
@@ -1329,6 +1329,8 @@ void Kaboomerang::UpdateFired(void) {
         mKaboomerangFlightTime += 1.0f / unk84;
 
         if (unk54 || mKaboomerangFlightTime > 1.0f) {
+            
+            // Send explosion message to all props near this
             ExplosionMessage msg;
             msg.Init(&mPos);
             objectManager.SendMessage(&msg, 0, &mPos, 1000.0f, false);
@@ -1359,7 +1361,7 @@ void Zappyrang::CollideWithEnvironment(CollisionResult* pCr) {
     CollisionInfo* pInfo = pCr->pInfo;
 
     if (pInfo && pInfo->pProp) {
-        MKMessage msg = {20};
+        MKMessage msg = {MSG_UNK_20};
         pInfo->pProp->Message(&msg);
     }
 }
@@ -2091,7 +2093,7 @@ void Chronorang::UpdateParticleEffect(void) {
 }
 
 inline void EndGameObjective::Message(MKMessage* pMsg) {
-    if (pMsg->unk0 == 10) {
+    if (pMsg->unk0 == MSG_Activate) {
         /* ASSERT(
                 pInAirDoomerang,
                 "This can\'t happen! activate end game objective without doomerang in air",

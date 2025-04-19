@@ -152,26 +152,28 @@ void AnimatingProp::Message(MKMessage* pMsg) {
     collisionInfo.bEnabled = gameObjFlags.CheckFlags(GameObjFlags_Enabled) &&
         gameObjFlags.CheckFlags(GameObjFlags_Visible);
     switch (pMsg->unk0) {
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             Activate(true);
             break;
-        case MKMSG_DEACTIVATE:
+        case MSG_Deactivate:
             Activate(false);
             break;
-        case MKMSG_ENABLE:
+        case MSG_Enable:
             Enable(true);
             break;
-        case MKMSG_DISABLE:
+        case MSG_Disable:
             Enable(false);
             break;
-        case MKMSG_SHOW:
+        case MSG_Show:
             Show(true);
             break;
-        case MKMSG_HIDE:
+        case MSG_Hide:
             Show(false);
             break;
     }
+    
     GameObject::Message(pMsg);
+
     if (pMsg->unk0 == -4 || !collisionInfo.bEnabled) {
         soundHelper.Reset();
     }

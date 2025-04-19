@@ -53,8 +53,11 @@ bool LevelObjective::LoadLine(KromeIniLine* pLine) {
 
 void LevelObjective::LoadDone(void) {
     objectManager.AddObject(this, NULL, NULL);
+    
     GameObject::LoadDone();
+    
     unk84 = true;
+
     if (pMatName && *pMatName != '\0') {
         pMaterial = Material::Create(pMatName);
     }
@@ -62,23 +65,25 @@ void LevelObjective::LoadDone(void) {
 
 void LevelObjective::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 2:
+        case MSG_UNK_2:
             Reset();
             break;
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             Activate();
             break;
-        case MKMSG_DEACTIVATE:
+        case MSG_Deactivate:
             Deactivate();
             break;
-        case 0x16:
-            if (bComplete || !bActive) return;
+        case MSG_ObjectiveIncrement:
+            if (bComplete || !bActive) {
+                return;
+            }
             Increment();
             break;
-        case 0x30:
+        case MSG_Abort:
             Abort();
             break;
-        case MKMSG_Resolve:             
+        case MSG_Resolve:             
             OnSuccess.Resolve();
             OnFailure.Resolve();
             OnIncrement.Resolve();
@@ -86,6 +91,7 @@ void LevelObjective::Message(MKMessage* pMsg) {
             OnAbort.Resolve();
             break;
     }
+    
     GameObject::Message(pMsg);
 }
 

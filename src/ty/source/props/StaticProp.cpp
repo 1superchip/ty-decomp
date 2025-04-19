@@ -345,10 +345,10 @@ void StaticFXProp::UpdateRotate(void) {
 
 void StaticFXProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_HIDE:
+        case MSG_Hide:
             Show(false);
             break;
-        case MKMSG_SHOW:
+        case MSG_Show:
             Show(true);
             break;
         default:

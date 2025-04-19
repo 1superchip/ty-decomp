@@ -103,18 +103,18 @@ extern "C" int Sound_IsVoicePlaying(int);
 
 void Friend::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 1:
+        case MSG_Resolve:
             mPlatformRider.Resolve();
             mPlatformRider.Attach(this);
             break;
-        case MKMSG_UpdateAttachment:
+        case MSG_UpdateAttachment:
             PlatformMoveMsg* pMoveMsg = (PlatformMoveMsg*)pMsg;
             mPos = *pMoveMsg->trans;
             mRot.y += pMoveMsg->rot->y;
             pModel->matrices[0].SetRotationPYR(&mRot);
             pModel->matrices[0].SetTranslation(&mPos);
             break;
-        case MKMSG_BoomerangMsg:
+        case MSG_BoomerangMsg:
             BoomerangMessage* pBoomerangMsg = (BoomerangMessage*)pMsg;
             if (mFlags & FSF_Visible) {
                 if (pBoomerangMsg->pBoomerang->mRangType != BR_Kaboomerang) {
@@ -135,24 +135,24 @@ void Friend::Message(MKMessage* pMsg) {
                 }
             }
             break;
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             mFlags |= FSF_Active;
             break;
-        case MKMSG_DEACTIVATE:
+        case MSG_Deactivate:
             mFlags &= ~FSF_Active;
             break;
-        case MKMSG_SHOW:
+        case MSG_Show:
             mFlags |= FSF_Visible;
             mCollisionInfo.Enable();
             break;
-        case MKMSG_HIDE:
+        case MSG_Hide:
             mFlags &= ~FSF_Visible;
             mCollisionInfo.Disable();
             break;
-        case MKMSG_ENABLE:
+        case MSG_Enable:
             mFlags |= FSF_Enabled;
             break;
-        case MKMSG_DISABLE:
+        case MSG_Disable:
             mFlags &= ~FSF_Enabled;
             break;
         default:
@@ -240,9 +240,11 @@ void Friend::Update(void) {
     if (gb.pDialogPlayer || !(mFlags & FSF_Active)) {
         return;
     }
+
     PreUpdate();
     mStateManager.UnkFunc(this, false);
     PostUpdate();
+    
     // If the flash timer isn't 0, decrement it and
     // set bFlashSkeleton to either true or false randomly
     if (mFlashTimer != 0) {
@@ -303,8 +305,8 @@ void Friend::PostUpdate(void) {
     mAnimScript.Apply(pModel->GetAnimation());
 
     if (mTyDistSq < FRIEND_AUTOTARGET_RANGE_SQ && (mFlags & FSF_Visible)) {
-        Vector sp8 = {mPos.x, mPos.y + (GetDesc()->mLodDesc.height / 2.0f), mPos.z};
-        ty.mAutoTarget.Set((TargetPriority)3, NULL, NULL, &sp8, pModel);
+        Vector centrePos = {mPos.x, mPos.y + (GetDesc()->mLodDesc.height / 2.0f), mPos.z};
+        ty.mAutoTarget.Set((TargetPriority)3, NULL, NULL, &centrePos, pModel);
     }
 
     IceBlock_TestCollision(GetPos(), mLodManager.pDescriptor->radius, true, false, false);

@@ -281,9 +281,6 @@ struct Chronorang : Boomerang {
     virtual void UpdateParticleEffect(void);
 };
 
-#define MKMSG_BoomerangMsg (8)
-#define MKMSG_ExplosionMsg (9)
-
 struct BoomerangMessage : MKMessage {
     Boomerang* pBoomerang;
     bool unk8;
@@ -297,7 +294,7 @@ struct ExplosionMessage : MKMessage {
     Vector pos;
 
     void Init(Vector* pPos) {
-        unk0 = MKMSG_ExplosionMsg;
+        unk0 = MSG_ExplosionMsg;
         pos = *pPos;
     }
 };

@@ -37,6 +37,13 @@ inline void CameraTools_CalcVectorVector(Vector* p0, Vector* p1, Vector* pCenter
     pCenter->z = (p0->z + p1->z) * 0.5f;
 }
 
+inline float GCT_MagSqrXZ(Vector* p0, Vector* p1) {
+    float dx = p0->x - p1->x;
+    float dz = p0->z - p1->z;
+    
+    return dx * dx + dz * dz;
+}
+
 extern float GCT_MIN_HEIGHT_DELTA;
 extern Vector clear;
 

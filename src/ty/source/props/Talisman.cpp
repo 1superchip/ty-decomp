@@ -82,19 +82,18 @@ void Talisman::Update(void) {
 
 void Talisman::Draw(void) {
     if (bCurrentVisible) {
-        // only draw the Talisman when it's visible
         StaticProp::Draw();
     }
 }
 
 void Talisman::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_ACTIVATE:
-        case MKMSG_SHOW:
+        case MSG_Activate:
+        case MSG_Show:
             bCurrentVisible = true;
             break;
-        case MKMSG_DEACTIVATE:
-        case MKMSG_HIDE:
+        case MSG_Deactivate:
+        case MSG_Hide:
             bCurrentVisible = false;
             break;
     }

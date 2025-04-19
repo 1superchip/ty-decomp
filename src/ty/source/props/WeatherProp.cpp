@@ -65,17 +65,17 @@ void WeatherProp::LoadDone(void) {
 
 void WeatherProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 2:
+        case MSG_UNK_2:
             Reset();
             break;
-        case 10:
+        case MSG_Activate:
             if (bEnabled != false) {
                 break;
             }
             bEnabled = 1;
             Activate();
             break;
-        case 11:
+        case MSG_Deactivate:
             if (bEnabled == false) {
                 break;
             }
@@ -124,6 +124,7 @@ void WeatherProp::Message(MKMessage* pMsg) {
         case 24:
             break;
     }
+    
     GameObject::Message(pMsg);
 }
 

@@ -82,7 +82,7 @@ void ScriptProp::Reset(void) {
 
 void ScriptProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             if (!bEnabled) {
                 return;
             }
@@ -94,21 +94,22 @@ void ScriptProp::Message(MKMessage* pMsg) {
             unk40 = Delay;
             currentMessageIndex = 0;
             return;
-        case MKMSG_DEACTIVATE:
+        case MSG_Deactivate:
             bActive = false;
             return;
-        case MKMSG_ENABLE:
+        case MSG_Enable:
             bEnabled = true;
             break;
-        case MKMSG_DISABLE:
+        case MSG_Disable:
             bEnabled = false;
             break;
-        case MKMSG_Resolve:
+        case MSG_Resolve:
             for (int i = 0; i < MessageCount; i++) {
                 messages[i].Resolve();
             }
             break;
     }
+    
     GameObject::Message(pMsg);
 }
 
@@ -134,13 +135,13 @@ bool ConditionalScriptProp::LoadLine(KromeIniLine* pLine) {
 
 void ConditionalScriptProp::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 2:
+        case MSG_UNK_2:
             if (bExecuteOnStart && CheckConditions()) {
-                MKMessage msg = {10};
+                MKMessage msg = {MSG_Activate};
                 ScriptProp::Message(&msg);
             }
             break;
-        case 10:
+        case MSG_Activate:
             if (CheckConditions()) {
                 ScriptProp::Message(pMsg);
             }

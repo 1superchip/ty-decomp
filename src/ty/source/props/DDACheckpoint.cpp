@@ -21,7 +21,7 @@ bool DDACheckpoint::LoadLine(KromeIniLine* pLine) {
 
 void DDACheckpoint::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case MKMSG_ACTIVATE:
+        case MSG_Activate:
             dda.NewCheckpoint(Number);
             break;
         default:

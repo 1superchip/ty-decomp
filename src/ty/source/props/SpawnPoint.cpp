@@ -32,7 +32,7 @@ void SpawnPoint::LoadDone(void) {
 
 void SpawnPoint::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
-        case 1:
+        case MSG_Resolve:
             if (fromLevel == gb.mGameData.pSaveData->previousLevel) {
                 ty.mSpawnPos = tySpawnPos;
                 ty.mSpawnRot = tySpawnRot;

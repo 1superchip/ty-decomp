@@ -137,7 +137,7 @@ void Shatterable::Message(MKMessage* pMsg) {
     Vector tempVel = {0.0f, GetDesc()->upVel, 0.0f};
 
     switch (pMsg->unk0) {
-        case 7:
+        case MSG_UNK_7:
             if (unk58 != 0) {
                 UnknownShatterMessage* pUnkMsg = (UnknownShatterMessage*)pMsg;
                 pUnkMsg->unk14 = true;
@@ -154,8 +154,8 @@ void Shatterable::Message(MKMessage* pMsg) {
                 OnShatter.Send();
             }
             break;
-        case 9:
-        case 20:
+        case MSG_ExplosionMsg:
+        case MSG_UNK_20:
             if (unk58 != 0) {
                 collisionInfo.Disable();
                 shatter->Explode(&tempVel, GetDesc()->spinRate, GetDesc()->power);
@@ -164,16 +164,16 @@ void Shatterable::Message(MKMessage* pMsg) {
                 OnShatter.Send();
             }
             break;
-        case 1:
+        case MSG_Resolve:
             OnShatter.Resolve();
             break;
-        case 10:
-        case 14:
+        case MSG_Activate:
+        case MSG_Show:
             unk58 = 1;
             collisionInfo.Enable();
             break;
-        case 11:
-        case 15:
+        case MSG_Deactivate:
+        case MSG_Hide:
             unk58 = 3;
             collisionInfo.Disable();
             break;
