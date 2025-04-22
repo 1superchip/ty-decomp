@@ -6,7 +6,7 @@
 #include <dolphin/CARDPriv.h>
 #include <dolphin/OSRtcPriv.h>
 
-#include "string.h"
+#include "../src/Runtime/string.h"
 
 #define __CARDGetDirCheck(dir) ((CARDDirCheck*)&(dir)[CARD_MAX_FILE])
 

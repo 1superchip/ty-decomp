@@ -653,13 +653,8 @@ def load_sources(ctx: c.SourceContext):
     raw = c.get_cmd_stdout(
         f"{c.SLICES} {ctx.binary} {ctx.slices} -o -p {ctx.srcdir}/"
     )
-    # print(raw)
-    s_list = [Source.make(ctx, s) for s in json.loads(raw)]
-    # for s in s_list:
-        # if type(s) == CSource:
-            # print(vars(s))
-    return s_list
-    #return [Source.make(ctx, s) for s in json.loads(raw)]
+    
+    return [Source.make(ctx, s) for s in json.loads(raw)]
 
 forcefiles = []
 
