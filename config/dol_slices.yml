@@ -707,7 +707,7 @@ ty/source/effects/Trails.cpp:
 #   .sbss: [0x803fa050, 0x803fa058]
 #   .sdata2: [0x803fd718, 0x803fd720]
 
-#SynkerBlueTongue.cpp:
+#ty/source/enemies/SynkerBlueTongue.cpp:
 #   .text: [0x800a62e8, 0x800a6624]
 #   .ctors: [0x8023c854, 0x8023c858]
 #   .data: [0x80250430, 0x80250568]
@@ -825,7 +825,7 @@ ty/source/friends/Friend.cpp:
   .sbss: [0x803fa108, 0x803fa110]
   .sdata2: [0x803fdbe8, 0x803fdc08]
 
-#julius.cpp:
+#ty/source/friends/julius.cpp:
 #   .text: [0x800b9880, 0x800baa70]
 #   .ctors: [0x8023c888, 0x8023c88c]
 #   .data: [0x802530f0, 0x802534d8]
@@ -889,7 +889,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa150, 0x803fa158]
 #   .sdata2: [0x803fdd30, 0x803fdd70]
 
-#FrontEnd_Credits.cpp:
+#ty/source/frontend/FrontEnd_Credits.cpp:
 #   .text: [0x800c16bc, 0x800c2bdc]
 #   .data: [0x80254388, 0x802544b0]
 #   .bss: [0x802a4070, 0x802a4340]
@@ -912,7 +912,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa178, 0x803fa180]
 #   .sdata2: [0x803fdde8, 0x803fde08]
 
-#FrontEnd_LanguageSelect.cpp:
+#ty/source/frontend/FrontEnd_LanguageSelect.cpp:
 #   .text: [0x800c3b34, 0x800c3f20]
 #   .data: [0x80254500, 0x80254520]
 #   .bss: [0x802a44a0, 0x802a44d0]
@@ -926,7 +926,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa180, 0x803fa188]
 #   .sdata2: [0x803fde28, 0x803fde30]
 
-#FrontEnd_LoadLevel.cpp:
+#ty/source/frontend/FrontEnd_LoadLevel.cpp:
 #   .text: [0x800c44f8, 0x800c5120]
 #   .data: [0x80254530, 0x80254578]
 #   .bss: [0x802a4538, 0x802a4640]
@@ -934,7 +934,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa188, 0x803fa1b8]
 #   .sdata2: [0x803fde30, 0x803fde78]
 
-#FrontEnd_MainMenu.cpp:
+#ty/source/frontend/FrontEnd_MainMenu.cpp:
 #   .text: [0x800c5120, 0x800c5ef4]
 #   .rodata: [0x8023d890, 0x8023d8b0]
 #   .data: [0x80254578, 0x802545a8]
@@ -952,7 +952,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa1c8, 0x803fa1d0]
 #   .sdata2: [0x803fdec8, 0x803fdef0]
 
-#FrontEnd_Videos.cpp:
+#ty/source/frontend/FrontEnd_Videos.cpp:
 #   .text: [0x800c62d4, 0x800c69d4]
 #   .data: [0x802545b8, 0x802545e0]
 #   .bss: [0x802a47d0, 0x802a4888]
@@ -960,7 +960,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa1d0, 0x803fa1e0]
 #   .sdata2: [0x803fdef0, 0x803fdf18]
 
-#PauseScreen.cpp:
+#ty/source/frontend/PauseScreen.cpp:
 #   .text: [0x800c69d4, 0x800c8774]
 #   .rodata: [0x8023d8c0, 0x8023d900]
 #   .data: [0x802545e0, 0x80254790]
@@ -969,7 +969,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa1e0, 0x803fa1e8]
 #   .sdata2: [0x803fdf18, 0x803fdfd0]
 
-#PauseScreen_Continue.cpp:
+#ty/source/frontend/PauseScreen_Continue.cpp:
 #   .text: [0x800c8774, 0x800c8ccc]
 #   .data: [0x80254790, 0x80254810]
 #   .bss: [0x802a4f18, 0x802a5048]
@@ -986,7 +986,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa1f0, 0x803fa220]
 #   .sdata2: [0x803fdfe8, 0x803fe098]
 
-#PauseScreen_GameTotals.cpp:
+#ty/source/frontend/PauseScreen_GameTotals.cpp:
 #   .text: [0x800ca7b4, 0x800cb710]
 #   .rodata: [0x8023d930, 0x8023d950]
 #   .data: [0x802549a0, 0x80254a78]
@@ -995,7 +995,7 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa220, 0x803fa228]
 #   .sdata2: [0x803fe098, 0x803fe108]
 
-#PauseScreen_Map.cpp:
+#ty/source/frontend/PauseScreen_Map.cpp:
 #   .text: [0x800cb710, 0x800ccb8c]
 #   .ctors: [0x8023c8a0, 0x8023c8a4]
 #   .rodata: [0x8023d950, 0x8023da08]
@@ -1003,7 +1003,7 @@ ty/source/friends/Friend.cpp:
 #   .sdata: [0x803f60f8, 0x803f6110]
 #   .sdata2: [0x803fe108, 0x803fe238]
 
-#PauseScreen_OptionControls.cpp:
+#ty/source/frontend/PauseScreen_OptionControls.cpp:
 #   .text: [0x800ccb8c, 0x800cddb4]
 #   .rodata: [0x8023da08, 0x8023da70]
 #   .data: [0x80254ff0, 0x80255000]
@@ -1012,31 +1012,31 @@ ty/source/friends/Friend.cpp:
 #   .sbss: [0x803fa228, 0x803fa230]
 #   .sdata2: [0x803fe238, 0x803fe2b0]
 
-#PauseScreen_Options.cpp:
+#ty/source/frontend/PauseScreen_Options.cpp:
 #   .text: [0x800cddb4, 0x800ce234]
 #   .bss: [0x802a5cd8, 0x802a5d80]
 #   .sdata2: [0x803fe2b0, 0x803fe2c8]
 
-#PauseScreen_OptionScreen.cpp:
+#ty/source/frontend/PauseScreen_OptionScreen.cpp:
 #   .text: [0x800ce234, 0x800cecf0]
 #   .bss: [0x802a5d80, 0x802a5e48]
 #   .sbss: [0x803fa230, 0x803fa238]
 #   .sdata2: [0x803fe2c8, 0x803fe2f8]
 
-#PauseScreen_OptionSound.cpp:
+#ty/source/frontend/PauseScreen_OptionSound.cpp:
 #   .text: [0x800cecf0, 0x800cfd5c]
 #   .bss: [0x802a5e48, 0x802a5f10]
 #   .sdata: [0x803f6118, 0x803f6128]
 #   .sbss: [0x803fa238, 0x803fa250]
 #   .sdata2: [0x803fe2f8, 0x803fe340]
 
-#PauseScreen_RangInfo.cpp:
+#ty/source/frontend/PauseScreen_RangInfo.cpp:
 #   .text: [0x800cfd5c, 0x800d0368]
 #   .bss: [0x802a5f10, 0x802a5f70]
 #   .sbss: [0x803fa250, 0x803fa260]
 #   .sdata2: [0x803fe340, 0x803fe380]
 
-#PauseScreen_SaveGame.cpp:
+#ty/source/frontend/PauseScreen_SaveGame.cpp:
 #   .text: [0x800d0368, 0x800d0490]
 #   .bss: [0x802a5f70, 0x802a5fa0]
 
@@ -1362,7 +1362,7 @@ ty/source/props/DDACheckpoint.cpp:
 #   .sbss: [0x803fa3f8, 0x803fa408]
 #   .sdata2: [0x803feb98, 0x803fec00]
 
-#FlamingLog.cpp:
+#ty/source/props/FlamingLog.cpp:
 #   .text: [0x800edde4, 0x800ee380]
 #   .ctors: [0x8023c920, 0x8023c924]
 #   .data: [0x802582a8, 0x802583c8]
@@ -1436,7 +1436,7 @@ ty/source/props/gem.cpp:
 #   .sbss: [0x803fa480, 0x803fa488]
 #   .sdata2: [0x803feeb0, 0x803feec8]
 
-#JuliusMachine.cpp:
+#ty/source/props/JuliusMachine.cpp:
 #   .text: [0x800f5d30, 0x800f6194]
 #   .ctors: [0x8023c940, 0x8023c944]
 #   .data: [0x80259440, 0x802595e8]
@@ -1746,7 +1746,7 @@ ty/source/props/Talisman.cpp:
 #   .sbss: [0x803fa620, 0x803fa628]
 #   .sdata2: [0x803ff6a8, 0x803ff6e8]
 
-#ThunderEggCollector.cpp:
+#ty/source/props/ThunderEggCollector.cpp:
 #   .text: [0x8011351c, 0x801137f8]
 #   .ctors: [0x8023c9c4, 0x8023c9c8]
 #   .data: [0x8025d2e8, 0x8025d438]
@@ -2181,7 +2181,7 @@ ty/source/heatflare.cpp:
    .sdata: [0x803f8958, 0x803f8960]
    .sbss: [0x803fa928, 0x803fa938]
 
-#Hud.cpp:
+#ty/source/Hud.cpp:
 #   .text: [0x80164b18, 0x80167d84]
 #   .rodata: [0x8023e918, 0x8023e998]
 #   .data: [0x80264060, 0x802640b8]
@@ -2341,7 +2341,7 @@ ty/source/RangeCheck.cpp:
    .sbss: [0x803faa40, 0x803faa48]
    .sdata2: [0x80401058, 0x80401078]
 
-#reeds.cpp:
+#ty/source/reeds.cpp:
 #   .text: [0x8018a99c, 0x8018b10c]
 #   .rodata: [0x8023eb18, 0x8023eb28]
 #   .bss: [0x802b49f8, 0x802b4a58]
@@ -2552,7 +2552,7 @@ ty/source/Torch.cpp:
 #   .sbss: [0x803fabd8, 0x803fac08]
 #   .sdata2: [0x80401758, 0x804017a0]
 
-#TyMemCardQuery.cpp:
+#ty/source/TyMemCardQuery.cpp:
 #   .text: [0x801bb7b8, 0x801bdbe4]
 #   .rodata: [0x8023f010, 0x8023f020]
 #   .data: [0x8026b410, 0x8026b6c0]
@@ -2632,7 +2632,7 @@ ty/source/UserInterface.cpp:
 #   .sbss: [0x803fac78, 0x803fac88]
 #   .sdata2: [0x80401b38, 0x80401b90]
 
-#WeatherTypes.cpp:
+#ty/source/WeatherTypes.cpp:
 #   .data: [0x8026bce8, 0x8026c428]
 #   .sdata: [0x803f96a8, 0x803f96e8]
 
@@ -2648,96 +2648,96 @@ ty/source/WobbleTexture.cpp:
   .rodata: [0x8023f060, 0x8023f0e0]
   .sdata2: [0x80401ba8, 0x80401be8]
 
-#EXIBios.c:
+#Dolphin/exi/EXIBios.c:
 #   .text: [0x801c60b8, 0x801c7984]
 #   .bss: [0x802bb330, 0x802bb3f0]
 
-#EXIUart.c:
+#Dolphin/exi/EXIUart.c:
 #   .text: [0x801c7984, 0x801c7bf4]
 #   .sbss: [0x803fac98, 0x803faca8]
 
-#SIBios.c:
+#Dolphin/si/SIBios.c:
 #   .text: [0x801c7bf4, 0x801c92d4]
 #   .data: [0x8026c448, 0x8026c518]
 #   .bss: [0x802bb3f0, 0x802bb5f0]
 #   .sbss: [0x803faca8, 0x803facb8]
 
-#SISamplingRate.c:
+#Dolphin/si/SISamplingRate.c:
 #   .text: [0x801c92d4, 0x801c93dc]
 #   .data: [0x8026c518, 0x8026c5b0]
 #   .sbss: [0x803facb8, 0x803facc0]
 
-#AmcExi2Stubs.c:
+#Dolphin/amcstubs/AmcExi2Stubs.c:
 #   .text: [0x801c93dc, 0x801c940c]
 
-#odenotstub.c:
+#Dolphin/odenotstub/odenotstub.c:
 #   .text: [0x801c940c, 0x801c9414]
 
-#GXInit.c:
+#Dolphin/gx/GXInit.c:
 #   .text: [0x801c9414, 0x801ca504]
 #   .bss: [0x802bb5f0, 0x802bbb68]
 #   .sdata: [0x803f96f8, 0x803f9700]
 #   .sbss: [0x803facc0, 0x803facd0]
 #   .sdata2: [0x80401be8, 0x80401c08]
 
-#GXFifo.c:
+#Dolphin/gx/GXFifo.c:
 #   .text: [0x801ca504, 0x801cab24]
 #   .sbss: [0x803facd0, 0x803facf0]
 
-#GXAttr.c:
+#Dolphin/gx/GXAttr.c:
 #   .text: [0x801cab24, 0x801cb94c]
 #   .data: [0x8026c5b0, 0x8026c6d0]
 #   .sdata: [0x803f9700, 0x803f9710]
 
-#GXMisc.c:
+#Dolphin/gx/GXMisc.c:
 #   .text: [0x801cb94c, 0x801cbdf8]
 #   .sbss: [0x803facf0, 0x803fad08]
 
-#GXGeometry.c:
+#Dolphin/gx/GXGeometry.c:
 #   .text: [0x801cbdf8, 0x801cc1d8]
 
-#GXFrameBuf.c:
+#Dolphin/gx/GXFrameBuf.c:
 #   .text: [0x801cc1d8, 0x801ccfc4]
 #   .data: [0x8026c6d0, 0x8026c7c0]
 #   .sdata2: [0x80401c08, 0x80401c18]
 
-#GXLight.c:
+#Dolphin/gx/GXLight.c:
 #   .text: [0x801ccfc4, 0x801cd644]
 
-#GXTexture.c:
+#Dolphin/gx/GXTexture.c:
 #   .text: [0x801cd644, 0x801ce560]
 #   .data: [0x8026c7c0, 0x8026c8f0]
 #   .sdata: [0x803f9710, 0x803f9750]
 #   .sdata2: [0x80401c18, 0x80401c40]
 
-#GXBump.c:
+#Dolphin/gx/GXBump.c:
 #   .text: [0x801ce560, 0x801cec30]
 #   .sdata2: [0x80401c40, 0x80401c48]
 
-#GXTev.c:
+#Dolphin/gx/GXTev.c:
 #   .text: [0x801cec30, 0x801cf668]
 #   .data: [0x8026c8f0, 0x8026c918]
 
-#GXPixel.c:
+#Dolphin/gx/GXPixel.c:
 #   .text: [0x801cf668, 0x801cfdb0]
 #   .data: [0x8026c918, 0x8026c938]
 #   .sdata2: [0x80401c48, 0x80401c78]
 
-#GXStubs.c:
+#Dolphin/gx/GXStubs.c:
 #   .text: [0x801cfdb0, 0x801cfdb4]
 
-#GXDisplayList.c:
+#Dolphin/gx/GXDisplayList.c:
 #   .text: [0x801cfdb4, 0x801cfe24]
 
-#GXTransform.c:
+#Dolphin/gx/GXTransform.c:
 #   .text: [0x801cfe24, 0x801d0590]
 #   .sdata2: [0x80401c78, 0x80401c90]
 
-#GXPerf.c:
+#Dolphin/gx/GXPerf.c:
 #   .text: [0x801d0590, 0x801d0e38]
 #   .data: [0x8026c938, 0x8026ca28]
 
-#texPalette.c:
+#Dolphin/tex/texPalette.c:
 #   .text: [0x801d0e38, 0x801d1128]
 #   .data: [0x8026ca28, 0x8026ca68]
 
@@ -2752,63 +2752,63 @@ ty/source/WobbleTexture.cpp:
 #string.c:
 #   .text: [0x801d151c, 0x801d15bc]
 
-#mtx.c:
+#Dolphin/mtx/mtx.c:
 #   .text: [0x801d15bc, 0x801d15f8]
 #   .sdata2: [0x80401c90, 0x80401c98]
 
-#mtx44.c:
+#Dolphin/mtx/mtx44.c:
 #   .text: [0x801d15f8, 0x801d1690]
 #   .sdata2: [0x80401c98, 0x80401ca8]
 
-#vi.c:
+#Dolphin/vi.c:
 #   .text: [0x801d1690, 0x801d3090]
 #   .data: [0x8026ca68, 0x8026cd30]
 #   .bss: [0x802bbb78, 0x802bbcc0]
 #   .sbss: [0x803fad10, 0x803fad60]
 
-#AX.c:
+#Dolphin/ax/AX.c:
 #   .text: [0x801d3090, 0x801d30f8]
 
-#AXAlloc.c:
+#Dolphin/ax/AXAlloc.c:
 #   .text: [0x801d30f8, 0x801d35c0]
 #   .bss: [0x802bbcc0, 0x802bbdc0]
 #   .sbss: [0x803fad60, 0x803fad68]
 
-#AXAux.c:
+#Dolphin/ax/AXAux.c:
 #   .text: [0x801d35c0, 0x801d3a48]
 #   .bss: [0x802bbdc0, 0x802beac0]
 #   .sbss: [0x803fad68, 0x803fada0]
 
-#AXCL.c:
+#Dolphin/ax/AXCL.c:
 #   .text: [0x801d3a48, 0x801d4180]
 #   .bss: [0x802beac0, 0x802bf0c0]
 #   .sbss: [0x803fada0, 0x803fadb8]
 
-#AXOut.c:
+#Dolphin/ax/AXOut.c:
 #   .text: [0x801d4180, 0x801d4840]
 #   .bss: [0x802bf0c0, 0x802c38e0]
 #   .sbss: [0x803fadb8, 0x803fadd8]
 
-#AXSPB.c:
+#Dolphin/ax/AXSPB.c:
 #   .text: [0x801d4840, 0x801d4d08]
 #   .bss: [0x802c38e0, 0x802c3920]
 #   .sbss: [0x803fadd8, 0x803fae00]
 
-#AXVPB.c:
+#Dolphin/ax/AXVPB.c:
 #   .text: [0x801d4d08, 0x801d5d54]
 #   .data: [0x8026cd30, 0x8026ce20]
 #   .bss: [0x802c3920, 0x802d4d20]
 #   .sbss: [0x803fae00, 0x803fae10]
 #   .sdata2: [0x80401ca8, 0x80401cb0]
 
-#AXProf.c:
+#Dolphin/ax/AXProf.c:
 #   .text: [0x801d5d54, 0x801d5d9c]
 #   .sbss: [0x803fae10, 0x803fae20]
 
-#AXComp.c:
+#Dolphin/ax/AXComp.c:
 #   .data: [0x8026ce20, 0x8026e860]
 
-#DSPCode.c:
+#Dolphin/ax/DSPCode.c:
 #   .data: [0x8026e860, 0x80270780]
 #   .sdata: [0x803f9750, 0x803f9758]
 
@@ -2818,7 +2818,7 @@ Dolphin/os/OS.c:
   .bss: [0x802d4d20, 0x802d4d70]
   .sbss: [0x803fae20, 0x803fae50]
 
-#OSAlarm.c:
+#Dolphin/os/OSAlarm.c:
 #   .text: [0x801d66f8, 0x801d6da4]
 #   .sbss: [0x803fae50, 0x803fae58]
 
@@ -2837,7 +2837,7 @@ Dolphin/os/OSAudioSystem.c:
   .text: [0x801d7434, 0x801d76c8]
   .data: [0x80270cd8, 0x80270d58]
 
-#OSCache.c:
+#Dolphin/os/OSCache.c:
 #   .text: [0x801d76c8, 0x801d7d30]
 #   .data: [0x80270d58, 0x80270f88]
 
@@ -2851,7 +2851,7 @@ Dolphin/os/OSError.c:
   .bss: [0x802d4d70, 0x802d4dc0]
   .sdata: [0x803f9768, 0x803f9770]
 
-#OSFont.c:
+#Dolphin/os/OSFont.c:
 #   .text: [0x801d8960, 0x801d89b8]
 #   .sdata: [0x803f9770, 0x803f9778]
 
@@ -2863,14 +2863,14 @@ Dolphin/os/OSInterrupt.c:
 Dolphin/os/OSLink.c:
   .text: [0x801d9224, 0x801d923c]
 
-#OSMessage.c:
+#Dolphin/os/OSMessage.c:
 #   .text: [0x801d923c, 0x801d9440]
 
-#OSMemory.c:
+#Dolphin/os/OSMemory.c:
 #   .text: [0x801d9440, 0x801d9738]
 #   .data: [0x802714b0, 0x802714c0]
 
-#OSMutex.c:
+#Dolphin/os/OSMutex.c:
 #   .text: [0x801d9738, 0x801d97a8]
 
 #Dolphin/os/OSReboot.c:
@@ -2882,7 +2882,7 @@ Dolphin/os/OSReset.c:
   .text: [0x801d99b4, 0x801d9d98]
   .sbss: [0x803fae98, 0x803faea0]
 
-#OSResetSW.c:
+#Dolphin/os/OSResetSW.c:
 #   .text: [0x801d9d98, 0x801da124]
 #   .sbss: [0x803faea0, 0x803faec0]
 
@@ -2890,7 +2890,7 @@ Dolphin/os/OSRtc.c:
   .text: [0x801da124, 0x801daaa8]
   .bss: [0x802d4de0, 0x802d4e38]
 
-#OSSync.c:
+#Dolphin/os/OSSync.c:
 #   .text: [0x801daaa8, 0x801dab2c]
 
 Dolphin/os/OSThread.c:
@@ -2898,7 +2898,7 @@ Dolphin/os/OSThread.c:
   .bss: [0x802d4e38, 0x802d5820]
   .sbss: [0x803faec0, 0x803faed0]
 
-#OSTime.c:
+#Dolphin/os/OSTime.c:
 #   .text: [0x801dbc14, 0x801dc038]
 #   .data: [0x802714c0, 0x80271520]
 
@@ -2912,72 +2912,72 @@ Dolphin/os/__ppc_eabi_init.cpp:
   .text: [0x801dc038, 0x801dc0cc]
   .init: [0x80003354, 0x800033a8]
 
-#db.c:
+#Dolphin/db.c:
 #   .text: [0x801dc0cc, 0x801dc1b8]
 #   .data: [0x80271520, 0x80271538]
 #   .sbss: [0x803faed0, 0x803faed8]
 
-#PPCArch.c:
+#Dolphin/PPCArch.c:
 #   .text: [0x801dc1b8, 0x801dc254]
 
-#Pad.c:
+#Dolphin/pad/Pad.c:
 #   .text: [0x801dc254, 0x801ddd1c]
 #   .data: [0x80271538, 0x80271548]
 #   .bss: [0x802d5820, 0x802d5870]
 #   .sdata: [0x803f9778, 0x803f9798]
 #   .sbss: [0x803faed8, 0x803faf00]
 
-#dvdlow.c:
+#Dolphin/dvd/dvdlow.c:
 #   .text: [0x801ddd1c, 0x801deb70]
 #   .bss: [0x802d5870, 0x802d5940]
 #   .sdata: [0x803f9798, 0x803f97a0]
 #   .sbss: [0x803faf00, 0x803faf48]
 
-#dvdfs.c:
+#Dolphin/dvd/dvdfs.c:
 #   .text: [0x801deb70, 0x801df4f4]
 #   .data: [0x80271548, 0x80271938]
 #   .sdata: [0x803f97a0, 0x803f97a8]
 #   .sbss: [0x803faf48, 0x803faf68]
 
-#dvd.c:
+#Dolphin/dvd/dvd.c:
 #   .text: [0x801df4f4, 0x801e1d2c]
 #   .data: [0x80271938, 0x80271a50]
 #   .bss: [0x802d5940, 0x802d5a18]
 #   .sdata: [0x803f97a8, 0x803f97b0]
 #   .sbss: [0x803faf68, 0x803fafb0]
 
-#dvdqueue.c:
+#Dolphin/dvd/dvdqueue.c:
 #   .text: [0x801e1d2c, 0x801e1f24]
 #   .bss: [0x802d5a18, 0x802d5a38]
 
-#dvderror.c:
+#Dolphin/dvd/dvderror.c:
 #   .text: [0x801e1f24, 0x801e20bc]
 #   .data: [0x80271a50, 0x80271a98]
 
-#fstload.c:
+#Dolphin/dvd/fstload.c:
 #   .text: [0x801e20bc, 0x801e22fc]
 #   .data: [0x80271a98, 0x80271b08]
 #   .bss: [0x802d5a38, 0x802d5aa8]
 #   .sdata: [0x803f97b0, 0x803f97c0]
 #   .sbss: [0x803fafb0, 0x803fafc0]
 
-#ai.c:
+#Dolphin/ai.c:
 #   .text: [0x801e22fc, 0x801e2c4c]
 #   .sbss: [0x803fafc0, 0x803fb000]
 
-#ar.c:
+#Dolphin/ar/ar.c:
 #   .text: [0x801e2c4c, 0x801e2dc4]
 #   .sbss: [0x803fb000, 0x803fb008]
 
-#dsp.c:
+#Dolphin/dsp/dsp.c:
 #   .text: [0x801e2dc4, 0x801e30a0]
 #   .data: [0x80271b08, 0x80271b40]
 #   .sbss: [0x803fb008, 0x803fb010]
 
-#dsp_debug.c:
+#Dolphin/dsp/dsp_debug.c:
 #   .text: [0x801e30a0, 0x801e30f0]
 
-#dsp_task.c:
+#Dolphin/dsp/dsp_task.c:
 #   .text: [0x801e30f0, 0x801e3974]
 #   .data: [0x80271b40, 0x80271c80]
 #   .sbss: [0x803fb010, 0x803fb028]
@@ -3382,35 +3382,35 @@ Dolphin/dtk.c:
   .bss: [0x802da2f8, 0x802da418]
   .sbss: [0x803fb080, 0x803fb0b0]
 
-#axart.c:
+#Dolphin/axart/axart.c:
 #   .text: [0x801fedd0, 0x801ff054]
 #   .sbss: [0x803fb0b0, 0x803fb0b8]
 #   .sdata2: [0x80402188, 0x804021a0]
 
-#axartsound.c:
+#Dolphin/axart/axartsound.c:
 #   .text: [0x801ff054, 0x801ff33c]
 #   .data: [0x802728f8, 0x80272940]
 #   .sdata2: [0x804021a0, 0x804021b0]
 
-#axartcents.c:
+#Dolphin/axart/axartcents.c:
 #   .text: [0x801ff33c, 0x801ff438]
 #   .data: [0x80272940, 0x80272d30]
 #   .sdata2: [0x804021b0, 0x804021b8]
 
-#axartenv.c:
+#Dolphin/axart/axartenv.c:
 #   .text: [0x801ff438, 0x801ff4f0]
 
-#axartlfo.c:
+#Dolphin/axart/axartlfo.c:
 #   .text: [0x801ff4f0, 0x801ff5a4]
 #   .sdata2: [0x804021b8, 0x804021c0]
 
-#axart3d.c:
+#Dolphin/axart/axart3d.c:
 #   .text: [0x801ff5a4, 0x801ff738]
 #   .data: [0x80272d30, 0x802735a8]
 #   .sbss: [0x803fb0b8, 0x803fb0c0]
 #   .sdata2: [0x804021c0, 0x804021d0]
 
-#mix.c:
+#Dolphin/mix/mix.c:
 #   .text: [0x801ff738, 0x80201964]
 #   .data: [0x802735a8, 0x80274168]
 #   .bss: [0x802da418, 0x802dbc20]
@@ -3423,7 +3423,7 @@ Dolphin/thp/THPDec.c:
   .sbss: [0x803fb0e0, 0x803fb1f8]
   .sdata2: [0x804021d0, 0x804021f0]
 
-#THPAudio.c:
+#Dolphin/thp/THPAudio.c:
 #   .text: [0x80208ea4, 0x802093d4]
 
 common/Source/Animation.cpp:
@@ -3621,7 +3621,7 @@ common/gc/Material_GC.cpp:
    .sbss: [0x803fb3b0, 0x803fb3e8]
    .sdata2: [0x804024c0, 0x80402538]
 
-#MKMemoryCard.cpp:
+#common/gc/MKMemoryCard.cpp:
 #   .text: [0x8022bb50, 0x8022f1bc]
 #   .rodata: [0x8023ffb0, 0x8023ffd0]
 #   .data: [0x80296d58, 0x80296db0]
@@ -3644,7 +3644,7 @@ common/gc/ModelGC.cpp:
    .sbss: [0x803fb430, 0x803fb448]
    .sdata2: [0x80402568, 0x804025b0]
 
-#Sound.cpp:
+#common/gc/Sound.cpp:
 #   .text: [0x80232398, 0x802348cc]
 #   .data: [0x802976a8, 0x802978b8]
 #   .bss: [0x803df1e0, 0x803e7080]
