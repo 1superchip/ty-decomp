@@ -42,16 +42,21 @@ void WobbleTexture::Deinit(void) {
 float WobbleTexture::SetUpGrid(Vector* pVec, float f1, float f2, float f3) {
     View* pCurrView = View::GetCurrent();
     Matrix* pUnk48 = &pCurrView->unk48;
+
     Vector pos = *pVec;
-    
     pos.w = 0.0f;
     pos.y = (f3 * 2.0f) - pos.y;
+
     pos.ApplyMatrix(&pCurrView->unkC8);
+
     Vector top = {0.0f, pos.y + (f2 / 2.0f), pos.z};
     top.ApplyMatrix(pUnk48);
+
     Vector bottom = {0.0f, pos.y - (f2 / 2.0f), pos.z};
     bottom.ApplyMatrix(pUnk48);
+
     unk10 = (f3 - top.y) / (bottom.y - top.y);
+
     float _80 = 0.0f;
     float _84 = 1.0f;
     float _88 = f2 / 2.0f;
@@ -70,29 +75,42 @@ float WobbleTexture::SetUpGrid(Vector* pVec, float f1, float f2, float f3) {
         f2 *= _84;
     }
 
-    Vector spB4 = {pos.x - (f1 / 2.0f), pos.y + _88, pos.z};
+    Vector corner = {pos.x - (f1 / 2.0f), pos.y + _88, pos.z};
+
     for (int j = 0; j < mHeight; j++) {
         Vector temp;
-        temp.Set(spB4.x, spB4.y - ((f2 * j) / (mHeight - 1.0f)), spB4.z, 0.0f);
+        temp.Set(
+            corner.x, 
+            corner.y - ((f2 * j) / (mHeight - 1.0f)), 
+            corner.z, 
+            0.0f
+        );
         temp.ApplyMatrix(pUnk48);
+
         Vector* row3 = pCurrView->unk48.Row3();
         float _DC = (f3 - row3->y) / (temp.y - row3->y);
+
         for (int i = 0; i < mWidth; i++) {
+
             GetWobbleEntry(i, j)->mPos.Set(
-                ((f1 * i) / (mWidth - 1.0f)) + spB4.x,
-                spB4.y - ((f2 * j) / (mHeight - 1.0f)),
-                spB4.z
+                ((f1 * i) / (mWidth - 1.0f)) + corner.x,
+                corner.y - ((f2 * j) / (mHeight - 1.0f)),
+                corner.z
             );
+
             GetWobbleEntry(i, j)->mPos.Scale(_DC);
             GetWobbleEntry(i, j)->unk30 = i / (mWidth - 1.0f);
             GetWobbleEntry(i, j)->unk34 = ((_84 * j) / (mHeight - 1.0f)) + _80;
             GetWobbleEntry(i, j)->mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
+
             if (j == 0) {
                 GetWobbleEntry(i, j)->mColor.w = 0.0f;
             }
+
             GetWobbleEntry(i, j)->mColor.w *= Clamp<float>(0.0f, 1.0f - GetWobbleEntry(i, j)->unk34, 1.0f);
         }
     }
+
     return f2;
 }
 
@@ -101,27 +119,34 @@ void WobbleTexture::WobbleUVs(float f1) {
         for (int i = 1; i < mWidth - 1; i++) {
             float sin = _table_sinf((0.08f * unk4) + GetWobbleEntry(i, j)->unk48) * 0.15f;
             float cos = _table_cosf((0.08f * unk4) + GetWobbleEntry(i, j)->unk4C);
+
             if (cos < 0.0f) {
                 GetWobbleEntry(i, j)->mColor.w *= 1.0f + (cos * 0.3f);
             }
+
             cos *= 0.2f;
             float f21 = (Tools_Wobble(unk4 * 0.01f, (j * 6) + i) + 2.0f) * f1;
             f21 *= (GetWobbleEntry(i, j)->unk34 - unk10) * sin;
             float f2 = (Tools_Wobble(unk4 * 0.015f, (j * 6) + i) + 2.0f) * f1;
             f2 *= (GetWobbleEntry(i, j)->unk34 - unk10) * cos;
+
             if (i % 2) {
                 f21 = -f21;
             }
+
             if (j % 2) {
                 f2 = -f2;
             }
+
             GetWobbleEntry(i, j)->unk30 += f21;
             GetWobbleEntry(i, j)->unk34 += f2;
+
             if (GetWobbleEntry(i, j)->unk30 > 0.99f) {
                 GetWobbleEntry(i, j)->unk30 = 0.99f;
             } else if (GetWobbleEntry(i, j)->unk30 < 0.0f) {
                 GetWobbleEntry(i, j)->unk30 = 0.0f;
             }
+
             if (GetWobbleEntry(i, j)->unk34 > 0.99f) {
                 GetWobbleEntry(i, j)->unk34 = 0.99f;
             } else if (GetWobbleEntry(i, j)->unk34 < 0.0f) {
@@ -154,6 +179,7 @@ void WobbleTexture::Draw(Material* pMat, bool r5) {
                 mpTriStrips[(j * 2) + 1].uv.y = GetWobbleEntry(i + 1, j)->unk34;
             }
         }
+
         mpTriStrips->DrawNoPerspective(mHeight * 2, 1.0f);
     }
 }

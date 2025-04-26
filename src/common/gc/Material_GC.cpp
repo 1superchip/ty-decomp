@@ -11,6 +11,8 @@
 #include "common/StdMath.h"
 #include "common/Water_GC.h"
 #include "common/Debug.h"
+#include "common/demoinit.h"
+#include "Dolphin/vi.h"
 
 typedef f32 (*MtxPtr)[4];
 
@@ -24,8 +26,6 @@ extern "C" void C_MTXIdentity(Mtx44*);
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" {
-    u32 VIGetTvFormat(void);
-    _GXRenderModeObj* DEMOGetRenderModeObj(void);
     double fmod(double, double);
 };
 

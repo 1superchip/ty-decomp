@@ -6,6 +6,8 @@
 #include "common/Str.h"
 #include "common/Animation.h"
 
+#include "Dolphin/os.h"
+
 bool moduleInitialised = false;
 PtrList<Model> modelInstances;
 PtrList<ModelTemplate> modelTemplates;
@@ -50,7 +52,6 @@ extern "C" void strcpy(char*, char*);
 extern "C" char* strtok(char*, char*);
 extern "C" void memset(void*, int, int);
 extern "C" void strncpy(char*, char*, int);
-extern "C" void DCStoreRange(uint*, int);
 extern "C" int stricmp(char*, char*);
 
 Model* Model::Create(char* pMeshName, char* pAnimName) {

@@ -5,10 +5,11 @@
 #include "common/Str.h"
 #include "common/FileSys.h"
 
+#include "Dolphin/os.h"
+
 extern "C" {
     void memcpy(void*, void*, int);
     void strcpy(char*, char*);
-    void DCStoreRange(uint*, int);
     void memset(void*, int, int);
     int stricmp(char*, char*);
 };

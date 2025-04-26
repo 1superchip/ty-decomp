@@ -4,7 +4,6 @@
 #include "Dolphin/vi.h"
 
 extern "C" {
-    void OSInit(void);
     void DVDInit(void);
     void memset(void*, int, int);
     void GXPokeARGB(u16 x, u16 y, u32 color);
@@ -94,13 +93,13 @@ static void  __DEMOInitRenderMode(_GXRenderModeObj* pRMode) {
         rmode = pRMode;
     } else {
         switch (VIGetTvFormat()) {
-            case 0:
+            case VI_NTSC:
                 rmode = &GXNtsc480IntDf;
                 break;
-            case 1:
+            case VI_PAL:
                 rmode = &GXPal528IntDf;
                 break;
-            case 2:
+            case VI_MPAL:
                 rmode = &GXMpal480IntDf;
                 break;
             default:

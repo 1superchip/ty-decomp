@@ -257,27 +257,31 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
         
         for (int i = 0; i < 3; i++) {
             GXColor color;
-            int r,g,b;
-            r = 255.0f * pLight->mLightColors[i].x;
-            color.r = r > 0xff ? 0xff : r;
-            g = 255.0f * pLight->mLightColors[i].y;
-            color.g = g > 0xff ? 0xff : g;
-            b = 255.0f * pLight->mLightColors[i].z;
-            color.b = b > 0xff ? 0xff : b;
-            color.a = 0xff;
+            
+            color.r = Min<int>(255, pLight->mLightColors[i].x * 255.0f);
+            color.g = Min<int>(255, pLight->mLightColors[i].y * 255.0f);
+            color.b = Min<int>(255, pLight->mLightColors[i].z * 255.0f);
+            color.a = 255;
+
             GXInitLightColor(&lo, color);
+            
             Vector* vec = pLight->mLightDirs;
             lightPos.Set(vec[i].x, vec[i].y, vec[i].z);
+
             Matrix m;
             m.SetIdentity();
+
             m = unkC8;
             m.data[0][2] *= -1.0f;
             m.data[1][2] *= -1.0f;
             m.data[2][2] *= -1.0f;
+
             lightPos.ApplyRotMatrix(&lightPos, &m);
             lightPos.Normalise(&lightPos);
             lightPos.Scale(1000000.0f);
+
             GXInitLightPos(&lo, -lightPos.x, -lightPos.y, -lightPos.z);
+            
             switch (i) {
                 case 0:
                     GXLoadLightObjImm(&lo, GX_LIGHT0);
@@ -342,14 +346,21 @@ void View::DeinitModule(void) {
 float View::TransformPoint(IntVector* arg1, Vector* arg2) {
     Vector temp;
     temp.ApplyMatrix(arg2, &unk148);
+    
     float oneOverW = 1.0f / temp.w;
+
     int tx = ((temp.x * oneOverW) * gDisplay.orthoXSize) * 0.5f;
     arg1->x = ((int)gDisplay.orthoXSize >> 1) + tx;
+
     int ty = ((temp.y * oneOverW) * gDisplay.orthoYSize) * 0.5f;
     int endY = ((int)gDisplay.orthoYSize >> 1) + ty;
+
     arg1->y = gDisplay.orthoYSize - (float)endY;
+
     arg1->z = temp.z * oneOverW;
+
     arg1->w = (int)temp.w;
+
     return oneOverW;
 }
 
@@ -504,17 +515,24 @@ void View::SetAspectRatio(float arg1, float arg2) {
 	unk2B0 = arg2;
 }
 
-void View::TransformPoint2Dto3D(float arg1, float arg2, float arg3, Vector* out) {
+void View::TransformPoint2Dto3D(float x, float y, float z, Vector* pOutPos) {
     Vector centrePos;
     Vector point;
-    float fVar1 = 2.0f * (float)tan(0.5f * unk2CC) * arg3;
-    centrePos.Scale((Vector*)&unk48.data[2], arg3);
-    point.x = fVar1 * ((arg1 / gDisplay.orthoXSize) - 0.5f);
-    point.y = 0.8f * fVar1 * (0.5f - (arg2 / gDisplay.orthoYSize));
-    point.z = 0.0f;
-    point.ApplyRotMatrix(&point, &unk48);
-    out->Add(&centrePos, &point);
-    out->Add(unk48.Row3());
+
+    float fVar1 = 2.0f * (float)tan(0.5f * unk2CC) * z;
+
+    centrePos.Scale((Vector*)&unk48.data[2], z);
+
+    point.Set(
+        fVar1 * ((x / gDisplay.orthoXSize) - 0.5f),
+        0.8f * fVar1 * (0.5f - (y / gDisplay.orthoYSize)),
+        0.0f
+    );
+
+    point.ApplyRotMatrix(&unk48);
+
+    pOutPos->Add(&centrePos, &point);
+    pOutPos->Add(unk48.Row3());
 }
 
 static float ortho_old[7] __attribute__ ((aligned (32)));

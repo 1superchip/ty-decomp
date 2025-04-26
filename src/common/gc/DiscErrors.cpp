@@ -4,13 +4,13 @@
 #include "common/system_extras.h"
 #include "types.h"
 
+#include "Dolphin/os.h"
+
 extern "C" int strlen(char*);
 extern "C" void strncpy(char*, char*, int);
 extern "C" char* strchr(char*, char);
-extern "C" u8 OSGetLanguage(void);
 void XFONTClearScreen(u32);
 void XFONTPrintf(short, short, char*, ...);
-extern "C" void DCFlushRange(void*, int);
 extern u8 __ctype_map[];
 
 struct LanguageErrorStrings {

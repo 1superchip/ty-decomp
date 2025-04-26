@@ -5,7 +5,8 @@
 #include "common/Heap.h"
 #include "Dolphin/gx.h"
 
-extern "C" void DCStoreRange(uint*, int);
+#include "Dolphin/os.h"
+
 void Grass_DrawGC(Model*, u8*, int, int, float, float);
 
 static inline void Vector_ApplyMatrix(Vector* pOut, Vector* pVector, Matrix* pMatrix) {

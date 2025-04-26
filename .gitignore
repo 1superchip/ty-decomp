@@ -1,19 +1,42 @@
-__pycache__/
+# IDE folders
+.idea/
+.vs/
 .vscode/
-assets/
+
+# Caches
+__pycache__
+.mypy_cache
+.cache/
+
+# Original files
+orig/*/*
+!orig/*/.gitkeep
+
+# Build files
 build/
+.ninja_*
+build.ninja
+
+# decompctx output
+ctx.*
+*.ctx
+
+# Generated configs
+objdiff.json
+compile_commands.json
+report*.json
+
+# Miscellaneous
+*.exe
+*.dll
+*.dol
+*.txt
+
+cli.py
+cli.ini
+
 expected
 out/
 asm/
 pickles/
-disasm.txt
-*.dol
-*.rel
-*.exe
-*.dll
-build.ninja
-order.txt
-cli.py
-cli.ini
-objdiff.json
-ctx.c
+assets/

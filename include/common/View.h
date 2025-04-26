@@ -76,14 +76,16 @@ struct View {
     void SetFogIntensity(float, float);
     void SetCameraMatrix(Matrix*);
     void SetAspectRatio(float xRatio, float yRatio);
-    void TransformPoint2Dto3D(float, float, float, Vector*);
+    void TransformPoint2Dto3D(float x, float y, float z, Vector* pOutPos);
     void OrthoBegin(void);
     void OrthoEnd(void);
     
     static void InitModule(void);
     static void DeinitModule(void);
+    
     static View* pCurrentView;
     static View* pDefaultView;
+
     static View* GetCurrent(void) {
         return pCurrentView;
     }

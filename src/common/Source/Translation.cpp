@@ -5,11 +5,12 @@
 #include "common/FileSys.h"
 #include "common/Str.h"
 
+#include "Dolphin/os.h"
+
 extern "C" int atoi(char*);
 extern "C" int strcmpi(char*, char*);
 extern "C" int strlen(char*);
 extern "C" void memmove(char*, char*, int);
-extern "C" u8 OSGetLanguage(void);
 
 
 static TranslationLanguage gCurrentLanguage = Language_NotSet;

@@ -1,7 +1,7 @@
 #include "common/Water_GC.h"
 #include "common/StdMath.h"
 
-extern "C" void DCFlushRange(uint*, int);
+#include "Dolphin/os.h"
 
 #define WATER_TEX_WIDTH (0x20)
 #define WATER_TEX_HEIGHT (0x20)
