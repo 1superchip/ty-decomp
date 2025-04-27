@@ -4,6 +4,7 @@
 #include "ty/props/StaticProp.h"
 #include "ty/WobbleTexture.h"
 #include "ty/soundbank.h"
+#include "ty/heatflare.h"
 
 struct ParticleSystem;
 
@@ -53,7 +54,7 @@ struct Torch : StaticProp {
     bool bFoundWater;
     TorchState mState;
     int unkCC; // Unset field!!
-    int unkD0;
+    HeatFlareInfo* pHeatFlare;
     ParticleSystem* mpParticleSys0;
     ParticleSystem* mpParticleSys1;
     int unkDC;

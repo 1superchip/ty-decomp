@@ -3,8 +3,7 @@
 
 #include "common/Vector.h"
 
-// possibly called "HeatFlareInfo" based on assertions?
-struct HeatFlare {
+struct HeatFlareInfo {
     Vector unk0;
     float unk10;
     float unk14;
@@ -17,5 +16,9 @@ void HeatFlare_Deinit(void);
 void HeatFlare_Update(void);
 void HeatFlare_Draw(void);
 void HeatFlare_Unlock(void);
+
+HeatFlareInfo* HeatFlare_Add(Vector*, float);
+
+void HeatFlare_On(void*, int);
 
 #endif // HEATFLARE_H

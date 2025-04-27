@@ -1313,13 +1313,8 @@ Vector* Tools_RandomNormal(Vector* pOut) {
 }
 
 float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnRate) {
-    float angleDiff = NormaliseAngle(maxAngle) - NormaliseAngle(currentAngle);
 
-    if (angleDiff > PI) {
-        angleDiff -= (2 * PI);
-    } else if (angleDiff < -PI) {
-        angleDiff = (2 * PI) + angleDiff;
-    }
+    float angleDiff = GetSmallestAngle(currentAngle, maxAngle);
 
     float finalAngle;
 
@@ -1330,25 +1325,16 @@ float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnRate) {
     } else {
         finalAngle = currentAngle + maxTurnRate;
     }
-    
-    // if less than 0.0f, add 2PI to get in a range of [0, 2PI)
-    if (finalAngle < 0.0f) {
-        finalAngle = (2 * PI) + finalAngle;
-    } else if (finalAngle > (2 * PI)) {
-        // if greater than 2PI, subtract 2PI to get in a range of [0, 2PI)
-        finalAngle -= (2 * PI);
-    }
 
-    return finalAngle;
+    return Simple_NormaliseAngle(finalAngle);
 }
 
-float Tools_SmoothToValue2(float f1, float f2, float f3, float f4, float f5) {
-    float f6 = f1 - f2;
-    float f0;
+// Tools_TurnToTarget
 
-    if (f6 < 0.0f) {
-        f6 = -f6;
-    }
+float Tools_SmoothToValue2(float f1, float f2, float f3, float f4, float f5) {
+    float f6 = Abs<float>(f1 - f2);
+
+    float f0;
 
     f0 = f6 * f3;
     if (f0 < f4) {
@@ -1378,25 +1364,7 @@ float Tools_SmoothToAngle2(float f1, float f2, float f3, float f4, float f5) {
         f1 -= (2 * PI);
     }
 
-    float finalAngle = f2;
-    float abs = Abs<float>(f1 - f2);
-    float f0 = abs * f3;
-
-    if (f0 < f4) {
-        f0 = f4;
-    } else if (f0 > f5) {
-        f0 = f5;
-    }
-
-    if (abs > f0) {
-        if (f1 > f2) {
-            finalAngle = f1 - f0;
-        } else {
-            finalAngle = f1 + f0;
-        }
-    }
-
-    return NormaliseAngle(finalAngle);
+    return NormaliseAngle(Tools_SmoothToValue2(f1, f2, f3, f4, f5));
 }
 
 Vector* Tools_RandomBox(Vector* pVector, float maxExtent) {
@@ -1461,6 +1429,7 @@ char* Tools_DynamicStringTable::AppendString(char* pString) {
         currentLen += len; // update table length with the new string's length
         strcpy(str, pString);
     }
+
     nmbrOfStrings++;
     return str; // returns the string within the string table
 }
@@ -1469,12 +1438,15 @@ char* Tools_DynamicStringTable::AppendString(char* pString) {
 // if not found, returns NULL
 char* Tools_DynamicStringTable::FindString(char* pString) {
     char* pCurrStr = pStringTable;
+
     for (int i = 0; i < nmbrOfStrings; i++) {
         if (stricmp(pCurrStr, pString) == 0) {
             return pCurrStr;
         }
+
         pCurrStr += strlen(pCurrStr) + 1; // add length of current string + 1
     }
+
     return NULL;
 }
 
@@ -1521,14 +1493,17 @@ float Tools_CylinderTest(Vector* pVec, Vector* pVec1, float radius, Vector* pTes
     tmp2.Sub(pTestPoint, pVec);
     float cylinderEndDist = tmp.MagSquared(); // distance between the 2 cylinder ends (pVec1, pVec)
     float f1_ = tmp.Dot(&tmp2);
+    
     if (f1_ < 0.0f || f1_ > cylinderEndDist) {
         // cylinder end test?
         return -1.0f;
     }
+
     float f0 = tmp2.MagSquared() - ((f1_ * f1_) / cylinderEndDist);
     if (f0 > radSq) {
         return -1.0f;
     }
+
     return f0;
 }
 

@@ -1,6 +1,6 @@
 #include "common/StdMath.h"
 
-#define STEP_SIZE PI / 1024.0f
+#define STEP_SIZE (PI / 1024.0f)
 
 // move 0.0f to the beginning of .sdata2
 bool Orderfloats(float x) {
@@ -227,6 +227,7 @@ int RandomIR(int* pSeed, int min, int max) {
     if (range <= 0) {
         return min;
     }
+
     curr = *pSeed = (*pSeed * 0x343FD) + 0x269EC3;
     curr = (curr >> 8) & 0xFFFFFF;
     return min + (curr % range);
@@ -255,29 +256,41 @@ float _table_sinf(float theta) {
     float temp_f6;
     int temp_r5;
     int temp_r6;
+
     union {
         int isin;
         float fsin;
     };
-    
-    // 1/2PI
-    temp_r6 = 0.15915494f * (2048.0f * theta);
+
+    temp_r6 = (theta * 2048.0f) * (1.0f / (2.0f * PI));
+
     temp_r5 = temp_r6 & 1023;
+
     temp_f6 = _sinTable[temp_r5];
-    fsin = temp_f6 + (325.94931f * (theta - (STEP_SIZE * (f32)temp_r6)) * (_sinTable[temp_r5 + 1] - temp_f6));
+
+    fsin = temp_f6 + ((1.0f / STEP_SIZE) * (theta - (STEP_SIZE * (f32)temp_r6)) * (_sinTable[temp_r5 + 1] - temp_f6));
+
     isin |= ((temp_r6 << 0x15) & 0x80000000);
+
     return fsin;
 }
 
+/// @brief Normalises an angle to the range of [0, 2 * PI)
+/// @param angle Angle to normalise
+/// @return Normalised angle in range of [0, 2 * PI)
 float NormaliseAngle(float angle) {
-    if (angle >= 6.2831855f) {
-        return angle - (6.2831855f * (int)(0.15915494f * angle));
+
+    if (angle >= (2.0f * PI)) {
+        // if angle >= 2PI, return angle % 2PI
+        return angle - ((2.0f * PI) * (int)(angle * (1.0f / (2.0f * PI))));
     }
+    
     if (angle < 0.0f) {
-        angle -= 6.2831855f * (int)((0.15915494f * angle) - 1.0f);
-        if (angle == 6.2831855f) {
+        angle -= (2.0f * PI) * (int)((angle * (1.0f / (2.0f * PI))) - 1.0f);
+        if (angle == (2.0f * PI)) {
             angle = 0.0f;
         }
     }
+
     return angle;
 }
