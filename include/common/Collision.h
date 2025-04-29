@@ -64,7 +64,7 @@ struct CollisionVertex {
 // Contains polygon vertex info
 struct CollisionThing {
     CollisionVertex verts[3];
-    Vector normal;
+    float normal[3];
 };
 
 struct CollisionInfo {
@@ -95,12 +95,6 @@ struct CollisionTriangle {
     int flags;
     int subObjectIdx;
     CollisionInfo* pCollisionInfo;
-    float vertexPos0[3]; // position of vertex 0
-    float vertexPos1[3]; // position of vertex 1
-    float vertexPos2[3]; // position of vertex 2
-    int unk30;
-    int unk34;
-    int unk38;
 };
 
 struct Item {

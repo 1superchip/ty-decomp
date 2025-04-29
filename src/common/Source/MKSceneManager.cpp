@@ -574,6 +574,16 @@ void MKSceneManager::DrawStaticProps(int arg1) {
     MKPropDescriptor::pDrawListDescs = NULL;
 }
 
+static void AddToDrawList(MKPropDescriptor* pDesc, MKProp* pProp) {
+    if (pDesc->pProps == NULL) {
+        pDesc->pNext = MKPropDescriptor::pDrawListDescs;
+        MKPropDescriptor::pDrawListDescs = pDesc;
+    }
+
+    pProp->pNextOfThisType = pDesc->pProps;
+    pDesc->pProps = pProp;
+}
+
 static void SMDrawProp(void* pData, int rejectResult, float distSq, float arg3) {
     MKProp* pPropData = (MKProp*)pData;
     MKPropDescriptor* pDesc = pPropData->pDescriptor;
@@ -594,13 +604,7 @@ static void SMDrawProp(void* pData, int rejectResult, float distSq, float arg3) 
         }
         pPropData->unk1C = fVar3;
 
-        if (pDesc->pProps == NULL) {
-            pDesc->pNext = MKPropDescriptor::pDrawListDescs;
-            MKPropDescriptor::pDrawListDescs = pDesc;
-        }
-
-        pPropData->pNextOfThisType = pDesc->pProps;
-        pDesc->pProps = pPropData;
+        AddToDrawList(pDesc, pPropData);
     }
 }
 
@@ -665,13 +669,7 @@ void MKSceneManager::DrawGlobalProps(int arg1) {
     while (pProp != &globalPropArray[arg1]) {
         pDesc = pProp->pDescriptor;
 
-        if (pDesc->pProps == NULL) {
-            pDesc->pNext = MKPropDescriptor::pDrawListDescs;
-            MKPropDescriptor::pDrawListDescs = pDesc;
-        }
-
-        pProp->pNextOfThisType = pDesc->pProps;
-        pDesc->pProps = pProp;
+        AddToDrawList(pDesc, pProp);
 
         pProp = pProp->pNext;
     }

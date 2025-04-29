@@ -302,7 +302,7 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
 
         if (pDescriptor->flags & LODFlags_Scissor) {
             int descScissorFlags = pDescriptor->scissorFlags;
-            pModel->flags.bits.b3 = TestLOD(descScissorFlags);
+            pModel->bScissoring = TestLOD(descScissorFlags);
         }
     }
 
@@ -335,7 +335,7 @@ bool LODManager::Draw(Model* pModel, int arg1, float arg2, float arg3, bool arg4
     InternalUpdate(pModel, arg1, arg2);
 
     if ((pDescriptor->flags & LODFlags_Scissor) && pDescriptor->maxScissorDist > 0.0f) {
-        pModel->flags.bits.b3 = arg3 < Sqr<float>(pDescriptor->maxScissorDist);
+        pModel->bScissoring = arg3 < Sqr<float>(pDescriptor->maxScissorDist);
     }
 
     if (pModel->colour.w < 1.0f || pDescriptor->flags & LODFlags_AlphaProp) {

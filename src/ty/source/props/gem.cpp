@@ -202,23 +202,26 @@ Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
     pNewGem->unk94 = pNewGem->pos;
     pNewGem->mCollected = false;
     pNewGem->unk6C = 0;
-    pNewGem->unkF6b0 = 0;
+    pNewGem->unkF6b0 = false;
     pNewGem->mParticle.pos = pNewGem->pos;
     pNewGem->mParticle.angle = 0.0f;
-    pNewGem->SetState((GemState)2);
+    pNewGem->SetState(GEMSTATE_2);
     pNewGem->unkB4.SetIdentity();
     pNewGem->unkB4.SetTranslation(&pNewGem->pos);
 
-    objectManager.AddObject(pNewGem, &pNewGem->unkB4,
-        elementInfo[gemElement].pModel->GetModelVolume());
+    objectManager.AddObject(
+        pNewGem, 
+        &pNewGem->unkB4,
+        elementInfo[gemElement].pModel->GetModelVolume()
+    );
 
     if (r5) {
-        pNewGem->unkF6b0 = 1;
+        pNewGem->unkF6b0 = true;
         pNewGem->unk94 = *r5;
         pNewGem->SpawnStatic();
-        pNewGem->SetState((GemState)0);
+        pNewGem->SetState(GEMSTATE_0);
     } else {
-        pNewGem->SetState((GemState)2);
+        pNewGem->SetState(GEMSTATE_2);
     }
     
     pNewGem->Reset();
@@ -229,7 +232,6 @@ Gem* Gem_Add(GemType type, Vector* pPos, Vector* r5) {
 }
 
 /// @brief Returns the number of existing opals
-/// @param  None
 /// @return Number of gems created
 int Gem_GetCount(void) {
     return Gem::totalGems;
@@ -238,7 +240,6 @@ int Gem_GetCount(void) {
 extern "C" void memset(void*, int, int);
 
 /// @brief Deinits all spawned opals
-/// @param  None
 void Gem_DeleteList(void) {
     Gem* pGem = spawnedGemList.GetCurrEntry();
 
@@ -262,12 +263,12 @@ void Gem::LoadDone(void) {
     unk94 = pos;
     mCollected = false;
     unk6C = 0;
-    unkF6b0 = 0;
+    unkF6b0 = false;
 
     mParticle.pos = pos;
     mParticle.angle = 0.0f;
 
-    SetState((GemState)2);
+    SetState(GEMSTATE_2);
     CalcShadowPos();
     
     unkB4.SetIdentity();
@@ -294,7 +295,7 @@ void Gem::Deinit(void) {
 
 void Gem::Update(void) {
     // if bHideAll, don't update opals
-    if (bHideAll || mState == (GemState)0) {
+    if (bHideAll || mState == GEMSTATE_0) {
         return;
     }
 
@@ -304,16 +305,16 @@ void Gem::Update(void) {
     }
 
     switch (mState) {
-        case 2:
+        case GEMSTATE_2:
             Idle();
             break;
-        case 3:
+        case GEMSTATE_3:
             Magnetised();
             break;
-        case 4:
+        case GEMSTATE_4:
             Collecting();
             break;
-        case 1:
+        case GEMSTATE_1:
             Spawning();
             break;
     }
@@ -321,7 +322,7 @@ void Gem::Update(void) {
     mParticle.pos.w = 1.0f;
     unkB4.SetTranslation(&mParticle.pos);
 
-    if (mState < (GemState)5 && unkF6b2) {
+    if (mState < GEMSTATE_5 && bGroundBeneath) {
         Vector tempPos;
         tempPos.x = mParticle.pos.x;
         tempPos.y = unkFC;
@@ -332,7 +333,7 @@ void Gem::Update(void) {
         );
     }
 
-    if (mState < (GemState)4) {
+    if (mState < GEMSTATE_4) {
         pSystem->pDynamicData[pSystem->mNumDyn].pMatrix = &unkB4;
         pSystem->mNumDyn++;
     }
@@ -341,11 +342,11 @@ void Gem::Update(void) {
 extern void Draw_AddPostDrawElement(void*, void (*)(void*), float, bool);
 
 void Gem::Draw(void) {
-    if (bHideAll || mState == (GemState)0) {
+    if (bHideAll || mState == GEMSTATE_0) {
         return;
     }
 
-    if (mState >= (GemState)4) {
+    if (mState >= GEMSTATE_4) {
         return;
     }
 
@@ -392,12 +393,12 @@ void Gem::Reset(void) {
     bHideAll = false;
 
     if (unkF6b0) {
-        SetState((GemState)0);
+        SetState(GEMSTATE_0);
         mLerpTime = 0.0f;
         return;
     }
 
-    SetState((GemState)2);
+    SetState(GEMSTATE_2);
     mParticle.pos = pos;
 }
 
@@ -410,8 +411,8 @@ void Gem_ShowAll(void) {
 }
 
 void Gem::Spawn(void) {
-    if (mState != (GemState)5) {
-        SetState((GemState)1);
+    if (mState != GEMSTATE_5) {
+        SetState(GEMSTATE_1);
     }
 }
 
@@ -438,31 +439,38 @@ bool Gem::UpdateCollection(float f1) {
 float Gem::GetMagneticRangeSqr(void) {
     // default magnetic range is (hero->objectRadius + 100)^2
     float magneticRadius = Sqr<float>(pHero->objectAdjustmentRadius + 100.0f);
+    
     if (pHero->mMagnetData.IsActive()) {
         // if the opal magnet is active
         // adjust the radius based on how many opals are collected
         int collectedGemCount = gb.mGameData.GetLevelCollectedGemCount();
         int newRadius = 500;
+
         if (collectedGemCount >= 270) {
             // if there are less than or equal to 30 opals left to collect
             newRadius += 1000; // 1500
         }
+
         if (collectedGemCount >= 285) {
             // if there are less than or equal to 15 opals left to collect
             newRadius += 1500; // 3000
         }
+
         if (collectedGemCount >= 295) {
             // if there are less than or equal to 5 opals left to collect
             newRadius += 3000; // 6000
         }
+
         if (collectedGemCount >= 298) {
             // if there are less than or equal to 2 opals left to collect
             newRadius += 6000; // 12000
         }
+
         if (collectedGemCount >= 299) {
             // if there are less than or equal to 1 opals left to collect
             newRadius += 24000; // 36000
         }
+
         magneticRadius = Sqr<int>(newRadius);
     }
 
@@ -477,10 +485,8 @@ float Gem::GetMagneticRangeSqr(void) {
                     magneticRadius += (ty.superbitecharge / 150.0f) * (500000.0f - magneticRadius);
                     break;
             }
-        } else {
-            if (ty.unk1A90 == 3 && !pHero->mMagnetData.IsActive()) {
-                magneticRadius *= 2.1f;
-            }
+        } else if (ty.unk1A90 == 3 && !pHero->mMagnetData.IsActive()) {
+            magneticRadius *= 2.1f;
         }
     }
 
@@ -488,13 +494,12 @@ float Gem::GetMagneticRangeSqr(void) {
 }
 
 bool Gem::CheckMagnetism(float f1) {
-    if ((unkF4 > 0 && !pHero->IsBushPig())
-        || (f1 > 1000000.0f && !pHero->mMagnetData.IsActive())) {
+    if ((unkF4 > 0 && !pHero->IsBushPig()) || (f1 > 1000000.0f && !pHero->mMagnetData.IsActive())) {
         return false;
     }
 
     if (f1 <= GetMagneticRangeSqr()) {
-        SetState((GemState)3);
+        SetState(GEMSTATE_3);
         return true;
     }
 
@@ -502,19 +507,20 @@ bool Gem::CheckMagnetism(float f1) {
 }
 
 void Gem::SpawnStatic(void) {
-    Vector spC;
-    spC.Sub(&unk94, &pos);
-    float mag = spC.Magnitude();
-    
-    unk84[0] = RandomFR(&gb.mRandSeed, 0.2f, 0.4f);
-    unk84[0] = unk84[0] / sqrtf(mag);
-    unk84[1] = mag * 0.8f;
+    Vector delta;
+    delta.Sub(&unk94, &pos);
 
-    if (unk84[1] < 200.0f) {
-        unk84[1] = 200.0f;
+    float mag = delta.Magnitude();
+    
+    unk84 = RandomFR(&gb.mRandSeed, 0.2f, 0.4f);
+    unk84 = unk84 / sqrtf(mag);
+    unk88 = mag * 0.8f;
+
+    if (unk88 < 200.0f) {
+        unk88 = 200.0f;
     }
 
-    unk84[2] = spC.y / spC.x;
+    mSlope = delta.y / delta.x;
 
     mLerpTime = 0.0f;
 }
@@ -522,49 +528,51 @@ void Gem::SpawnStatic(void) {
 // Unused / Stripped
 void Gem::SpawnDynamic(Vector* p) {
     pos = *p;
-    SetState((GemState)1);
+    SetState(GEMSTATE_1);
 
-    Vector s;
-    s.x = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
-    s.x += -1.0f;
-    s.y = 0.0f;
-    s.z = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
-    s.z += -1.0f;
-    s.w = 0.0f;
+    Vector dir;
+    dir.x = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
+    dir.x += -1.0f;
+    dir.y = 0.0f;
+    dir.z = RandomFR(&gb.mRandSeed, 0.0f, 2.0f);
+    dir.z += -1.0f;
+    dir.w = 0.0f;
 
-    s.Normalise();
+    dir.Normalise();
 
-    unk94.Scale(&s, RandomFR(&gb.mRandSeed, 100.0f, 280.0f));
+    unk94.Scale(&dir, RandomFR(&gb.mRandSeed, 100.0f, 280.0f));
     unk94.Add(p);
 
+    Vector tempv;
+
     for (int i = 0; i < 5; i++) {
-        Vector temp;
         CollisionResult cr;
 
-        temp.InterpolateLinear(&unk94, &pos, i * 0.2f);
-        temp.y = pos.y + 50.0f;
+        tempv.InterpolateLinear(&unk94, &pos, i * 0.2f);
+        tempv.y = pos.y + 50.0f;
 
-        if (Tools_TestFloor(&temp, &cr, 300.0f, false)) {
-            unk94 = temp;
+        if (Tools_TestFloor(&tempv, &cr, 300.0f, false)) {
+            unk94 = tempv;
             unk94.y = cr.pos.y + 50.0f;
             break;
         }
 
         if (i == 4) {
-            unk94 = temp;
+            unk94 = tempv;
             unk94.y = p->y + 50.0f;
         }
     }
     
-    Vector spC;
-    spC.Sub(&unk94, &pos);
-    unk84[0] = RandomFR(&gb.mRandSeed, 0.5f, 1.0f);
-    float mag = spC.Magnitude();
-    unk84[0] = unk84[0] / (sqrtf(mag) * 0.5f);
-    unk84[1] = mag * 0.5f;
+    tempv.Sub(&unk94, &pos);
 
-    if (unk84[1] < 200.0f) {
-        unk84[1] = 200.0f;
+    unk84 = RandomFR(&gb.mRandSeed, 0.5f, 1.0f);
+
+    float mag = tempv.Magnitude();
+    unk84 = unk84 / (sqrtf(mag) * 0.5f);
+    unk88 = mag * 0.5f;
+
+    if (unk88 < 200.0f) {
+        unk88 = 200.0f;
     }
 
     mLerpTime = 0.0f;
@@ -599,17 +607,21 @@ void Gem::Magnetised(void) {
         }
     }
 
-    Vector dir; // direction to hero
+    Vector vel;
+
     Vector heroPos = pHero->mPos;
     heroPos.y += 50.0f;
-    dir.Sub(&heroPos, &mParticle.pos);
-    float mag = dir.Normalise(); // normalize direction
+
+    vel.Sub(&heroPos, &mParticle.pos);
+
+    float mag = vel.Normalise();
+
     if (!UpdateCollection(Sqr<float>(mag))) {
         if (mLerpTime >= 50.0f) {
             Collect();
         } else {
-            dir.Scale(mLerpTime);
-            mParticle.pos.Add(&dir);
+            vel.Scale(mLerpTime);
+            mParticle.pos.Add(&vel);
             mLerpTime += (mag * 0.01f) * f31;
             if ((gb.logicGameCount % 5) == 0) {
                 CalcShadowPos();
@@ -621,7 +633,7 @@ void Gem::Magnetised(void) {
 void Gem::Collecting(void) {
     mParticle.unk20 *= 0.7f;
     if (mParticle.unk20 <= 0.1f) {
-        SetState((GemState)5);
+        SetState(GEMSTATE_5);
     }
 }
 
@@ -634,32 +646,33 @@ void Gem::Spawning(void) {
     if (mLerpTime >= 1.0f) {
         mParticle.pos = unk94;
         CalcShadowPos();
-        SetState((GemState)2);
+        SetState(GEMSTATE_2);
     } else {
         mParticle.pos.InterpolateLinear(&pos, &unk94, mLerpTime);
-        mParticle.pos.y += unk84[1] * SmoothCenteredCurve(mLerpTime);
-        mLerpTime += unk84[0];
+        mParticle.pos.y += unk88 * SmoothCenteredCurve(mLerpTime);
+        mLerpTime += unk84;
     }
 }
 
 void Gem::SetState(GemState newState) {
     mState = newState;
+
     switch (mState) {
-        case (GemState)0:
+        case GEMSTATE_0:
             mParticle.color.Set(0.0f, 0.0f, 0.0f, 0.0f);
             mParticle.unk20 = 0.0f;
             break;
-        case (GemState)2:
+        case GEMSTATE_2:
             unkF4 = gDisplay.displayFreq * 0.5f;
             mParticle.color.Set(
                 1.0f, 1.0f, 1.0f, mCollected ? 0.15f : 1.0f
             );
             mParticle.unk20 = 20.0f;
             break;
-        case (GemState)3:
+        case GEMSTATE_3:
             mLerpTime = 0.0f;
             break;
-        case (GemState)1:
+        case GEMSTATE_1:
             unkF4 = gDisplay.displayFreq * 0.5f;
             mParticle.pos = pos;
             mParticle.color.Set(
@@ -671,7 +684,7 @@ void Gem::SetState(GemState newState) {
 }
 
 void Gem::Collect(void) {
-    SetState((GemState)4);
+    SetState(GEMSTATE_4);
     Gem_PickupParticle_SpawnParticles(&mParticle.pos);
     gb.mGameData.CollectGem(mCollected);
     dda.StorePickupInfo(Pickup_Gem);
@@ -681,10 +694,12 @@ void Gem::Collect(void) {
 void Gem::CalcShadowPos(void) {
     Vector start = mParticle.pos;
     Vector end = {mParticle.pos.x, mParticle.pos.y - 200.0f, mParticle.pos.z};
+
     CollisionResult cr;
+    
     // Check for ground underneath the opal
-    unkF6b2 = Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0);
-    if (unkF6b2) {
+    bGroundBeneath = Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0);
+    if (bGroundBeneath) {
         // if ground, set unkFC and copy the collision normal
         unkFC = cr.pos.y + 1.0f;
         mCollisionNormal = cr.normal;

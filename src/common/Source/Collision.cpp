@@ -36,6 +36,7 @@ void* CollisionHeap_Update(int size, int alignment) {
         // 32 bit alignment by default
         alignment = 4;
     }
+
     collisionHeapIndex += (alignment - 1);
     collisionHeapIndex &= ~(alignment - 1);
     void* pEntry = (u8*)pCollisionHeap + collisionHeapIndex;
@@ -67,25 +68,40 @@ int CalcNumDynamicLinks(float vecMag) {
     return Sqr<int>(div + 2);
 }
 
-bool CheckPoint(Vector* pVec, Vector* pVec1, Vector* point1, Vector* point2) {
+/// @brief Checks if the ray formed by pEnd and pStart lies on the front side of the plane formed by pVert0 and pVert1
+/// @param pEnd End of the ray
+/// @param pStart Start of the ray
+/// @param pVert0 First vertex
+/// @param pVert1 Second vertex
+/// @return True if the ray lies on the front side of the plane (or on the plane), false otherwise
+bool IsPointOnFrontSide(Vector* pEnd, Vector* pStart, Vector* pVert0, Vector* pVert1) {
     Vector v1;
     Vector v2;
     Vector v3;
     Vector v4;
+
     // Vector_Cross
-    v1.x = point1->x - pVec1->x;
-    v1.y = point1->y - pVec1->y;
-    v1.z = point1->z - pVec1->z;
-    v2.x = point2->x - pVec1->x;
-    v2.y = point2->y - pVec1->y;
-    v2.z = point2->z - pVec1->z;
+
+    // Edge 0
+    v1.x = pVert0->x - pStart->x;
+    v1.y = pVert0->y - pStart->y;
+    v1.z = pVert0->z - pStart->z;
+
+    // Edge 1
+    v2.x = pVert1->x - pStart->x;
+    v2.y = pVert1->y - pStart->y;
+    v2.z = pVert1->z - pStart->z;
+
+    // Compute normal
     v3.x = v1.y * v2.z - v1.z * v2.y;
     v3.y = v1.z * v2.x - v1.x * v2.z;
     v3.z = v1.x * v2.y - v1.y * v2.x;
-    // v3 is the surface normal?
-    v4.x = pVec->x - pVec1->x;
-    v4.y = pVec->y - pVec1->y;
-    v4.z = pVec->z - pVec1->z;
+
+    // direction
+    v4.x = pEnd->x - pStart->x;
+    v4.y = pEnd->y - pStart->y;
+    v4.z = pEnd->z - pStart->z;
+
     return v3.x * v4.x + v3.y * v4.y + v3.z * v4.z >= 0.0f;
 }
 
@@ -328,12 +344,12 @@ static void NearestPointOnPolyEdge(Vector* pVec, Vector* pVec1, int* indices, in
 // checks if the ray formed by pVec and pVec1 intersects the polygon with nmbrOfVertices vertices of pVec2
 static bool PointInPoly(Vector* pVec, Vector* pVec1, Vector* pVec2, int* indices, int nmbrOfVertices) {
     for (int i = 0; i < nmbrOfVertices - 1; i++) {
-        if (CheckPoint(pVec, pVec1, &pVec2[indices[i]], &pVec2[indices[i + 1]])) {
+        if (IsPointOnFrontSide(pVec, pVec1, &pVec2[indices[i]], &pVec2[indices[i + 1]])) {
             return false;
         }
     }
     
-    return !CheckPoint(pVec, pVec1, &pVec2[indices[nmbrOfVertices - 1]], &pVec2[indices[0]]);
+    return !IsPointOnFrontSide(pVec, pVec1, &pVec2[indices[nmbrOfVertices - 1]], &pVec2[indices[0]]);
 }
 
 float SubDot(Vector* vec, Vector* vec1, Vector* vec2) {
@@ -418,18 +434,21 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
     return true;
 }
 
-static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1, 
-            Vector* pVec2, Vector* pVec3, Vector* pVec4, CollisionResult* pResult) {
+static bool SweepSphereToTri(SphereRay* pRay, Vector* pVert0, Vector* pVert1, 
+            Vector* pVert2, Vector* pVec3, Vector* pVec4, CollisionResult* pResult) {
     Vector hitPoint = pRay->mStart;
     Vector hitNormal = *pVec3;
     float min;
+
     if (pVec4->Dot(&pRay->mDir) < 0.0f) {
         return false;
     }
-    float d = SubDot(&pRay->mStart, pVec, pVec3);
+
+    float d = SubDot(&pRay->mStart, pVert0, pVec3);
     if (d > pRay->mLength + pRay->radius) {
         return false;
     }
+
     if (d <= pRay->radius) {
         hitPoint.Scale(pVec4, d);
         min = 0.0f;
@@ -442,9 +461,9 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
         if (pVec3->Dot(&pRay->mDir) == 0.0f) {
             t = -1e+12f;
         } else {
-            t = -(pVec3->x * (tmp.x - pVec->x) + 
-                pVec3->y * (tmp.y - pVec->y) + 
-                pVec3->z * (tmp.z - pVec->z)) / pVec3->Dot(&pRay->mDir);
+            t = -(pVec3->x * (tmp.x - pVert0->x) + 
+                pVec3->y * (tmp.y - pVert0->y) + 
+                pVec3->z * (tmp.z - pVert0->z)) / pVec3->Dot(&pRay->mDir);
         }
         min = t;
         if (t <= 0.0f || t > pRay->mLength) {
@@ -453,10 +472,12 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
         hitPoint.Scale(&pRay->mDir, min);
         hitPoint.Add(&tmp);
     }
-    if (!CheckPoint(&hitPoint, &pRay->mStart, pVec1, pVec) || 
-            !CheckPoint(&hitPoint, &pRay->mStart, pVec2, pVec1) || !CheckPoint(&hitPoint, &pRay->mStart, pVec, pVec2)) {
+
+    if (!IsPointOnFrontSide(&hitPoint, &pRay->mStart, pVert1, pVert0) || 
+        !IsPointOnFrontSide(&hitPoint, &pRay->mStart, pVert2, pVert1) || 
+        !IsPointOnFrontSide(&hitPoint, &pRay->mStart, pVert0, pVert2)) {
         // point isn't in the triangle
-        NearestPointOnTriEdge(&hitPoint, pVec, pVec1, pVec2);
+        NearestPointOnTriEdge(&hitPoint, pVert0, pVert1, pVert2);
         // pos is now the coordinate on the polygon's edge 
         if (hitPoint.IsInsideSphere(&pRay->mStart, pRay->radius)) {
             // if the position on the polygon's edge is in the SphereRay's sphere
@@ -482,9 +503,11 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVec, Vector* pVec1,
     } else {
         Collision_BInteriorPoint = 0.0f == min;
     }
+
     pResult->normal = hitNormal;
     pResult->pos = hitPoint;
     pResult->unk40 = min;
+
     return true;
 }
 
@@ -520,7 +543,7 @@ void Collision_DeinitModule(void) {}
 static void StoreSphereResult(Item* pItem, Vector* pVec, CollisionResult* pResult, float arg4) {
     lastCollision.pos = *(Vector*)&pItem->collisionThing->verts[0].pos;
 
-    lastCollision.normal = pItem->collisionThing->normal;
+    lastCollision.normal = *(Vector*)&pItem->collisionThing->normal;
     if (arg4 < 0.0f) {
         lastCollision.normal.Scale(-1.0f);
     }
@@ -558,12 +581,11 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
                 if ((pItem->pTriangle->pCollisionInfo == NULL || pItem->pTriangle->pCollisionInfo->bEnabled) &&
                     (pItem->pTriangle->flags & flags) == 0) {
                     // need radiusSq
-                    CollisionVertex* pVerts = pItem->collisionThing->verts;
                     Vector* triVert0 = (Vector*)&pItem->collisionThing->verts[0];
                     Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
                     Vector* triVert2 = (Vector*)&pItem->collisionThing->verts[2];
                     float fVar19 =
-                        SubDot(pPos, (Vector*)&pItem->collisionThing->verts[0], &pItem->collisionThing->normal);
+                        SubDot(pPos, (Vector*)&pItem->collisionThing->verts[0], (Vector*)&pItem->collisionThing->normal);
                     float fVar0 = Abs<float>(fVar19);
                     if (!(fVar0 > radius)) {
                         Vector v1;
@@ -646,19 +668,19 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
                                                 }
                                             } else {
                                                 v1.Sub(triVert1, triVert0);
-                                                v2.Cross(&v1, &pItem->collisionThing->normal);
+                                                v2.Cross(&v1, (Vector*)&pItem->collisionThing->normal);
                                                 v3.Sub(pPos, triVert0);
                                                 if (v3.Dot(&v2) >= 0.0f) {
 
                                                     v1.Sub(triVert2, triVert1);
-                                                    v2.Cross(&v1, &pItem->collisionThing->normal);
+                                                    v2.Cross(&v1, (Vector*)&pItem->collisionThing->normal);
 
                                                     v3.Sub(pPos, triVert1);
 
                                                     if (v3.Dot(&v2) >= 0.0f) {
 
                                                         v1.Sub(triVert0, triVert2);
-                                                        v2.Cross(&v1, &pItem->collisionThing->normal);
+                                                        v2.Cross(&v1, (Vector*)&pItem->collisionThing->normal);
                                                         v3.Sub(pPos, triVert2);
 
                                                         if (v3.Dot(&v2) >= 0.0f) {
@@ -690,15 +712,18 @@ end:
     return numCollisions;
 }
 
-
-bool CheckTrianglePoint(float* pPoint, Item* pItem) {
+/// @brief Checks if pPoint is on or in front of the plane formed by pItem
+/// @param pPoint Point to check
+/// @param pItem Item that forms the plane
+/// @return True if pPoint is on or in front of the plane formed by pItem, otherwise false
+bool InFrontOfItem(Vector* pPoint, Item* pItem) {
     Vector v;
-    v.x = pPoint[0] - pItem->collisionThing->verts[0].pos[0];
-    v.y = pPoint[1] - pItem->collisionThing->verts[0].pos[1];
-    v.z = pPoint[2] - pItem->collisionThing->verts[0].pos[2];
-    return v.x * pItem->collisionThing->normal.x +
-        v.y * pItem->collisionThing->normal.y +
-        v.z * pItem->collisionThing->normal.z >= 0.0f;
+    v.x = pPoint->x - pItem->collisionThing->verts[0].pos[0];
+    v.y = pPoint->y - pItem->collisionThing->verts[0].pos[1];
+    v.z = pPoint->z - pItem->collisionThing->verts[0].pos[2];
+    return v.x * pItem->collisionThing->normal[0] +
+        v.y * pItem->collisionThing->normal[1] +
+        v.z * pItem->collisionThing->normal[2] >= 0.0f;
 }
 
 bool CheckItemSphereRay(Item* pItem, Vector* pVec, Vector* pVec1) {
@@ -718,19 +743,15 @@ bool CheckItemSphereRay(Item* pItem, Vector* pVec, Vector* pVec1) {
     return ret;
 }
 
-void SwapPtrs(Vector** p0, Vector** p1) {
-    Vector* tmp = *p0;
-    *p0 = *p1;
-    *p1 = tmp;
-}
-
-static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, CollisionResult* pCr, int flags) {
+static bool Collision_PolyCollide(Vector* pStart, Vector* pEnd, Vector* pDir, CollisionResult* pCr, int flags) {
     int minx;
     int minz;
     int maxx;
     int maxz;
-    FindGridBoundaries(pVec0, pVec1, &minx, &minz, &maxx, &maxz);
+    FindGridBoundaries(pStart, pEnd, &minx, &minz, &maxx, &maxz);
+
     bFound = false;
+
     for (int j = minz; j <= maxz; j++) {
         for (int i = minx; i <= maxx; i++) {
             Item* pItem = Collision_Grid[j * Collision_TilesAcross + i];
@@ -738,31 +759,38 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
                 if ((pItem->pTriangle->pCollisionInfo == NULL ||
                     pItem->pTriangle->pCollisionInfo->bEnabled) &&
                     (pItem->pTriangle->flags & flags) == 0) {
-                    bool b0 = CheckTrianglePoint((float*)pVec1, pItem);
-                    bool b1 = CheckTrianglePoint((float*)pVec0, pItem);
-                    if (b1 != b0) {
-                        Vector* p1 = (Vector*)&pItem->collisionThing->verts[0].pos;
-                        Vector* p2 = (Vector*)&pItem->collisionThing->verts[1].pos;
-                        Vector* p3 = (Vector*)&pItem->collisionThing->verts[2].pos;
-                        Vector surfaceNormal = pItem->collisionThing->normal;
-                        if (b0) {
-                            SwapPtrs(&p2, &p3);
+
+                    bool bEndInFront = InFrontOfItem(pEnd, pItem);
+                    bool bStartInFront = InFrontOfItem(pStart, pItem);
+
+                    if (bStartInFront != bEndInFront) {
+                        // start and end positions are on opposite sides of the plane
+                        // ray from start to end may intersect the poly
+
+                        Vector* pVert0 = (Vector*)&pItem->collisionThing->verts[0].pos;
+                        Vector* pVert1 = (Vector*)&pItem->collisionThing->verts[1].pos;
+                        Vector* pVert2 = (Vector*)&pItem->collisionThing->verts[2].pos;
+                        Vector surfaceNormal = *(Vector*)&pItem->collisionThing->normal;
+
+                        if (bEndInFront) {
+                            Swap<Vector*>(pVert1, pVert2);
                             surfaceNormal.Inverse();
                         }
-                        if (CheckPoint(pVec1, pVec0, p2, p1) &&
-                            CheckPoint(pVec1, pVec0, p3, p2) &&
-                            CheckPoint(pVec1, pVec0, p1, p3)) {
+
+                        if (IsPointOnFrontSide(pEnd, pStart, pVert1, pVert0) &&
+                            IsPointOnFrontSide(pEnd, pStart, pVert2, pVert1) &&
+                            IsPointOnFrontSide(pEnd, pStart, pVert0, pVert2)) {
                             // ray is intersecting the polygon
                             float d = surfaceNormal.Dot(pDir);
                             if (d < 0.0f) {
                                 Vector a;
-                                a.Sub(pVec0, p1);
+                                a.Sub(pStart, pVert0);
                                 // finalPos is the intersection point of the ray and polygon
                                 // finalPos may be called "a"?
                                 Vector newRayNormal;
                                 float scale = -surfaceNormal.Dot(&a) / d;
                                 newRayNormal.Scale(pDir, scale);
-                                newRayNormal.Add(pVec0);
+                                newRayNormal.Add(pStart);
 
                                 // set fields of the collision result
                                 lastCollision.pos = newRayNormal;
@@ -778,8 +806,9 @@ static bool Collision_PolyCollide(Vector* pVec0, Vector* pVec1, Vector* pDir, Co
                                     // if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
                                 }
+                                
                                 bFound = true;
-                                pVec1 = &lastCollision.pos; // set the new end position to the position of the collision
+                                pEnd = &lastCollision.pos; // set the new end position to the position of the collision
                             }
                         }
                     }
@@ -817,18 +846,23 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                             (pItem->pTriangle->pCollisionInfo == NULL ||
                             pItem->pTriangle->pCollisionInfo->bEnabled) &&
                             (pItem->pTriangle->flags & flags) == 0) {
+                            
                             Vector* p1 = (Vector*)&pItem->collisionThing->verts[0].pos;
                             Vector* p3 = (Vector*)&pItem->collisionThing->verts[1].pos;
                             Vector* p2 = (Vector*)&pItem->collisionThing->verts[2].pos;
-                            Vector normal = pItem->collisionThing->normal;
-                            Vector invNormal = pItem->collisionThing->normal;
+                            
+                            Vector normal = *(Vector*)&pItem->collisionThing->normal;
+                            Vector invNormal = *(Vector*)&pItem->collisionThing->normal;
+
                             invNormal.Inverse();
+
                             bool swept;
-                            if (CheckTrianglePoint((float*)&pRay->mStart, pItem)) {
+                            if (InFrontOfItem(&pRay->mStart, pItem)) {
                                 swept = SweepSphereToTri(pRay, p1, p3, p2, &normal, &invNormal, &lastCollision);
                             } else {
                                 swept = SweepSphereToTri(pRay, p1, p2, p3, &invNormal, &normal, &lastCollision);
                             }
+
                             if (swept) {
                                 bFound = true;
                                 GetVertexColorFromPoly(&lastCollision.color, &lastCollision.pos, pItem);
@@ -836,10 +870,11 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                                 lastCollision.itemIdx = pItem->pTriangle->subObjectIdx;
                                 lastCollision.pModel = NULL;
                                 lastCollision.pInfo = pItem->pTriangle->pCollisionInfo;
+
                                 if (pCr) {
-                                    // if a CollisionResult was passed, copy the result to it
                                     *pCr = lastCollision;
                                 }
+
                                 pRay->mLength = lastCollision.unk40;
                                 pRay->mEnd.Scale(&pRay->mDir, pRay->mLength);
                                 pRay->mEnd.Add(&pRay->mStart);
@@ -973,13 +1008,13 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
             */
             if (pTri == NULL || pTri->flags != pExplorer->pMaterial->collisionFlags ||
                     pTri->subObjectIdx != pExplorer->subObjectIdx) {
-                pTri = (CollisionTriangle*)CollisionHeap_Update(sizeof(Item), 0);
+                pTri = (CollisionTriangle*)CollisionHeap_Update(sizeof(CollisionTriangle), 0);
                 pTri->flags = pExplorer->pMaterial->collisionFlags;
                 pTri->subObjectIdx = pExplorer->subObjectIdx;
                 pTri->pCollisionInfo = pInfo;
             }
 
-            CollisionThing* pTriData = (CollisionThing*)CollisionHeap_Update(sizeof(CollisionTriangle), 0);
+            CollisionThing* pTriData = (CollisionThing*)CollisionHeap_Update(sizeof(CollisionThing), 0);
             // loop through all vertices of the triangle
             for (int i = 0; i < 3; i++) {
                 ((Vector*)&pTriData->verts[i].pos)->ApplyMatrix(&pExplorer->vertices[i].pos, &pModel->matrices[0]);
@@ -998,9 +1033,12 @@ void Collision_AddStaticModel(Model* pModel, CollisionInfo* pInfo, int subobject
             Vector caDiff;
             baDiff.Sub((Vector*)&pTriData->verts[1].pos, (Vector*)&pTriData->verts[0].pos);
             caDiff.Sub((Vector*)&pTriData->verts[2].pos, (Vector*)&pTriData->verts[0].pos);
-            pTriData->normal.Cross(&caDiff, &baDiff);
-            pTriData->normal.Normalise(&pTriData->normal);
-            if (pTriData->normal.Dot(&pTriData->normal) > 0.0f) {
+
+            ((Vector*)&pTriData->normal)->Cross(&caDiff, &baDiff);
+
+            ((Vector*)&pTriData->normal)->Normalise();
+
+            if (((Vector*)&pTriData->normal)->MagSquared() > 0.0f) {
                 bFound = false;
                 Collision_AddItem(&item);
             }
@@ -1023,8 +1061,11 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     Vector v2;
     v1.Copy(&pVolume->v1);
     v2.Add(&pVolume->v1, &pVolume->v2);
-    if (pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart) >
-        Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) return false;
+
+    float dist = pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart);
+    if (dist > Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) {
+        return false;
+    }
 
     Vector corners[8] = {
         {v1.x, v1.y, v1.z},
@@ -1066,7 +1107,8 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     
     for (int i = 0; i < 3; i++) {
         int dotTest = normals[i * 2].Dot(&pRay->mDir) > 0.0f ? 1 : 0;
-        if (CheckPoint(&pRay->mStart, &corners[quads[(dotTest + 2*i)][0]], 
+
+        if (IsPointOnFrontSide(&pRay->mStart, &corners[quads[(dotTest + 2*i)][0]], 
                 &corners[quads[(dotTest + 2*i)][1]], &corners[quads[(dotTest + 2*i)][2]]) &&
                 SweepSphereToPoly(pRay, corners, &quads[(dotTest + 2*i)][0], 4, &normals[(dotTest + 2*i)], &normals[(1 - dotTest) + 2*i], &lastCollision)
             ) {
@@ -1283,11 +1325,13 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
                 while (currNode != &dynGrid[i * 0x20 + j]) {
                     DynamicItem* currItem = currNode->PTR_0x8;
                     // potentially fix CollisionNode fields
+                    
                     if (currItem->pInfo == NULL || currItem->pInfo->bEnabled) {
                         bool collideItem = Collision_RayCollideDynamicItem(pStart, pEnd, pCr, currItem, mag);
                         if (!collideItem) {
                             collideItem = bFound;
-                        } 
+                        }
+
                         bFound = collideItem;
                     }
 
@@ -1388,9 +1432,11 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
     nextModel->pModel = pModel;
     nextModel->idx = subobjectIdx;
     BoundingVolume* pVolume = nextModel->pModel->GetBoundingVolume(nextModel->idx);
-    Vector vec;
-    vec.ApplyRotMatrix(&pVolume->v2, &pModel->matrices[0]);
-    float mag = vec.Magnitude();
+
+    Vector tmp;
+    tmp.ApplyRotMatrix(&pVolume->v2, &pModel->matrices[0]);
+
+    float mag = tmp.Magnitude();
     nextModel->unk8 = mag;
     nextModel->unk10.Init(CalcNumDynamicLinks(mag), sizeof(CollisionNode));
     
@@ -1407,17 +1453,11 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
     nextModel->pos.y += 100.0f;
     
     nextModel->Update();
-    pModel->flags.bits.b4 = true;
+    pModel->collisionTracking = true;
 }
 
 void Collision_AddDynamicSubobject(Model* pModel, int subobject, CollisionInfo* pInfo) {
     Collision_AddDynamicModel(pModel, pInfo, subobject);
-}
-
-inline void Swap(DynamicItem** p, DynamicItem** p1) {
-    DynamicItem* tmp = *p;
-    *p = *p1;
-    *p1 = tmp;
 }
 
 void Collision_DeleteDynamicModel(Model* pModel) {
@@ -1433,10 +1473,7 @@ void Collision_DeleteDynamicModel(Model* pModel) {
             pDynItems++;
         }
 
-        while (*dynamicModels.pMem != NULL) {
-            dynamicModels.pMem++;
-        }
-
+        dynamicModels.Reset();
         return;
     }
 
@@ -1446,8 +1483,8 @@ void Collision_DeleteDynamicModel(Model* pModel) {
         // deinit all DynamicItems which use this Model
         if (pItem->pModel == pModel) {
             pItem->Deinit();
-            Swap(dynamicModels.pMem++, pItems);
-            pModel->flags.bits.b4 = false;
+            dynamicModels.Destroy(pItems);
+            pModel->collisionTracking = false;
         }
         pItems++;
     }

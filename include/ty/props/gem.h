@@ -36,7 +36,15 @@ enum ElementType {
     MAX_GEM_ELEMENTS    = 5,
 };
 
-enum GemState {};
+enum GemState {
+    GEMSTATE_0 = 0,
+    GEMSTATE_1 = 1,
+    GEMSTATE_2 = 2,
+    GEMSTATE_3 = 3,
+    GEMSTATE_4 = 4,
+    GEMSTATE_5 = 5,
+};
+
 enum GemType {};
 
 struct GemPickupData {
@@ -85,7 +93,10 @@ struct Gem : GameObject {
     int unk6C;
     GemState mState;
     Vector pos;
-    float unk84[3];
+
+    float unk84;
+    float unk88;
+    float mSlope; // Slope (deltaY / deltaX) of (unk94 - pos)
     
     // mLerpTime is used when spawning and magnetised
     float mLerpTime; // used for Linear Interpolation
@@ -93,9 +104,9 @@ struct Gem : GameObject {
     Vector mCollisionNormal;
     Matrix unkB4;
     s16 unkF4;
-    u8 unkF6b0 : 1;
+    bool unkF6b0 : 1;
     bool mCollected : 1;
-    u8 unkF6b2 : 1;
+    bool bGroundBeneath : 1; // Whether or not there is ground beneath for a shadow
     u8 unkF6b3 : 1;
     u8 unkF6b4 : 1;
     u8 unkF6b5 : 1;

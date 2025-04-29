@@ -22,10 +22,11 @@ struct AnimDef {
 struct AnimationData {
     struct Node {
         struct KeyFrame {
-            Vector* unk0;
-            Vector* unk4;
-            Vector* unk8;
+            Vector* pos;
+            Vector* rot;
+            Vector* scale;
         };
+
         Vector origin;
         char* pName;
         int parent;
@@ -40,7 +41,6 @@ struct AnimationData {
     int nmbrOfAnimDefs;
     AnimDef* pAnimDefs;
 };
-    
 
 struct AnimationTemplate {
     char name[0x20];
@@ -55,25 +55,27 @@ struct Animation {
         Vector scale;
         Matrix unk30; // custom0/1/2/3
         Vector* pOrigin;
-        u8 b0 : 1; // matrixCalc
-        u8 b1 : 1; // frameCalc
-        u8 b2 : 1; // useCustom
-        u8 b3 : 1; // disableAnim
+        bool matrixCalc     : 1;
+        bool frameCalc      : 1; // Has frame been calculated
+        bool useCustom      : 1;
+        u8 disableAnim      : 1;
         float targetFrame;
         float targetWeight;
     };
+
     AnimationTemplate* pTemplate;
     Matrix* pMatrices;
     int unk8;
     int unkC;
     FrameInstance frames[1];
     
-    static Animation* Create(char*, Matrix*);
+    static Animation* Create(char* pFilename, Matrix*);
+    
     void Destroy(void);
     void Tween(float, float);
     void TweenNode(float, float, int);
     void SetLocalToWorldDirty(void);
-    void SetNodeMatrix(int, Matrix*, bool);
+    void SetNodeMatrix(int nodeIndex, Matrix* pMatrix, bool bDisableAnim);
     void CalculateMatrices(void);
     int GetNmbrOfNodes(void);
     bool NodeExists(char*, int*);
@@ -82,6 +84,7 @@ struct Animation {
     Vector* GetNodeOrigin(int nodeNumber);
     void GetNodeWorldPosition(int index, Vector* pPos);
     void CalculateNodeMatrix(int);
+
     void Set(float arg0) {
         Tween(arg0, 1.0f);
     }

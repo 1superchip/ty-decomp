@@ -191,7 +191,7 @@ void Friend::Init(GameObjDesc* pDesc) {
 void Friend::Deinit(void) {
     mStateManager.Deinit(this);
     
-    if (pModel && pModel->flags.bits.b4) {
+    if (pModel && pModel->collisionTracking) {
         Collision_DeleteDynamicModel(pModel);
     }
 

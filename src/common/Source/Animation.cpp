@@ -93,11 +93,14 @@ Animation* Animation::Create(char* pFilename, Matrix* pMatrix) {
     
     for (int i = 0; i < pAnimTemplate->pAnimData->nmbrOfNodes; i++) {
         pAnim->frames[i].pOrigin = &pAnimTemplate->pAnimData->pNodes[i].origin;
+
         pAnim->frames[i].rotation.Set(0.0f, 0.0f, 0.0f, 1.0f);
-        pAnim->frames[i].b0 = 0;
-        pAnim->frames[i].b1 = 0;
-        pAnim->frames[i].b2 = 0;
-        pAnim->frames[i].b3 = 0;
+
+        pAnim->frames[i].matrixCalc = false;
+        pAnim->frames[i].frameCalc = false;
+        pAnim->frames[i].useCustom = false;
+        pAnim->frames[i].disableAnim = 0;
+
         pAnim->frames[i].targetFrame = 0.0f;
         pAnim->frames[i].targetWeight = 0.0f;
     }
@@ -118,16 +121,21 @@ void Animation::Destroy(void) {
 
 void Animation::Tween(float frameNmbr, float arg2) {
     float fVar1 = Clamp<float>(0.0f, arg2, 1.0f);
+
     Animation::FrameInstance* pFrames = frames;
+    
     AnimationData::Node* pNodes = pTemplate->pAnimData->pNodes;
+
     for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
-        if (!pFrames[i].b1 && fVar1 != 1.0f) {
+
+        if (!pFrames[i].frameCalc && fVar1 != 1.0f) {
             Animation_CalculateFrame(&pFrames[i], &pNodes[i]);
         }
+
         pFrames[i].targetFrame = frameNmbr;
         pFrames[i].targetWeight = fVar1;
-        pFrames[i].b1 = 0;
-        pFrames[i].b0 = 0;
+        pFrames[i].frameCalc = false;
+        pFrames[i].matrixCalc = false;
     }
 }
 
@@ -135,14 +143,15 @@ void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
     Animation::FrameInstance* pFrame = &frames[arg3];
     AnimationData::Node* pNode = &pTemplate->pAnimData->pNodes[arg3];
     
-    if (!pFrame->b1 && pFrame->targetWeight != 1.0f) {
+    if (!pFrame->frameCalc && pFrame->targetWeight != 1.0f) {
         Animation_CalculateFrame(pFrame, pNode);
     }
 
     pFrame->targetFrame = frameNmbr;
     pFrame->targetWeight = weight;
-    pFrame->b1 = 0;
-    pFrame->b0 = 0;
+    pFrame->frameCalc = false;
+    pFrame->matrixCalc = false;
+
     for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
         if (pTemplate->pAnimData->pNodes[i].parent == arg3) {
             TweenNode(frameNmbr, weight, i);
@@ -152,21 +161,19 @@ void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
 
 void Animation::SetLocalToWorldDirty(void) {
     for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
-        frames[i].b0 = 0;
+        frames[i].matrixCalc = false;
     }
 }
 
-// arg4 sets disableAnim
-void Animation::SetNodeMatrix(int nodeIndex, Matrix* pMatrix, bool arg4) {
-    if (pMatrix != NULL) {
+void Animation::SetNodeMatrix(int nodeIndex, Matrix* pMatrix, bool bDisableAnim) {
+    if (pMatrix) {
         frames[nodeIndex].unk30 = *pMatrix;
-        frames[nodeIndex].b2 = 1;
-        frames[nodeIndex].b3 = arg4;
-        return;
+        frames[nodeIndex].useCustom = true;
+        frames[nodeIndex].disableAnim = bDisableAnim;
+    } else {
+        frames[nodeIndex].useCustom = false;
+        frames[nodeIndex].disableAnim = 0;
     }
-    
-    frames[nodeIndex].b2 = 0;
-    frames[nodeIndex].b3 = 0;
 }
 
 void Animation::CalculateMatrices(void) {
@@ -176,7 +183,7 @@ void Animation::CalculateMatrices(void) {
 }
 
 int GetFrame(AnimationData::Node::KeyFrame* pKeyFrame) {
-    return *(int*)&pKeyFrame->unk0->w;
+    return *(int*)&pKeyFrame->pos->w;
 }
 
 void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData::Node* pNode, float frameNmbr) {
@@ -188,8 +195,6 @@ void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData:
         int mid = (start + end) / 2;
         AnimationData::Node::KeyFrame* pKeyFrame = &pNode->pKeyFrames[mid];
         if (GetFrame(pKeyFrame) > frameNmbr) {
-            // if the current keyframe number is greater than the target frame
-            // set the end index to the current index
             end = mid;
         } else {
             start = mid;
@@ -198,19 +203,23 @@ void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData:
 
     AnimationData::Node::KeyFrame* pKeyFrame = &pNode->pKeyFrames[start];
     if (frameNmbr == (float)GetFrame(pKeyFrame)) {
-        pFrame->position = *pKeyFrame->unk0;
-        pFrame->rotation = *pNode->pKeyFrames[start].unk4;
-        pFrame->scale = *pNode->pKeyFrames[start].unk8;
+        pFrame->position = *pKeyFrame->pos;
+        pFrame->rotation = *pNode->pKeyFrames[start].rot;
+        pFrame->scale = *pNode->pKeyFrames[start].scale;
     } else {
         AnimationData::Node::KeyFrame* pKeyFrame2 = &pNode->pKeyFrames[end];
         if (frameNmbr == (float)GetFrame(pKeyFrame2)) {
-            pFrame->position = *pKeyFrame2->unk0;
-            pFrame->rotation = *pNode->pKeyFrames[end].unk4;
-            pFrame->scale = *pNode->pKeyFrames[end].unk8;
+            pFrame->position = *pKeyFrame2->pos;
+            pFrame->rotation = *pNode->pKeyFrames[end].rot;
+            pFrame->scale = *pNode->pKeyFrames[end].scale;
         } else {
             float d = (frameNmbr - GetFrame(pKeyFrame)) / (float)(GetFrame(pKeyFrame2) - GetFrame(pKeyFrame));
-            Animation_InterpolateFrameData(pFrame,  d, pKeyFrame->unk0, pKeyFrame->unk4, pKeyFrame->unk8, 
-                pKeyFrame2->unk0, pKeyFrame2->unk4, pKeyFrame2->unk8);
+            Animation_InterpolateFrameData(
+                pFrame, 
+                d, 
+                pKeyFrame->pos, pKeyFrame->rot, pKeyFrame->scale, 
+                pKeyFrame2->pos, pKeyFrame2->rot, pKeyFrame2->scale
+            );
         }
     }
     pFrame->position.w = frameNmbr;
@@ -225,6 +234,7 @@ void Animation_InterpolateFrameData(Animation::FrameInstance* pFrame, float arg1
     pFrame->scale.x = (pScale1->x - pScale->x) * arg1 + pScale->x;
     pFrame->scale.y = (pScale1->y - pScale->y) * arg1 + pScale->y;
     pFrame->scale.z = (pScale1->z - pScale->z) * arg1 + pScale->z;
+
     // Slerp rotation
     SlerpQuat(pRot, pRot1, arg1, &pFrame->rotation);
 }
@@ -244,9 +254,11 @@ bool Animation::NodeExists(char* pName, int* pNodeIndex) {
             if (pNodeIndex != NULL) {
                 *pNodeIndex = i;
             }
+
             return true;
         }
     }
+
     return false;
 }
 
@@ -263,7 +275,7 @@ int Animation::GetNodeIndex(char* pNodeName) {
 }
 
 Matrix* Animation::GetNodeMatrix(int nodeIndex) {
-    if (!frames[nodeIndex].b0) {
+    if (!frames[nodeIndex].matrixCalc) {
         CalculateNodeMatrix(nodeIndex);
     }
     
@@ -280,16 +292,24 @@ void Animation::GetNodeWorldPosition(int index, Vector* pPos) {
 
 void Animation_CalculateFrame(Animation::FrameInstance* pFrame, AnimationData::Node* pNode) {
     Animation::FrameInstance localFrame;
+
     if (pFrame->targetWeight == 1.0f) {
         Animation_InterpolateFrame(pFrame, pNode, pFrame->targetFrame);
     } else {
         Animation_InterpolateFrame(&localFrame, pNode, pFrame->targetFrame);
-        Animation_InterpolateFrameData(pFrame, pFrame->targetWeight, &pFrame->position, 
-            &pFrame->rotation, &pFrame->scale, &localFrame.position, &localFrame.rotation, &localFrame.scale);
+
+        Animation_InterpolateFrameData(
+            pFrame, 
+            pFrame->targetWeight, 
+            &pFrame->position, &pFrame->rotation, &pFrame->scale, 
+            &localFrame.position, &localFrame.rotation, &localFrame.scale
+        );
+
         pFrame->position.w = pFrame->targetFrame;
     }
-    pFrame->b1 = 1;
-    pFrame->b0 = 0;
+
+    pFrame->frameCalc = true;
+    pFrame->matrixCalc = false;
 }
 
 #define SQRT2 1.41421356f
@@ -298,17 +318,17 @@ void Animation::CalculateNodeMatrix(int index) {
     AnimationData::Node* pNode = &pTemplate->pAnimData->pNodes[index];
     Animation::FrameInstance* pFrame = &frames[index];
 
-    if (!pFrame->b1) {
+    if (!pFrame->frameCalc) {
         Animation_CalculateFrame(pFrame, pNode);
     }
 
-    if (pNode->parent != -1 && !frames[pNode->parent].b0) {
+    if (pNode->parent != -1 && !frames[pNode->parent].matrixCalc) {
         CalculateNodeMatrix(pNode->parent);
     }
 
     Matrix* r28 = &pMatrices[index] + 1;
     Matrix* parentMatrix = &pMatrices[pNode->parent] + 1;
-    if (!pFrame->b3) {
+    if (!pFrame->disableAnim) {
         float sX = pFrame->scale.x;
         float sY = pFrame->scale.y;
         float sZ = pFrame->scale.z;
@@ -354,18 +374,18 @@ void Animation::CalculateNodeMatrix(int index) {
                 r28->Translate(&pFrame->position);
             }
         }
-        if (pFrame->b2) {
+        if (pFrame->useCustom) {
             r28->Multiply(&pFrame->unk30, r28);
         }
         
         r28->Multiply(parentMatrix);
-    } else if (pFrame->b2) {
+    } else if (pFrame->useCustom) {
         r28->Multiply(&pFrame->unk30, parentMatrix);
     } else {
         *r28 = *parentMatrix;
     }
 
-    frames[index].b0 = 1;
+    frames[index].matrixCalc = true;
 }
 
 // https://decomp.me/scratch/NzMve
@@ -442,47 +462,47 @@ void Animation_UnpackTemplate(AnimationData* pAnimData) {
         Fixup<AnimationData::Node::KeyFrame>(pData->pNodes[i].pKeyFrames, addr);
 
         for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
-            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk0, addr);
-            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk4, addr);
-            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].unk8, addr);
+            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].pos, addr);
+            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].rot, addr);
+            Fixup<Vector>(pData->pNodes[i].pKeyFrames[j].scale, addr);
         }
     }
 
     for (i = 0; i < pData->nmbrOfNodes; i++) {
         for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
-            if (((char*)pData->pNodes[i].pKeyFrames[j].unk0)[3] & 1) {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[0] |= 1;
+            if (((char*)pData->pNodes[i].pKeyFrames[j].pos)[3] & 1) {
+                ((char*)pData->pNodes[i].pKeyFrames[j].pos)[0] |= 1;
             } else {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[0] &= 0xFE;
+                ((char*)pData->pNodes[i].pKeyFrames[j].pos)[0] &= 0xFE;
             }
 
-            if (((char*)pData->pNodes[i].pKeyFrames[j].unk4)[3] & 1) {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[0] |= 1;
+            if (((char*)pData->pNodes[i].pKeyFrames[j].rot)[3] & 1) {
+                ((char*)pData->pNodes[i].pKeyFrames[j].rot)[0] |= 1;
             } else {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[0] &= 0xFE;
+                ((char*)pData->pNodes[i].pKeyFrames[j].rot)[0] &= 0xFE;
             }
             
-            if (((char*)pData->pNodes[i].pKeyFrames[j].unk8)[3] & 1) {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk8)[0] |= 1;
+            if (((char*)pData->pNodes[i].pKeyFrames[j].scale)[3] & 1) {
+                ((char*)pData->pNodes[i].pKeyFrames[j].scale)[0] |= 1;
             } else {
-                ((char*)pData->pNodes[i].pKeyFrames[j].unk8)[0] &= 0xFE;
+                ((char*)pData->pNodes[i].pKeyFrames[j].scale)[0] &= 0xFE;
             }
         }
     }
 
     for (i = 0; i < pData->nmbrOfNodes; i++) {
         for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
-            FixupVec(*pData->pNodes[i].pKeyFrames[j].unk0);
-            FixupVec(*pData->pNodes[i].pKeyFrames[j].unk4);
-            FixupVec(*pData->pNodes[i].pKeyFrames[j].unk8);
+            FixupVec(*pData->pNodes[i].pKeyFrames[j].pos);
+            FixupVec(*pData->pNodes[i].pKeyFrames[j].rot);
+            FixupVec(*pData->pNodes[i].pKeyFrames[j].scale);
         }
     }
     
     for (i = 0; i < pData->nmbrOfNodes; i++) {
         for (int j = 0; j < pData->pNodes[i].nmbrOfKeyFrames; j++) {
-            ((char*)pData->pNodes[i].pKeyFrames[j].unk0)[3] &= 0xFE;
-            ((char*)pData->pNodes[i].pKeyFrames[j].unk4)[3] &= 0xFE;
-            ((char*)pData->pNodes[i].pKeyFrames[j].unk8)[3] &= 0xFE;
+            ((char*)pData->pNodes[i].pKeyFrames[j].pos)[3] &= 0xFE;
+            ((char*)pData->pNodes[i].pKeyFrames[j].rot)[3] &= 0xFE;
+            ((char*)pData->pNodes[i].pKeyFrames[j].scale)[3] &= 0xFE;
         }
     }
 

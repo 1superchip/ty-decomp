@@ -108,17 +108,18 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
 
     if (pAnimName != NULL) {
         pModel->SetAnimation(Animation::Create(animName, pModel->pMatrices));
-        pModel->flags.bits.bHasAnimation = 1;
+        pModel->bHasAnimation = true;
     } else {
         pModel->pAnimation = NULL;
-        pModel->flags.bits.bHasAnimation = 0;
+        pModel->bHasAnimation = false;
     }
 
-    pModel->flags.bits.b0 = 0;
+    pModel->toBeDestroyed = 0;
     pModel->renderType = -1;
-    pModel->flags.bits.b3 = 0;
-    pModel->flags.bits.b4 = 0;
-    pModel->flags.bits.b5 = 0;
+    pModel->bScissoring = false;
+    pModel->collisionTracking = false;
+    pModel->b5 = 0;
+
     pModel->colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
 
     for (int matrixIdx = 0; matrixIdx < pModel->pTemplate->pModelData->nmbrOfMatrices; matrixIdx++) {
@@ -130,30 +131,30 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
     return pModel;
 }
 
+/// @brief Begins the process of freeing a model
 void Model::Destroy(void) {
-    flags.bits.b0 = 3;
-    if (!flags.bits.bHasAnimation) {
-        return;
-    }
+    toBeDestroyed = 3;
 
-    if (pAnimation != NULL) {
+    if (bHasAnimation && pAnimation) {
         pAnimation->Destroy();
         pAnimation = NULL;
-        flags.bits.bHasAnimation = 0;
+        bHasAnimation = false;
     }
 }
 
+/// @brief Attempts to free all models that are no longer active
 void Model::Purge(void) {
     Model** ppModels = modelInstances.GetPointers();
 
-    while (*ppModels != NULL) {
+    while (*ppModels) {
         Model* pModel = *ppModels;
-        if (pModel->flags.bits.b0 != 0 && --pModel->flags.bits.b0 == 0) {
-            if ((*ppModels)->pTemplate != NULL && --(*ppModels)->pTemplate->referenceCount == 0) {
+        if (pModel->toBeDestroyed != 0 && --pModel->toBeDestroyed == 0) {
+            if ((*ppModels)->pTemplate && --(*ppModels)->pTemplate->referenceCount == 0) {
+                // Destroy and free the ModelTemplate if there are no more references to it
 
+                // destroy all subobject materials
                 for (int i = 0; i < (*ppModels)->pTemplate->pModelData->nmbrOfSubObjects; i++) {
                     for (int j = 0; j < (*ppModels)->pTemplate->pModelData->pSubObjects[i].nmbrOfMaterials; j++) {
-                        // destroy all subobject materials
                         (*ppModels)->pTemplate->pModelData->pSubObjects[i].pMaterials[j].pMaterial->Destroy();
                     }
                 }
@@ -380,8 +381,9 @@ char* Model::GetSubObjectName(int subObjectIndex) {
 BoundingVolume* Model::GetBoundingVolume(int subObjectIndex) {
     if (subObjectIndex < 0) {
         return &pTemplate->pModelData->volume;
+    } else {
+        return &pTemplate->pModelData->pSubObjects[subObjectIndex].volume;
     }
-    return &pTemplate->pModelData->pSubObjects[subObjectIndex].volume;
 }
 
 char* Model::GetName(void){
