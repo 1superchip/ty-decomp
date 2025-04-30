@@ -62,7 +62,7 @@ void MKParticleGenType::Init(void) {
     zVel = 0.0f;
     nmbrOfParticles = 500;
     pMatName = "fx_073";
-    SetEnvelope(testEnv, 12);
+    SetEnvelope(testEnv, ARRAY_SIZE(testEnv));
     SetAnimRate(3.0f);
     unk74 = 9.090909E+10f;
     unk78 = 9.090909E+10f;

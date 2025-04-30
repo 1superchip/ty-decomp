@@ -69,7 +69,7 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         strtok(animName, ".");
     }
 
-    ModelTemplate** pTemplates = modelTemplates.pPointers;
+    ModelTemplate** pTemplates = modelTemplates.GetPointers();
     while (*pTemplates != NULL) {
         if (stricmp((*pTemplates)->name, meshName) == 0) {
             break;

@@ -1,11 +1,11 @@
 #include "ty/props/D1_Prop.h"
+#include "common/System_GC.h"
 #include "ty/global.h"
 #include "ty/GameObjectManager.h"
 
 extern void Credits_Init(void);
 extern void Credits_Deinit(void);
 extern void Credits_Reset(void);
-char* System_GetCommandLineParameter(char*);
 enum MusicType {};
 void SoundBank_PlayMusic(MusicType, float, float);
 extern "C" void Sound_MusicPause(bool);

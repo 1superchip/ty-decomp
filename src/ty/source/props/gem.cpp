@@ -176,7 +176,7 @@ void Gem_LoadResources(KromeIni* pIni) {
             gemType[i].updateFunc = gemPartSysInfo[i].updateFunc;
         }
 
-        gemType[i].SetEnvelope(4, gemPartSysInfo[i].envelopes);
+        gemType[i].SetEnvelope(ARRAY_SIZE(gemPartSysInfo[i].envelopes), gemPartSysInfo[i].envelopes);
         gemType[i].SetDistances(1000.0f, 2500.0f, 3000.0f);
     }
 
@@ -813,23 +813,31 @@ void Gem_FireCustomUpdate(ParticleSystem* pSys) {
         ParticleChunk* pCurrChunk = *ppChunks;
         Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
         do {
-            Matrix sp28;
+            Matrix rot;
+
             pParticle->unk3C += 0.05f;
             if (pParticle->unk3C > (2.0f * PI)) {
                 pParticle->unk3C -= (2.0f * PI);
             }
-            Vector sp18 = {0.0f, pParticle->unk3C, pParticle->mAngle};
-            Vector sp8 = {pParticle->unk20, pParticle->unk24, pParticle->unk28};
-            sp28.SetRotationPYR(&sp18);
-            sp8.ApplyRotMatrix(&sp28);
-            pParticle->mX = sp8.x;
-            pParticle->mY = sp8.y;
-            pParticle->mZ = sp8.z;
+
+            Vector ang = {0.0f, pParticle->unk3C, pParticle->mAngle};
+
+            Vector pos = {pParticle->unk20, pParticle->unk24, pParticle->unk28};
+
+            rot.SetRotationPYR(&ang);
+            pos.ApplyRotMatrix(&rot);
+
+            pParticle->mX = pos.x;
+            pParticle->mY = pos.y;
+            pParticle->mZ = pos.z;
+
             float delta = pSys->age - pParticle->unkC;
             if (delta > pSys->mpType->mpEnvelopes[pParticle->mEnvelopeIndex].unkC) {
                 pParticle->mEnvelopeIndex++;
             }
+
             ParticleEnvelope* pEnv = &pSys->mpType->mpEnvelopes[pParticle->mEnvelopeIndex - 1];
+
             float delta2 = ((delta - pEnv->unkC) / pEnv->deltaAge);
             // delta = pEnv->unk14 * ((delta - pEnv->unkC) / pEnv->deltaAge);
             pParticle->mColor.w = (delta2 * pEnv->unk14) + pEnv->unk4;

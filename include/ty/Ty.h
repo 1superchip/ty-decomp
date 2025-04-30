@@ -283,11 +283,114 @@ struct TyContext {
     }
 };
 
+struct LedgePullUpData {
+    bool bOnGround;
+    bool normalCheck;
+
+    Vector unk4;
+    Vector pos;
+
+    float unk24;
+
+    CollisionInfo* pInfo;
+    GameObject* pGameObject;
+    Vector nodeMatrixTranslation;
+    Vector tyVelocity;
+
+    StateMachine<LedgePullUpData> fsm;
+
+    bool UpdateCheck(void);
+    void LedgeMoved(Vector*, float);
+    void Grab(void);
+    void Hang(void);
+    void InitPull(void);
+    void Pull(void);
+    void Jump(void);
+    void PushOff(void);
+};
+
 struct Ty : Hero {
 
-    char padding320[0x338 - 0x320]; // mostly animation related data
+    int unk320;
+    Vector unk324;
+
+    int unk334;
     Vector unk338;
-    char padding348[0x828 - 0x348];
+
+    int unk348;
+    Vector unk34C;
+
+    int unk35C;
+    Vector unk360;
+
+    int unk370;
+    Vector unk374;
+
+    int unk384;
+    Vector unk388;
+
+    int unk398;
+    Vector unk39C;
+
+    int unk3AC;
+    Vector unk3B0;
+
+    int unk3C0;
+    Vector unk3C4;
+
+    int unk3D4;
+    Vector unk3D8;
+
+    int unk3E8;
+    Vector unk3EC; // specialPickupShowPos
+
+    int unk3FC;
+    Vector unk400;
+
+    int unk410; // eyeRefPointIdx
+    Vector unk414;
+
+    int unk424;
+    Vector unk428;
+
+    int unk438;
+    Vector unk43C;
+
+    int unk44C;
+    Vector unk450;
+
+    int unk460;
+    Vector unk464;
+
+    int unk474;
+    Vector unk478;
+
+    int unk488;
+    Vector unk48C;
+
+    int unk49C;
+    Vector unk4A0;
+    
+    int unk4B0;
+    char padding4B4[0x10]; // Vector?
+
+    int A_Head_idx; // 0x4C4
+    int A_BiteHead_idx; // 0x4C8
+
+    MKAnimScript animScript; // 0x4CC
+    MKAnimScript unk4EC;
+    MKAnimScript unk50C;
+
+    bool unk52C;
+
+    float unk530;
+
+    MKAnimScript unk534;
+    MKAnimScript rangPropLeftAnimScript;
+    MKAnimScript rangPropRightAnimScript;
+    char padding594[0x20]; // MKAnimScript?
+
+    char padding348[0x828 - 0x5B4];
     uint unk828;
     BoomerangType mBoomerangType;
     TyContext mContext;
@@ -368,7 +471,14 @@ struct Ty : Hero {
     int unk169C;
     int unk16A0;
     int unk16A4;
+
     AutoTargetStruct mAutoTarget;
+
+    float jumpYStep;
+
+    int unk18B8;
+
+    float startFallY;
     // finish
 
 

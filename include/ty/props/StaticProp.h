@@ -131,7 +131,7 @@ struct StaticFXProp : StaticProp {
     
     // these flags may have been part of a union with s32
     bool bCollidesWithWater : 1;
-    u8 b1 : 1;
+    bool b1 : 1;
     bool bVisible : 1;
     bool bDefaultVisible : 1;
     u8 b4 : 1;

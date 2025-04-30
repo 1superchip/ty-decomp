@@ -212,7 +212,11 @@ struct Tools_WayPoints {
 
 int Tools_GetAnimationNode(Model*, char*);
 
-enum Tools_SetNodeFlag {};
+enum Tools_SetNodeFlag {
+    TOOLS_NODEFLAG_0 = 0,
+    TOOLS_NODEFLAG_1 = 1,
+    TOOLS_NODEFLAG_2 = 2,
+};
 
 void Tools_SetNode(Animation*, int, Matrix*, Tools_SetNodeFlag);
 
@@ -259,7 +263,12 @@ void Tools_ProcessString(char*);
 
 struct FaderObject {
     enum FadeMode {};
-    enum FadeState {};
+    enum FadeState {
+        FADESTATE_0 = 0,
+        FADESTATE_1 = 1,
+        FADESTATE_2 = 2,
+        FADESTATE_3 = 3
+    };
 
     FaderObject::FadeMode fadeMode;
     FaderObject::FadeState currFadeState;

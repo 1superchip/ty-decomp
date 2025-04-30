@@ -20,6 +20,10 @@
 #include "common/Input.h"
 #include "common/MKRumble.h"
 #include "common/Water_GC.h"
+#include "common/MKPackage.h"
+#include "common/Video.h"
+#include "common/MKShadow.h"
+#include "common/MKGrass.h"
 
 extern "C" void memset(void*, int, int);
 
@@ -112,12 +116,8 @@ static int stopFrame = -1;
 char* gpBuildVersion = "<not set>";
 
 extern void Game_InitSystem(void);
-extern void MKPackage_InitModule(void);
 extern void MKMemoryCard_InitModule(void);
 extern "C" void Sound_InitModule(void);
-extern void Video_InitModule(void);
-extern void MKShadow_InitModule(void);
-extern void MKGrass_InitTypes(char*);
 
 void System_InitModule(void*, char* pCmdLineArgs) {
     pMainThread = OSGetCurrentThread();
@@ -177,11 +177,7 @@ void System_InitModule(void*, char* pCmdLineArgs) {
 }
 
 extern "C" void Sound_DeinitModule(void);
-extern void MKGrass_DeinitTypes(void);
-extern void MKShadow_DeinitModule();
-extern void Video_DeinitModule(void);
 extern void MKMemoryCard_DeinitModule(void);
-extern void MKPackage_DeinitModule(void);
 
 // might be missing inlines that cause the inline depth limit
 // to be reached for main
@@ -492,7 +488,7 @@ void System_CheckZRequests(void) {
         }
 
         int r26 = gDisplay.unk10;
-        int r31 = VIGetTvFormat() == 1 ? 496 : 448;
+        int r31 = VIGetTvFormat() == VI_PAL ? 496 : 448;
 
         float f5 = 1.0f / spC.w;
         float f1 = (spC.x * f5) * (float)r26;

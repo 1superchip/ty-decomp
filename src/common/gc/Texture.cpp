@@ -198,7 +198,7 @@ Texture* Texture::Find(char* pName) {
     Texture** list;
     char* str = Str_CopyString(pName, 0x1f);
     
-    list = (Texture**)textures.pMem;
+    list = textures.GetMem();
 
     while (*list != NULL) {
         if (stricmp((*list)->name, str) == 0) {

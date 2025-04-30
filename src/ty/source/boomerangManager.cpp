@@ -62,7 +62,7 @@ void BoomerangWeapon::Init(BoomerangSide side, BoomerangDesc* pDesc, BoomerangMa
         (*ammoQueue.GetCurr())->Load();
     }
 
-    mFsm.Init(boomerangLauncherStates, 0);
+    mFsm.Init(boomerangLauncherStates, BLS_Idle);
 }
 
 void BoomerangWeapon::Deinit(void) {
@@ -89,7 +89,7 @@ void BoomerangWeapon::Reset(void) {
     unkA7 = true;
     pBoomerang = NULL;
 
-    mFsm.Init(boomerangLauncherStates, 0);
+    mFsm.Init(boomerangLauncherStates, BLS_Idle);
 
     ammoQueue.Reset();
 

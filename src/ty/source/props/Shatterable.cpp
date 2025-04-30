@@ -34,7 +34,7 @@ void Shatterable_LoadResources(KromeIni* pIni) {
 
     slideType.Init("Slide", pSlideMat, 1.0f, 10.0f, 10.0f, 1);
 
-    slideType.SetEnvelope(3, slideEnvelope);
+    slideType.SetEnvelope(ARRAY_SIZE(slideEnvelope), slideEnvelope);
 
     slideType.unk64 = 0.999f;
     slideType.yVel = -10.0f;

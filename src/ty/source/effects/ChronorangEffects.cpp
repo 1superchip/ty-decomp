@@ -27,7 +27,7 @@ void Pollen_Update(ParticleSystem* pSys) {
 
     ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
-        Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
+        Particle* pParticle = pCurrChunk->GetParticle();
         do {
             pParticle->mX += pParticle->unk20;
             pParticle->mY += pParticle->unk24;

@@ -1037,9 +1037,16 @@ void Tools_DropShadow_Deinit(void) {
 }
 
 void Tools_DropShadow_Add(float f1, Vector* pVec, Vector* pVec1, float f2) {
-    if (!bDropShadowsIsInit) return;
-    if (shadows.CheckMemory()) return;
+    if (!bDropShadowsIsInit) {
+        return;
+    }
+
+    if (shadows.CheckMemory()) {
+        return;
+    }
+
     ShadowInfo* pShadow = shadows.GetNextEntry();
+
     pShadow->unk24 = f2;
     pShadow->unk20 = f1;
     pShadow->unk0.Copy(pVec);
@@ -1052,11 +1059,15 @@ void Tools_DropShadow_Add(float f1, Vector* pVec, Vector* pVec1, float f2) {
 inline void ShadowInfo::Draw(void) {
     Matrix transform;
     Vector sp18 = {0.0f, 0.0f, 1.0f, 0.0f};
+
     transform.SetIdentity();
     Tools_BuildLTWMatrix(&transform, &sp18, &unk10);
+
     transform.Row3()->Copy(&unk0);
     transform.Row3()->y += 3.0f;
+
     View::GetCurrent()->SetLocalToWorldMatrix(&transform);
+
     Blitter_TriStrip triStrips[4];
     triStrips[0].pos.Set(-unk20 / 2.0f, 0.0f, unk20 / 2.0f);
     triStrips[1].pos.Set(unk20 / 2.0f, 0.0f, unk20 / 2.0f);
@@ -1082,8 +1093,12 @@ inline void ShadowInfo::Draw(void) {
 }
 
 void Tools_DropShadow_Draw(void) {
-    if (shadows.CheckMemory2()) return;
+    if (shadows.CheckMemory2()) {
+        return;
+    }
+
     gb.pShadowMat->Use();
+
     ShadowInfo* pInfo = shadows.GetCurrEntry();
     for (int i = 0; i < shadows.GetCount(); i++) {
         pInfo[i].Draw();
@@ -1099,8 +1114,13 @@ void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL 
     Vector vec = {x, y, z};
     Matrix sp18;
     
-    if (!Range_IsVisible(&vec)) return;
-    if (Range_WhichZone(&vec, NULL) >= 2) return;
+    if (!Range_IsVisible(&vec)) {
+        return;
+    }
+
+    if (Range_WhichZone(&vec, NULL) >= 2) {
+        return;
+    }
 
     pMat->Use();
 
@@ -1230,27 +1250,26 @@ void Tools_WayPoints::Reset(void) {
 // returns the node index of the model's animation if it exists otherwise returns -1
 int Tools_GetAnimationNode(Model* pModel, char* pName) {
     int nodeIdx = -1;
-    if (pModel->pAnimation != NULL) {
-        if (pModel->pAnimation->NodeExists(pName, &nodeIdx)) {
-            return nodeIdx;
-        }
+    if (pModel->pAnimation && pModel->pAnimation->NodeExists(pName, &nodeIdx)) {
+        return nodeIdx;
+    } else {
+        return -1;
     }
-    return -1;
 }
 
 void Tools_SetNode(Animation* pAnimation, int idx, Matrix* pMatrix, Tools_SetNodeFlag eNodeFlag) {
     switch (eNodeFlag) {
-        case 0:
+        case TOOLS_NODEFLAG_0:
             if (pAnimation) {
                 pAnimation->SetNodeMatrix(idx, NULL, false);
             }
             break;
-        case 1:
+        case TOOLS_NODEFLAG_1:
             if (pAnimation && pMatrix) {
                 pAnimation->SetNodeMatrix(idx, pMatrix, false);
             }
             break;
-        case 2:
+        case TOOLS_NODEFLAG_2:
             if (pAnimation && pMatrix) {
                 pAnimation->SetNodeMatrix(idx, pMatrix, true);
             }
@@ -1581,8 +1600,8 @@ void Tools_ProcessString(char* pStr) {
 
 void FaderObject::Reset(void) {
     fadeMode = (FadeMode)1;
-    prevFadeState = (FadeState)0;
-    currFadeState = (FadeState)0;
+    prevFadeState = FADESTATE_0;
+    currFadeState = FADESTATE_0;
     unkC = 0;
     unk18 = -1;
     unk14 = -1;
@@ -1601,21 +1620,21 @@ void FaderObject::Update(void) {
 void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3, bool r5) {
     float f31 = 1.0f;
 
-    if (currFadeState != (FadeState)0 && unkC > 0 && r5) {
+    if (currFadeState != FADESTATE_0 && unkC > 0 && r5) {
         int r0 = unkC;
-        if (currFadeState == (FadeState)1) {
+        if (currFadeState == FADESTATE_1) {
             r0 = unk10;
-        } else if (currFadeState == (FadeState)2) {
+        } else if (currFadeState == FADESTATE_2) {
             r0 = unk14;
-        } else if (currFadeState == (FadeState)3) {
+        } else if (currFadeState == FADESTATE_3) {
             r0 = unk18;
         }
 
         f31 = (float)unkC / (float)r0;
         // if the current state is 1 and the next state is 2 OR
         //    the current state is 2 and the next state is 1
-        if ((currFadeState == (FadeState)1 && GetNextState((FadeState)0, mode) == (FadeState)2)
-            || (currFadeState == (FadeState)2 && GetNextState((FadeState)0, mode) == (FadeState)1)) {
+        if ((currFadeState == FADESTATE_1 && GetNextState(FADESTATE_0, mode) == FADESTATE_2)
+            || (currFadeState == FADESTATE_2 && GetNextState(FADESTATE_0, mode) == FADESTATE_1)) {
                 f31 = 1.0f - f31;
         }
     }
@@ -1631,11 +1650,11 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
     prevFadeState = currFadeState;
     currFadeState = nextState;
 
-    if (currFadeState == (FadeState)1) {
+    if (currFadeState == FADESTATE_1) {
         unkC = unk10;
-    } else if (currFadeState == (FadeState)2) {
+    } else if (currFadeState == FADESTATE_2) {
         unkC = unk14;
-    } else if (currFadeState == (FadeState)3) {
+    } else if (currFadeState == FADESTATE_3) {
         unkC = unk18;
     } else {
         unkC = 0;
@@ -1648,53 +1667,53 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
     FadeState nextState;
 
     switch (currState) {
-        case 0:
+        case FADESTATE_0:
         default:
             if (currMode == (FadeMode)1 || currMode == (FadeMode)2 || currMode == (FadeMode)3 || currMode == (FadeMode)4) {
-                nextState = (FadeState)1;
+                nextState = FADESTATE_1;
             } else if (currMode == (FadeMode)5 || currMode == (FadeMode)6 || currMode == (FadeMode)7 || currMode == (FadeMode)8) {
-                nextState = (FadeState)2;
+                nextState = FADESTATE_2;
             } else {
-                nextState = (FadeState)3;
+                nextState = FADESTATE_3;
             }
             break;
-        case 1:
+        case FADESTATE_1:
             if (currMode == (FadeMode)3) {
-                nextState = (FadeState)2;
+                nextState = FADESTATE_2;
             } else if (currMode == (FadeMode)2 || currMode == (FadeMode)4) {
-                nextState = (FadeState)3;
+                nextState = FADESTATE_3;
             } else {
-                nextState = (FadeState)0;
+                nextState = FADESTATE_0;
             }
             break;
-        case 2:
+        case FADESTATE_2:
             if (currMode == (FadeMode)7) {
-                nextState = (FadeState)1;
+                nextState = FADESTATE_1;
             } else if (currMode == (FadeMode)6 || currMode == (FadeMode)8) {
-                nextState = (FadeState)3;
+                nextState = FADESTATE_3;
             } else {
-                nextState = (FadeState)0;
+                nextState = FADESTATE_0;
             }
             break;
-        case 3:
+        case FADESTATE_3:
             if (currMode == (FadeMode)10 || currMode == (FadeMode)8) {
-                nextState = (FadeState)1;
+                nextState = FADESTATE_1;
             } else if (currMode == (FadeMode)11 || currMode == (FadeMode)4) {
-                nextState = (FadeState)2;
+                nextState = FADESTATE_2;
             } else {
-                nextState = (FadeState)0;
+                nextState = FADESTATE_0;
             }
             break;
     }
 
     switch (nextState) {
-        case 1:
+        case FADESTATE_1:
             unkC = unk10;
             break;
-        case 2:
+        case FADESTATE_2:
             unkC = unk14;
             break;
-        case 3:
+        case FADESTATE_3:
             unkC = unk18;
             break;
     }
@@ -1703,11 +1722,11 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
 }
 
 float FaderObject::GetFadePercentage(void) {
-    if (currFadeState == (FadeState)1 || (currFadeState == (FadeState)0 && prevFadeState == (FadeState)1)) {
+    if (currFadeState == FADESTATE_1 || (currFadeState == FADESTATE_0 && prevFadeState == FADESTATE_1)) {
         return 1.0f - ((float)unkC / (float)unk10);
     }
 
-    if (currFadeState == (FadeState)2 || (currFadeState == (FadeState)0 && prevFadeState == (FadeState)2)) {
+    if (currFadeState == FADESTATE_2 || (currFadeState == FADESTATE_0 && prevFadeState == FADESTATE_2)) {
         return (float)unkC / (float)unk14;
     }
 

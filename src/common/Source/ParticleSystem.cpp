@@ -556,7 +556,7 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
         pSys->textureIndexOffset -= (float)pSys->mpType->unk14;
     }
     
-    float f30 = pSys->age - pSys->mpType->unk1C;
+    float f30 = pSys->GetAge() - pSys->mpType->unk1C;
     float f29 = f31 * pSys->mpType->xVel;
     float f28 = f31 * pSys->mpType->yVel;
     float f27 = f31 * pSys->mpType->zVel;
@@ -573,7 +573,7 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
 
     ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
-        Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
+        Particle* pParticle = pCurrChunk->GetParticle();
         do {
             pParticle->mX += f29;
             pParticle->mX += pParticle->unk20 * f31;
@@ -604,7 +604,7 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
                 }
             }
             
-            float f3 = pSys->age - pParticle->unkC;
+            float f3 = pSys->GetAge() - pParticle->unkC;
             if (f3 > pSys->mpType->mpEnvelopes[pParticle->mEnvelopeIndex].unkC) {
                 pParticle->mEnvelopeIndex++;
             }
@@ -670,7 +670,7 @@ void SimpleParticleSystemType::CalculateEnvelope(void) {
 void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
 
     float f31 = gDisplay.frameTime;
-    float f30 = pSys->age - pSys->mpType->unk1C;
+    float f30 = pSys->GetAge() - pSys->mpType->unk1C;
     float f29 = f31 * pSys->mpType->unk44;
     float f28 = f31 * pSys->mpType->unk48;
     float f27 = f31 * pSys->mpType->unk4C;
@@ -681,7 +681,7 @@ void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
 
     ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
-        Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
+        Particle* pParticle = pCurrChunk->GetParticle();
         do {
             pParticle->mX += pParticle->unk20 * f31;
             pParticle->unk20 += f29;
@@ -690,7 +690,7 @@ void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
             pParticle->mZ += pParticle->unk28 * f31;
             pParticle->unk28 += f27;
             
-            float f3 = pSys->age - pParticle->unkC;
+            float f3 = pSys->GetAge() - pParticle->unkC;
             if (f3 > pSys->mpType->mpEnvelopes[pParticle->mEnvelopeIndex].unkC) {
                 pParticle->mEnvelopeIndex++;
             }

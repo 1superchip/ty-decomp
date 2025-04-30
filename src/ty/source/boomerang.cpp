@@ -133,19 +133,19 @@ static ModuleInfo<Aquarang> aquarangModule;
 
 static ModuleInfo<Chronorang> chronorangModule;
 
-static ModuleInfo<Boomerang>* pBoomerangModules[NUM_BOOMERANGS] = {
+static ModuleInfoBase* pBoomerangModules[NUM_BOOMERANGS] = {
     &boomerangModule, // Boomerang
-    (ModuleInfo<Boomerang>*)&frostyrangModule,
-    (ModuleInfo<Boomerang>*)&flamerangModule,
-    (ModuleInfo<Boomerang>*)&kaboomerangModule,
-    (ModuleInfo<Boomerang>*)&doomerangModule,
-    (ModuleInfo<Boomerang>*)&megarangModule,
+    &frostyrangModule,
+    &flamerangModule,
+    &kaboomerangModule,
+    &doomerangModule,
+    &megarangModule,
     &boomerangModule, // Zoomerang
     &boomerangModule, // Infrarang
-    (ModuleInfo<Boomerang>*)&zappyrangModule,
-    (ModuleInfo<Boomerang>*)&aquarangModule,
+    &zappyrangModule,
+    &aquarangModule,
     &boomerangModule, // Mutirang
-    (ModuleInfo<Boomerang>*)&chronorangModule,
+    &chronorangModule,
 };
 
 void GameCamera_SnapDoomarangCamera(Vector*, Vector*, Vector*, float);

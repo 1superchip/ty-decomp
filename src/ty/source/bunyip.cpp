@@ -34,8 +34,8 @@ void Bunyip_LoadResources(KromeIni* pIni) {
         &bunyipModule, 
         "act_63_bunyip", "Bunyip",
         1, 1,
-        animEntries, 11,
-        animEvents, 4,
+        animEntries, ARRAY_SIZE(animEntries),
+        animEvents, ARRAY_SIZE(animEvents),
         false, 
         GameObjFlags_All
     );
@@ -117,7 +117,7 @@ void Bunyip::Update(void) {
 }
 
 void Bunyip::Draw(void) {
-    if (mState == 0 || gb.pDialogPlayer) {
+    if (mState == BUNYIP_STATE_0 || gb.pDialogPlayer) {
         return;
     }
 

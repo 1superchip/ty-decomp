@@ -242,17 +242,18 @@ void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
 }
 
 void MKAnimScript::Init(char* pFilename) {
-    MKAnimScriptTemplate* pFound;
-    MKAnimScriptTemplate** pList = (MKAnimScriptTemplate**)mkAnimScriptTemplates.pMem;
+
+    MKAnimScriptTemplate** pList = mkAnimScriptTemplates.GetMem();
     while (*pList != NULL) {
         if (stricmp((*pList)->name, pFilename) == 0) {
             break;
         }
+
         pList++;
     }
-    pFound = *pList;
-    if (pFound != NULL) {
-        pTemplate = pFound;
+
+    if (*pList) {
+        pTemplate = *pList;
         pTemplate->referenceCount++;
     } else {
         pTemplate = mkAnimScriptTemplates.GetNextEntry();
@@ -270,9 +271,11 @@ void MKAnimScript::Init(char* pFilename) {
                 return;
             }
         }
+
         strcpy(pTemplate->name, pFilename);
         pTemplate->referenceCount = 1;
     }
+
     nextAnim = NULL;
     currAnim = NULL;
     unk10 = 0.0f;
@@ -288,22 +291,23 @@ void MKAnimScript::Init(char* pFilename) {
 // defining it as inline matches
 // if it is defined as inline, will it be stripped by the linker even though there are calls to the function outside of this file?
 // https://decomp.me/scratch/jqJsO
-/*void MKAnimScript::Init(MKAnimScript* pOther) {
-    Init(pOther->pTemplate->name);
-}*/
+// void MKAnimScript::Init(MKAnimScript* pOther) {
+//     this->Init(pOther->pTemplate->name);
+// }
 void MKAnimScript::Init(MKAnimScript* pOther) {
     char* otherName = pOther->pTemplate->name;
-    MKAnimScriptTemplate* pFound;
+
     MKAnimScriptTemplate** pList = mkAnimScriptTemplates.GetMem();
     while (*pList != NULL) {
         if (stricmp((*pList)->name, otherName) == 0) {
             break;
         }
+
         pList++;
     }
-    pFound = *pList;
-    if (pFound != NULL) {
-        pTemplate = pFound;
+    
+    if (*pList != NULL) {
+        pTemplate = *pList;
         pTemplate->referenceCount++;
     } else {
         pTemplate = mkAnimScriptTemplates.GetNextEntry();
@@ -320,9 +324,11 @@ void MKAnimScript::Init(MKAnimScript* pOther) {
             }
             ParseBadFile(fileName, pTemplate);
         }
+
         strcpy(pTemplate->name, otherName);
         pTemplate->referenceCount = 1;
     }
+
     nextAnim = NULL;
     currAnim = NULL;
     unk10 = 0.0f;
@@ -358,9 +364,9 @@ MKAnim* MKAnimScript::GetAnim(char* pAnimName) {
 MKAnim* MKAnimScript::GetAnim(int animNumber) {
     if (animNumber < pTemplate->pSection->animCount) {
         return &pTemplate->pSection->anims[animNumber];
+    } else {
+        return NULL;
     }
-
-    return NULL;
 }
 
 bool MKAnimScript::Exists(char* pAnimName) {
@@ -483,6 +489,7 @@ void MKAnimScript::ApplyNode(Animation* pAnimation, int nodeIndex) {
     }
 }
 
+// Does this return a pointer to AnimEvent?
 char* MKAnimScript::GetEventByName(char* pName) {
     for (int i = 0; i < pTemplate->pSection->animCount; i++) {
         for (int j = 0; j < pTemplate->pSection->anims[i].nmbrOfRanges; j++) {

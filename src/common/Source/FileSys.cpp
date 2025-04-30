@@ -4,6 +4,7 @@
 #include "common/File.h"
 #include "common/Str.h"
 #include "common/Utils.h"
+#include "common/System_GC.h"
 
 extern "C" int stricmp(char*, char*);
 extern "C" void strcpy(char*, char*);
@@ -11,7 +12,6 @@ extern "C" char* strcat(char*, char*);
 extern "C" int strlen(char*);
 extern "C" char* strstr(char*, char*);
 extern "C" void qsort(void*, int, int, int (*compar)(const void*,const void*));
-char* System_GetCommandLineParameter(char*);
 
 
 static RkvTOC data;

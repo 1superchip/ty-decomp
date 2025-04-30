@@ -6,7 +6,6 @@ ParticleSystemType Bubble::bubbleType;
 Material* Bubble::pBubbleMat = NULL;
 
 /// @brief Loads resources for the Bubble Particle
-/// @param  None
 void Bubble_LoadResources(void) {
     Bubble::pBubbleMat = Material::Create("fx_002a");
     Bubble::bubbleType.Init("Bubble", Bubble::pBubbleMat, 2.0f, 1.0f, 1.0f, 1);
@@ -22,7 +21,6 @@ void Bubble::Init(Vector* pPos, BoundingVolume* pVolume, float f1) {
 }
 
 /// @brief Destroys the ParticleSystem
-/// @param  None
 void Bubble::Deinit(void) {
     if (mpSystem) {
         mpSystem->Destroy();
@@ -62,14 +60,20 @@ void Bubble_CustomUpdate(ParticleSystem* pSys) {
             ParticleChunk* pCurrChunk = *ppChunks;
             Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
             do {
-                pParticle->SetUnk58ArrayByIndex(1, 
-                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.frameTime);
+                
+                pParticle->SetUnk58ArrayByIndex(
+                    1, 
+                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.frameTime
+                );
+
                 if (pParticle->GetUnk58ArrayByIndex(1) <= 0.0f || 
                     pParticle->mY > pParticle->GetUnk58ArrayByIndex(0)) {
                     pSys->DestroyParticle(pParticle, ppChunks);
                 }
+
                 pParticle++;
             } while (pParticle < &pCurrChunk->mChunkData[24]);
+
             if (*ppChunks == pCurrChunk) {
                 ppChunks = &(*ppChunks)->mpNext;
             }

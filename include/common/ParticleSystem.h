@@ -146,6 +146,10 @@ struct ParticleChunk {
     ParticleChunk* GetNext(void) {
         return mpNext;
     }
+
+    Particle* GetParticle(void) {
+        return &mChunkData[mDataIndex];
+    }
 };
 
 // Linked List Structure

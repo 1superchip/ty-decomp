@@ -21,7 +21,7 @@ extern Material** particleManager; // TyParticleManager pointer
 /// @param  None
 void Flame_LoadResources(void) {
     Flame::type.Init("Flame", particleManager[0x40 / 4], 1.0f, 5.0f, 5.0f, 1);
-    Flame::type.SetEnvelope(3, Flame::envelope);
+    Flame::type.SetEnvelope(ARRAY_SIZE(Flame::envelope), Flame::envelope);
     Flame::type.unk48 = 0.4f;
     Flame::type.unk64 = 0.995f;
     Flame::type.updateFunc = &Flame_CustomUpdate;
@@ -39,7 +39,6 @@ void Flame::Init(Vector* pPos, BoundingVolume* pVolume, float f1, float f2) {
 }
 
 /// @brief Destroys the ParticleSystem
-/// @param  None
 void Flame::Deinit(void) {
     if (mpSystem) {
         mpSystem->Destroy();
@@ -91,7 +90,6 @@ void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
 }
 
 /// @brief Destroys all ParticleChunks
-/// @param  None
 void Flame::Reset(void) {
     mpSystem->DestroyAll();
 }
@@ -100,7 +98,7 @@ void Flame::Reset(void) {
 /// @param pSys ParticleSystem to update
 void Flame_CustomUpdate(ParticleSystem* pSys) {
     float f31 = gDisplay.frameTime;
-    float f30 = pSys->age - pSys->mpType->unk1C;
+    float f30 = pSys->GetAge() - pSys->mpType->unk1C;
     float f28 = pSys->mpType->unk48;
     float f29 = pSys->mpType->unk64;
 
@@ -110,7 +108,7 @@ void Flame_CustomUpdate(ParticleSystem* pSys) {
     
     ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
-        Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
+        Particle* pParticle = pCurrChunk->GetParticle();
         do {
             pParticle->mX += pParticle->unk20 * f31;
             pParticle->unk20 *= f29;
@@ -120,7 +118,7 @@ void Flame_CustomUpdate(ParticleSystem* pSys) {
             pParticle->mZ += pParticle->unk28 * f31;
             pParticle->unk28 *= f29;
             
-            float f3 = pSys->age - pParticle->unkC;
+            float f3 = pSys->GetAge() - pParticle->unkC;
             if (f3 > pSys->mpType->mpEnvelopes[pParticle->mEnvelopeIndex].unkC) {
                 pParticle->mEnvelopeIndex++;
             }

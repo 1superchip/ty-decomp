@@ -81,9 +81,11 @@ inline void PtrList<T>::Init(int count) {
 template <typename T>
 inline void PtrList<T>::Deinit(void) {
     while (*--pPointers != NULL) {}
+    
     if (pPointers != (T**)&gEmptyPtrList) {
         Heap_MemFree(pPointers);
     }
+
     pPointers = NULL;
 }
 

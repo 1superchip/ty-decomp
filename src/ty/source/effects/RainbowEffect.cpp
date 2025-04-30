@@ -29,7 +29,7 @@ void RainbowEffect_Update(ParticleSystem* pSys) {
 
     ParticleChunk* pCurrChunk = pSys->GetChunks();
     while (pCurrChunk) {
-        Particle* pParticle = &pCurrChunk->mChunkData[pCurrChunk->mDataIndex];
+        Particle* pParticle = pCurrChunk->GetParticle();
         do {
             pParticle->mY += f30;
 
