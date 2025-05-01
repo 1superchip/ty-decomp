@@ -1,24 +1,11 @@
 Ty the Tasmanain Tiger  
-[![Build Status]][actions] ![Progress] [![Discord Badge]][discord]
+[![Build Status]][actions] [![Code Progress]][progress] [![Data Progress]][progress] [![Discord Badge]][discord]
 =============
 
-<!--
-Replace with your repository's URL.
--->
 [Build Status]: https://github.com/1superchip/ty-decomp/actions/workflows/build.yml/badge.svg
 [actions]: https://github.com/1superchip/ty-decomp/actions/workflows/build.yml
-<!---
-Code progress URL:
-https://progress.decomp.club/data/[project]/[version]/all/?mode=shield&measure=code
-URL encoded then appended to: https://img.shields.io/endpoint?label=Code&url=
--->
-[Progress]: https://img.shields.io/endpoint?label=Code&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Fty%2Fus%2FCode%2F%3Fmode%3Dshield%26measure%3Dcode
-<!---
-DOL progress URL:
-https://progress.decomp.club/data/[project]/[version]/dol/?mode=shield&measure=code
-URL encoded then appended to: https://img.shields.io/endpoint?label=DOL&url=
--->
-<!-- [DOL Progress]: https://img.shields.io/endpoint?label=DOL&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Ftww%2FGZLE01%2Fdol%2F%3Fmode%3Dshield%26measure%3Dcode -->
+[Code Progress]: https://decomp.dev/1superchip/ty-decomp.svg?mode=shield&measure=code&label=Code
+[Data Progress]: https://decomp.dev/1superchip/ty-decomp.svg?mode=shield&measure=data&label=Data
 [Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
 [discord]: https://discord.gg/hKx3FJJgrV
 
