@@ -31,11 +31,7 @@ extern "C" {
 
 // End EXTERNS
 
-// # include "assets/Material_GC/rawCaptureTexData.inc"
-
-char rawCaptureTexData[0x20000] __attribute__ ((aligned (32))) = {
-	#include "assets/materialgc_rawCaptureData.inc"
-};
+#include "assets/Material_GC/rawCaptureTexData.inc"
 
 static KromeIni materialIni __attribute__ ((aligned (32)));
 static GXTexObj restorationTexObj __attribute__ ((aligned (16)));

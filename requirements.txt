@@ -1,4 +1,0 @@
--r ./tools/ppcdis/requirements.txt
-
-ninja_syntax
-prettytable

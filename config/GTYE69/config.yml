@@ -1,0 +1,24 @@
+# See config.example.yml for documentation.
+object: orig/GTYE69/sys/main.dol
+hash: c398adeba17e80b18e7b25d13dbc30c2939479c5
+symbols: config/GTYE69/symbols.txt
+splits: config/GTYE69/splits.txt
+# Change this to match the linker verison.
+# See config.example.yml for a list.
+mw_comment_version: 10
+
+symbols_known: false
+fill_gaps: false
+
+extract:
+- symbol: rawCaptureTexData
+  binary: assets/Material_GC/rawCaptureTexData.bin
+  header: assets/Material_GC/rawCaptureTexData.inc
+  header_type: symbol
+
+block_relocations:
+- source: .data:0x8025517C # Remove relocation in buttonType1 object
+- source: .data:0x80255180 # Remove relocation in buttonType1 object
+
+- source: .text:0x800C35A0 # Remove false relocation from FrontEnd_Gallery_Init__Fv
+- source: .text:0x800C35A8 # Remove false relocation from FrontEnd_Gallery_Init__Fv

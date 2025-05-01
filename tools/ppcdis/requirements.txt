@@ -1,5 +1,0 @@
-colorama
-capstone
-pyelftools
-pylibyaml
-PyYAML

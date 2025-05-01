@@ -1,7 +1,5 @@
-#include "../src/Runtime/NMWException.h"
+#include "NMWException.h"
 #include "__ppc_eabi_linker.h"
-
-#pragma force_active on
 
 static int fragmentID = -2;
 
@@ -31,6 +29,8 @@ extern void __init_cpp_exceptions(void) {
 
     R2 = GetR2();
 
+    /* HACK: TODO: _eti_init_info should be _eti_init_info, we can't use the appropriate name yet due to the
+     * linker not being able to generate it*/
     fragmentID = __register_fragment(_eti_init_info, R2);
   }
 }
@@ -42,21 +42,9 @@ extern void __fini_cpp_exceptions(void) {
   }
 }
 
-/*
-// this order doesn't seem to match
-// __fini_cpp_exceptions_reference needs to come before __destroy_global_chain_reference
 __declspec(section
            ".ctors") static void* const __init_cpp_exceptions_reference = __init_cpp_exceptions;
 __declspec(section
            ".dtors") static void* const __destroy_global_chain_reference = __destroy_global_chain;
 __declspec(section
            ".dtors") static void* const __fini_cpp_exceptions_reference = __fini_cpp_exceptions;
-*/
-
-
-// __declspec(section
-//            ".ctors") static void* const __init_cpp_exceptions_reference = __init_cpp_exceptions;
-__declspec(section
-           ".dtors") static void* const __fini_cpp_exceptions_reference = __fini_cpp_exceptions;
-__declspec(section
-           ".dtors") static void* const __destroy_global_chain_reference = __destroy_global_chain;
