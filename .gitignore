@@ -30,7 +30,7 @@ report*.json
 *.exe
 *.dll
 *.dol
-*.txt
+# *.txt
 
 cli.py
 cli.ini
