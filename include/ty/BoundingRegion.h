@@ -1,15 +1,7 @@
 #ifndef BOUNDINGREGION_H
 #define BOUNDINGREGION_H
 
-// clean up
-// decomp Path.cpp?
-struct PathSegment {
-    u8 count;
-    int unk4;
-    int unk8;
-    int unkC;
-    Vector points[];
-};
+#include "ty/Path.h"
 
 struct RectXZ {
     float minPoint[2];

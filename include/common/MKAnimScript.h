@@ -42,7 +42,7 @@ struct MKAnimTemplateSection {
     u16 animCount;
     u16 unkA;
     u16 unkC;
-    MKAnim anims[];
+    MKAnim anims[0];
 };
 
 struct MKAnimScriptTemplate {

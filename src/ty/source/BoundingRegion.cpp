@@ -38,7 +38,7 @@ bool BoundingRegion::ArePointsWithinAndAdjacent(Vector* pPoint, Vector* pPoint1)
 }
 
 bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
-    Vector* pLastVector = (pSegment->points + pSegment->count) - 1;
+    Vector* pLastVector = (pSegment->points + pSegment->numPoints) - 1;
     Vector* pPoints = pSegment->points;
     
     float xMin, xMax, zMin, zMax;
@@ -85,13 +85,13 @@ int BoundingRegion::getIntersectCount(Vector* pPoint, Vector* pPoint1) {
     int intersectCount = 0;
     int i;
 
-    for (i = 0; i < pPath->count - 1; i++) {
+    for (i = 0; i < pPath->numPoints - 1; i++) {
         if (isIntersect(pPoint, pPoint1, &pPath->points[i], &pPath->points[i + 1]) != false) {
             intersectCount++;
         }
     }
 
-    if (isIntersect(pPoint, pPoint1, &pPath->points[pPath->count - 1], &pPath->points[0]) != false) {
+    if (isIntersect(pPoint, pPoint1, &pPath->points[pPath->numPoints - 1], &pPath->points[0]) != false) {
         intersectCount++;
     }
     

@@ -175,7 +175,7 @@ config.reconfig_deps = []
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
-config.scratch_preset_id = None
+config.scratch_preset_id = 96
 
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
@@ -557,7 +557,7 @@ config.libs = [
             Object(NonMatching, "ty/source/particleEffects.cpp"),
             Object(NonMatching, "ty/source/ParticleEmitter.cpp"),
             Object(NonMatching, "ty/source/particleengine.cpp"),
-            Object(NonMatching, "ty/source/Path.cpp"),
+            Object(Matching, "ty/source/Path.cpp"),
             Object(NonMatching, "ty/source/Pontoon.cpp"),
             Object(NonMatching, "ty/source/portal.cpp"),
             Object(Matching, "ty/source/quadratic.cpp"),
