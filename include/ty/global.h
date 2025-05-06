@@ -405,9 +405,16 @@ struct GlobalVar {
     bool unk7AC;
     bool unk7AD;
     bool unk7AE;
-    // seems to contain unused fields such as
-    // a few Material pointers, a View struct, and an ObjectiveFinder struct
-    char padding[0xD94 - 0x7AF];
+
+    Material* unk7B0; // pUnk860
+    int unk7B4;
+
+    Material* unk7B8; // pUnk868
+    int unk7BC;
+
+    View mView;
+    // seems to contain unused fields such as an ObjectiveFinder struct
+    char padding[0xD94 - (0x7C0 + sizeof(View))];
     DirectLight mDirectLight;
     bool autoLevelSwitch;
     bool unkE85;

@@ -564,7 +564,7 @@ config.libs = [
             Object(Matching, "ty/source/RangeCheck.cpp"),
             Object(NonMatching, "ty/source/reeds.cpp"),
             Object(NonMatching, "ty/source/Reflection.cpp"),
-            Object(NonMatching, "ty/source/renderTexture.cpp"),
+            Object(Matching, "ty/source/renderTexture.cpp"),
             Object(Matching, "ty/source/Script.cpp"),
             Object(NonMatching, "ty/source/SeaMine.cpp"),
             Object(Matching, "ty/source/setup.cpp"),

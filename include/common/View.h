@@ -2,6 +2,7 @@
 #define COMMON_VIEW
 
 #include "types.h"
+#include "common/Material.h"
 #include "common/Texture.h"
 #include "common/Vector.h"
 #include "common/Matrix.h"
@@ -31,7 +32,7 @@ struct View {
     Matrix unkC8; // View matrix? InverseSimple(unk48)
     Matrix unk108;
     Matrix unk148;
-    char unk188[64];
+    Matrix unk188;
     Matrix unk1C8;
     Matrix unk208;
     Matrix unk248;

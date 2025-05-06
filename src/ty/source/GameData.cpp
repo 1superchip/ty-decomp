@@ -275,7 +275,7 @@ void GameData::SetCollectedGems(void) {
     for (int i = 0; i < totalGems; i++) {
         if (CheckArrayByBitIndex(pGems, i) && Gem::gemPtrList[i]) {
             Gem::gemPtrList[i]->mCollected = true;
-            Gem::gemPtrList[i]->SetState((GemState)5);
+            Gem::gemPtrList[i]->SetState(GEMSTATE_5);
             gemCount++;
         }
     }
@@ -294,7 +294,7 @@ void GameData::GetCollectedGems(void) {
 
     for (int i = 0; i < totalGems; i++) {
         Gem* pGem = Gem::gemPtrList[i];
-        if (pGem->mState == 5 || pGem->mState == 4 || pGem->mCollected) {
+        if (pGem->mState == GEMSTATE_5 || pGem->mState == GEMSTATE_4 || pGem->mCollected) {
             pGems[i >> 3] |= 1 << (i & 7);
         }
     }

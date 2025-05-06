@@ -9,6 +9,7 @@
 #include "ty/CollisionObject.h"
 #include "ty/tools.h"
 #include "ty/DDA.h"
+#include "ty/Quadratic.h"
 
 struct Bunyip;
 
@@ -309,6 +310,14 @@ struct LedgePullUpData {
     void PushOff(void);
 };
 
+struct LearnToDiveData {
+    StateMachine<LearnToDiveData> fsm;
+
+    int unk10;
+    char unk14;
+    int unk18;
+};
+
 struct Ty : Hero {
 
     int unk320;
@@ -479,6 +488,36 @@ struct Ty : Hero {
     int unk18B8;
 
     float startFallY;
+
+    int unk18C0;
+
+    float jumpTurnFactor;
+    float moveSmoothing;
+    float totalGravity;
+
+    int unk18D0;
+    
+    bool bFallingToIce;
+
+    char padding_0x18D5[3];
+    bool unk18D8;
+    bool unk18D9;
+    bool unk18DA;
+
+    LedgePullUpData mLedgePullUpData;
+    float initialVelocity;
+
+    bool bLaunch;
+
+    LearnToDiveData mLearnToDive;
+
+    float unk1960;
+    float unk1964;
+
+    bool unk1968;
+
+    Quadratic mQuadratic;
+
     // finish
 
 

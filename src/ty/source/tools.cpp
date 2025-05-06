@@ -1645,7 +1645,7 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
 
     fadeMode = mode;
 
-    FaderObject::FadeState nextState = GetNextState((FaderObject::FadeState)0, mode);
+    FaderObject::FadeState nextState = GetNextState(FADESTATE_0, mode);
 
     prevFadeState = currFadeState;
     currFadeState = nextState;

@@ -20,7 +20,7 @@ void PathSegment::Init(void) {
     unk4 = this;
     unk8 = this;
     unkC = 1;
-    unkD = 0;
+    unkD = false;
 }
 
 void PathSegment::CalcLengths(void) {
@@ -196,6 +196,14 @@ void Path_Init(void) {
     }
 }
 
+void Path_Deinit(void) {
+    if (bPathLoaded) {
+        bPathLoaded = false;
+
+        Heap_MemFree(pSegmentData);
+    }
+}
+
 void Path_Load(PathLoadInfo* pLoadInfo) {
     pTerminator->pathId = pLoadInfo->type;
     pTerminator->numPoints = pLoadInfo->numPoints;
@@ -212,25 +220,29 @@ void Path_Manager_Init(void) {
         bPathManagerLoaded = true;
 
         ResolveConnections(pSegmentData);
-    } 
+    }
 }
 
 void Path_Manager_Deinit(void) {
-    if (bPathLoaded) {
-        bPathLoaded = false;
-
-        Heap_MemFree(pSegmentData);
-    }
+    Path_Deinit();
 
     bPathManagerLoaded = false;
 }
 
-void* Path_GetTerminatorSegment(void) {
-    return bPathLoaded ? pTerminator : NULL;
+PathSegment* Path_GetTerminatorSegment(void) {
+    if (!bPathLoaded) {
+        return NULL;
+    }
+
+    return pTerminator;
 }
 
-void* Path_GetFirstSegment(void) {
-    return bPathLoaded ? pSegmentData : NULL;
+PathSegment* Path_GetFirstSegment(void) {
+    if (!bPathLoaded) {
+        return NULL;
+    }
+
+    return pSegmentData;
 }
 
 void PathManager::Init(s8 r4) {
@@ -358,9 +370,9 @@ Vector* PathManager::GetNearestNode(Vector* r4, float closestDist) {
     u8 bIsStart = pOptionIsStart[rand];
 
     if ((unkE & 1) && !bIsStart) {
-        unkD = 1;
+        unkD = true;
     } else {
-        unkD = 0;
+        unkD = false;
     }
 
     SetCurrentPath(pSeg2, bIsStart ? 0 : 16);
@@ -435,7 +447,7 @@ int PathManager::NextPoint(bool r4) {
 
             if (options == 0) {
                 if (unkE & 2) {
-                    unkD = 1;
+                    unkD = true;
                     return NextPoint(r4);
                 } else {
                     unk4 = pCurrentSegment->numPoints - 1;
@@ -534,7 +546,7 @@ int PathManager::PrevPoint(bool r4) {
 
             if (options == 0) {
                 if (unkE & 2) {
-                    unkD = 1;
+                    unkD = true;
                     return PrevPoint(r4);
                 } else {
                     unk4 = 0;
@@ -643,9 +655,9 @@ Vector* PathManager::GetNextNearestNode(Vector* const r4, PathSegment* r5, float
     u8 bIsStart = pOptionIsStart[rand];
 
     if ((unkE & 1) && !bIsStart) {
-        unkD = 1;
+        unkD = true;
     } else {
-        unkD = 0;
+        unkD = false;
     }
 
     SetCurrentPath(pSeg2, bIsStart ? 0 : 16);

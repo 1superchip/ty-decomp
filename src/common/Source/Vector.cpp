@@ -10,7 +10,6 @@ Vector gYAxis = {0.0f, 1.0f, 0.0f, 0.0f};
 Vector gZAxis = {0.0f, 0.0f, 1.0f, 0.0f};
 
 /// @brief sqrtf(x * x + y * y + z * z)
-/// @param  None
 /// @return Magnitude of this
 float Vector::Magnitude(void) {
     return sqrtf(MagSquared());
@@ -153,8 +152,6 @@ void Vector::CClamp(Vector* pColour, float min, float max) {
     z = Clamp<float>(min, pColour->z, max);
     w = Clamp<float>(min, pColour->w, max);
 }
-
-extern "C" double fmod(float, double);
 
 void Vector::NormaliseRot(Vector* pVector) {
     pVector->x = fmod(pVector->x, 6.2831854820251461);

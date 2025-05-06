@@ -61,6 +61,12 @@ inline float DegToRad(float deg) {
     return deg * (PI / 180.0f);
 }
 
+extern "C" double fmod(double, double);
+
+inline void fmod_inline(float& val, float change) {
+    val = fmod(val + 1.0f + change, 1.0f);
+}
+
 #ifdef __MWERKS__
 extern inline float sqrtf(float x) {
     static const double _half=.5;

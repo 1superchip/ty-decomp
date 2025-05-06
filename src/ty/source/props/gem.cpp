@@ -1035,8 +1035,10 @@ void Gem_PickupParticle_Draw(void) {
         };
         
         View::GetCurrent()->TransformPoint2Dto3D(
-            pModelData->unk14, pModelData->unk18,
-            10.0f + View::GetCurrent()->unk2C0, &pModelData->unk0
+            pModelData->unk14, 
+            pModelData->unk18,
+            View::GetCurrent()->unk2C0 + 10.0f, 
+            &pModelData->unk0
         );
 
         Gem_DrawModel(&pModelData->unk0, &scale, gemElement);
