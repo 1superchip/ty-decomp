@@ -306,21 +306,24 @@ void Tools_GetPYR(Matrix* pRotMatrix, float* pPitch, float* pYaw, float* pRoll) 
 void DebugInfo_Line3d(char*, Vector*, Vector*, int, bool) {}
 
 float GetFloor(Vector* pPos, float arg1, CollisionResult* pCr) {
-    Vector unk8;
-    Vector unk18;
-    unk8.Set(pPos->x, pPos->y + arg1, pPos->z);
+    Vector start;
+    Vector end;
+    
     float collideY = 10000.0f;
-    unk18.Set(pPos->x, pPos->y - 100000.0f, pPos->z);
+
+    start.Set(pPos->x, pPos->y + arg1, pPos->z);
+    end.Set(pPos->x, pPos->y - 100000.0f, pPos->z);
+    
     // if pCr is not NULL, use the pCr argument otherwise use a local CollisionResult
     if (pCr) {
         // Only collide with ground
-        if (Collision_RayCollide(&unk8, &unk18, pCr, COLLISION_MODE_POLY, 0)) {
+        if (Collision_RayCollide(&start, &end, pCr, COLLISION_MODE_POLY, 0)) {
             collideY = pCr->pos.y;
         }
     } else {
         CollisionResult cr;
         // Only collide with ground
-        if (Collision_RayCollide(&unk8, &unk18, &cr, COLLISION_MODE_POLY, 0)) {
+        if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0)) {
             collideY = cr.pos.y;
         }
     }

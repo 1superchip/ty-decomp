@@ -15,6 +15,16 @@ struct FrillBike;
 
 void Lasso_LoadResources(void);
 
+enum LassoState {
+    LS_Idle             = 0,
+    LS_Throw            = 1,
+    LS_PullInRope       = 2,
+    LS_CaughtEmu        = 3,
+    LS_CaughtWaterTank  = 4,
+    LS_CaughtFrillBike  = 5,
+    LS_Snapped          = 6
+};
+
 struct Lasso {
     Vector unk0;
     Vector unk10;

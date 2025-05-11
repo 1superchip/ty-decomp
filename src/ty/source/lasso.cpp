@@ -5,7 +5,50 @@
 static MKAnimScript lassoBad;
 
 static StateMachine<Lasso>::State lassoStates[7] = {
-    {&Lasso::InitLassoThrow, &Lasso::LassoThrow, &Lasso::DeinitLassoThrow},
+    {
+        // LS_Idle
+        &Lasso::InitIdle,
+        NULL,
+        NULL
+    },
+    {
+        // LS_Throw
+        &Lasso::InitLassoThrow, 
+        &Lasso::DeinitLassoThrow, 
+        &Lasso::LassoThrow, 
+        &Lasso::LassoDraw
+    },
+    {   // LS_PullInRope
+        &Lasso::InitLassoPullIn, 
+        &Lasso::DeinitLassoPullIn, 
+        &Lasso::LassoPullIn, 
+        &Lasso::LassoDraw
+    },
+    {   // LS_CaughtEmu
+        &Lasso::InitLassoCaughtEmu, 
+        &Lasso::DeinitLassoCaughtEmu, 
+        &Lasso::LassoCaughtEmu, 
+        &Lasso::LassoDrawSimple
+    },
+    {
+        // LS_CaughtWaterTank
+        &Lasso::InitLassoCaughtWaterTank, 
+        &Lasso::DeinitLassoCaughtWaterTank, 
+        &Lasso::LassoCaughtWaterTank, 
+        &Lasso::LassoDrawSimple
+    },
+    {   // LS_CaughtFrillBike
+        &Lasso::InitLassoCaughtFrillBike, 
+        &Lasso::DeinitLassoCaughtFrillBike, 
+        &Lasso::LassoCaughtFrillBike, 
+        &Lasso::LassoDrawSimple
+    },
+    {   // LS_Snapped
+        &Lasso::InitLassoSnapped, 
+        &Lasso::DeinitLassoSnapped, 
+        &Lasso::LassoSnapped, 
+        &Lasso::LassoDraw
+    }
 };
 
 void Lasso_LoadResources(void) {
@@ -17,7 +60,7 @@ void Lasso::Init(void) {
     
     unk34 = Model::Create(lassoBad.GetMeshName(), lassoBad.GetAnimName());
 
-    fsm.Init(lassoStates, 0);
+    fsm.Init(lassoStates, LS_Idle);
 
     pRopeMat = Material::Create("rope_01");
     pTensionMat = Material::Create("tension");
@@ -50,7 +93,7 @@ void Lasso::Reset(void) {
 
     unk78 = 0.0f;
 
-    fsm.SetState(0, false);
+    fsm.SetState(LS_Idle, false);
 }
 
 void Lasso::Update(Vector* p, Vector* p1, float f1) {
@@ -311,7 +354,7 @@ void Lasso::LassoDraw(void) {
 }
 
 void Lasso::ThrowLasso(void) {
-
+    unk76 = true;
 }
 
 void Lasso::InitIdle(void) {
