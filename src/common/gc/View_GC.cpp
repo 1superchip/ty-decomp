@@ -48,7 +48,7 @@ void View::Init(void) {
 }
 
 // floating args are unused but they are viewport related in other builds
-void View::Init(float arg1, float arg2, float arg3, float arg4) {
+void View::Init(float x, float y, float arg3, float arg4) {
     Vector camPos;
     Vector camTarget;
 
@@ -448,13 +448,7 @@ void View::ClearBuffer(int r, int g, int b, int alpha) {
 
     Material::UseNone(-1);
 
-    if (alpha < 0) {
-        dstAlpha = 0;
-    } else {
-        dstAlpha = (alpha > 255) ? 255 : alpha;
-    }
-
-    GXSetDstAlpha(GX_ENABLE, dstAlpha);
+    GXSetDstAlpha(GX_ENABLE, Clamp<int>(0, alpha, 255));
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
 
     GXClearVtxDesc();
@@ -535,7 +529,7 @@ void View::TransformPoint2Dto3D(float x, float y, float z, Vector* pOutPos) {
     pOutPos->Add(unk48.Row3());
 }
 
-static float ortho_old[7] __attribute__ ((aligned (32)));
+static float ortho_old[7] ATTRIBUTE_ALIGN(32);
 
 void View::OrthoBegin(void) {
     Mtx44 ortho;

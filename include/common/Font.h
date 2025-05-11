@@ -58,7 +58,20 @@ struct FontData {
 };
 
 // Document this enum
-enum FontJustify {};
+enum FontJustify {
+    FONT_JUSTIFY_0  = 0,
+    FONT_JUSTIFY_1  = 1,
+    FONT_JUSTIFY_2  = 2,
+    FONT_JUSTIFY_3  = 3,
+    FONT_JUSTIFY_4  = 4,
+    FONT_JUSTIFY_5  = 5,
+    FONT_JUSTIFY_6  = 6,
+    FONT_JUSTIFY_7  = 7,
+    FONT_JUSTIFY_8  = 8,
+    FONT_JUSTIFY_9  = 9,
+    FONT_JUSTIFY_10 = 10,
+    FONT_JUSTIFY_11 = 11,
+};
 
 struct TextSegmentInfo {
     char* unk0;

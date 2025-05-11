@@ -88,7 +88,7 @@ Model* Tools_GetGroundLightModel(Vector* pVec, int* pSubObjectIndex, float maxDi
     int groundSubObject = -1;
 
     for (int subObjectIndex = 0; subObjectIndex < numSubObjects; subObjectIndex++) {
-        float subObjDist = pGroundModel->GetSubObjectOrigin(subObjectIndex)->DistSq(pVec);
+        float subObjDist = SquareDistance(pGroundModel->GetSubObjectOrigin(subObjectIndex), pVec);
         if (subObjDist < closestDist) {
             closestDist = subObjDist;
             groundSubObject = subObjectIndex;
@@ -362,6 +362,7 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
             // collision against water
             *pOut = true;
         }
+        
         if (cr.normal.y > 0.5f) {
             return cr.pos.y;
         }
@@ -370,25 +371,34 @@ float Tools_GetCollideHeight(Vector* pVec, Vector* pVec1, bool* pOut, float f1) 
     return -1e+06f;
 }
 
-void Tools_DrawOverlay(Material* pMaterial, Vector* pVec, float f1, float f2, float f3, 
-        float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11,
-        float f12, float f13, float f14, float f15, float f16) {
-    
+void Tools_DrawOverlay(
+    Material* pMaterial, 
+    Vector* pColor, 
+    float x, float y, 
+    float uv0, float uv1, 
+    float f5, float f6, 
+    float f7, float f8, 
+    float endX, float endY, 
+    float uv2, float uv3, 
+    float f13, float f14, 
+    float f15, float f16
+) {
+
     if (pMaterial) {
         pMaterial->Use();
     }
     
     Blitter_Image bImage;
-    bImage.startX = f1;
-    bImage.endX = f9;
-    bImage.startY = f2;
-    bImage.endY = f10;
+    bImage.startX = x;
+    bImage.endX = endX;
+    bImage.startY = y;
+    bImage.endY = endY;
     bImage.z = 0.0f;
-    bImage.uv0 = f3;
-    bImage.uv2 = f11;
-    bImage.uv1 = f4;
-    bImage.uv3 = f12;
-    bImage.color = *pVec;
+    bImage.uv0 = uv0;
+    bImage.uv2 = uv2;
+    bImage.uv1 = uv1;
+    bImage.uv3 = uv3;
+    bImage.color = *pColor;
     bImage.unk40.Set(1.0f, 1.0f, 1.0f, 1.0f);
     bImage.Draw(1);
 }
@@ -761,6 +771,7 @@ bool Tools_ClipSphereToDynamicModel(const Vector& vec, float f1, Vector* pVec1, 
 }
 
 // Inlined multiple times throughout the binary
+// should be a class method based on calling convention?
 inline float Vector_MagSquared(Vector* p) {
     return p->x * p->x + p->y * p->y + p->z * p->z;
 }
@@ -890,54 +901,30 @@ Vector Tools_MakePlane(Vector* pNormal, Vector* pPos) {
     return res;
 }
 
-float Vec_VolatileFakeDistSqFunction(Vector* vec, Vector* veccc, float& rx, float& ry, float& rz) {
-    float da = *(volatile float*)&veccc->x;
-    float x = (rx=*(volatile float*)&vec->x) - da;
-    float y1 = (ry=*(volatile float*)&vec->y) - *(volatile float*)&veccc->y;
-    // float dx = x - x1;
-    float dz = (rz=*(volatile float*)&vec->z) - *(volatile float*)&veccc->z;
-    return x * x + y1 * y1 + dz * dz;
-}
-
-float Vec_VolatileFakeDistSqFunction____(float x, float y, float z, Vector* veccc) {
-    x -= *(volatile float*)&veccc->x;
-    float y1 = y - *(volatile float*)&veccc->y;
-    // float dx = x - x1;
-    float dz = z - *(volatile float*)&veccc->z;
-    return x * x + y1 * y1 + dz * dz;
-}
-
-// this function is fake...
 bool Tools_CapsuleTestMagSq(Vector* pVec, Vector* pVec1, Vector* pVec2, float f1) {
-    // float vec_x1 = *(volatile float*)&pVec1->x;
-    float vec_x;// = *(volatile float*)&pVec->x;
-    float vec_y;// = *(volatile float*)&pVec->y;
-    // float vec_y1 = *(volatile float*)&pVec1->y;
-    float vec_z;// = *(volatile float*)&pVec->z;
-    // float vec_z1 = *(volatile float*)&pVec1->z;
-    if (Vec_VolatileFakeDistSqFunction(pVec, pVec1, vec_x, vec_y, vec_z) < f1 ||
-            Vec_VolatileFakeDistSqFunction____(vec_x, vec_y, vec_z, pVec2) < f1) {
+    if (SquareDistance(pVec, pVec1) < f1 || SquareDistance(pVec, pVec2) < f1) {
         return true;
     }
 
-    Vector tmp;
-    Vector tmp2;
-    
-    tmp.Sub(pVec, pVec1);
-    tmp2.Sub(pVec2, pVec1);
+    Vector toPoint2;
+    Vector toSphere;
 
-    float tmp_dot_tmp2 = tmp.Dot(&tmp2);
+    toPoint2.Sub(pVec2, pVec1);
+    toSphere.Sub(pVec, pVec1);
 
-    float f5 = tmp2.MagSquared();
-    if (!f5) {
+    float dot = toSphere.Dot(&toPoint2);
+
+    float mag = Vector_MagSquared(&toPoint2); // figure this out
+
+    if (!mag) {
         return false;
     }
-
-    float t = tmp_dot_tmp2 / f5;
+    
+    float t = dot / mag;
     if (t >= 0.0f && t <= 1.0f) {
-        Vector interpolated;
-        interpolated.InterpolateLinear(pVec1, pVec2, t);
-        if (interpolated.DistSq(pVec) <= f1) {
+        Vector temp;
+        temp.InterpolateLinear(pVec1, pVec2, t);
+        if (SquareDistance(&temp, pVec) <= f1) {
             return true;
         }
     }

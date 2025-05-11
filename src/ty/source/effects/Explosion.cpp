@@ -300,7 +300,7 @@ void Explosion_Draw(void) {
         Draw_AddPostDrawElement(
             *pExplosions, 
             Explosion_PostDrawFunc,
-            GameCamera_GetPos()->DistSq(&(*pExplosions)->mPos),
+            SquareDistance(GameCamera_GetPos(), &(*pExplosions)->mPos),
             (*pExplosions)->unk20
         );
 

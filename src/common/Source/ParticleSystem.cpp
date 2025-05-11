@@ -721,57 +721,57 @@ void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
 void ParticleSystem::DrawDebug(float xPos, float* yPos) {
     gpDebugFont->DrawText(
         Str_Printf("pos: %s", PrintVector(mpPos)),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("volume: %s", PrintVector(&mVolume.v1)),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("        %s", PrintVector(&mVolume.v2)),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("numParticleChunks: %d", numParticleChunks),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("numLivePartices: %d", numLiveParticles),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("uOffset: %g, vOffset: %g", uOffset, vOffset),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("textureIndexOffset: %g", textureIndexOffset),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("isDying: %d", isDying),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("deathTimer: %d", deathTimer),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("invDeathTimer: %d", invDeathTimer),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("age: %g", age),
-        xPos, *yPos, 1.5f, 1.5f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.5f, 1.5f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
 }

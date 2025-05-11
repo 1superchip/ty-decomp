@@ -41,10 +41,19 @@ void DebugInfo_Line3d(char*, Vector*, Vector*, int, bool);
 float GetFloor(Vector*, float, CollisionResult* pCr);
 float Tools_GetCollideHeight(Vector*, Vector*, bool*, float);
 
-void Tools_DrawOverlay(Material*, Vector*, float, 
-        float, float, float, float, float, float,
-        float, float, float, float, float, float,
-        float, float, float);
+void Tools_DrawOverlay(
+    Material* pMaterial, 
+    Vector* pColor, 
+    float x, float y, 
+    float uv0, float uv1, 
+    float, float, 
+    float, float, 
+    float endX, float endY, 
+    float uv2, float uv3, 
+    float, float, 
+    float, float
+);
+
 void Tools_RenderToTarget(Material*, float, float, float, float, float, float, float);
 
 float Tools_Wobble(float, int);

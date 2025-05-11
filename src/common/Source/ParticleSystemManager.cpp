@@ -248,51 +248,51 @@ void ParticleSystemManager::DrawDebug(float xPos, float* yPos) {
 void ParticleSystemManager::DrawDebug(float xPos, float* yPos) {
     gpDebugFont->DrawText(
         Str_Printf("numChunks: %d", mChunkList.GetSize()),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("numSystems: %d", mParticleSysList.GetSize()),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("CPU -- numParticles: %d, numVirtualParticles: %d, numChunks: %d",
             unk20, numVirtualParticles, numChunks),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("VU -- numParticles: %d, numVirtualParticles: %d, numChunks: %d",
             unk14, unk18, unk1C),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("VU -- numCodeBytes: %d", unk34),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("numRejectedSystems: %d", numRejectedSystems),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("paused: %d", ParticleSystem::bPaused),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("minParticles: %d, maxParticles: %d, avgParticles: %g",
             minParticles, maxParticles, avgParticles),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
     gpDebugFont->DrawText(
         Str_Printf("minChunks: %d, maxChunks: %d, avgChunks: %g", 
             minChunks, maxChunks, avgChunks),
-        xPos, *yPos, 1.0f, 1.0f, (FontJustify)0, 0x80ffffff
+        xPos, *yPos, 1.0f, 1.0f, FONT_JUSTIFY_0, 0x80ffffff
     );
     *yPos += 20.0f;
 }

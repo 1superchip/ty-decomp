@@ -854,7 +854,7 @@ Boomerang* Boomerang_FindClosest(Vector* pPoint) {
 
     while (*ppBoomerangs) {
         if (!(*ppBoomerangs)->unk54) {
-            float dist = (*ppBoomerangs)->mPos.DistSq(pPoint);
+            float dist = SquareDistance(&(*ppBoomerangs)->mPos, pPoint);
             if (dist < closestDist) {
                 pClosestRang = *ppBoomerangs;
                 closestDist = dist;
@@ -1543,7 +1543,7 @@ void Megarang::Fire(Vector* pVec1, Vector* pVec2) {
             float closestDist = Sqr<float>(10000.0f);
 
             for (i = 0; i < vis.numItems; i++) {
-                float newDist = vis.unk0[i]->DistSq(&vis.unk54);
+                float newDist = SquareDistance(vis.unk0[i], &vis.unk54);
                 if (newDist < closestDist) {
                     closestDist = newDist;
                     closestIndex = i;

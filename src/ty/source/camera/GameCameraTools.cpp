@@ -156,7 +156,7 @@ void GCT_BuildQuadratic(Vector* r3, Vector* r4, Vector* r5, int r6, Quadratic* p
 /// @param yPos Y position of string
 void GCT_DrawText(char* pStr, float xPos, float yPos) {
     volatile float orderFloats = -1.0f; // need this to order floats
-    gpDebugFont->DrawText(pStr, xPos, yPos, 1.0f, 1.0f, (FontJustify)4, 0x80606060);
+    gpDebugFont->DrawText(pStr, xPos, yPos, 1.0f, 1.0f, FONT_JUSTIFY_4, 0x80606060);
 }
 
 void CameraOverride_GetContainterPoints(Matrix* pMtx, Vector* pVec, Vector* pVec1, Vector* pVec2,
@@ -300,8 +300,7 @@ bool GCT_Trigger::TestPoint(Vector* pPoint) {
         }
     } else {
         // Sphere Trigger
-        // not using this Vector method
-        if (mPos.DistSq(pPoint) < mRadiusSq) {
+        if (CameraTools_VectorDistSq(&mPos, pPoint) < mRadiusSq) {
             return true;
         }
     }

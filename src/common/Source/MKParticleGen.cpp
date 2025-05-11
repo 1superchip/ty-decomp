@@ -396,15 +396,15 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
 void MKParticleGen::DrawDebugInfo(View* pView) {
     float startY = 200.0f;
     gpDebugFont->DrawText(Str_Printf("Rain Particles: %d", pType->nmbrOfParticles), 10.0f, startY,
-        1.5f, 1.5f, (FontJustify)0, 0x800000ff);
+        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
     startY += 20.0f;
     gpDebugFont->DrawText(Str_Printf("xPos: %g", xPos), 10.0f, startY,
-        1.5f, 1.5f, (FontJustify)0, 0x800000ff);
+        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
     startY += 20.0f;
     gpDebugFont->DrawText(Str_Printf("yPos: %g", yPos), 10.0f, startY,
-        1.5f, 1.5f, (FontJustify)0, 0x800000ff);
+        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
     startY += 20.0f;
     gpDebugFont->DrawText(Str_Printf("zPos: %g", zPos), 10.0f, startY,
-        1.5f, 1.5f, (FontJustify)0, 0x800000ff);
+        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
     startY += 20.0f;
 }

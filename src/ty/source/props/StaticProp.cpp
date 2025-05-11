@@ -298,7 +298,7 @@ void StaticFXProp::UpdateShake(void) {
 }
 
 void StaticFXProp::UpdateWaterRipple(void) {
-    if (ty.pos.DistSq(&unk58) < 640000.0f && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
+    if (ty.pos.IsInsideSphere(&unk58, 800.0f) && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
         unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
         Vector ripplePosition = {0.0f, 5.0f, 0.0f, 0.0f};
         ripplePosition.x += waterCollisionPos.x;

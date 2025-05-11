@@ -581,7 +581,7 @@ void Gem::SpawnDynamic(Vector* p) {
 void Gem::Idle(void) {
     mParticle.pos.y = unk94.y + _table_sinf(yOffsetAngle) * 5.0f;
 
-    float heroDist = pHero->mPos.DistSq(&mParticle.pos);
+    float heroDist = SquareDistance(&pHero->mPos, &mParticle.pos);
     if (!UpdateCollection(heroDist)) {
         CheckMagnetism(heroDist);
     }
@@ -638,7 +638,7 @@ void Gem::Collecting(void) {
 }
 
 void Gem::Spawning(void) {
-    float dist = pHero->mPos.DistSq(&mParticle.pos);
+    float dist = SquareDistance(&pHero->mPos, &mParticle.pos);
     if (UpdateCollection(dist) || CheckMagnetism(dist)) {
         return;
     }

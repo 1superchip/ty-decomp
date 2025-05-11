@@ -269,7 +269,7 @@ void Friend::PreUpdate(void) {
 
     mAnimScript.Animate();
     
-    mTyDistSq = mPos.DistSq(&ty.pos);
+    mTyDistSq = SquareDistance(&mPos, &ty.pos);
     Vector tyDir;
     Vector dot = {0.0f, 1.0f, 0.0f, 0.0f};
     tyDir.Sub(&ty.pos, &mPos);

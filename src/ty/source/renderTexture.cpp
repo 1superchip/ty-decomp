@@ -2,6 +2,8 @@
 #include "ty/global.h"
 #include "ty/Hero.h"
 
+// PS2 renderTexture.cpp scratch: https://decomp.me/scratch/xqV79
+
 extern "C" int stricmp(char*, char*);
 
 static float scroll[3];

@@ -80,6 +80,12 @@ struct View {
     void TransformPoint2Dto3D(float x, float y, float z, Vector* pOutPos);
     void OrthoBegin(void);
     void OrthoEnd(void);
+
+    void Init(Material*, Material*);
+
+    void DisableZWrite(void) {
+        bDisableZWrite = true;
+    }
     
     static void InitModule(void);
     static void DeinitModule(void);

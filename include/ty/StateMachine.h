@@ -30,12 +30,19 @@ struct StateMachine {
         unk4 = arg2;
     }
 
+    // Calls the current state's deinit function (could be called Exit?)
     void Deinit(T* pActor) {
         if (unk0 != -1 && mpStates[unk0].func2) {
             (pActor->*mpStates[unk0].func2)();
         }
 
         unk0 = -1;
+    }
+
+    void DrawState(T* pActor) {
+        if (unk0 != -1 && mpStates[unk0].func4) {
+            (pActor->*mpStates[unk0].func4)();
+        }
     }
 
     inline void SetState(int state, bool bAlways) {

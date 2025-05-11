@@ -327,7 +327,7 @@ void System_GameDraw(void) {
             gCPUCycles / 81000, gGXCycles / 81000,
             totalMemLeft / 1024.0f, 105, gpBuildVersion);
         gpDebugFont->DrawText(debugStr, 320.0f, 495.0f, 1.0f, 1.0f,
-            (FontJustify)5, COLOR_WHITE);
+            FONT_JUSTIFY_5, COLOR_WHITE);
     }
     
     gDrawCounter++;

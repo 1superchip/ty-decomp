@@ -1062,8 +1062,10 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
     v1.Copy(&pVolume->v1);
     v2.Add(&pVolume->v1, &pVolume->v2);
 
-    float dist = pDynItem->GetMatrix()->Row3()->DistSq(&pRay->mStart);
-    if (dist > Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) {
+    Vector tmp;
+    tmp.Sub(pDynItem->GetMatrix()->Row3(), &pRay->mStart);
+    
+    if (tmp.MagSquared() > Sqr<float>(pRay->mLength + (2.0f * pRay->radius) + pDynItem->unk8)) {
         return false;
     }
 

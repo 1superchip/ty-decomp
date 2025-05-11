@@ -289,7 +289,7 @@ Vector* PathManager::GetNearestPoint(Vector* r4, float closestDist) {
     while (pSeg->numPoints != 0) {
         if (pSeg->pathId == pathId) {
             for (int i = 0; i < pSeg->numPoints; i++) {
-                float distSq = pSeg->points[i].DistSq(r4);
+                float distSq = SquareDistance(&pSeg->points[i], r4);
                 if (distSq < closestDist) {
                     closestDist = distSq;
                     pClosestPath = pSeg;
@@ -318,7 +318,7 @@ Vector* PathManager::GetNearestNode(Vector* r4, float closestDist) {
 
     while (pSeg->numPoints != 0) {
         if (pSeg->pathId == pathId) {
-            float distSq = pSeg->GetFirstPoint()->DistSq(r4);
+            float distSq = SquareDistance(pSeg->GetFirstPoint(), r4);
             if (distSq < closestDist) {
                 pClosestPath = pSeg;
                 closestDist = distSq;
@@ -326,7 +326,7 @@ Vector* PathManager::GetNearestNode(Vector* r4, float closestDist) {
             }
 
             if (unkE & 1) {
-                float distSq = pSeg->GetLastPoint()->DistSq(r4);
+                float distSq = SquareDistance(pSeg->GetLastPoint(), r4);
                 if (distSq < closestDist) {
                     pClosestPath = pSeg;
                     closestDist = distSq;
@@ -593,9 +593,9 @@ bool Path_Exists(s8 id) {
 }
 
 // const pointer may be fake (need it to match the loads)
-Vector* PathManager::GetNextNearestNode(Vector* const r4, PathSegment* r5, float closestDist) {
+Vector* PathManager::GetNextNearestNode(Vector* r4, PathSegment* r5, float closestDist) {
     
-    float f9 = r5->GetFirstPoint()->DistSq(r4) + 1.0f;
+    float f9 = SquareDistance(r5->GetFirstPoint(), r4) + 1.0f;
     PathSegment* pClosestPath = NULL;
     u8 r6 = true;
     
@@ -603,7 +603,7 @@ Vector* PathManager::GetNextNearestNode(Vector* const r4, PathSegment* r5, float
 
     while (pSeg->numPoints != 0) {
         if (pSeg->pathId == pathId) {
-            float distSq = pSeg->GetFirstPoint()->DistSq(r4);
+            float distSq = SquareDistance(pSeg->GetFirstPoint(), r4);
             if (distSq < closestDist && distSq > f9) {
                 pClosestPath = pSeg;
                 closestDist = distSq;
@@ -611,7 +611,7 @@ Vector* PathManager::GetNextNearestNode(Vector* const r4, PathSegment* r5, float
             }
 
             if (unkE & 1) {
-                float distSq = pSeg->GetLastPoint()->DistSq(r4);
+                float distSq = SquareDistance(pSeg->GetLastPoint(), r4);
                 if (distSq < closestDist) {
                     pClosestPath = pSeg;
                     closestDist = distSq;

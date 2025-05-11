@@ -543,7 +543,7 @@ void Camera::DrawDebug(float x, float* pY) {
         Str_Printf("Camera:"), 
         x, *pY, 
         1.0f, 1.0f, 
-        (FontJustify)0, 0x40808080
+        FONT_JUSTIFY_0, 0x40808080
     );
 
 
@@ -554,7 +554,7 @@ void Camera::DrawDebug(float x, float* pY) {
         Str_Printf("pos: %s", FormatVector(&pos)), 
         x, *pY, 
         1.0f, 1.0f, 
-        (FontJustify)0, 0x40808080
+        FONT_JUSTIFY_0, 0x40808080
     );
 
     *pY += 20.0f;
@@ -563,7 +563,7 @@ void Camera::DrawDebug(float x, float* pY) {
         Str_Printf("target: %s", FormatVector(&target)), 
         x, *pY, 
         1.0f, 1.0f, 
-        (FontJustify)0, 0x40808080
+        FONT_JUSTIFY_0, 0x40808080
     );
 
     *pY += 20.0f;
@@ -572,7 +572,7 @@ void Camera::DrawDebug(float x, float* pY) {
         Str_Printf("dir: %s", FormatVector(&dir)), 
         x, *pY, 
         1.0f, 1.0f, 
-        (FontJustify)0, 0x40808080
+        FONT_JUSTIFY_0, 0x40808080
     );
 
     *pY += 20.0f;
@@ -587,7 +587,7 @@ void Camera::DrawDebug(float x, float* pY) {
         Str_Printf("mode: %s", modeNames[mode]), 
         x, *pY, 
         1.0f, 1.0f, 
-        (FontJustify)0, 0x40808080
+        FONT_JUSTIFY_0, 0x40808080
     );
 
     *pY += 20.0f;

@@ -41,13 +41,6 @@ struct Vector {
         return x * pVector->x + y * pVector->y + z * pVector->z + w * pVector->w;
     }
 
-    inline float DistSq(Vector* pVector) {
-        float dx = x - pVector->x;
-        float dy = y - pVector->y;
-        float dz = z - pVector->z;
-        return dx * dx + dy * dy + dz * dz;
-    }
-
     inline void Set(float _x, float _y, float _z) {
         x = _x;
         y = _y;
@@ -187,6 +180,13 @@ struct Vector {
 #else
 };
 #endif
+
+inline float SquareDistance(const Vector* p, const Vector* pVector) {
+    float dx = p->x - pVector->x;
+    float dy = p->y - pVector->y;
+    float dz = p->z - pVector->z;
+    return dx * dx + dy * dy + dz * dz;
+}
 
 inline float Dist2D(Vector* pVec, Vector* pVec1) {
     // might be a Vector method?

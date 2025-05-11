@@ -131,6 +131,13 @@ int GetScreenData(float x) {
     return (int)(16.0f * x);
 }
 
+// Possibly fake? needs references to match
+static void Blit_Color(u8& r, u8& g, u8& b, u8& a) {
+    GXWGFifo.u8 = r;
+    GXWGFifo.u8 = g;
+    GXWGFifo.u8 = b;
+    GXWGFifo.u8 = a;
+}
 
 /// @brief 2D - Draws a string on the screen 
 /// @param pString String to draw
@@ -168,31 +175,31 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
     stringLength *= xScale;
 
     switch (justify) {
-        case 1:
+        case FONT_JUSTIFY_1:
             posX -= GetScreenData(stringLength * 0.5f);
             break;
-        case 2:
+        case FONT_JUSTIFY_2:
             posX -= GetScreenData(stringLength);
             break;
-        case 4:
+        case FONT_JUSTIFY_4:
             posY -= scaleY / 2;
             break;
-        case 5:
+        case FONT_JUSTIFY_5:
             posX -= GetScreenData(stringLength * 0.5f);
             posY -= scaleY / 2;
             break;
-        case 6:
+        case FONT_JUSTIFY_6:
             posX -= GetScreenData(stringLength);
             posY -= scaleY / 2;
             break;
-        case 8:
+        case FONT_JUSTIFY_8:
             posY += scaleY;
             break;
-        case 9:
+        case FONT_JUSTIFY_9:
             posX -= GetScreenData(stringLength * 0.5f);
             posY += scaleY;
             break;
-        case 10:
+        case FONT_JUSTIFY_10:
             posX -= GetScreenData(stringLength);
             posY += scaleY;
             break;
@@ -235,41 +242,29 @@ void Font::DrawText(char* pString, float xPos, float yPos, float xScale, float y
                 float v = charData->unkC;
                 float char10 = charData->unk10;
                 float char14 = charData->unk14;
-
+                
                 GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
                 GXPosition3f32(dVar17, dVar18, 0.0f);
-                GXWGFifo.u8 = colorData[3];
-                GXWGFifo.u8 = colorData[2];
-                GXWGFifo.u8 = colorData[1];
-                GXWGFifo.u8 = colorData[0];
+                Blit_Color(colorData[3], colorData[2], colorData[1], colorData[0]);
                 GXTexCoord2f32(u, v);
                 
                 GXWGFifo.f32 = dVar17;
                 GXWGFifo.f32 = dVar19 + 1.0f;
                 GXWGFifo.f32 = 0.0f;
-                GXWGFifo.u8 = colorData[3];
-                GXWGFifo.u8 = colorData[2];
-                GXWGFifo.u8 = colorData[1];
-                GXWGFifo.u8 = colorData[0];
+                Blit_Color(colorData[3], colorData[2], colorData[1], colorData[0]);
                 GXTexCoord2f32(u, char14);
 
                 GXWGFifo.f32 = dVar17 + charLength;
                 GXWGFifo.f32 = dVar18;
                 GXWGFifo.f32 = 0.0f;
-                GXWGFifo.u8 = colorData[3];
-                GXWGFifo.u8 = colorData[2];
-                GXWGFifo.u8 = colorData[1];
-                GXWGFifo.u8 = colorData[0];
+                Blit_Color(colorData[3], colorData[2], colorData[1], colorData[0]);
                 GXTexCoord2f32(char10, v);
                 
                 GXWGFifo.f32 = dVar17 + charLength;
                 GXWGFifo.f32 = dVar19 + 1.0f;
                 GXWGFifo.f32 = 0.0f;
-                GXWGFifo.u8 = colorData[3];
-                GXWGFifo.u8 = colorData[2];
-                GXWGFifo.u8 = colorData[1];
-                GXWGFifo.u8 = colorData[0];
+                Blit_Color(colorData[3], colorData[2], colorData[1], colorData[0]);
                 GXTexCoord2f32(char10, char14);
 
                 dVar17 += (charData->unk18 + unk8) * xScale;
@@ -348,32 +343,32 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
     Vector sp8;
     topLeft = *pPos;
 
-    switch(justify) {
-        case 1:
+    switch (justify) {
+        case FONT_JUSTIFY_1:
             topLeft.x -= 0.5f * sx;
             break;
-        case 2:
+        case FONT_JUSTIFY_2:
             topLeft.x -= sx;
             break;
-        case 4:
+        case FONT_JUSTIFY_4:
             topLeft.y += 0.5f * sy;
             break;
-        case 5:
+        case FONT_JUSTIFY_5:
             topLeft.x -= 0.5f * sx;
             topLeft.y += 0.5f * sy;
             break;
-        case 6:
+        case FONT_JUSTIFY_6:
             topLeft.x -= sx;
             topLeft.y += 0.5f * sy;
             break;
-        case 8:
+        case FONT_JUSTIFY_8:
             topLeft.y += sy;
             break;
-        case 9:
+        case FONT_JUSTIFY_9:
             topLeft.x -= 0.5f * sx;
             topLeft.y += sy;
             break;
-        case 10:
+        case FONT_JUSTIFY_10:
             topLeft.x -= sx;
             topLeft.y += sy;
             break;
@@ -533,23 +528,23 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
         FontJustify justify, uint color, int flags) {
     float xPos = pPos->x;
     float yPos = pPos->y;
-    float zPos = pPos->z;
-    float wPos = pPos->w; // not w pos?
+    float width = pPos->z;
+    float height = pPos->w;
 
     if (flags & 4) {
-        xPos -= zPos * 0.5f;
+        xPos -= width * 0.5f;
     }
 
     if (flags & 8) {
-        yPos -= wPos * 0.5f;
+        yPos -= height * 0.5f;
     }
 
     if (showFontWrapArea || flags & 1) {
         Blitter_UntexturedImage image;
         image.pos.x = xPos;
         image.pos.y = yPos;
-        image.pos.z = xPos + zPos;
-        image.pos.w = yPos + wPos;
+        image.pos.z = xPos + width;
+        image.pos.w = yPos + height;
         // fake?
         *((int*)&image.color + 1) = 0x40800000;
         *(int*)&image.color = 0x40800000;
@@ -563,21 +558,31 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
         char* text = pText;
         // r29 = 0;
         float max = 0.0f;
+
         for (r29 = 0; *text != '\0' && r29 < MAX_TEXT_SEGMENTS; r29++) {
-            if (!GetTextSegment(&text, zPos / xScale, &info[r29])) {
+            if (!GetTextSegment(&text, width / xScale, &info[r29])) {
                 break;
             }
+
             info[r29].unk4 *= xScale;
+
             if (info[r29].unk4 > max) {
                 max = info[r29].unk4;
             }
         }
-        if (!r24) break;
-        if (max > zPos) {
-            xScale *= zPos / max;
-            yScale *= zPos / max;
+
+        if (!r24) {
+            break;
+        }
+
+        if (max > width) {
+            xScale *= width / max;
+            yScale *= width / max;
         } else {
-            if (!((r29 * mHeight) * yScale > wPos)) break;
+            if (!((r29 * mHeight) * yScale > height)) {
+                break;
+            }
+
             xScale *= 0.975f;
             yScale *= 0.975f;
         }
@@ -588,75 +593,81 @@ void Font::DrawTextWrapped(char* pText, float xScale, float yScale, Vector* pPos
     float dVar16 = mHeight;
     float dVar18;
     switch (justify) {
-        case (FontJustify)3:
+        case FONT_JUSTIFY_3:
             bSave_fieldC = 1;
-            justify = (FontJustify)0;
-        case (FontJustify)0:
+            justify = FONT_JUSTIFY_0;
+            // fallthrough
+        case FONT_JUSTIFY_0:
             dVar16 = 0.0f;
-            wPos = 0.0f;
+            height = 0.0f;
             break;
-        case (FontJustify)1:
-            wPos = 0.0f;
-            dVar16 = zPos / 2.0f;
+        case FONT_JUSTIFY_1:
+            height = 0.0f;
+            dVar16 = width / 2.0f;
             break;
-        case (FontJustify)2:
-            dVar16 = zPos;
-            wPos = 0.0f;
+        case FONT_JUSTIFY_2:
+            dVar16 = width;
+            height = 0.0f;
             break;
-        case (FontJustify)7:
+        case FONT_JUSTIFY_7:
             bSave_fieldC = 1;
-            justify = (FontJustify)4;
-        case (FontJustify)4:
+            justify = FONT_JUSTIFY_4;
+            // fallthrough
+        case FONT_JUSTIFY_4:
             dVar16 = 0.0f;
-            wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
+            height = (height - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)5:
-            dVar16 = zPos / 2.0f;
-            wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
+        case FONT_JUSTIFY_5:
+            dVar16 = width / 2.0f;
+            height = (height - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)6:
-            dVar16 = zPos;
-            wPos = (wPos - ((r29 - 1) * dVar17)) / 2.0f;
+        case FONT_JUSTIFY_6:
+            dVar16 = width;
+            height = (height - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)11:
+        case FONT_JUSTIFY_11:
             bSave_fieldC = 1;
-            justify = (FontJustify)8;
-        case (FontJustify)8:
+            justify = FONT_JUSTIFY_8;
+            // fallthrough
+        case FONT_JUSTIFY_8:
             dVar16 = 0.0f;
-            wPos = wPos - (((r29 + 1) * dVar17));
+            height = height - (((r29 + 1) * dVar17));
             break;
-        case (FontJustify)9:
-            dVar16 = zPos / 2.0f;
-            wPos = wPos - (((r29 + 1) * dVar17));
+        case FONT_JUSTIFY_9:
+            dVar16 = width / 2.0f;
+            height = height - (((r29 + 1) * dVar17));
             break;
-        case (FontJustify)10:
-            dVar16 = zPos;
-            wPos = wPos - (((r29 + 1) * dVar17));
+        case FONT_JUSTIFY_10:
+            dVar16 = width;
+            height = height - (((r29 + 1) * dVar17));
             break;
         default:
             dVar16 = 0.0f;
-            wPos = 0.0f;
+            height = 0.0f;
             break;
     }
 
     xPos += dVar16;
+
     for (int i = 0; i < r29; i++) {
         float unkC_save = unkC;
         if (bSave_fieldC && !info[i].unk8) {
             int spaceCount = 0;
             int charIndex = 0;
+
             while (info[i].unk0[charIndex] != '\0') {
                 if (info[i].unk0[charIndex] == ' ') {
                     spaceCount++;
                 }
                 charIndex++;
             }
+
             if (spaceCount) {
-                unkC += ((zPos - info[i].unk4) / (float)spaceCount) / xScale;
+                unkC += ((width - info[i].unk4) / (float)spaceCount) / xScale;
             }
         }
 
-        DrawText(info[i].unk0, xPos, yPos + wPos, xScale, yScale, justify, color);
+        DrawText(info[i].unk0, xPos, yPos + height, xScale, yScale, justify, color);
 
         if (bSave_fieldC && !info[i].unk8) {
             unkC = unkC_save;
@@ -707,48 +718,51 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
     float dVar18;
 
     switch (justify) {
-        case (FontJustify)3:
+        case FONT_JUSTIFY_3:
             r27 = true;
-            justify = (FontJustify)0;
-        case (FontJustify)0:
+            justify = FONT_JUSTIFY_0;
+            // fallthrough
+        case FONT_JUSTIFY_0:
             dVar16 = 0.0f;
             dVar18 = 0.0f;
             break;
-        case (FontJustify)1:
+        case FONT_JUSTIFY_1:
             dVar18 = 0.0f;
             dVar16 = f3 / 2.0f;
             break;
-        case (FontJustify)2:
+        case FONT_JUSTIFY_2:
             dVar16 = f3;
             dVar18 = 0.0f;
             break;
-        case (FontJustify)7:
+        case FONT_JUSTIFY_7:
             r27 = true;
-            justify = (FontJustify)4;
-        case (FontJustify)4:
+            justify = FONT_JUSTIFY_4;
+            // fallthrough
+        case FONT_JUSTIFY_4:
             dVar16 = 0.0f;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)5:
+        case FONT_JUSTIFY_5:
             dVar16 = f3 / 2.0f;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)6:
+        case FONT_JUSTIFY_6:
             dVar16 = f3;
             dVar18 = (f4 - ((r29 - 1) * dVar17)) / 2.0f;
             break;
-        case (FontJustify)11:
+        case FONT_JUSTIFY_11:
             r27 = 1;
-            justify = (FontJustify)8;
-        case (FontJustify)8:
+            justify = FONT_JUSTIFY_8;
+            // fallthrough
+        case FONT_JUSTIFY_8:
             dVar16 = 0.0f;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
-        case (FontJustify)9:
+        case FONT_JUSTIFY_9:
             dVar16 = f3 / 2.0f;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
-        case (FontJustify)10:
+        case FONT_JUSTIFY_10:
             dVar16 = f3;
             dVar18 = f4 - (((r29 - 1) * dVar17));
             break;
@@ -774,12 +788,15 @@ void Font::DrawTextWrapped3d(char* pText, float f1, float f2, Vector* pPos,
     if (showFontWrapArea || flags & 1) {
         Blitter_Box area;
         area.origin = *pPos;
+
         if (flags & 4) {
             area.origin.x -= dVar16;
         }
+
         if (flags & 8) {
             area.origin.y += dVar18;
         }
+
         area.extent.Set(f3, -f4, 0.01f, 0.0f);
         area.color.Set(128.0f, 0.0f, 0.0f, 128.0f);
         area.color1.Set(128.0f, 0.0f, 0.0f, 128.0f);
@@ -908,8 +925,10 @@ void Font::BuildLines(char* pString, float f1, float f2, TextLineData* lineData)
                 lineData->data[r9].unk8 = f10;
             }
         }
+
         f4 = f9;
         text = r30;
+
         if (r31) {
             text = r30 + 1;
         } else {
@@ -918,6 +937,7 @@ void Font::BuildLines(char* pString, float f1, float f2, TextLineData* lineData)
                 f4 += unkC * f6;
             }
         }
+
         f7 += mHeight * f6;
         r9++;
         if (f7 > f2) {
