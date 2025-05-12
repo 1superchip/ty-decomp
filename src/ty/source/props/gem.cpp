@@ -910,10 +910,10 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         for (int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
             pModelData->unk180_array[i][1] = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
             pModelData->unk180_array[i][0] = RandomFR(&gb.mRandSeed, 5.0f, 15.0f);
-            pModelData->imgs[i].unk40.x = 1.0f;
-            pModelData->imgs[i].unk40.y = 1.0f;
-            pModelData->imgs[i].unk40.z = 1.0f;
-            pModelData->imgs[i].unk40.w = 1.0f;
+            pModelData->imgs[i].unk40[0] = 1.0f;
+            pModelData->imgs[i].unk40[1] = 1.0f;
+            pModelData->imgs[i].unk40[2] = 1.0f;
+            pModelData->imgs[i].unk40[3] = 1.0f;
 
             pModelData->imgs[i].z = 0.0f;
 

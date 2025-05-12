@@ -65,15 +65,20 @@ struct Blitter_Particle {
 struct Blitter_Image {
     float startX; // X position of Corner 1
     float startY; // Y position of Corner 1
+
     float endX; // X position of Corner 2
     float endY; // Y position of Corner 2
+
     float z;
+
     float uv0;
     float uv1;
     float uv2;
     float uv3;
+
     Vector color;
-    Vector unk40;
+
+    float unk40[4];
     
     void Draw(int count);
 };

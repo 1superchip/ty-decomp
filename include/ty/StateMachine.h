@@ -4,89 +4,99 @@
 template <typename T>
 struct StateMachine {
 
-    typedef void(T::*StateFunc1)(void);
-    typedef void(T::*StateFunc2)(void);
+    typedef void(T::*InitFunc)(void);
+    typedef void(T::*DeinitFunc)(void);
     typedef void(T::*StateFunc3)(void);
-    typedef void(T::*StateFunc4)(void);
+    typedef void(T::*DrawFunc)(void);
     typedef void(T::*StateFunc5)(void);
 
     struct State {
-        StateFunc1  func1;
-        StateFunc2  func2; // Deinit?
+        InitFunc    Init;
+        DeinitFunc  Deinit;
         StateFunc3  func3;
-        StateFunc4  func4;
+        DrawFunc    Draw;
         StateFunc5  func5;
     };
 
-    int unk0;
-    int unk4;
-    int unk8;
+    int currentState;
+    int nextState;
+    int lastState;
     State* mpStates;
 
     void Init(State* pStates, int arg2) {
         mpStates = pStates;
-        unk0 = -1;
-        unk8 = -1;
-        unk4 = arg2;
+        currentState = -1;
+        lastState = -1;
+        nextState = arg2;
     }
 
-    // Calls the current state's deinit function (could be called Exit?)
+    /// @brief Calls the current state's Deinit method
+    /// @param pActor 
     void Deinit(T* pActor) {
-        if (unk0 != -1 && mpStates[unk0].func2) {
-            (pActor->*mpStates[unk0].func2)();
+        if (currentState != -1 && mpStates[currentState].Deinit) {
+            (pActor->*mpStates[currentState].Deinit)();
         }
 
-        unk0 = -1;
+        currentState = -1;
     }
 
+    /// @brief Calls the current state's Draw method
+    /// @param pActor 
     void DrawState(T* pActor) {
-        if (unk0 != -1 && mpStates[unk0].func4) {
-            (pActor->*mpStates[unk0].func4)();
+        if (currentState != -1 && mpStates[currentState].Draw) {
+            (pActor->*mpStates[currentState].Draw)();
         }
     }
 
+    /// @brief Sets the next state to state
+    /// @param state Next state
+    /// @param bAlways Whether or not to set the next state if state is equal to the current state
     inline void SetState(int state, bool bAlways) {
-        if (bAlways || (unk0 != state)) {
-            unk4 = state;
+        if (bAlways || (currentState != state)) {
+            nextState = state;
         }
     }
 
     int GetState(void) {
-        return unk0;
+        return currentState;
     }
 
     int GetNextState(void) {
-        return unk4;
+        return nextState;
     }
 
     int GetLastState(void) {
-        return unk8;
+        return lastState;
     }
 
+    /// @brief Updates the state machine
+    /// @param pActor 
+    /// @param bPrintStateChange Whether or not to print state changes
     inline void UnkFunc(T* pActor, bool bPrintStateChange /* parameter in debug build */) {
-        if (unk4 != -1) {
-            if (unk0 != -1 && mpStates[unk0].func2) {
-                (pActor->*mpStates[unk0].func2)();
+        if (nextState != -1) {
+            // Deinit old current state
+            if (currentState != -1 && mpStates[currentState].Deinit) {
+                (pActor->*mpStates[currentState].Deinit)();
             }
 
-            unk8 = unk0;
-            unk0 = unk4;
-            unk4 = -1;
+            lastState = currentState;
+            currentState = nextState;
+            nextState = -1;
 
-            if (unk0 != -1 && mpStates[unk0].func1) {
-                (pActor->*mpStates[unk0].func1)();
+            // Init new current state
+            if (currentState != -1 && mpStates[currentState].Init) {
+                (pActor->*mpStates[currentState].Init)();
             }
         }
         
-        if (unk0 != -1 && mpStates[unk0].func3) {
-            (pActor->*mpStates[unk0].func3)();
+        if (currentState != -1 && mpStates[currentState].func3) {
+            (pActor->*mpStates[currentState].func3)();
         }
     }
 
     inline char* GetStateName(int index) {
         return NULL;
     }
-
 };
 
 #endif // STATEMACHINE_H

@@ -35,15 +35,17 @@ void ProgressBar::Init(char* pBGMatName, char* pFGMatName, int xPos,
     backgroundImage.uv3 = 1.0f;
     backgroundImage.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
 
-    backgroundImage.unk40.x = f3;
-    backgroundImage.unk40.y = f3;
-    backgroundImage.unk40.z = f3;
-    backgroundImage.unk40.w = f3;
+    backgroundImage.unk40[0] = f3;
+    backgroundImage.unk40[1] = f3;
+    backgroundImage.unk40[2] = f3;
+    backgroundImage.unk40[3] = f3;
+
     foregroundImage = backgroundImage;
-    foregroundImage.unk40.x = 1.0f;
-    foregroundImage.unk40.y = 1.0f;
-    foregroundImage.unk40.z = 1.0f;
-    foregroundImage.unk40.w = 1.0f;
+
+    foregroundImage.unk40[0] = 1.0f;
+    foregroundImage.unk40[1] = 1.0f;
+    foregroundImage.unk40[2] = 1.0f;
+    foregroundImage.unk40[3] = 1.0f;
     foregroundImage.startX = (float)xPos - (unk268 / 2.0f);
     foregroundImage.startY = (float)yPos - (temp / 2.0f);
     foregroundImage.endX = foregroundImage.startX + (unk268 * progressRatio);

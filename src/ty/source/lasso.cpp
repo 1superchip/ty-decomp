@@ -2,8 +2,6 @@
 #include "ty/global.h"
 #include "common/View.h"
 
-static MKAnimScript lassoBad;
-
 static StateMachine<Lasso>::State lassoStates[7] = {
     {
         // LS_Idle
@@ -50,6 +48,8 @@ static StateMachine<Lasso>::State lassoStates[7] = {
         &Lasso::LassoDraw
     }
 };
+
+static MKAnimScript lassoBad;
 
 void Lasso_LoadResources(void) {
     lassoBad.Init("boomerang_01");
@@ -113,13 +113,6 @@ void Lasso::Update(Vector* p, Vector* p1, float f1) {
     fsm.UnkFunc(this, false);
 }
 
-void test(void) {
-    volatile float x = 120.0f;
-    volatile float sx = 400.0f;
-    volatile float y = 462.0f;
-    volatile float sy = 20.0f;
-}
-
 void Lasso::Draw(void) {
     fsm.DrawState(this);
 
@@ -152,7 +145,7 @@ void Lasso::Draw(void) {
         sy = 20.0f;
 
         f1 = x;
-        f5 = f1 + sx;
+        f5 = (float)f1 + sx;
         f9 = f5;
         f13 = f1;
         
@@ -163,7 +156,7 @@ void Lasso::Draw(void) {
         
         f2 = y;
         f6 = f2;
-        f10 = f2 + sy;
+        f10 = (float)f2 + sy;
         f14 = f10;
 
         f4 = 0.0f;
@@ -197,7 +190,7 @@ void Lasso::Draw(void) {
         
         f2 = y;
         f6 = f2;
-        f10 = f2 + sy;
+        f10 = f2 + (float)sy;
         f14 = f10;
 
         f4 = 0.5f;
@@ -245,6 +238,8 @@ void DrawRope(CircularQueue<Vector>* pQueue, Material* pMaterial, float f1) {
     }
 }
 
+static float targetRadius = 600.0f;
+
 void Lasso::GetControlPoints(Vector* p, Vector* p1, Vector* p2) {
 
 }
@@ -286,7 +281,8 @@ void Lasso::DeinitLassoPullIn(void) {
 }
 
 void Lasso::InitLassoCaughtEmu(void) {
-
+    unk9C.Set(0.0f, -50.0f, 0.0f);
+    unkAC.SetZero();
 }
 
 void Lasso::LassoCaughtEmu(void) {
@@ -294,7 +290,9 @@ void Lasso::LassoCaughtEmu(void) {
 }
 
 void Lasso::DeinitLassoCaughtEmu(void) {
-    
+    unk70 = 0;
+    unk75 = false;
+    pEmu = NULL;
 }
 
 void Lasso::PullRope(float f1) {
@@ -302,7 +300,8 @@ void Lasso::PullRope(float f1) {
 }
 
 void Lasso::InitLassoCaughtWaterTank(void) {
-
+    unk9C.Set(0.0f, -50.0f, 0.0f);
+    unkAC.SetZero();
 }
 
 void Lasso::LassoCaughtWaterTank(void) {
@@ -310,11 +309,12 @@ void Lasso::LassoCaughtWaterTank(void) {
 }
 
 void Lasso::DeinitLassoCaughtWaterTank(void) {
-
+    unk54 = NULL;
 }
 
 void Lasso::InitLassoCaughtFrillBike(void) {
-
+    unk9C.Set(0.0f, -50.0f, 0.0f);
+    unkAC.SetZero();
 }
 
 void Lasso::LassoCaughtFrillBike(void) {
@@ -326,11 +326,15 @@ void Lasso::CheckPullBike(void) {
 }
 
 void Lasso::Snap(void) {
+    if (unk70 != 0) {
+        unk70 = 0;
 
+        fsm.SetState(LS_Snapped, false);
+    }
 }
 
 void Lasso::DeinitLassoCaughtFrillBike(void) {
-
+    pFrillBike = NULL;
 }
 
 void Lasso::InitLassoSnapped(void) {
@@ -355,6 +359,8 @@ void Lasso::LassoDraw(void) {
 
 void Lasso::ThrowLasso(void) {
     unk76 = true;
+
+    fsm.SetState(LS_Throw, false);
 }
 
 void Lasso::InitIdle(void) {

@@ -386,23 +386,32 @@ void Tools_DrawOverlay(
     float f13, float f14, 
     float f15, float f16
 ) {
+    Blitter_Image bImage;
 
     if (pMaterial) {
         pMaterial->Use();
     }
-    
-    Blitter_Image bImage;
+
     bImage.startX = x;
     bImage.endX = endX;
+
     bImage.startY = y;
     bImage.endY = endY;
+
     bImage.z = 0.0f;
+
     bImage.uv0 = uv0;
     bImage.uv2 = uv2;
     bImage.uv1 = uv1;
     bImage.uv3 = uv3;
+
     bImage.color = *pColor;
-    bImage.unk40.Set(1.0f, 1.0f, 1.0f, 1.0f);
+
+    bImage.unk40[0] = 1.0f;
+    bImage.unk40[1] = 1.0f;
+    bImage.unk40[2] = 1.0f;
+    bImage.unk40[3] = 1.0f;
+
     bImage.Draw(1);
 }
 
