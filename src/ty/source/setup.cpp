@@ -16,6 +16,10 @@
 #include "common/MKGrass.h"
 #include "ty/Shadow.h"
 #include "ty/Ty.h"
+#include "ty/boomerang.h"
+#include "ty/effects/Explosion.h"
+#include "ty/RenderTexture.h"
+#include "ty/Path.h"
 
 MKSceneManager gSceneManager;
 
@@ -207,19 +211,13 @@ void Bilby_Deinit(void);
 void Spider_Deinit(void);
 void Reeds_Deinit(void);
 void IceBlock_Deinit(void);
-void Boomerang_Deinit(void);
 void Windmill_Deinit(void);
-void MKGrass_Deinit(void);
-void MKGrassGC_UnloadTextures(void);
 void Waterfall_Deinit(void);
-void RenderTexture_Deinit(void);
 void Wake_Deinit(void);
 void Dialog_Deinit(void);
 void LetterBox_Deinit(void);
 void WaterSlide_Deinit(void);
 void Shatter_Deinit(void);
-void Explosion_Deinit(void);
-void Path_Manager_Deinit(void);
 void Enemies_DeinitBoundingRegions(void);
 void SoundBank_Deinit(void);
 
@@ -392,15 +390,12 @@ extern void Shatter_Init(void);
 extern void IceBlock_Init(void);
 extern void Critters_Init(void);
 extern void Fly_InitTyFlies(void);
-extern void Boomerang_Init(void);
 extern void Dialog_Init(void);
 extern void Ty_Init(void);
 extern void BushPig_Init(void);
 extern void Level_Load(char*);
 extern void Waterfall_Init(void);
 extern void WaterSlide_Init(void);
-extern void RenderTexture_Init(void);
-extern void Path_Manager_Init(void);
 extern void Enemies_InitBoundingRegions(void);
 extern void MiniGame_Init(void);
 extern int Main_GetCameraDistanceTypeForLevel(void);
@@ -409,7 +404,6 @@ extern void EnableTechnoRangs(void);
 extern void EnableElementalRangs(void);
 extern void EnableChangeLevel(bool);
 
-extern float GrassGCMaxRadius;
 extern Vector* pCameraGrassPoint;
 extern bool bEnableGallery;
 extern bool bEnableMovies;

@@ -258,6 +258,15 @@ void Lasso::InitLassoThrow(void) {
     unk6C = RandomFR(&gb.mRandSeed, 0.2f, 0.8f);
 
     unk74 = RandomIR(&gb.mRandSeed, 0, 2) == 1;
+
+    Vector sp28;
+    Vector sp38;
+    Vector sp48;
+
+    GetControlPoints(&sp48, &sp28, &sp38);
+
+    Vector sp18;
+    sp18.InterpolateLinear(&sp38, &sp48, targetRadius / unk104);
 }
 
 void Lasso::LassoThrow(void) {

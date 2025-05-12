@@ -327,5 +327,5 @@ void DropShadow::SetColor(Vector* pColor) {
 
 void DropShadow::Draw(void) {
     View::GetCurrent()->SetLocalToWorldMatrix(&mMatrix);
-    mStrips[0].Draw(4, 1.0f);
+    mStrips[0].Draw(ARRAY_SIZE(mStrips), 1.0f);
 }

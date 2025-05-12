@@ -74,10 +74,13 @@ enum GameObjDescFlags {
 
 struct GameObjDesc : MKPropDescriptor {
     virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
+    
     virtual void Load(KromeIni* pIni);
+
     virtual void* ConstructObject(void* mem) {
         return pModule->ConstructObject(mem); // weak virtual, placed in Bird.cpp
     }
+
     u8* SetUpMem(u8* pMem);
     void LoadObjects(KromeIni* pIni, KromeIniLine* pLine);
     GameObject* CreateObject(void);
@@ -149,7 +152,7 @@ struct ModuleInfo : ModuleInfoBase {
 
         pData->InitModule = GameObject::InitModule;
         pData->DeinitModule = GameObject::DeinitModule;
-        pData->pUpdateModule = GameObject::UpdateModule;
+        pData->pUpdateModule = T::UpdateModule;
         pData->pDrawModule = GameObject::DrawModule;
         pData->pAllocate = GameObject::Allocate;
         pData->pDeallocate = GameObject::Deallocate;

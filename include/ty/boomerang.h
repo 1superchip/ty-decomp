@@ -299,6 +299,9 @@ struct ExplosionMessage : MKMessage {
     }
 };
 
+void Boomerang_Init(void);
+void Boomerang_Deinit(void);
+void Boomerang_Reset(void);
 
 Boomerang* Boomerang_CheckForHitSphere(Vector* pVec, float radius, bool r4);
 Boomerang* Boomerang_CheckForHit(Model* pModel, int subobjectIdx, CollisionResult* pCr);

@@ -4,6 +4,9 @@
 #include "types.h"
 #include "common/Vector.h"
 
+void Path_Manager_Init(void);
+void Path_Manager_Deinit(void);
+
 #define MAX_NEXUS_JOINS (16)
 
 struct PathLoadInfo {
