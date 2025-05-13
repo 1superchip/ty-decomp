@@ -8,10 +8,11 @@ void GuideParticle_Show(void);
 void GuideParticle_Hide(void);
 bool GuideParticle_HasPassedThoughAll(void);
 
+/// @brief Time attack ring object
 struct GuideParticle : GameObject {
     float unk3C;
     Matrix unk40;
-    int unk80;
+    int gateOrderIndex;
     int unk84;
 
     int unk88;

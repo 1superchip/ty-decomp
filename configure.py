@@ -537,7 +537,7 @@ config.libs = [
             Object(NonMatching, "ty/source/Gate.cpp"),
             Object(Matching, "ty/source/global.cpp"),
             Object(NonMatching, "ty/source/guidebarrel.cpp"),
-            Object(NonMatching, "ty/source/GuideParticle.cpp"),
+            Object(Matching, "ty/source/GuideParticle.cpp"),
             Object(Matching, "ty/source/heatflare.cpp"),
             Object(NonMatching, "ty/source/Hud.cpp"),
             Object(NonMatching, "ty/source/iceblock.cpp"),
