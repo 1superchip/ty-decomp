@@ -22,6 +22,12 @@ struct BoundingVolume {
         pCentre->y = v1.y + (v2.y * 0.5f);
         pCentre->z = v1.z + (v2.z * 0.5f);
     }
+
+    bool IsWithin(Vector* pPoint) {
+        return ((pPoint->x >= v1.x) && pPoint->x <= v1.x + v2.x) &&
+            ((pPoint->y >= v1.y) && pPoint->y <= v1.y + v2.y) &&
+            ((pPoint->z >= v1.z) && pPoint->z <= v1.z + v2.z);
+    }
 };
 
 inline bool BoundingVolume_CheckPoint(BoundingVolume *volume, Vector *point) {

@@ -22,6 +22,7 @@ enum BunyipState {
     BUNYIP_DISAPPEAR    = 8,
 };
 
+/// @brief Bunyip object used when Ty is in the Bunyip state
 struct Bunyip : AnimatingProp {
     Vector mRot;
     Vector mDefaultPos;

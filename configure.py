@@ -530,7 +530,7 @@ config.libs = [
             Object(NonMatching, "ty/source/elle.cpp"),
             Object(NonMatching, "ty/source/emu.cpp"),
             Object(Matching, "ty/source/ExtendedAnalogControl.cpp"),
-            Object(NonMatching, "ty/source/finishline.cpp"),
+            Object(Matching, "ty/source/finishline.cpp"),
             Object(Matching, "ty/source/GameData.cpp"),
             Object(Matching, "ty/source/GameObject.cpp"),
             Object(Matching, "ty/source/GameObjectManager.cpp"),
