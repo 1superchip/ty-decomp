@@ -38,7 +38,12 @@ enum BoomerangType {
 
 #define NUM_BOOMERANGS (BR_Max)
 
-enum BoomerangSound {};
+enum BoomerangSound {
+    BR_SOUND_0 = 0,
+    BR_SOUND_1 = 1,
+    BR_SOUND_2 = 2,
+    BR_SOUND_3 = 3
+};
 
 struct BoomerangDesc : GameObjDesc {
     char trailMatName[0x20];

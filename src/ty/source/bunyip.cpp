@@ -188,7 +188,7 @@ extern "C" void Sound_SetVolume(int, char, char);
 void Bunyip::Disappear(void) {
     Sound_SetVolume(mSoundHelper.unk0, mScale * 255.0f, mScale * 255.0f);
 
-    mScale -= (1.0f / gDisplay.displayFreq);
+    mScale -= (1.0f / gDisplay.fps);
 
     if (mScale < 0.0f) {
         mScale = 0.0f;
@@ -222,7 +222,7 @@ void Bunyip::SetState(BunyipState newState) {
             GetPos()->y += 75.0f;
             mAnimScript.SetAnim(mAnimManager.GetAnim(10));
             unkD9 = true;
-            bunyipLifeSpan = gDisplay.displayFreq * (float)gb.mDataVal.bunyipLifeSpan;
+            bunyipLifeSpan = gDisplay.fps * (float)gb.mDataVal.bunyipLifeSpan;
             SoundBank_PauseMusic(true, 0.5f);
             SoundBank_Play(0x91, NULL, 0);
             break;

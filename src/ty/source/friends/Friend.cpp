@@ -82,7 +82,6 @@ void Friend::LoadDone(void) {
 }
 
 /// @brief Draws a Friend object
-/// @param  None
 void Friend::Draw(void) {
     // If bFlashSkeleton is true, set the default material to the Shock Material
     if (bFlashSkeleton) {
@@ -130,7 +129,7 @@ void Friend::Message(MKMessage* pMsg) {
                     // and have the boomerang play a sound
                     // When a friend is hit by the zappyrang, they will flash on and off
                     // showing a skeleton
-                    pBoomerangMsg->pBoomerang->PlaySound((BoomerangSound)3, 0);
+                    pBoomerangMsg->pBoomerang->PlaySound(BR_SOUND_3, 0);
                     mFlashTimer = 40;
                 }
             }
@@ -187,7 +186,6 @@ void Friend::Init(GameObjDesc* pDesc) {
 }
 
 /// @brief Deinits the object
-/// @param  None
 void Friend::Deinit(void) {
     mStateManager.Deinit(this);
     
@@ -199,7 +197,6 @@ void Friend::Deinit(void) {
 }
 
 /// @brief Resets fields
-/// @param  None
 void Friend::Reset(void) {
     mAnimScript.Init(&GetDesc()->mAnimScript);
 

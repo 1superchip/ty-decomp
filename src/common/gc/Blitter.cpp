@@ -32,9 +32,11 @@ void Blitter_Box::Draw(int count) {
         int green = (int)(pBox->color.y * 255.0f);
         int blue = (int)(pBox->color.z * 255.0f);
         int alpha = (int)(pBox->color.w * 255.0f);
+
         float posX = pBox->origin.x;
         float posY = pBox->origin.y;
         float posZ = pBox->origin.z;
+
         float endX = posX + pBox->extent.x;
         float endY = posY + pBox->extent.y;
         float endZ = posZ + pBox->extent.z;
@@ -167,7 +169,8 @@ void CalcUV(float& u, float& v, int y, float default00, float default01, float c
 void Blitter_Particle::Draw(int count) {
     Blitter_Particle* pParticle = this;
     
-    float uv[4][2];
+    float rotatedUV[4][2];
+
     static float defaultUV[4][2] = {
         0.0f, 0.0f,
         1.0f, 0.0f,
@@ -176,8 +179,8 @@ void Blitter_Particle::Draw(int count) {
     };
 	
     View* pView = View::GetCurrent();
-    Vector* pViewRow0 = pView->unk48.Row0();
-    Vector* pViewRow1 = pView->unk48.Row1();
+    Vector* pCameraX = pView->unk48.Row0();
+    Vector* pCameraY = pView->unk48.Row1();
 	
     // initiate GX
     GXClearVtxDesc();
@@ -186,26 +189,31 @@ void Blitter_Particle::Draw(int count) {
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 	
     for (int i = 0; i < count; i++) {
-        float (* pUV)[2] = defaultUV;
+        float (*pUV)[2] = defaultUV; // Uses defaultUV by default
+
         if (pParticle->angle) {
             float c = _table_cosf(pParticle->angle);
             float s = _table_sinf(pParticle->angle);
-            pUV = uv;
+
+            // use rotatedUV if angle != 0.0f
+            pUV = rotatedUV;
+
             for (int y = 0; y < 4; y++) {
                 float u = (defaultUV[y][0] - 0.5f) * c - (defaultUV[y][1] - 0.5f) * s + 0.5f;
                 float v = (defaultUV[y][0] - 0.5f) * s + (defaultUV[y][1] - 0.5f) * c + 0.5f;
                 
-                uv[y][0] = u;
-                uv[y][1] = v;
+                rotatedUV[y][0] = u;
+                rotatedUV[y][1] = v;
             }
         }
         
-        float dVar29 = (pParticle->unk20 * pViewRow1->x) - (pParticle->unk20 * pViewRow0->x);
-        float dVar28 = (pParticle->unk20 * pViewRow1->y) - (pParticle->unk20 * pViewRow0->y);
-        float dVar27 = (pParticle->unk20 * pViewRow1->x) + (pParticle->unk20 * pViewRow0->x);
-        float dVar26 = (pParticle->unk20 * pViewRow1->y) + (pParticle->unk20 * pViewRow0->y);
-        float dVar25 = (pParticle->unk20 * pViewRow1->z) - (pParticle->unk20 * pViewRow0->z);
-        float dVar24 = (pParticle->unk20 * pViewRow1->z) + (pParticle->unk20 * pViewRow0->z);
+        // Apply rotation to always face towards the camera
+        float dVar29 = (pParticle->scale * pCameraY->x) - (pParticle->scale * pCameraX->x);
+        float dVar28 = (pParticle->scale * pCameraY->y) - (pParticle->scale * pCameraX->y);
+        float dVar27 = (pParticle->scale * pCameraY->x) + (pParticle->scale * pCameraX->x);
+        float dVar26 = (pParticle->scale * pCameraY->y) + (pParticle->scale * pCameraX->y);
+        float dVar25 = (pParticle->scale * pCameraY->z) - (pParticle->scale * pCameraX->z);
+        float dVar24 = (pParticle->scale * pCameraY->z) + (pParticle->scale * pCameraX->z);
         
         u8 red = pParticle->color.x * 255.0f;
         u8 green = pParticle->color.y * 255.0f;
@@ -257,17 +265,19 @@ void Blitter_Particle::DrawFrames(int count, float arg1) {
     Blitter_Particle* pParticle = this;
     
     View* pView = View::GetCurrent();
-    Vector* viewVec = pView->unk48.Row0();
-    Vector* viewVec1 = pView->unk48.Row1();
+    Vector* pCameraX = pView->unk48.Row0();
+    Vector* pCameraY = pView->unk48.Row1();
     
     for (int i = 0; i < count; i++) {
+        // Rotate to always face towards the camera
         float dVar29, dVar28, dVar27, dVar26, dVar25, dVar24;
-        dVar29 = pParticle->unk20 * (viewVec1->x - viewVec->x);
-        dVar28 = pParticle->unk20 * (viewVec1->y - viewVec->y);
-        dVar27 = pParticle->unk20 * (viewVec1->x + viewVec->x);
-        dVar26 = pParticle->unk20 * (viewVec1->y + viewVec->y);
-        dVar25 = pParticle->unk20 * (viewVec1->z - viewVec->z);
-        dVar24 = pParticle->unk20 * (viewVec1->z + viewVec->z);
+        
+        dVar29 = pParticle->scale * (pCameraY->x - pCameraX->x);
+        dVar28 = pParticle->scale * (pCameraY->y - pCameraX->y);
+        dVar27 = pParticle->scale * (pCameraY->x + pCameraX->x);
+        dVar26 = pParticle->scale * (pCameraY->y + pCameraX->y);
+        dVar25 = pParticle->scale * (pCameraY->z - pCameraX->z);
+        dVar24 = pParticle->scale * (pCameraY->z + pCameraX->z);
         
         u8 red = pParticle->color.x * 255.0f;
         u8 green = pParticle->color.y * 255.0f;
@@ -323,6 +333,7 @@ void Blitter_Image::Draw(int count) {
         float _startY = pImage->startY;
         float _endX = pImage->endX;
         float _endY = pImage->endY;
+
         u8 red = 255.0f * pImage->color.x;
         u8 green = 255.0f * pImage->color.y;
         u8 blue = 255.0f * pImage->color.z;
@@ -345,6 +356,7 @@ void Blitter_Image::Draw(int count) {
         GXPosition3f32(_endX, _endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
         GXTexCoord2f32(pImage->uv2, pImage->uv3);
+        
         pImage++;
     }
 
@@ -370,8 +382,9 @@ void Blitter_UntexturedImage::Draw(int count) {
     while (count-- > 0) {
         float posX = pImage->pos.x;
         float posY = pImage->pos.y;
-        float posZ = pImage->pos.z;
-        float posW = pImage->pos.w;
+        float endX = pImage->pos.z;
+        float endY = pImage->pos.w;
+
         int red = pImage->color[3];
         alpha = (pImage->color[0] * 255) >> 7;
         u8 green = pImage->color[2];
@@ -379,16 +392,16 @@ void Blitter_UntexturedImage::Draw(int count) {
 
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT1, 4);
 
-        GXPosition3f32(posX, posY, pImage->unk10);
+        GXPosition3f32(posX, posY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
 
-        GXPosition3f32(posX, posW, pImage->unk10);
+        GXPosition3f32(posX, endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
 
-        GXPosition3f32(posZ, posY, pImage->unk10);
+        GXPosition3f32(endX, posY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
 
-        GXPosition3f32(posZ, posW, pImage->unk10);
+        GXPosition3f32(endX, endY, pImage->z);
         GXColor4u8(red, green, blue, alpha);
         pImage++;
     }

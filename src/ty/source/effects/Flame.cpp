@@ -97,7 +97,7 @@ void Flame::Reset(void) {
 /// @brief Custom update for the Flame Particle System
 /// @param pSys ParticleSystem to update
 void Flame_CustomUpdate(ParticleSystem* pSys) {
-    float f31 = gDisplay.frameTime;
+    float f31 = gDisplay.dt;
     float f30 = pSys->GetAge() - pSys->mpType->unk1C;
     float f28 = pSys->mpType->unk48;
     float f29 = pSys->mpType->unk64;

@@ -59,7 +59,7 @@ void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
 }
 
 void MKSceneManager::Deinit(void) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < (int)ARRAY_SIZE(staticPropTree); i++) {
         staticPropTree[i].Deinit();
     }
 
@@ -265,65 +265,55 @@ void SMTree::Deinit(void) {
     }
 }
 
-static inline void Vector_Average(Vector* pOut, Vector* pIn, Vector* pIn2) {
-    pOut->x = (pIn->x + 0.5f * pIn2->x);
-    pOut->y = (pIn->y + 0.5f * pIn2->y);
-    pOut->z = (pIn->z + 0.5f * pIn2->z);
-}
-
-static inline void Vector_Sub(Vector* pOut, Vector* pIn, Vector* pIn2) {
-    pOut->x = (pIn2->x - pIn->x);
-    pOut->y = (pIn2->y - pIn->y);
-    pOut->z = (pIn2->z - pIn->z);
-}
-
-static inline void BoundingVolume_Center(BoundingVolume* volume, BoundingVolume* volume1, Vector* pOut) {
-    pOut->x = (volume->v1.x + 0.5f * volume->v2.x);// - (volume1->v1.x + 0.5f * volume1->v2.x);
-    pOut->y = (volume->v1.y + 0.5f * volume->v2.y);// - (volume1->v1.y + 0.5f * volume1->v2.y);
-    pOut->z = (volume->v1.z + 0.5f * volume->v2.z);// - (volume1->v1.z + 0.5f * volume1->v2.z);
-}
-
 void SMTree::PairUp(int arg1, int arg2) {
     SMNode* pNode2;
     SMNode save1;
     SMNode* pSave;
 
     for (int idx = 0; idx < arg2 - 1; idx += 2) {
-        int iVar8 = idx + 1;
+        int iVar8;
         SMNode* pNode1 = &pNodes[arg1 + idx];
         SMNode* pClosest = pNode1;
-        float centreX = pNode1->volume.v1.x + 0.5f * pNode1->volume.v2.x;
+
+        Vector centre1;
+        Vector centre2;
+
+        pNode1->volume.GetCentre(&centre1);
+        float centreX = centre1.x;
         
-        while (iVar8 < arg2) {
+        for (iVar8 = idx + 1; iVar8 < arg2; iVar8++) {
             pNode2 = &pNodes[arg1 + iVar8];
-            float centreX2 = pNode2->volume.v1.x + 0.5f * pNode2->volume.v2.x;
-            if (centreX2 < centreX) {
-                centreX = centreX2;
+
+            pNode2->volume.GetCentre(&centre2);
+
+            if (centre2.x < centreX) {
+                centreX = centre2.x;
                 pClosest = pNode2;
             }
-            iVar8++;
+
         }
 
         pSave = NULL;
-        iVar8 = idx + 1;
         save1 = *pNode1;
         *pNode1 = *pClosest;
         *pClosest = save1;
         float maxDist = 100000000000000.0f;
-        Vector average;
-        Vector_Average(&average, &pNode1->volume.v1, &pNode1->volume.v2);
-        while (iVar8 < arg2) {
+
+        pNode1->volume.GetCentre(&centre1);
+
+        for (iVar8 = idx + 1; iVar8 < arg2; iVar8++) {
             pNode2 = &pNodes[arg1 + iVar8];
-            Vector centre;
-            Vector_Average(&centre, &pNode2->volume.v1, &pNode2->volume.v2);
-            BoundingVolume_Center(&pNode2->volume, &pNode1->volume, &centre);
-            Vector_Sub(&centre, &centre, &average);
-            float mag = centre.MagSquared();
+
+            Vector diff;
+            pNode2->volume.GetCentre(&centre2);
+            diff.Sub(&centre1, &centre2);
+
+            float mag = diff.MagSquared();
             if (mag < maxDist) {
                 maxDist = mag;
                 pSave = pNode2;
             }
-            iVar8++;
+
         }
 
         save1 = *(pNode1 + 1);
@@ -332,6 +322,7 @@ void SMTree::PairUp(int arg1, int arg2) {
     }
 }
 
+// class method
 void SMNode_ComputeVolume(SMNode* pThis, SMNode* pNode1, SMNode* pNode2) {
     float xMax = Max<float>(pNode2->volume.v1.x + pNode2->volume.v2.x, pNode1->volume.v1.x + pNode1->volume.v2.x);
     float yMax = Max<float>(pNode2->volume.v1.y + pNode2->volume.v2.y, pNode1->volume.v1.y + pNode1->volume.v2.y);
@@ -352,7 +343,7 @@ inline void SMTree::LinkUpRow(int firstLeaf, int leafCount, int firstParent) {
         pParent->unk20[0] = node;
         pParent->unk20[1] = node + 1;
         SMNode_ComputeVolume(pParent, node, node + 1);
-        pParent->drawDist = Max<float>(node->drawDist, (node + 1)->drawDist);
+        pParent->drawDist = Max<float>(node->drawDist, node[1].drawDist);
         node += 2;
         pParent++;
     }
@@ -362,17 +353,21 @@ void SMTree::LinkUp(void) {
     if (pLastNode == NULL || nmbrOfSubObjects == 1) {
         return;
     }
+
     s32 subobjectCount = nmbrOfSubObjects;
+    
     int depth = -1;
     int s = subobjectCount;
     while (s != 0) {
         s >>= 1;
         depth++;
     }
+
     if (subobjectCount & subobjectCount - 1) {
         PairUp(0, subobjectCount);
         LinkUpRow(0, propCount - (((1 << depth)) * 2 - 1), nmbrOfSubObjects);
     }
+
     while (depth != 0) {
         PairUp(propCount - (((1 << depth)) * 2 - 1), 1 << depth);
         LinkUpRow(propCount - (((1 << depth)) * 2 - 1), 1 << depth, propCount - (((1 << (depth - 1))) * 2 - 1));
@@ -768,10 +763,12 @@ void MKSceneManager::UpdateProps(void) {
 void SendMessageToProp(MKProp* pProp, MKMessage* pMessage, uint mask, Vector* pPos, float radius) {
     if (mask == 0 || mask & pProp->pDescriptor->searchMask) {
         if (pPos != NULL) {
-            Vector *pLTWTrans = pProp->pLocalToWorld->Row3();
+            Vector* pLTWTrans = pProp->pLocalToWorld->Row3();
+
             float distSq = Sqr<float>(pLTWTrans->x - pPos->x) + 
                 Sqr<float>(pLTWTrans->y - pPos->y) + 
                 Sqr<float>(pLTWTrans->z - pPos->z);
+
             if (distSq < Sqr<float>(radius)) {
                 pProp->Message(pMessage);
             }
@@ -781,7 +778,7 @@ void SendMessageToProp(MKProp* pProp, MKMessage* pMessage, uint mask, Vector* pP
     }
 }
 
-void MKSceneManager::SendMessage(MKMessage *pMessage, uint mask, bool bIncludeStatic, Vector *pPos, float radius) {
+void MKSceneManager::SendMessage(MKMessage* pMessage, uint mask, bool bIncludeStatic, Vector* pPos, float radius) {
     int i;
     int index;
 
@@ -829,12 +826,14 @@ void MKSceneManager::SetActivePoint(Vector* pPoint) {
 
 void MKSceneManager::UpdateProp(MKProp* pProp, MKMessage* pMessage) {
     MKProp* nextUpdated = pProp->pNextUpdated;
+
     if (nextUpdated == NULL) {
         pProp->Message(pMessage);
     } else {
         nextUpdated->pPrevUpdated = pProp->pPrevUpdated;
         pProp->pPrevUpdated->pNextUpdated = pProp->pNextUpdated;
     }
+
     MKProp* prop = &props[propIdx];
     pProp->pNextUpdated = prop->pNextUpdated;
     pProp->pPrevUpdated = prop;
@@ -895,7 +894,7 @@ int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTes
             props = ppProps;
             for (prop = dynamicPropArray[i].pNext; prop != &dynamicPropArray[i] && ret < maxCount; prop = prop->pNext) {
                 if (searchMask == -1 || prop->pDescriptor->searchMask & searchMask) {
-                    Vector *pLTWTrans = prop->pLocalToWorld->Row3();
+                    Vector* pLTWTrans = prop->pLocalToWorld->Row3();
                     float distSq = Sqr<float>(pLTWTrans->x - pTestPt->x) +
                         Sqr<float>(pLTWTrans->y - pTestPt->y) + 
                         Sqr<float>(pLTWTrans->z - pTestPt->z);

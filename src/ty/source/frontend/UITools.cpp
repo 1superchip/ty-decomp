@@ -78,7 +78,7 @@ void UIButton::Update(void) {
         // If selected, update text scale
         
         if (pDescriptor->bAnimateTextScale && mAngle > 0.0f) {
-            mAngle += 6.0f / gDisplay.displayFreq;
+            mAngle += 6.0f / gDisplay.fps;
             if (mAngle > (2.0f * PI)) {
                 mAngle -= (2.0f * PI);
             }
@@ -88,13 +88,13 @@ void UIButton::Update(void) {
         
         if (f2 >= unk34 * 1.2f) {
             if (pDescriptor->bAnimateTextScale) {
-                mAngle = 6.0f / gDisplay.displayFreq;
+                mAngle = 6.0f / gDisplay.fps;
                 mText.SetScale((_table_sinf(mAngle) * 0.025f + 1.2f) * unk34);
             } else {
                 mText.SetScale(unk34 * 1.2f);
             }
         } else {
-            mText.SetScale(f2 + (2.0f / gDisplay.displayFreq) * unk34);
+            mText.SetScale(f2 + (2.0f / gDisplay.fps) * unk34);
         }
 
         return;
@@ -105,7 +105,7 @@ void UIButton::Update(void) {
         return;
     }
 
-    mText.SetScale(mText.GetScale() - (2.0f / gDisplay.displayFreq) * unk34);
+    mText.SetScale(mText.GetScale() - (2.0f / gDisplay.fps) * unk34);
 }
 
 void UIButton::Draw(void) {

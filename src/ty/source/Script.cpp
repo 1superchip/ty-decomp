@@ -51,7 +51,7 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
 
 void ScriptProp::Update(void) {
     if (bActive) {
-        unk40 -= gDisplay.frameTime;
+        unk40 -= gDisplay.dt;
 
         if (!(unk40 <= 0.0f)) {
             return;
@@ -171,32 +171,32 @@ bool ConditionalScriptProp::CheckConditions(void) {
             break;
         case 3:
             // Check if the zones have been completed by defeating the zone boss (Conditions 3 - 7)
-            if (gb.mGameData.IsZoneCompleted(1)) {
+            if (gb.mGameData.IsZoneCompleted(ZN_1)) {
                 bConditionMet = true;
             }
             break;
         case 4:
-            if (gb.mGameData.IsZoneCompleted(2)) {
+            if (gb.mGameData.IsZoneCompleted(ZN_2)) {
                 bConditionMet = true;
             }
             break;
         case 5:
-            if (gb.mGameData.IsZoneCompleted(3)) {
+            if (gb.mGameData.IsZoneCompleted(ZN_3)) {
                 bConditionMet = true;
             }
             break;
         case 6:
-            if (gb.mGameData.IsZoneCompleted(4)) {
+            if (gb.mGameData.IsZoneCompleted(ZN_4)) {
                 bConditionMet = true;
             }
             break;
         case 7:
-            if (gb.mGameData.IsZoneCompleted(5)) {
+            if (gb.mGameData.IsZoneCompleted(ZN_5)) {
                 bConditionMet = true;
             }
             break;
         case 8:
-            if (gb.mGameData.HasLevelBeenEntered(gb.mGameData.GetCurrentLevel())) {
+            if (!gb.mGameData.HasLevelBeenEntered(gb.mGameData.GetCurrentLevel())) {
                 bConditionMet = true;
             }
             break;
@@ -213,27 +213,28 @@ bool ConditionalScriptProp::CheckConditions(void) {
             break;
         case 11:
             // check if the zone hasn't been completed but the (boss level?) has been entered (Conditions 11 - 14)
-            if (gb.mGameData.GetLevelEnterCount(LN_BULLS_PEN) != 0 && !gb.mGameData.IsZoneCompleted(1)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_BULLS_PEN) != 0 && !gb.mGameData.IsZoneCompleted(ZN_1)) {
                 bConditionMet = true;
             }
             break;
         case 12:
-            if (gb.mGameData.GetLevelEnterCount(LN_CRIKEYS_COVE) != 0 && !gb.mGameData.IsZoneCompleted(2)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_CRIKEYS_COVE) != 0 && !gb.mGameData.IsZoneCompleted(ZN_2)) {
                 bConditionMet = true;
             }
             break;
         case 13:
-            if (gb.mGameData.GetLevelEnterCount(LN_FLUFFYS_FJORD) != 0 && !gb.mGameData.IsZoneCompleted(3)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_FLUFFYS_FJORD) != 0 && !gb.mGameData.IsZoneCompleted(ZN_3)) {
                 bConditionMet = true;
             }
             break;
         case 14:
-            if (gb.mGameData.GetLevelEnterCount(LN_FINAL_BATTLE) != 0 && !gb.mGameData.IsZoneCompleted(5)) {
+            if (gb.mGameData.GetLevelEnterCount(LN_FINAL_BATTLE) != 0 && !gb.mGameData.IsZoneCompleted(ZN_5)) {
                 bConditionMet = true;
             }
             break;
         case 15:
-            if (gb.mGameData.CheckZone_Unk0(5)) {
+            // GateE ?
+            if (gb.mGameData.CheckZone_Unk0(ZN_5)) {
                 bConditionMet = true;
             }
             break;

@@ -137,7 +137,7 @@ void GuideParticle::Reset(void) {
 }
 
 void GuideParticle::Update(void) {
-    float roll = ((gb.logicGameCount % (uint)(gDisplay.displayFreq * 8.0f)) * 0.125f) * gDisplay.frameTime * PI * 2.0f;
+    float roll = ((gb.logicGameCount % (uint)(gDisplay.fps * 8.0f)) * 0.125f) * gDisplay.dt * PI * 2.0f;
 
     Matrix m;
 
@@ -202,7 +202,7 @@ void GuideParticle::UpdateModule(void) {
         return;
     }
 
-    int d = gDisplay.displayFreq * 15.0f;
+    int d = gDisplay.fps * 15.0f;
 
     gateTimeOutCounter++;
 

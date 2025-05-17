@@ -17,11 +17,11 @@ Material* RainbowEffect::pRainbowMat;
 
 void RainbowEffect_Update(ParticleSystem* pSys) {
 
-    float f31 = gDisplay.frameTime;
+    float f31 = gDisplay.dt;
 
     float f29 = pSys->GetAge() - pSys->mpType->unk1C;
     
-    float f30 = gDisplay.frameTime * pSys->mpType->yVel;
+    float f30 = gDisplay.dt * pSys->mpType->yVel;
 
     if (!pSys->mpType->InfiniteParticles()) {
         pSys->DestroyAllParticlesCreatedBefore(f29);

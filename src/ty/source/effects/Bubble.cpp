@@ -63,7 +63,7 @@ void Bubble_CustomUpdate(ParticleSystem* pSys) {
                 
                 pParticle->SetUnk58ArrayByIndex(
                     1, 
-                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.frameTime
+                    pParticle->GetUnk58ArrayByIndex(1) - gDisplay.dt
                 );
 
                 if (pParticle->GetUnk58ArrayByIndex(1) <= 0.0f || 

@@ -50,12 +50,13 @@ struct Blitter_Line3D {
     }
 };
 
+/// @brief 2D particle that always faces the camera
 struct Blitter_Particle {
     Vector pos;
     Vector color;
-    float unk20;
+    float scale;
     uint unk24;
-    float angle;
+    float angle; // Angle of which to rotate texture (rotates UVs). Is not used in DrawFrames
     float unk2C;
     
     void Draw(int count);
@@ -85,7 +86,7 @@ struct Blitter_Image {
 
 struct Blitter_UntexturedImage {
     Vector pos;
-    float unk10;
+    float z;
     u8 color[4];
     float unk20;
     

@@ -271,7 +271,21 @@ int Tools_MapPadToKey(int);
 void Tools_ProcessString(char*);
 
 struct FaderObject {
-    enum FadeMode {};
+    enum FadeMode {
+        FADEMODE_0 = 0,
+        FADEMODE_1 = 1,
+        FADEMODE_2 = 2,
+        FADEMODE_3 = 3,
+        FADEMODE_4 = 4,
+        FADEMODE_5 = 5,
+        FADEMODE_6 = 6,
+        FADEMODE_7 = 7,
+        FADEMODE_8 = 8,
+        FADEMODE_9 = 9,
+        FADEMODE_10 = 10,
+        FADEMODE_11 = 11,
+    };
+
     enum FadeState {
         FADESTATE_0 = 0,
         FADESTATE_1 = 1,

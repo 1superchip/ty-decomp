@@ -105,9 +105,9 @@ struct StaticFXPropDesc : StaticPropDescriptor {
                         {"rotate", FX_Rotate}
                     };
 
-                    if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, 5, &effectFlags) == false) {
+                    if (LoadLevel_LoadFlags(pLine, "effectFlags", flagsTmp, ARRAY_SIZE(flagsTmp), &effectFlags) == false) {
                         if (LoadLevel_LoadVector(pLine, "autoRotate", &autoRotate)) {
-                            autoRotate.Scale(gDisplay.frameTime);
+                            autoRotate.Scale(gDisplay.dt);
                         } else {
                             LoadLevel_LoadString(pLine, "rotateSubObj", rotateSubObj, sizeof(rotateSubObj), 0);
                         }

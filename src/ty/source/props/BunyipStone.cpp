@@ -67,7 +67,7 @@ void BunyipStone::Update(void) {
         if (dist.MagSquared() < 2500.0f && Bunyip_Activate()) {
             // if the hero is in distance and the Bunyip was activated
             // set the timer 
-            cooldownTimer = gDisplay.displayFreq * 120.0f;
+            cooldownTimer = gDisplay.fps * 120.0f;
             mBallState = BS_BALLSTATE_HIDE; // Start hiding the balls in the stone
         }
     }

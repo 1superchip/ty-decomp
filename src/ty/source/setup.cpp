@@ -25,36 +25,36 @@ MKSceneManager gSceneManager;
 
 int gLevelLoadStartTime = 0;
 
-LevelInfo levelInfo[24] = {
-    {"z1", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, true}, // Rainbow Cliffs
-    {"z2", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, true}, 
-    {"z3", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, false}, 
-    {"z4", (ElementType)3, (ZoneNumber)0, (TalismanType)0, false, false}, 
+LevelInfo levelInfo[TOTAL_LEVEL_MAX] = {
+    {"z1", ELEMENT_RAINBOW, ZN_0, TALISMAN_TYPE_0, false, true}, // Rainbow Cliffs
+    {"z2", ELEMENT_RAINBOW, ZN_0, TALISMAN_TYPE_0, false, true}, 
+    {"z3", ELEMENT_RAINBOW, ZN_0, TALISMAN_TYPE_0, false, false}, 
+    {"z4", ELEMENT_RAINBOW, ZN_0, TALISMAN_TYPE_0, false, false}, 
 
-    {"a1", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Two Up
-    {"a2", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Walk in the Park
-    {"a3", (ElementType)0, (ZoneNumber)1, (TalismanType)0, true, true}, // Ship Rex
-    {"a4", (ElementType)0, (ZoneNumber)1, (TalismanType)0, false, false}, // Bull's Pen
+    {"a1", ELEMENT_FIRE, ZN_1, TALISMAN_TYPE_0, true, true}, // Two Up
+    {"a2", ELEMENT_FIRE, ZN_1, TALISMAN_TYPE_0, true, true}, // Walk in the Park
+    {"a3", ELEMENT_FIRE, ZN_1, TALISMAN_TYPE_0, true, true}, // Ship Rex
+    {"a4", ELEMENT_FIRE, ZN_1, TALISMAN_TYPE_0, false, false}, // Bull's Pen
 
-    {"b1", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Bridge on the River Ty
-    {"b2", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Snow Worries
-    {"b3", (ElementType)1, (ZoneNumber)2, (TalismanType)1, true, true}, // Outback Safari
-    {"b4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, //
+    {"b1", ELEMENT_ICE, ZN_2, TALISMAN_TYPE_1, true, true}, // Bridge on the River Ty
+    {"b2", ELEMENT_ICE, ZN_2, TALISMAN_TYPE_1, true, true}, // Snow Worries
+    {"b3", ELEMENT_ICE, ZN_2, TALISMAN_TYPE_1, true, true}, // Outback Safari
+    {"b4", ELEMENT_ICE, ZN_2, TALISMAN_TYPE_1, false, false}, //
 
-    {"c1", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Lyre Lyre Pants on Fire
-    {"c2", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Beyond the Black Stump
-    {"c3", (ElementType)2, (ZoneNumber)3, (TalismanType)2, true, true}, // Rex Marks The Spot
-    {"c4", (ElementType)2, (ZoneNumber)3, (TalismanType)2, false, false}, // Fluffy's Fjord
+    {"c1", ELEMENT_AIR, ZN_3, TALISMAN_TYPE_2, true, true}, // Lyre Lyre Pants on Fire
+    {"c2", ELEMENT_AIR, ZN_3, TALISMAN_TYPE_2, true, true}, // Beyond the Black Stump
+    {"c3", ELEMENT_AIR, ZN_3, TALISMAN_TYPE_2, true, true}, // Rex Marks The Spot
+    {"c4", ELEMENT_AIR, ZN_3, TALISMAN_TYPE_2, false, false}, // Fluffy's Fjord
 
-    {"d1", (ElementType)2, (ZoneNumber)5, (TalismanType)3, false, false}, 
-    {"d2", (ElementType)2, (ZoneNumber)5, (TalismanType)3, false, false}, // Cass' Crest
-    {"d3", (ElementType)2, (ZoneNumber)4, (TalismanType)3, false, false}, 
-    {"d4", (ElementType)1, (ZoneNumber)2, (TalismanType)1, false, false}, // Crikey's Cove
+    {"d1", ELEMENT_AIR, ZN_5, TALISMAN_TYPE_3, false, false}, 
+    {"d2", ELEMENT_AIR, ZN_5, TALISMAN_TYPE_3, false, false}, // Cass' Crest
+    {"d3", ELEMENT_AIR, ZN_4, TALISMAN_TYPE_3, false, false}, 
+    {"d4", ELEMENT_ICE, ZN_2, TALISMAN_TYPE_1, false, false}, // Crikey's Cove
 
-    {"e1", (ElementType)4, (ZoneNumber)5, (TalismanType)3, false, false}, // Cass' Pass
-    {"e2", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Bonus World (Day)
-    {"e3", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Bonus World (Night)
-    {"e4", (ElementType)4, (ZoneNumber)5, (TalismanType)4, false, false}, // Final Battle
+    {"e1", ELEMENT_EARTH, ZN_5, TALISMAN_TYPE_3, false, false}, // Cass' Pass
+    {"e2", ELEMENT_EARTH, ZN_5, TALISMAN_TYPE_4, false, false}, // Bonus World (Day)
+    {"e3", ELEMENT_EARTH, ZN_5, TALISMAN_TYPE_4, false, false}, // Bonus World (Night)
+    {"e4", ELEMENT_EARTH, ZN_5, TALISMAN_TYPE_4, false, false}, // Final Battle
 };
 
 void LevelData::InitDefaults(void) {
@@ -441,8 +441,8 @@ void Setup_LoadLevel(void) {
     LensFlare_Init();
     Dialog_Init();
 
-    gb.mGameData.SetCurrentZone(gb.level.GetZone((LevelNumber)gb.level.GetCurrentLevel()));
-    gb.mGameData.SetCurrentLevel((LevelNumber)gb.level.GetCurrentLevel());
+    gb.mGameData.SetCurrentZone(gb.level.GetZone(gb.level.GetCurrentLevel()));
+    gb.mGameData.SetCurrentLevel(gb.level.GetCurrentLevel());
 
     PauseScreen_InitLevel();
     objectManager.InitLevel();
@@ -548,7 +548,7 @@ void PreInitializeLevel(int r3) {
     gb.unk7AC = true;
     gb.level.unk400 = (LevelNumber)r3;
     gFERes.mFrontEndFader.Init(NULL, 640.0f, 512.0f);
-    gFERes.mFrontEndFader.mFader.Fade((FaderObject::FadeMode)5, 0.0f, 0.5f, 0.0f, false);
+    gFERes.mFrontEndFader.mFader.Fade(FaderObject::FADEMODE_5, 0.0f, 0.5f, 0.0f, false);
     gLevelLoadStartTime = Tools_GetTimeInSeconds();
 
 }

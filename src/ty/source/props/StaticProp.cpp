@@ -91,25 +91,34 @@ void StaticPropDescriptor::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDes
 
 void StaticPropDescriptor::Load(KromeIni* pIni) {
     GameObjDesc::Load(pIni);
+
     KromeIniLine* pLine = pIni->GotoLine(modelName, NULL);
+
     if (pLine != NULL) {
         lodDesc.Init(pIni, modelName);
+
         while (pLine != NULL && (pLine->section != NULL || pLine->pFieldName != NULL || pLine->comment != NULL)) {
+
             if (pLine->pFieldName != NULL) {
                 char* pString = NULL;
+
                 if (stricmp(pLine->pFieldName, "collide") == 0 && pLine->AsString(0, &pString) != false) {
                     if (stricmp("dynamic", pString) == 0) {
                         bDynamic = true;
+
                         if (pLine->elementCount > 1) {
                             pLine->AsString(1, &pString);
                         }
                     }
+
                     strncpy(subObjectName, pString, sizeof(subObjectName));
                 }
+
                 LoadLevel_LoadBool(pLine, "bUseGroundColor", &bUseGroundColor);
                 NameFlagPair flagsTmp[3] = {{"Grabable", 1}, {"NoIce", 2}, {"JumpCamera", 4}};
-                LoadLevel_LoadFlags(pLine, "collisionInfoFlags", flagsTmp, 3, &collisionInfoFlags);
+                LoadLevel_LoadFlags(pLine, "collisionInfoFlags", flagsTmp, ARRAY_SIZE(flagsTmp), &collisionInfoFlags);
             }
+
             pLine = pIni->GetLineWithLine(pLine);
         }
     }
@@ -133,7 +142,8 @@ void StaticProp::Deinit(void) {
 }
 
 bool StaticProp::LoadLine(KromeIniLine* pLine) {
-    return GameObject::LoadLine(pLine) || LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
+    return GameObject::LoadLine(pLine) || 
+        LoadLevel_LoadVector(pLine, "pos", pModel->matrices[0].Row3()) || 
         LoadLevel_LoadVector(pLine, "rot", &loadInfo.defaultRot) || 
         LoadLevel_LoadVector(pLine, "scale", &loadInfo.defaultScale) || 
         LoadLevel_LoadBool(pLine, "collide", &collide);
@@ -172,11 +182,9 @@ void StaticProp::LoadDone(void) {
             } else {
                 Collision_AddDynamicModel(pModel, &collisionInfo, -1);
             }
-        } else {
-            if (pModel->SubObjectExists(GetDesc()->subObjectName, &index)) {
-                Collision_AddStaticModel(pModel, &collisionInfo, index);
-                pModel->EnableSubObject(index, false);
-            }
+        } else if (pModel->SubObjectExists(GetDesc()->subObjectName, &index)) {
+            Collision_AddStaticModel(pModel, &collisionInfo, index);
+            pModel->EnableSubObject(index, false);
         }
     }
 
@@ -229,6 +237,7 @@ void StaticFXProp::LoadDone(void) {
         bCollidesWithWater = true;
         waterCollisionPos = cr.pos;
     }
+
     if ((GetDesc()->effectFlags & FX_Rotate) && GetDesc()->rotateSubObj[0] != '\0') {
         // if the rotation subobject name isn't empty and this prop has Rotate effects
         // get the index of the subobject that controls rotation

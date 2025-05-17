@@ -390,7 +390,7 @@ void MKGrass_Deinit(void) {
 
 void MKGrass_Update(void) {
     for (int i = 0; i < MAX_GRASS_ENTRIES; i++) {
-        GrassInfoGC[i].unk30 += gDisplay.frameTime * GrassInfoGC[i].textureAnimSpeed;
+        GrassInfoGC[i].unk30 += gDisplay.dt * GrassInfoGC[i].textureAnimSpeed;
         GrassInfoGC[i].unk34 = GrassInfoGC[i].unk30;
     }
 }

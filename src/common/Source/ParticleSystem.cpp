@@ -254,7 +254,7 @@ bool ParticleSystem::CheckLiveness(void) {
 }
 
 void ParticleSystem::Update(void) {
-    float f31 = gDisplay.frameTime;
+    float f31 = gDisplay.dt;
     
     if (bPaused) {
         return;
@@ -376,9 +376,12 @@ inline void ParticleSystem::DrawCPU(void) {
 
 inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, ParticleChunk* pChunk) {
     int r26 = mpType->unk14 - 1;
+
     View* pCurrView = View::GetCurrent();
-    Vector* pRow0 = pCurrView->unk48.Row0();
-    Vector* pRow1 = pCurrView->unk48.Row1();
+
+    Vector* pCameraX = pCurrView->unk48.Row0();
+    Vector* pCameraY = pCurrView->unk48.Row1();
+
     float f29, f28, f27, f26;
     float alpha0 = unk30 * (invDeathTimer * (pDynamic->unk0 * pDynamic->unkC));
     float f24 = pDynamic->unk4 * scale;
@@ -398,12 +401,12 @@ inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, 
         float particle48 = pChunk->mChunkData[i].unk48;
         float particle4C = pChunk->mChunkData[i].unk4C;
         
-        float fVar13 = (pRow1->x * particle4C - pRow0->x * particle48) * mpType->unkC;
-        float fVar14 = (pRow1->y * particle4C - pRow0->y * particle48) * mpType->unkC;
-        float fVar15 = (pRow1->z * particle4C - pRow0->z * particle48) * mpType->unkC;
-        float fVar16 = (pRow1->x * particle48 + pRow0->x * particle4C) * mpType->unk8;
-        float fVar17 = (pRow1->y * particle48 + pRow0->y * particle4C) * mpType->unk8;
-        float fVar18 = (pRow1->z * particle48 + pRow0->z * particle4C) * mpType->unk8;
+        float fVar13 = (pCameraY->x * particle4C - pCameraX->x * particle48) * mpType->unkC;
+        float fVar14 = (pCameraY->y * particle4C - pCameraX->y * particle48) * mpType->unkC;
+        float fVar15 = (pCameraY->z * particle4C - pCameraX->z * particle48) * mpType->unkC;
+        float fVar16 = (pCameraY->x * particle48 + pCameraX->x * particle4C) * mpType->unk8;
+        float fVar17 = (pCameraY->y * particle48 + pCameraX->y * particle4C) * mpType->unk8;
+        float fVar18 = (pCameraY->z * particle48 + pCameraX->z * particle4C) * mpType->unk8;
         
         float f0 = (pChunk->mChunkData[i].unk30 * pChunk->mChunkData[i].unk50) * f24;
         float chunkAlpha = pChunk->mChunkData[i].unk54 * pChunk->mChunkData[i].mColor.w;
@@ -540,7 +543,7 @@ void ParticleSystemType::Init(char* _pName, Material* pMat, float f1, float f2, 
 }
 
 void ParticleSystemType::Update(ParticleSystem* pSys) {
-    float f31 = gDisplay.frameTime;
+    float f31 = gDisplay.dt;
     
     pSys->uOffset += f31 * pSys->mpType->unk58;
     pSys->vOffset += f31 * pSys->mpType->unk5C;
@@ -669,7 +672,7 @@ void SimpleParticleSystemType::CalculateEnvelope(void) {
 
 void SimpleParticleSystemType::Update(ParticleSystem* pSys) {
 
-    float f31 = gDisplay.frameTime;
+    float f31 = gDisplay.dt;
     float f30 = pSys->GetAge() - pSys->mpType->unk1C;
     float f29 = f31 * pSys->mpType->unk44;
     float f28 = f31 * pSys->mpType->unk48;

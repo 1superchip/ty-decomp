@@ -50,12 +50,27 @@ enum LevelNumber {
 };
 
 enum ZoneNumber {
+    ZN_0        = 0,
+    ZN_1        = 1,
+    ZN_2        = 2,
+    ZN_3        = 3,
+    ZN_4        = 4,
+    ZN_5        = 5,
     TOTAL_ZONES = 6
 };
 
 enum GoldenCogType {};
 enum ThunderEggType {};
-enum TalismanType {};
+
+enum TalismanType {
+    TALISMAN_TYPE_0 = 0,
+    TALISMAN_TYPE_1 = 1,
+    TALISMAN_TYPE_2 = 2,
+    TALISMAN_TYPE_3 = 3,
+    TALISMAN_TYPE_4 = 4,
+    TALISMAN_TYPE_5 = 5
+};
+
 enum BilbyType {};
 
 struct GameDataSettings {
@@ -193,7 +208,7 @@ struct GameData {
     float GetSoundVolume(void);
     void SetMusicDucked(bool);
 
-    bool IsBilbyFree(int level, int type) {
+    bool IsBilbyFree(LevelNumber level, int type) {
         return pSaveData->levels[level].bilbies[type] & 1;
     }
 
@@ -201,9 +216,9 @@ struct GameData {
         bIsDirty = bSet;
     }
 
-    void SetHasTalisman(int zone, bool bHas) {
+    void SetHasTalisman(TalismanType type, bool bHas) {
         // Most likely defined in GameData.cpp
-        pSaveData->bHasTalismans[zone] = bHas;
+        pSaveData->bHasTalismans[type] = bHas;
         SetDataDirty(true);
     }
 
@@ -215,7 +230,7 @@ struct GameData {
         return pSaveData->tyAttributes.bBothRangs;
     }
 
-    bool IsThunderEggCollected(int eggIdx, int level) {
+    bool IsThunderEggCollected(int eggIdx, LevelNumber level) {
         return pSaveData->levels[level].thunderEggs[eggIdx];
     }
 
@@ -223,27 +238,27 @@ struct GameData {
         return IsThunderEggCollected(eggIdx, pSaveData->currentLevel);
     }
 
-    bool IsZoneCompleted(int zoneIdx) {
+    bool IsZoneCompleted(ZoneNumber zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bZoneCompleted;
     }
 
-    int GetCurrentLevel(void) {
+    LevelNumber GetCurrentLevel(void) {
         return pSaveData->currentLevel;
     }
 
-    bool HasLevelBeenEntered(int level) {
-        return pSaveData->levels[level].nmbrOfTimesEntered <= 1;
+    bool HasLevelBeenEntered(LevelNumber level) {
+        return pSaveData->levels[level].nmbrOfTimesEntered > 1;
     }
 
     bool HasBoomerang(BoomerangType index) {
         return pSaveData->tyAttributes.bHasRangs[index];
     }
 
-    bool GetLevelEnterCount(int level) {
+    bool GetLevelEnterCount(LevelNumber level) {
         return pSaveData->levels[level].nmbrOfTimesEntered;
     }
 
-    bool CheckZone_Unk0(int zoneIdx) {
+    bool CheckZone_Unk0(ZoneNumber zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bUnlocked;
     }
 

@@ -129,5 +129,5 @@ void SoundProp::Message(MKMessage* pMsg) {
 
 void SoundProp::Play(void) {
     unk7C.Update(unk84, false, true, this, NULL, -1.0f, 0);
-    unk88 = RandomIR(&gb.mRandSeed, minDelay, maxDelay) * (int)gDisplay.displayFreq;
+    unk88 = RandomIR(&gb.mRandSeed, minDelay, maxDelay) * (int)gDisplay.fps;
 }

@@ -353,7 +353,7 @@ void Boomerang::Reset(void) {
     
     time = 0.0f;
 
-    unk84 = gDisplay.displayFreq * GetDesc()->flightTime;
+    unk84 = gDisplay.fps * GetDesc()->flightTime;
 
     unk88 = false;
     unk89 = false;
@@ -392,7 +392,7 @@ void Boomerang::Load(void) {
 void Boomerang::Fire(Vector* pVec1, Vector* pVec2) {
     int i;
 
-    unk84 = GetDesc()->flightTime * gDisplay.displayFreq;
+    unk84 = GetDesc()->flightTime * gDisplay.fps;
 
     Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
 
@@ -464,7 +464,7 @@ void Boomerang::Deactivate(void) {
 
 void Boomerang::InitFired(void) {
     pModel->EnableSubObject(subObjectIndex, true);
-    unkA8.unk0 = PlaySound((BoomerangSound)0, 0);
+    unkA8.unk0 = PlaySound(BR_SOUND_0, 0);
 }
 
 extern "C" void Sound_Update3d(int, int, Vector*);
@@ -511,7 +511,7 @@ void Boomerang::UpdateFired(void) {
 
     if ((1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound((BoomerangSound)1, 0);
+        PlaySound(BR_SOUND_1, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -737,7 +737,7 @@ void Doomerang::StopSounds(void) {
 int Boomerang::PlaySound(BoomerangSound sound, int collisionFlags) {
     return SoundBank_Play(
         GetDesc()->mpStaticInfo->sounds[sound], 
-        sound == (BoomerangSound)1 ? NULL : &mPos, 
+        sound == BR_SOUND_1 ? NULL : &mPos, 
         collisionFlags
     );
 }
@@ -779,7 +779,7 @@ void Boomerang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound((BoomerangSound)2, collisionFlags);
+    PlaySound(BR_SOUND_2, collisionFlags);
 
     if (collisionFlags & ID_WATER_BLUE) {
         particleManager->SpawnBigSplash(pPos, true, 0.3f, true, 1.7f, 6);
@@ -1062,7 +1062,7 @@ void Flamerang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound((BoomerangSound)2, collisionFlags);
+    PlaySound(BR_SOUND_2, collisionFlags);
 
     if (collisionFlags & ID_WATER_BLUE) {
         particleManager->SpawnWaterSteam(pPos, 30.0f);
@@ -1163,7 +1163,7 @@ void Frostyrang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound((BoomerangSound)2, collisionFlags);
+    PlaySound(BR_SOUND_2, collisionFlags);
 
     if (collisionFlags & 0x200) {
         particleManager->SpawnWaterSteam(pPos, 30.0f);
@@ -1336,7 +1336,7 @@ void Kaboomerang::UpdateFired(void) {
             objectManager.SendMessage(&msg, 0, &mPos, 1000.0f, false);
 
             if (!b) {
-                PlaySound((BoomerangSound)3, 0);
+                PlaySound(BR_SOUND_3, 0);
             }
 
             mExplosion.Explode(&mPos, 0.0f);
@@ -1381,7 +1381,7 @@ void Aquarang::Init(GameObjDesc* pDesc, BoomerangWeapon* pWeapon) {
 }
 void Aquarang::InitFired(void) {
     pModel->EnableSubObject(subObjectIndex, true);
-    PlaySound((BoomerangSound)0, 0);
+    PlaySound(BR_SOUND_0, 0);
 }
 
 /// @brief Updates the boomerang in flight
@@ -1475,7 +1475,7 @@ void Aquarang::UpdateFired(void) {
 
     if ((1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound((BoomerangSound)1, 0);
+        PlaySound(BR_SOUND_1, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -1701,7 +1701,7 @@ void Megarang::UpdateFired(void) {
 
     if (!unk108 && (1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound((BoomerangSound)1, 0);
+        PlaySound(BR_SOUND_1, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -1743,7 +1743,7 @@ void Megarang::HitWorld(Vector* pPos, int collisionFlags) {
     unk54 = true;
 
     if (!unk89 && unkFC <= 0) {
-        PlaySound((BoomerangSound)2, collisionFlags);
+        PlaySound(BR_SOUND_2, collisionFlags);
 
         if (collisionFlags & 0x400) {
             particleManager->SpawnBigSplash(pPos, true, 0.3f, true, 1.7f, 6);
@@ -1909,7 +1909,7 @@ void Doomerang::UpdateFired(void) {
             if (Collision_SweepSphereCollide(
                     &mOldPos, &mPos, 45.0f, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
                 
-                VibrateJoystick(1.0f, 0.0f, gDisplay.frameTime, 0, 4.0f);
+                VibrateJoystick(1.0f, 0.0f, gDisplay.dt, 0, 4.0f);
                 if ((gb.logicGameCount % 3) == 0) {
                     Vector box = mPos;
                     particleManager->SpawnSpark(Tools_RandomBox(&box, 10.0f));
@@ -1943,7 +1943,7 @@ void Doomerang::UpdateFired(void) {
             }
         }
 
-        if (unk130 > gDisplay.displayFreq * 0.25f && !unk88) {
+        if (unk130 > gDisplay.fps * 0.25f && !unk88) {
             GameCamera_UseDoomarangCamera(
                 true, 
                 &mPos, &velocity, 
@@ -1953,7 +1953,7 @@ void Doomerang::UpdateFired(void) {
         }
 
         if (!unk88 && unk89 && (
-                (unk130 - unk134 > gDisplay.displayFreq * 1.3f) || (unk130 < gDisplay.displayFreq * 0.45f)
+                (unk130 - unk134 > gDisplay.fps * 1.3f) || (unk130 < gDisplay.fps * 0.45f)
             )) {
             if (unk539 && ++numHits > 6 && speedScale > 0.8f) {
                 speedScale *= 0.97f;
@@ -2021,7 +2021,7 @@ void Doomerang::CheckForEnteringRegions(void) {
         it++;
     }
 
-    gb.mGameData.SetBossDefeated((ZoneNumber)5, true);
+    gb.mGameData.SetBossDefeated(ZN_5, true);
 }
 
 void GameCamera_UseDoomarangCamera(bool, Vector*, Vector*, Vector*, float);

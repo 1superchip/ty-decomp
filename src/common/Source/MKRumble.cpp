@@ -22,16 +22,18 @@ static int effectsPlaying = 0;
 static bool vibrationPaused = false;
 
 /// @brief Resets all vibration effects
-/// @param None
 void MKRumble_Reset(void) {
     vibrationPaused = false;
+
     for(int i = 0; i < MAX_CHANS; i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = 0;
         ves[i].unk8 = 0;
-        Input_Vibrate((InputDevices)i, 0, 0);
+        Input_Vibrate((InputDevices)i, 0, false);
     }
+
     effectsPlaying = 0;
+
     for(int i = 0; i < NUM_VIBRA_EFFECTS; i++) {
         vibrationEffect[i].unk14 = 0;
         vibrationEffect[i].unk0 = 60.0f;
@@ -44,10 +46,11 @@ void MKRumble_Reset(void) {
 }
 
 /// @brief Updates all vibration effects
-/// @param None
 void MKRumble_Update(void) {
     // if vibrations are paused, no need to update
-    if (vibrationPaused) return;
+    if (vibrationPaused) {
+        return;
+    }
     
     float largeActMag[NUM_VIBRA_EFFECTS] = {};
     float smallActMag[NUM_VIBRA_EFFECTS] = {};
@@ -95,6 +98,7 @@ void MKRumble_Update(void) {
             if (i < effectsPlaying - 1) {
                 vibrationEffect[i] = vibrationEffect[effectsPlaying - 1];
             }
+            
             i--;
             effectsPlaying--;
         }
@@ -129,9 +133,9 @@ void MKRumble_Update(void) {
 }
 
 /// @brief Pauses the rumble of all input devices
-/// @param  None
 void MKRumble_Pause(void) {
-    vibrationPaused = true; // Set vibrations to paused
+    vibrationPaused = true;
+    
     for (int i = 0; i < MAX_CHANS; i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = false;
@@ -141,9 +145,7 @@ void MKRumble_Pause(void) {
 }
 
 /// @brief Resumes MKRumble vibrations
-/// @param  None
 void MKRumble_Resume(void) {
-    // Resume vibrations
     vibrationPaused = false;
 }
 
@@ -156,9 +158,11 @@ void MKRumble_Resume(void) {
 /// @param param_6 
 void MKRumble_Play(InputDevices param_1, float param_2, float param_3, 
         float param_4, char effectFlags, float param_6) {
+    
     if (effectsPlaying >= NUM_VIBRA_EFFECTS) {
         return;
     }
+
     vibrationEffect[effectsPlaying].unk14 = param_1;
     vibrationEffect[effectsPlaying].unk4 = param_3;
     vibrationEffect[effectsPlaying].unk8 = param_2;
@@ -166,7 +170,9 @@ void MKRumble_Play(InputDevices param_1, float param_2, float param_3,
     vibrationEffect[effectsPlaying].flags = effectFlags;
     vibrationEffect[effectsPlaying].unkC = param_4 * param_6;
     vibrationEffect[effectsPlaying].unk18 = 0.0f;
+
     ves[param_1].unk8 = 0.0f;
+
     effectsPlaying++;
 }
 

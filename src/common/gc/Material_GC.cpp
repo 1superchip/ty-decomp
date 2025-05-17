@@ -1070,7 +1070,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
 }
 
 void Material::Update(void) {
-    float frameSpeed = gDisplay.frameTime * (float)(frameCounter - frameCounter1);
+    float frameSpeed = gDisplay.dt * (float)(frameCounter - frameCounter1);
     frameCounter1 = frameCounter;
     int matFlags = flags;
     if (matFlags & 0x10000) {

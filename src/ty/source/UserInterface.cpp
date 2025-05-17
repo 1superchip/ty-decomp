@@ -190,11 +190,15 @@ float UIText::Draw(void) {
 
 float UIText::Draw(char* pDrawString) {
     Vector s; // Matrix scale vector
+
     Matrix matrix;
     matrix.SetIdentity();
     matrix.SetRotationRoll(mRoll);
+
     s.Set(mScaleX, mScaleY, 1.0f, 1.0f);
+    
     matrix.Scale(&s);
+    
     if (!(mFlags & 3)) {
         matrix.Row3()->x = x + (unk8 / 2.0f) * mScaleX;
     } else if (mFlags & 1) {
@@ -202,6 +206,7 @@ float UIText::Draw(char* pDrawString) {
     } else {
         matrix.Row3()->x = x - (unk8 / 2.0f) * mScaleX;
     }
+
     if (!(mFlags & 12)) {
         matrix.Row3()->y = y + (fontHeight / 2.0f) * mScaleY;
     } else if (mFlags & 4) {

@@ -2,25 +2,10 @@
 #include "common/Model.h"
 #include "common/Material.h"
 #include "ty/LensFlare.h"
+#include "common/System_GC.h"
 #include "common/Blitter.h"
-#include "common/View.h"
 
 // https://decomp.me/scratch/DcZyE
-
-// from another file
-struct ZCheckRequest {
-    Vector unk0;
-    int unk10;
-    View* unk14;
-    int unk18;
-    float unk1C;
-    float unk20;
-    float unk24;
-    float unk28;
-    float unk2C;
-};
-ZCheckRequest* System_CreateZRequest(void);
-void System_DestroyZRequest(ZCheckRequest*);
 
 static char* LF_TEXTURE_NAME = "fx_081";
 static char* LF_SUNTEXTURE_NAME = "fx_083";
@@ -50,7 +35,7 @@ void LensFlare_Init(void) {
         pMaterial = Material::Create(LF_TEXTURE_NAME);
         pSunMaterial = Material::Create(LF_SUNTEXTURE_NAME);
         pZRequest = System_CreateZRequest();
-        pZRequest->unk1C = 1.0f;
+        pZRequest->depth = 1.0f;
     }
 }
 

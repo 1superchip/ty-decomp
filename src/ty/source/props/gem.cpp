@@ -4,60 +4,8 @@
 #include "ty/global.h"
 #include "ty/DDA.h"
 #include "ty/tools.h"
+#include "ty/Ty.h"
 #include "ty/GameObjectManager.h"
-
-// EXTERNS
-
-struct OpalMagnetData {
-    bool IsActive(void);
-};
-struct Hero : GameObject {
-    int unk3C;
-    Vector mPos;
-    char padding1[0xD8 - (sizeof(Vector) + sizeof(GameObject))];
-    float objectAdjustmentRadius;
-    int type;
-    char padding2[0x1FC - 0xE4];
-    OpalMagnetData mMagnetData;
-
-    bool IsTy(void) {
-        return type == 0;
-    }
-    bool IsBushPig(void) {
-        return type == 1;
-    }
-};
-
-extern Hero* pHero;
-
-struct TyFSM {
-    char padding[0x10];
-    int state;
-    // https://decomp.me/scratch/wZJsi
-    bool BiteState(int);
-
-    bool BiteState(void) {
-        return BiteState(state);
-    }
-};
-
-struct Ty {
-    char padding[0xa38];
-    TyFSM fsm;
-    char padding1[0x1250-(0xa38 + sizeof(TyFSM))];
-    int medium;
-    char padding2[0x1338-0x1254];
-    int superbitecharge;
-    char padding3[0x1a90-0x133c];
-    int unk1A90;
-    
-    int GetMedium(void) {
-        return medium;
-    }
-};
-extern Ty ty;
-
-// END EXTERNS
 
 bool bDrawCheatLines = false;
 
@@ -294,7 +242,6 @@ void Gem::Deinit(void) {
 }
 
 void Gem::Update(void) {
-    // if bHideAll, don't update opals
     if (bHideAll || mState == GEMSTATE_0) {
         return;
     }
@@ -424,7 +371,7 @@ bool Gem::UpdateCollection(float f1) {
         return false;
     }
 
-    if (f1 <= Sqr<float>(pHero->objectAdjustmentRadius)) {
+    if (f1 <= Sqr<float>(pHero->objectRadiusAdjustment)) {
         bCollect = true;
     }
 
@@ -438,9 +385,9 @@ bool Gem::UpdateCollection(float f1) {
 
 float Gem::GetMagneticRangeSqr(void) {
     // default magnetic range is (hero->objectRadius + 100)^2
-    float magneticRadius = Sqr<float>(pHero->objectAdjustmentRadius + 100.0f);
+    float magneticRadius = Sqr<float>(pHero->objectRadiusAdjustment + 100.0f);
     
-    if (pHero->mMagnetData.IsActive()) {
+    if (pHero->opalMagnetData.IsActive()) {
         // if the opal magnet is active
         // adjust the radius based on how many opals are collected
         int collectedGemCount = gb.mGameData.GetLevelCollectedGemCount();
@@ -475,17 +422,17 @@ float Gem::GetMagneticRangeSqr(void) {
     }
 
     if (pHero->IsTy()) {
-        if (ty.fsm.BiteState()) {
-            switch (ty.GetMedium()) {
+        if (ty.mFsm.BiteState()) {
+            switch (ty.tyBite.fsm.GetState()) {
                 case 0:
                 case 1:
                 case 2:
                 case 5:
                 case 6:
-                    magneticRadius += (ty.superbitecharge / 150.0f) * (500000.0f - magneticRadius);
+                    magneticRadius += (ty.tyBite.superBiteCharge / 150.0f) * (500000.0f - magneticRadius);
                     break;
             }
-        } else if (ty.unk1A90 == 3 && !pHero->mMagnetData.IsActive()) {
+        } else if (((int*)&ty)[0x1A90 / 4] == 3 && !pHero->opalMagnetData.IsActive()) {
             magneticRadius *= 2.1f;
         }
     }
@@ -494,7 +441,7 @@ float Gem::GetMagneticRangeSqr(void) {
 }
 
 bool Gem::CheckMagnetism(float f1) {
-    if ((unkF4 > 0 && !pHero->IsBushPig()) || (f1 > 1000000.0f && !pHero->mMagnetData.IsActive())) {
+    if ((unkF4 > 0 && !pHero->IsBushPig()) || (f1 > 1000000.0f && !pHero->opalMagnetData.IsActive())) {
         return false;
     }
 
@@ -581,7 +528,7 @@ void Gem::SpawnDynamic(Vector* p) {
 void Gem::Idle(void) {
     mParticle.pos.y = unk94.y + _table_sinf(yOffsetAngle) * 5.0f;
 
-    float heroDist = SquareDistance(&pHero->mPos, &mParticle.pos);
+    float heroDist = SquareDistance(&pHero->pos, &mParticle.pos);
     if (!UpdateCollection(heroDist)) {
         CheckMagnetism(heroDist);
     }
@@ -589,11 +536,11 @@ void Gem::Idle(void) {
 
 void Gem::Magnetised(void) {
     float f31 = 0.9f;
-    if (pHero->mMagnetData.IsActive()) {
+    if (pHero->opalMagnetData.IsActive()) {
         f31 = 0.15f;
     } else if (pHero->IsTy()) {
-        if (ty.fsm.BiteState()) {
-            switch (ty.medium) {
+        if (ty.mFsm.BiteState()) {
+            switch (ty.tyBite.fsm.GetState()) {
                 case 0:
                 case 1:
                 case 2:
@@ -602,14 +549,14 @@ void Gem::Magnetised(void) {
                     f31 = 0.25f;
                     break;
             }
-        } else if (ty.unk1A90 == 3) {
+        } else if (((int*)&ty)[0x1A90 / 4] == 3) {
             f31 = 0.9f;
         }
     }
 
     Vector vel;
 
-    Vector heroPos = pHero->mPos;
+    Vector heroPos = pHero->pos;
     heroPos.y += 50.0f;
 
     vel.Sub(&heroPos, &mParticle.pos);
@@ -631,14 +578,14 @@ void Gem::Magnetised(void) {
 }
 
 void Gem::Collecting(void) {
-    mParticle.unk20 *= 0.7f;
-    if (mParticle.unk20 <= 0.1f) {
+    mParticle.scale *= 0.7f;
+    if (mParticle.scale <= 0.1f) {
         SetState(GEMSTATE_5);
     }
 }
 
 void Gem::Spawning(void) {
-    float dist = SquareDistance(&pHero->mPos, &mParticle.pos);
+    float dist = SquareDistance(&pHero->pos, &mParticle.pos);
     if (UpdateCollection(dist) || CheckMagnetism(dist)) {
         return;
     }
@@ -660,25 +607,25 @@ void Gem::SetState(GemState newState) {
     switch (mState) {
         case GEMSTATE_0:
             mParticle.color.Set(0.0f, 0.0f, 0.0f, 0.0f);
-            mParticle.unk20 = 0.0f;
+            mParticle.scale = 0.0f;
             break;
         case GEMSTATE_2:
-            unkF4 = gDisplay.displayFreq * 0.5f;
+            unkF4 = gDisplay.fps * 0.5f;
             mParticle.color.Set(
                 1.0f, 1.0f, 1.0f, mCollected ? 0.15f : 1.0f
             );
-            mParticle.unk20 = 20.0f;
+            mParticle.scale = 20.0f;
             break;
         case GEMSTATE_3:
             mLerpTime = 0.0f;
             break;
         case GEMSTATE_1:
-            unkF4 = gDisplay.displayFreq * 0.5f;
+            unkF4 = gDisplay.fps * 0.5f;
             mParticle.pos = pos;
             mParticle.color.Set(
                 1.0f, 1.0f, 1.0f, mCollected ? 0.15f : 1.0f
             );
-            mParticle.unk20 = 20.0f;
+            mParticle.scale = 20.0f;
             break;
     }
 }
@@ -896,7 +843,7 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
 
         pBlitterParticle->pos = *pVector;
         pBlitterParticle->color.Set(1.0f, 1.0f, 1.0f, 0.8f);
-        pBlitterParticle->unk20 = 12.0f;
+        pBlitterParticle->scale = 12.0f;
         pBlitterParticle->angle = 0.0f;
     }
     GemModelDrawData* pModelData = modelDraw.GetNextEntry();
@@ -941,7 +888,7 @@ void Gem_PickupParticle_Update(void) {
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
 
     while (pModelData) {
-        pModelData->unk24 -= gDisplay.frameTime;
+        pModelData->unk24 -= gDisplay.dt;
         if (pModelData->unk24 <= 0.0f) {
             modelDraw.CopyEntry(pModelData);
         } else if (pModelData->unk10) {
@@ -970,7 +917,7 @@ void Gem_PickupParticle_Update(void) {
                 pModelData->imgs[i].endY = pModelData->imgs[i].startY + 22.0f;
                 pModelData->unk180_array[i][1] += 0.15f;
                 if (pModelData->unk24 < 0.4f) {
-                    pModelData->imgs[i].color.w -= 1.0f / (gDisplay.displayFreq * 0.25f);
+                    pModelData->imgs[i].color.w -= 1.0f / (gDisplay.fps * 0.25f);
                     pModelData->unk180_array[i][0] += 1.5f;
                 }
             }
@@ -982,7 +929,7 @@ void Gem_PickupParticle_Update(void) {
     GemPickupData* pPickupData = pickupData.GetCurrEntry();
 
     while (pPickupData) {
-        pPickupData->unk10 -= gDisplay.frameTime;
+        pPickupData->unk10 -= gDisplay.dt;
 
         if (pPickupData->unk10 <= 0.0f) {
             pickupData.CopyEntry(pPickupData);
@@ -990,7 +937,7 @@ void Gem_PickupParticle_Update(void) {
         } else {
             pBlitParticle->pos.Add(&pPickupData->unk0);
             if (pPickupData->unk10 < 0.2f) {
-                pBlitParticle->color.w -= gDisplay.frameTime * 4.0f;
+                pBlitParticle->color.w -= gDisplay.dt * 4.0f;
             }
         }
 

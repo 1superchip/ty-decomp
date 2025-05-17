@@ -1598,7 +1598,7 @@ void Tools_ProcessString(char* pStr) {
 }
 
 void FaderObject::Reset(void) {
-    fadeMode = (FadeMode)1;
+    fadeMode = FADEMODE_1;
     prevFadeState = FADESTATE_0;
     currFadeState = FADESTATE_0;
     unkC = 0;
@@ -1608,7 +1608,7 @@ void FaderObject::Reset(void) {
 }
 
 void FaderObject::Update(void) {
-    if (currFadeState != 0 && --unkC < 0) {
+    if (currFadeState != FADESTATE_0 && --unkC < 0) {
         unkC = 0;
         FadeState nextState = GetNextState(currFadeState, fadeMode);
         prevFadeState = currFadeState;
@@ -1638,9 +1638,9 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
         }
     }
 
-    unk10 = gDisplay.displayFreq * f1;
-    unk14 = gDisplay.displayFreq * f2;
-    unk18 = gDisplay.displayFreq * f3;
+    unk10 = gDisplay.fps * f1;
+    unk14 = gDisplay.fps * f2;
+    unk18 = gDisplay.fps * f3;
 
     fadeMode = mode;
 
@@ -1668,36 +1668,36 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
     switch (currState) {
         case FADESTATE_0:
         default:
-            if (currMode == (FadeMode)1 || currMode == (FadeMode)2 || currMode == (FadeMode)3 || currMode == (FadeMode)4) {
+            if (currMode == FADEMODE_1 || currMode == FADEMODE_2 || currMode == FADEMODE_3 || currMode == FADEMODE_4) {
                 nextState = FADESTATE_1;
-            } else if (currMode == (FadeMode)5 || currMode == (FadeMode)6 || currMode == (FadeMode)7 || currMode == (FadeMode)8) {
+            } else if (currMode == FADEMODE_5 || currMode == FADEMODE_6 || currMode == FADEMODE_7 || currMode == FADEMODE_8) {
                 nextState = FADESTATE_2;
             } else {
                 nextState = FADESTATE_3;
             }
             break;
         case FADESTATE_1:
-            if (currMode == (FadeMode)3) {
+            if (currMode == FADEMODE_3) {
                 nextState = FADESTATE_2;
-            } else if (currMode == (FadeMode)2 || currMode == (FadeMode)4) {
+            } else if (currMode == FADEMODE_2 || currMode == FADEMODE_4) {
                 nextState = FADESTATE_3;
             } else {
                 nextState = FADESTATE_0;
             }
             break;
         case FADESTATE_2:
-            if (currMode == (FadeMode)7) {
+            if (currMode == FADEMODE_7) {
                 nextState = FADESTATE_1;
-            } else if (currMode == (FadeMode)6 || currMode == (FadeMode)8) {
+            } else if (currMode == FADEMODE_6 || currMode == FADEMODE_8) {
                 nextState = FADESTATE_3;
             } else {
                 nextState = FADESTATE_0;
             }
             break;
         case FADESTATE_3:
-            if (currMode == (FadeMode)10 || currMode == (FadeMode)8) {
+            if (currMode == FADEMODE_10 || currMode == FADEMODE_8) {
                 nextState = FADESTATE_1;
-            } else if (currMode == (FadeMode)11 || currMode == (FadeMode)4) {
+            } else if (currMode == FADEMODE_11 || currMode == FADEMODE_4) {
                 nextState = FADESTATE_2;
             } else {
                 nextState = FADESTATE_0;

@@ -76,11 +76,14 @@ struct TyMediumMachine {
     int unk0;
     int unk4;
     int unk8;
-    int unkC;
+    State* pStates;
 
     // Initializes the machine
-    void Init(void* pStates, int) {
-
+    void Init(State* _pStates, int state) {
+        pStates = _pStates;
+        unk0 = -1;
+        unk8 = -1;
+        unk4 = state;
     }
 
     void CallDeinit(void) {
@@ -110,12 +113,12 @@ struct TyFSM {
     typedef void(Ty::*EventFunc)(char*);
 
     struct State {
-        InitFunc Init;
-        DeinitFunc Deinit;
-        ActiveFunc Active;
-        DrawFunc Draw;
-        EventFunc Event;
-        int medium; // Not sure?
+        InitFunc    Init;
+        DeinitFunc  Deinit;
+        ActiveFunc  Active;
+        DrawFunc    Draw;
+        EventFunc   Event;
+        int         medium; // Not sure?
     };
 
     int unk0;
@@ -194,7 +197,9 @@ struct TyFSM {
         return SneakState(GetState());
     }
 
-    // WaterSurfaceState?
+    bool WaterSurfaceState(void) {
+        return WaterSurfaceState(GetState());
+    }
 
     bool FirstPersonState(void) {
         return FirstPersonState(GetState());
@@ -316,6 +321,39 @@ struct LearnToDiveData {
     int unk10;
     char unk14;
     int unk18;
+};
+
+struct TyBite {
+    StateMachine<TyBite> fsm;
+    Matrix unk10[3];
+
+    int unkD0;
+    float speed;
+    float discreteAcceleration;
+    float gravity;
+    float unkE0;
+    int unkE4;
+    int superBiteCharge;
+    ParticleSystem* pSystem;
+    Material* pMat;
+    float unkF4;
+    float tyPosY;
+    Vector tyPos; // y is updated with Ty's radius
+    int unk10C;
+    float unk110;
+    Vector targetPos;
+    float targetDist;
+    Model* targetedModel;
+    Vector targetDir;
+    float unk13C;
+    float unk140;
+    bool bCollisionHit;
+    bool unk145;
+    int unk148;
+    float tyRadius;
+    Vector* unk150;
+    bool isTargeting;
+    bool unk155;
 };
 
 struct Ty : Hero {
@@ -443,7 +481,7 @@ struct Ty : Hero {
     BoomerangAnimInfo unk1220;
     int boomerangButton; // direction to change boomerangs
     bool unk124C;
-    char tyBite[0x158];
+    TyBite tyBite;
     Bunyip* pBunyip;
     int unk13AC;
     KnockBackType eKnockBackType;
@@ -464,6 +502,7 @@ struct Ty : Hero {
     int unk1420;
     ColObjDescriptor colObjDesc;
     CollisionObject tyColObj;
+    // some structure here
     Vector directVelocity;
     Vector normal;
     int directvel_to_velocity_interpolation;

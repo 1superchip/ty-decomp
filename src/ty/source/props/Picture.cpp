@@ -195,5 +195,5 @@ void Picture::Spawn(int frameNumber, Vector* pPos) {
     mQuadratic.SetPoints(GetPos(), &mid, &end);
     bInitialised = true;
     mQuadraticTime = 0.0f;
-    unk70 = Max<float>(200.0f / (GetPos()->y - end.y), 1.0f) * gDisplay.frameTime;
+    unk70 = Max<float>(200.0f / (GetPos()->y - end.y), 1.0f) * gDisplay.dt;
 }

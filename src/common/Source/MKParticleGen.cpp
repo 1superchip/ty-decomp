@@ -113,10 +113,10 @@ void MKParticleGen::Deinit(void) {
 }
 
 void MKParticleGen::Update(void) {
-    xPos += (unk8 * gDisplay.frameTime) + (pType->xVel * gDisplay.frameTime);
-    yPos += (unkC * gDisplay.frameTime) + (pType->yVel * gDisplay.frameTime);
-    zPos += (unk10 * gDisplay.frameTime) + (pType->zVel * gDisplay.frameTime);
-    unk20 += (pType->envAnimRate * gDisplay.frameTime);
+    xPos += (unk8 * gDisplay.dt) + (pType->xVel * gDisplay.dt);
+    yPos += (unkC * gDisplay.dt) + (pType->yVel * gDisplay.dt);
+    zPos += (unk10 * gDisplay.dt) + (pType->zVel * gDisplay.dt);
+    unk20 += (pType->envAnimRate * gDisplay.dt);
     unk20 = unk20 - (pType->numEnvEntries * (int)(unk20 * (1.0f / pType->numEnvEntries)));
 }
 

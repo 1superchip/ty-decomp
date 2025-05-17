@@ -49,8 +49,8 @@ void GameData_Init(void) {
 void GameData_New(void) {
     memset(gameData, 0, sizeof(SaveData));
 
-    gameData->zoneInfo[0].bUnlocked = true;
-    gameData->zoneInfo[1].bUnlocked = true;
+    gameData->zoneInfo[ZN_0].bUnlocked = true;
+    gameData->zoneInfo[ZN_1].bUnlocked = true;
 
     gameData->currentLevel = LN_RAINBOW_CLIFFS;
     gameData->previousLevel = LN_RAINBOW_CLIFFS;
@@ -230,9 +230,12 @@ void GameData::SetHasRang(BoomerangType type, bool hasRang) {
 
 void GameData::SetBossDefeated(ZoneNumber zone, bool bossDefeated) {
     pSaveData->zoneInfo[zone].bZoneCompleted = bossDefeated;
+    
     SetDataDirty(true);
+
     TalismanType index = gb.level.GetTalismanType(pSaveData->currentLevel);
     SetHasTalisman(index, true);
+
     index = gb.level.GetTalismanType(pSaveData->currentLevel);
     SetHasPlacedTalisman(index, true);
 }
@@ -384,7 +387,7 @@ int GameData::GetTotalFreeBilbyCount(void) {
 
     for (u32 i = 0; i < Total_Levels; i++) {
         for (int j = 0; j < Total_Bilbies; j++) {
-            if (IsBilbyFree(i, j)) {
+            if (IsBilbyFree((LevelNumber)i, j)) {
                 count++;
             }
         }

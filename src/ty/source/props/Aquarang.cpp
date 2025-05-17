@@ -27,7 +27,7 @@ void AquarangProp::Reset(void) {
     GameObject::Reset();
     bCurrVisible = bVisible;
     particle.color.Set(1.0f, 1.0f, 1.0f, 1.0f);
-    particle.unk20 = 60.0f;
+    particle.scale = 60.0f;
     particle.angle = 0.0f;
     randAngle = RandomFR(&gb.mRandSeed, 0.0f, (2 * PI));
     yaw = 0.0f;
@@ -47,7 +47,7 @@ void AquarangProp::Update(void) {
         randAngle -= (2 * PI);
     }
 
-    particle.unk20 = 60.0f + 8.0f * _table_sinf(randAngle);
+    particle.scale = 60.0f + 8.0f * _table_sinf(randAngle);
 
     particle.pos = *StaticProp::GetPos();
 

@@ -321,7 +321,7 @@ void Explosion::Draw(void) {
         mParticleColor, mParticleColor, mParticleColor, 1.0f
     );
     part.angle = 0.0f;
-    part.unk20 = unk3D0 * unk3C8;
+    part.scale = unk3D0 * unk3C8;
 
     part.Draw(1);
 

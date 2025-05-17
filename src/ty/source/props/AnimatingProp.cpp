@@ -128,10 +128,21 @@ void AnimatingProp::Update(void) {
             while (event = mAnimScript.GetEvent(i)) {
                 for (int j = 0; j < GetDesc()->nmbrOfSoundEvents; j++) {
                     if (event == GetDesc()->pSoundEvents[j].animEventName) {
+
                         SoundEventHelper soundEvent;
+                        
                         soundEvent.unk0 = -1;
-                        soundEvent.Update(GetDesc()->pSoundEvents[j].soundEventIndex, false, true,
-                            this, NULL, -1.0f, 0);
+
+                        soundEvent.Update(
+                            GetDesc()->pSoundEvents[j].soundEventIndex, 
+                            false, 
+                            true,
+                            this, 
+                            NULL, 
+                            -1.0f, 
+                            0
+                        );
+
                         break;
                     }
                 }

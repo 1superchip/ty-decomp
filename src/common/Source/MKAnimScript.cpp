@@ -276,13 +276,15 @@ void MKAnimScript::Init(char* pFilename) {
         pTemplate->referenceCount = 1;
     }
 
-    nextAnim = NULL;
-    currAnim = NULL;
+    currAnim = nextAnim = NULL;
+
     unk10 = 0.0f;
     unkC = 0.0f;
+
     unk14 = 0.0f;
     unk18 = 0;
     unk1A = 0;
+
     unk1E = 0;
     unk1C = 0;
 }

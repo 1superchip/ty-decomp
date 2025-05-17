@@ -81,8 +81,8 @@ MKDefaults gMKDefaults = {
 Display gDisplay = {
     2, // region
     0, // unk4
-    0.0f, // displayFreq
-    0.0f, // frameTime
+    0.0f, // fps
+    0.0f, // dt
     0, // unk10
     0, // unk14
     {0}, // unk18
@@ -323,11 +323,23 @@ void System_GameDraw(void) {
     
     if (pf_enabled != 0) {
         int totalMemLeft = OSGetConsoleSimulatedMemSize() - OSCheckHeap(0);
-        char* debugStr = Str_Printf("%3d /%3d MEM:%.2fK MK:%d BLD:%s",
-            gCPUCycles / 81000, gGXCycles / 81000,
-            totalMemLeft / 1024.0f, 105, gpBuildVersion);
-        gpDebugFont->DrawText(debugStr, 320.0f, 495.0f, 1.0f, 1.0f,
-            FONT_JUSTIFY_5, COLOR_WHITE);
+
+        char* debugStr = Str_Printf(
+            "%3d /%3d MEM:%.2fK MK:%d BLD:%s",
+            gCPUCycles / 81000, 
+            gGXCycles / 81000,
+            totalMemLeft / 1024.0f, 
+            105, 
+            gpBuildVersion
+        );
+        
+        gpDebugFont->DrawText(
+            debugStr, 
+            320.0f, 495.0f, 
+            1.0f, 1.0f,
+            FONT_JUSTIFY_5, 
+            COLOR_WHITE
+        );
     }
     
     gDrawCounter++;
@@ -347,12 +359,12 @@ void System_SetDisplayMode(int _region, int r4, int r5, int r6, int r7) {
     gDisplay.region = _region;
 
     if (VIGetTvFormat() == VI_PAL) {
-        gDisplay.displayFreq = 50.0f;
+        gDisplay.fps = 50.0f;
     } else {
-        gDisplay.displayFreq = 60.0f;
+        gDisplay.fps = 60.0f;
     }
 
-    gDisplay.frameTime = 1.0f / gDisplay.displayFreq;
+    gDisplay.dt = 1.0f / gDisplay.fps;
     gDisplay.unk10 = r4;
     gDisplay.unk14 = r5;
     gDisplay.unk28 = 640;

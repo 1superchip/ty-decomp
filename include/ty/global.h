@@ -297,7 +297,7 @@ struct LevelData {
     LevelNumber unk400;
     int newLevelNumber;
     int nmbrOfLoadLevels;
-    int levelNumber;
+    LevelNumber levelNumber;
     int lastLevelIdx;
     bool bBossEnabled;
 
@@ -318,7 +318,7 @@ struct LevelData {
     bool ShowGameInfo(LevelNumber levelNr);
     bool ShowGemCount(LevelNumber levelNr);
 
-    int GetCurrentLevel(void) {
+    LevelNumber GetCurrentLevel(void) {
         return levelNumber;
     }
 
