@@ -5,6 +5,7 @@
 #include "ty/tools.h"
 #include "ty/global.h"
 #include "ty/GameObjectManager.h"
+#include "ty/ParticleEngine.h"
 #include "common/Translation.h"
 #include "common/MKGrass.h"
 #include "ty/soundbank.h"
@@ -754,20 +755,6 @@ void Boomerang::ScaleRang(void) {
     unkB0 = m * 0.0004f + 1.0f;
     pModel->matrices[0].Scale(unkB0);
 }
-
-struct TyParticleManager {
-    char unk[0x44];
-    void SpawnBridgeChunk(Vector*, Model*);
-    void SpawnWaterRipple(Vector*, float);
-    void SpawnLeafGrassDust(Vector*, Vector*, bool);
-    void SpawnBigSplash(Vector*, bool, float, bool, float, int);
-    void SpawnSpark(Vector*);
-    void SpawnWaterSteam(Vector*, float);
-    void SpawnElectricity(Vector*, float);
-    void SpawnShockGlow(Vector*, float);
-};
-
-extern TyParticleManager* particleManager;
 
 /// @brief 
 /// @param pPos Position the collision occurred

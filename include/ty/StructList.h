@@ -5,40 +5,40 @@
 
 template <typename T>
 struct StructList {
-    T* pStart; // pBlock?
-    T* pCurr;
+    T* pBlock;
+    T* pBegin;
     T* pEnd;
 
     void Init(int count) {
-        pStart = (T*)Heap_MemAlloc(sizeof(T) * count);
-        pCurr = &pStart[count];
-        pEnd = &pStart[count];
+        pBlock = (T*)Heap_MemAlloc(sizeof(T) * count);
+        pBegin = &pBlock[count];
+        pEnd = &pBlock[count];
     }
 
     void Deinit(void) {
-        Heap_MemFree((void*)pStart);
-        pStart = pCurr = pEnd = NULL;
+        Heap_MemFree((void*)pBlock);
+        pBlock = pBegin = pEnd = NULL;
     }
 
     bool CheckMemory(void) {
-        return pCurr == pStart;
+        return pBegin == pBlock;
     }
     
     bool CheckMemory2(void) {
-        return pCurr == pEnd;
+        return pBegin == pEnd;
     }
 
     T* GetNextEntry(void) {
-        if (pStart < pCurr) {
-            return --pCurr;
+        if (pBlock < pBegin) {
+            return --pBegin;
         }
         
         return NULL;
     }
 
     T* GetCurrEntry(void) {
-        if (pCurr != pEnd) {
-            return pCurr;
+        if (pBegin != pEnd) {
+            return pBegin;
         }
 
         return NULL;
@@ -51,19 +51,20 @@ struct StructList {
     }
 
     void UnknownSetPointer(void) {
-        pCurr = pEnd;
+        pBegin = pEnd;
     }
 
     int GetCount(void) {
-        return pEnd - pCurr;
+        return pEnd - pBegin;
     }
     
+    // Destroy?
     void CopyEntry(T* p) {
-        if (p != pCurr) {
-            *p = *pCurr;
+        if (p != pBegin) {
+            *p = *pBegin;
         }
 
-        pCurr++;
+        pBegin++;
     }
 };
 

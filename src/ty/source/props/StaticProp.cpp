@@ -4,17 +4,9 @@
 #include "ty/props/StaticProp.h"
 #include "ty/GameObjectManager.h"
 #include "ty/global.h"
+#include "ty/ParticleEngine.h"
 #include "common/StdMath.h"
 #include "common/Str.h"
-
-struct TyParticleManager {
-    char unk[0x44];
-    void SpawnBridgeChunk(Vector*, Model*);
-    void SpawnWaterRipple(Vector*, float);
-    void SpawnLeafGrassDust(Vector*, Vector*, bool);
-};
-
-extern TyParticleManager* particleManager;
 
 extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);

@@ -22,12 +22,15 @@ void LevelObjective::Deinit(void) {
     if (pCurObjective == this) {
         pCurObjective = NULL;
     }
+
     unk66 = 0;
     unk68 = 0;
+
     if (pMaterial) {
         pMaterial->Destroy();
         pMaterial = NULL;
     }
+
     GameObject::Deinit();
 }
 
@@ -35,9 +38,11 @@ void LevelObjective::Reset(void) {
     unk68 = 0;
     bActive = false;
     bComplete = false;
+    
     if (unk84) {
         unk84 = false;
     }
+
     GameObject::Reset();
 }
 

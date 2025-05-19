@@ -831,9 +831,11 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
     for (int i = 0; i < 5; i++) {
         Blitter_Particle* pBlitterParticle = pickupDraw.GetNextEntry();
         GemPickupData* pPickupData = pickupData.GetNextEntry();
+
         if (pBlitterParticle == NULL) {
             break;
         }
+
         pPickupData->unk0 = xDir;
         pPickupData->unk0.Scale(RandomFR(&gb.mRandSeed, -1.8f, 1.8f));
         pPickupData->unk0.y = RandomFR(&gb.mRandSeed, 1.7f, 2.0f);
@@ -846,6 +848,7 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         pBlitterParticle->scale = 12.0f;
         pBlitterParticle->angle = 0.0f;
     }
+
     GemModelDrawData* pModelData = modelDraw.GetNextEntry();
 
     if (pModelData) {
@@ -854,6 +857,7 @@ void Gem_PickupParticle_SpawnParticles(Vector* pVector) {
         pModelData->unk0 = *pVector;
         pModelData->unk0.w = 1.0f;
         pModelData->unk28 = 0.0f;
+        
         for (int i = 0; i < NUM_GEMMODELDATA_IMAGES; i++) {
             pModelData->unk180_array[i][1] = RandomFR(&gb.mRandSeed, 0.0f, 2.0f * PI);
             pModelData->unk180_array[i][0] = RandomFR(&gb.mRandSeed, 5.0f, 15.0f);

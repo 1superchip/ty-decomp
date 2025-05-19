@@ -20,6 +20,7 @@
 #include "ty/effects/Explosion.h"
 #include "ty/RenderTexture.h"
 #include "ty/Path.h"
+#include "ty/ParticleEngine.h"
 
 MKSceneManager gSceneManager;
 
@@ -227,13 +228,6 @@ struct FootEffect {
     void Deinit(void);
 };
 extern FootEffect gbFootEffects;
-
-struct TyParticleManager {
-    void Init(void);
-    void Deinit(void);
-};
-extern TyParticleManager* particleManager;
-
 
 void DeinitializeLevel(void) {
     gb.mGameData.SynchroniseExitLevel();
