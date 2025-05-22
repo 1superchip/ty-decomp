@@ -1110,70 +1110,72 @@ void Tools_DropShadow_Update(void) {
 
 void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL if unneeded */, float f1,
         float x, float y, float z, float f5, float f6, float f7, float angle, bool uvSetting) {
-    Vector vec = {x, y, z};
-    Matrix sp18;
     
-    if (!Range_IsVisible(&vec)) {
+    Vector testPos = {x, y, z, 0.0f};
+    Matrix shadowMatrix;
+    
+    if (!Range_IsVisible(&testPos)) {
         return;
     }
 
-    if (Range_WhichZone(&vec, NULL) >= 2) {
+    if (Range_WhichZone(&testPos, NULL) >= 2) {
         return;
     }
 
     pMat->Use();
 
-    sp18.SetIdentity();
-    sp18.Row2()->Set(_table_cosf(angle), 0.0f, _table_sinf(angle));
-    sp18.Row1()->Set(f5, f6, f7);
-    sp18.Row0()->Cross(sp18.Row2(), sp18.Row1());
-    sp18.Row0()->Normalise();
-    sp18.Row2()->Cross(sp18.Row1(), sp18.Row0());
-    sp18.Row3()->Set(x, y, z);
+    shadowMatrix.SetIdentity();
 
-    View::GetCurrent()->SetLocalToWorldMatrix(&sp18);
+    shadowMatrix.Row2()->Set(_table_cosf(angle), 0.0f, _table_sinf(angle));
+    shadowMatrix.Row1()->Set(f5, f6, f7);
+    shadowMatrix.Row0()->Cross(shadowMatrix.Row2(), shadowMatrix.Row1());
+    shadowMatrix.Row0()->Normalise();
+    shadowMatrix.Row2()->Cross(shadowMatrix.Row1(), shadowMatrix.Row0());
+    shadowMatrix.Row3()->Set(x, y, z);
 
-    Blitter_TriStrip triStrips[4];
-    triStrips[0].pos.Set(-f1 / 2.0f, 0.0f, f1 / 2.0f);
-    triStrips[1].pos.Set(f1 / 2.0f, 0.0f, f1 / 2.0f);
-    triStrips[2].pos.Set(-f1 / 2.0f, 0.0f, -f1 / 2.0f);
-    triStrips[3].pos.Set(f1 / 2.0f, 0.0f, -f1 / 2.0f);
+    View::GetCurrent()->SetLocalToWorldMatrix(&shadowMatrix);
+
+    Blitter_TriStrip vertices[4];
+    vertices[0].pos.Set(-f1 / 2.0f, 0.0f, f1 / 2.0f);
+    vertices[1].pos.Set(f1 / 2.0f, 0.0f, f1 / 2.0f);
+    vertices[2].pos.Set(-f1 / 2.0f, 0.0f, -f1 / 2.0f);
+    vertices[3].pos.Set(f1 / 2.0f, 0.0f, -f1 / 2.0f);
 
     if (pColor) {
-        triStrips[0].color = *pColor;
-        triStrips[3].color = triStrips[2].color = triStrips[1].color = triStrips[0].color;
+        vertices[0].color = *pColor;
+        vertices[3].color = vertices[2].color = vertices[1].color = vertices[0].color;
     } else {
-        triStrips[0].color.Set(1.0f, 1.0f, 1.0f, 1.0f);
-        triStrips[3].color = triStrips[2].color = triStrips[1].color = triStrips[0].color;
+        vertices[0].color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+        vertices[3].color = vertices[2].color = vertices[1].color = vertices[0].color;
     }
     
     if (uvSetting) {
-        triStrips[0].uv.x = 0.0f;
-        triStrips[0].uv.y = 0.0f;
+        vertices[0].uv.x = 0.0f;
+        vertices[0].uv.y = 0.0f;
         
-        triStrips[1].uv.x = 1.0f;
-        triStrips[1].uv.y = 0.0f;
+        vertices[1].uv.x = 1.0f;
+        vertices[1].uv.y = 0.0f;
         
-        triStrips[2].uv.x = 0.0f;
-        triStrips[2].uv.y = 1.0f;
+        vertices[2].uv.x = 0.0f;
+        vertices[2].uv.y = 1.0f;
         
-        triStrips[3].uv.x = 1.0f;
-        triStrips[3].uv.y = 1.0f;
+        vertices[3].uv.x = 1.0f;
+        vertices[3].uv.y = 1.0f;
     } else {
-        triStrips[0].uv.x = 0.0f;
-        triStrips[0].uv.y = 1.0f;
+        vertices[0].uv.x = 0.0f;
+        vertices[0].uv.y = 1.0f;
         
-        triStrips[1].uv.x = 1.0f;
-        triStrips[1].uv.y = 1.0f;
+        vertices[1].uv.x = 1.0f;
+        vertices[1].uv.y = 1.0f;
         
-        triStrips[2].uv.x = 0.0f;
-        triStrips[2].uv.y = 0.0f;
+        vertices[2].uv.x = 0.0f;
+        vertices[2].uv.y = 0.0f;
         
-        triStrips[3].uv.x = 1.0f;
-        triStrips[3].uv.y = 0.0f;
+        vertices[3].uv.x = 1.0f;
+        vertices[3].uv.y = 0.0f;
     }
 
-    triStrips[0].Draw(ARRAY_SIZE(triStrips), 1.0f);
+    vertices[0].Draw(ARRAY_SIZE(vertices), 1.0f);
 }
 
 
