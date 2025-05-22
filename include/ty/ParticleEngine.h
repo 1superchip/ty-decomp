@@ -59,6 +59,46 @@ struct TyParticleManager {
 
     Vector unk20;
     Vector unk30;
+
+    Material* unk40;
+    Material* unk44;
+    Material* unk48;
+    Material* unk4C;
+    Material* unk50;
+    Material* unk54;
+    Material* unk58;
+    Material* unk5C;
+    Material* unk60;
+    Material* unk64;
+    Material* unk68;
+    Material* unk6C;
+    Material* unk70;
+    Material* unk74;
+    Material* unk78;
+    Material* unk7C;
+    Material* unk80;
+    Material* unk84;
+    Material* unk88;
+    Material* unk8C;
+    Material* unk90;
+    Material* unk94;
+
+    Material* unk98[4];
+
+    Material* unkA8;
+    Material* unkAC;
+
+    char unkB0[0x18];
+
+    Model* pIceShardModels[2];
+
+    Model* unkD0[3];
+
+    Model* pFeatherModel;
+
+    Model* unkE0;
+
+    float unkE4;
     
     void LoadResources(void);
     void Init(void);

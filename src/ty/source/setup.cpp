@@ -544,7 +544,6 @@ void PreInitializeLevel(int r3) {
     gFERes.mFrontEndFader.Init(NULL, 640.0f, 512.0f);
     gFERes.mFrontEndFader.mFader.Fade(FaderObject::FADEMODE_5, 0.0f, 0.5f, 0.0f, false);
     gLevelLoadStartTime = Tools_GetTimeInSeconds();
-
 }
 
 void InitializeLevel(void) {

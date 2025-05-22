@@ -17,7 +17,6 @@ extern "C" {
 
 // extern u8 rawCaptureTexData[0x20000];
 extern u16 rawCaptureTexData[0x10000];
-void System_CheckZRequests(void);
 
 #define TEXDATA_STARTX (192)
 #define TEXDATA_WIDTH (128)

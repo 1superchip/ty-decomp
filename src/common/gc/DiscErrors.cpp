@@ -98,22 +98,22 @@ char* DiscErr_GetErrorString(void) {
     if (Translation_GetLanguage() == -1) {
         int defaultLanguage = 0;
         switch (OSGetLanguage()) {
-            case 0:
+            case OS_LANG_ENGLISH:
                 defaultLanguage = LANGUAGE_ENGLISH;
                 break;
-            case 1:
+            case OS_LANG_GERMAN:
                 defaultLanguage = Language_German;
                 break;
-            case 2:
+            case OS_LANG_FRENCH:
                 defaultLanguage = Language_French;
                 break;
-            case 3:
+            case OS_LANG_SPANISH:
                 defaultLanguage = Language_Spanish;
                 break;
-            case 4:
+            case OS_LANG_ITALIAN:
                 defaultLanguage = Language_Italian;
                 break;
-            case 5:
+            case OS_LANG_DUTCH:
                 defaultLanguage = Language_Dutch;
                 break;
         }

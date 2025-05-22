@@ -377,7 +377,7 @@ struct GlobalVar {
     float tyYPos;
     Material* pShadowMat;
     Material* pBlackSquareMat;
-    uint logicGameCount;
+    uint logicGameCount; // Does not increment while paused. Reset when entering a level
     Material* pSmokeTex;
     Material* pZ1Mat_B;
     Material* pWaterfallMat;

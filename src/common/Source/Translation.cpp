@@ -78,26 +78,28 @@ TranslationLanguage Translation_GetLanguage(void) {
 
 TranslationLanguage Translation_GetDefaultLanguage(void) {
     TranslationLanguage defaultLanguage = LANGUAGE_ENGLISH;
+
     switch (OSGetLanguage()) {
-    case 0:
-        defaultLanguage = LANGUAGE_ENGLISH;
-        break;
-    case 1:
-        defaultLanguage = Language_German;
-        break;
-    case 2:
-        defaultLanguage = Language_French;
-        break;
-    case 3:
-        defaultLanguage = Language_Spanish;
-        break;
-    case 4:
-        defaultLanguage = Language_Italian;
-        break;
-    case 5:
-        defaultLanguage = Language_Dutch;
-        break;
+        case OS_LANG_ENGLISH:
+            defaultLanguage = LANGUAGE_ENGLISH;
+            break;
+        case OS_LANG_GERMAN:
+            defaultLanguage = Language_German;
+            break;
+        case OS_LANG_FRENCH:
+            defaultLanguage = Language_French;
+            break;
+        case OS_LANG_SPANISH:
+            defaultLanguage = Language_Spanish;
+            break;
+        case OS_LANG_ITALIAN:
+            defaultLanguage = Language_Italian;
+            break;
+        case OS_LANG_DUTCH:
+            defaultLanguage = Language_Dutch;
+            break;
     }
+
     if (defaultLanguage == LANGUAGE_ENGLISH || Translation_IsLanguageAvailable(defaultLanguage) == false) {
         if (gDisplay.region == 1 && Translation_IsLanguageAvailable(Language_American) != false) {
             defaultLanguage = Language_American;

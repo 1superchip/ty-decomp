@@ -121,38 +121,50 @@ void MKParticleGen::Update(void) {
 }
 
 void MKParticleGen::Draw(View* pView, Vector* pNewPos, Vector* pVec1) {
-    if (!gbDrawParticles) return;
+    if (!gbDrawParticles) {
+        return;
+    }
+
     if (pNewPos) {
         mSrcPos = *pNewPos;
     }
+
     Vector BoxPos;
     BoxPos.Set(0.0f, 0.0f, pType->radius, 0.0f);
     BoxPos.ApplyRotMatrix(&pView->unk48);
     BoxPos.Add(&mSrcPos);
     BoxPos.w += mSrcPos.w;
+
     Matrix m;
     m.SetIdentity();
     *m.Row3() = BoxPos;
     pView->SetLocalToWorldMatrix(&m);
+
     Vector particleOffset;
     float s = pType->radius * 2.0f;
     float inv_s = 1.0f / s;
+
     particleOffset.Sub(pVec1, &BoxPos);
+
     particleOffset.x += xPos;
     particleOffset.y += yPos;
     particleOffset.z += zPos;
+
     particleOffset.x = particleOffset.x - (int)(particleOffset.x * inv_s) * s;
     if (particleOffset.x < 0.0f) {
         particleOffset.x += s;
     }
+
     particleOffset.y = particleOffset.y - (int)(particleOffset.y * inv_s) * s;
     if (particleOffset.y < 0.0f) {
         particleOffset.y += s;
     }
+
     particleOffset.z = particleOffset.z - (int)(particleOffset.z * inv_s) * s;
     if (particleOffset.z < 0.0f) {
         particleOffset.z += s;
     }
+
     if (pType->nmbrOfParticles > 0) {
         switch (pType->primitiveType) {
             case 0:
@@ -165,6 +177,7 @@ void MKParticleGen::Draw(View* pView, Vector* pNewPos, Vector* pVec1) {
                 break;
         }
     }
+
     if (gbDrawParticlesBox) {
         Blitter_Box box;
         box.origin.Set(pType->radius, pType->radius, pType->radius);
@@ -175,6 +188,7 @@ void MKParticleGen::Draw(View* pView, Vector* pNewPos, Vector* pVec1) {
         Material::UseNone(-1);
         box.Draw(1);
     }
+
     if (gbDrawParticlesDebugInfo) {
         DrawDebugInfo(pView);
     }
@@ -186,17 +200,20 @@ void MKParticleGen::DrawLines(View* pView, Vector* pBoxOff) {
     Vector color[2];
     Blitter_Line3D line[60];
     float f19 = 1.0f / f20;
-    if (gbMakeParticlesStandOut != false) {
+
+    if (gbMakeParticlesStandOut) {
         color[0].Set(1.0f, 1.0f, 1.0f, 1.0f);
         color[1].Set(1.0f, 1.0f, 1.0f, 1.0f);
     } else {
         color[0] = pType->color0;
         color[1] = pType->color1;
     }
+
     if (mSrcPos.y < pType->unk78 - pType->radius ||
         mSrcPos.y > pType->unk74 + pType->radius) {
         return;
     }
+
     int numParticles = pType->nmbrOfParticles;
     float radiusSq = pType->radius * pType->radius;
     float sp_f54 = pType->unk78 - pView->unk88.Row3()->y;
@@ -205,22 +222,27 @@ void MKParticleGen::DrawLines(View* pView, Vector* pBoxOff) {
         int tmp;
         int j;
         int t;
+
         if (60 <= numParticles) {
             tmp = 60;
         } else {
             tmp = numParticles;
         }
+
         j = tmp - 1;
         t = tmp;
         
         for (int i = 0; i <= j; j--) {
             float f17 = 1.0f / radiusSq;
             float f16;
+
             float randParticleIndex = RandomFR(&particleStartPosSeed, 0.0f, pType->numEnvEntries);
+
             randParticleIndex += unk20;
             if (randParticleIndex > pType->numEnvEntries) {
                 randParticleIndex -= pType->numEnvEntries;
             }
+
             float fraction = randParticleIndex - (int)randParticleIndex;
             int envIndex = (int)randParticleIndex;
             line[j].point.x = RandomFR(&particleStartPosSeed, 0.0f, f20);
@@ -263,6 +285,7 @@ void MKParticleGen::DrawLines(View* pView, Vector* pBoxOff) {
             *line[j].color.GetAlpha() *= m;
             *line[j].color1.GetAlpha() *= m;
         }
+
         numParticles -= t;
         line[0].DrawNoMat(t, (pType->alpha * unk24) * 0.5f);
     }
@@ -395,16 +418,44 @@ void MKParticleGen::DrawQuads(View* pView, Vector* pBoxOff) {
 /// @param pView Unused
 void MKParticleGen::DrawDebugInfo(View* pView) {
     float startY = 200.0f;
-    gpDebugFont->DrawText(Str_Printf("Rain Particles: %d", pType->nmbrOfParticles), 10.0f, startY,
-        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
+    
+    gpDebugFont->DrawText(
+        Str_Printf("Rain Particles: %d", pType->nmbrOfParticles), 
+        10.0f, startY,
+        1.5f, 1.5f, 
+        FONT_JUSTIFY_0, 
+        0x800000ff
+    );
+
     startY += 20.0f;
-    gpDebugFont->DrawText(Str_Printf("xPos: %g", xPos), 10.0f, startY,
-        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
+
+    gpDebugFont->DrawText(
+        Str_Printf("xPos: %g", xPos), 
+        10.0f, startY,
+        1.5f, 1.5f, 
+        FONT_JUSTIFY_0, 
+        0x800000ff
+    );
+
     startY += 20.0f;
-    gpDebugFont->DrawText(Str_Printf("yPos: %g", yPos), 10.0f, startY,
-        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
+
+    gpDebugFont->DrawText(
+        Str_Printf("yPos: %g", yPos), 
+        10.0f, startY,
+        1.5f, 1.5f, 
+        FONT_JUSTIFY_0, 
+        0x800000ff
+    );
+
     startY += 20.0f;
-    gpDebugFont->DrawText(Str_Printf("zPos: %g", zPos), 10.0f, startY,
-        1.5f, 1.5f, FONT_JUSTIFY_0, 0x800000ff);
+
+    gpDebugFont->DrawText(
+        Str_Printf("zPos: %g", zPos), 
+        10.0f, startY,
+        1.5f, 1.5f, 
+        FONT_JUSTIFY_0, 
+        0x800000ff
+    );
+    
     startY += 20.0f;
 }
