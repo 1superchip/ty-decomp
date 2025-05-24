@@ -17,19 +17,34 @@ struct WaterSteamStruct {
 };
 
 struct GhostStruct {
-    char padding[0x20];
+    float unk0;
+    int unk4;
+    int unk8;
+    int unkC;
+    int unk10;
+    float unk14;
+    float unk18;
+    float unk1C;
 };
 
 struct GhostSmokeStruct {
-    char padding[0x14];
+    float unk0;
+    char padding4[0xC];
+    int unk10;
 };
 
 struct ChompStruct {
-    char padding[0x10];
+    float unk0;
+    int unk4;
+    int unk8;
+    int unkC;
 };
 
 struct ShockGlowStruct {
-    char padding[0x10];
+    float unk0;
+    int unk4;
+    int unk8;
+    int unkC;
 };
 
 struct SnowFlakeStruct {
@@ -110,7 +125,7 @@ struct WaterRippleStruct {
     float z;
     int unk18;
     Vector unk1C;
-    int unk2C;
+    char unk2C;
 };
 
 struct FireStruct {
@@ -138,16 +153,16 @@ struct TyParticleManager {
     Material* pFireMaterial;
     Material* unk44;
     Material* unk48;
-    Material* unk4C;
-    Material* unk50;
+    Material* pDustMaterial;
+    Material* pShockGlowMaterial;
     Material* unk54;
     Material* unk58;
     Material* unk5C;
     Material* unk60;
     Material* unk64;
-    Material* unk68;
-    Material* unk6C;
-    Material* unk70;
+    Material* pChompMaterial;
+    Material* pGhostMaterial; // Ghost Skull
+    Material* pGhostSmokeMaterial; // Ghost Smoke
 
     // Exclamation Mark
     Material* pExclamationMaterial;
@@ -206,6 +221,18 @@ struct TyParticleManager {
 
     StructList<BreathMistStruct> mBreathMistData;
     StructList<Blitter_Particle> mBreathMistParticles;
+
+    StructList<ShockGlowStruct> mShockGlowData;
+    StructList<Blitter_Particle> mShockGlowParticles;
+
+    StructList<ChompStruct> mChompData;
+    StructList<Blitter_Particle> mChompParticles;
+
+    StructList<GhostStruct> mGhostData;
+    StructList<Blitter_Particle> mGhostParticles;
+
+    StructList<GhostSmokeStruct> mGhostSmokeData;
+    StructList<Blitter_Particle> mGhostSmokeParticles;
 
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;

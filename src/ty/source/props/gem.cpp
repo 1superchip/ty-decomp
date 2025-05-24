@@ -894,7 +894,7 @@ void Gem_PickupParticle_Update(void) {
     while (pModelData) {
         pModelData->unk24 -= gDisplay.dt;
         if (pModelData->unk24 <= 0.0f) {
-            modelDraw.CopyEntry(pModelData);
+            modelDraw.Destroy(pModelData);
         } else if (pModelData->unk10) {
             pModelData->unk1C = (575.0f - pModelData->unk14) * 0.1f;
             pModelData->unk20 = (72.0f - pModelData->unk18) * 0.1f;
@@ -936,8 +936,8 @@ void Gem_PickupParticle_Update(void) {
         pPickupData->unk10 -= gDisplay.dt;
 
         if (pPickupData->unk10 <= 0.0f) {
-            pickupData.CopyEntry(pPickupData);
-            pickupDraw.CopyEntry(pBlitParticle);
+            pickupData.Destroy(pPickupData);
+            pickupDraw.Destroy(pBlitParticle);
         } else {
             pBlitParticle->pos.Add(&pPickupData->unk0);
             if (pPickupData->unk10 < 0.2f) {

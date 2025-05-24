@@ -105,7 +105,7 @@ void Explosion::Deinit(void) {
     Explosion** pExplosions = activeSet.GetCurrEntry();
     while (pExplosions) {
         if (*pExplosions == this) {
-            activeSet.CopyEntry(pExplosions);
+            activeSet.Destroy(pExplosions);
             break;
         }
 
@@ -199,7 +199,7 @@ void Explosion_Update(void) {
 
         if ((*pExplosions)->unk24 > 120.0f) {
             (*pExplosions)->unk21 = false;
-            activeSet.CopyEntry(pExplosions);
+            activeSet.Destroy(pExplosions);
         }
 
         pExplosions = activeSet.GetNextEntryWithEntry(pExplosions);

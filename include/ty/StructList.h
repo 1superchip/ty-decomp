@@ -58,8 +58,7 @@ struct StructList {
         return pEnd - pBegin;
     }
     
-    // Destroy?
-    void CopyEntry(T* p) {
+    void Destroy(T* p) {
         if (p != pBegin) {
             *p = *pBegin;
         }
