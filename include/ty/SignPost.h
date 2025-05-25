@@ -31,10 +31,37 @@ struct SignPostDesc : StaticPropDescriptor {
 };
 
 enum SignPostState {
-
+    SPS_0 = 0,
+    SPS_1 = 1,
+    SPS_2 = 2,
 };
 
 struct SignPost : StaticProp {
+    Vector mRot; // Current rotation
+    Vector mDefaultRot; // Default Rotation
+    int light1_index;
+    int light2_index;
+    int mRotSetting;
+    int unk84;
+    int unk88;
+    int unk8C;
+    float mRotInc;
+    bool unk94;
+    bool unk95;
+    SignPostState mState;
+    Vector centrePos;
+
+    virtual void LoadDone(void);
+    virtual void Reset(void);
+    virtual void Update(void);
+    virtual void Draw(void);
+    virtual void Message(MKMessage* pMsg);
+    virtual void Init(GameObjDesc* pDesc);
+
+    void Idle(void);
+    void Hit(void);
+
+    void SetState(SignPostState);
 
     SignPostDesc* GetDesc(void) {
         return descr_cast<SignPostDesc*>(pDescriptor);
@@ -42,7 +69,10 @@ struct SignPost : StaticProp {
 };
 
 struct TaSignPost : SignPost {
-
+    virtual void LoadDone(void);
+    virtual void Reset(void);
+    virtual void Update(void);
+    virtual void Draw(void);
 };
 
 #endif // SIGNPOST_H

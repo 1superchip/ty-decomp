@@ -169,6 +169,7 @@ struct Model {
     BoundingVolume* GetBoundingVolume(int subObjectIndex);
 
     // Returns the volume of the model
+    // not a class method
     BoundingVolume* GetModelVolume(void) {
         return GetBoundingVolume(-1);
     }
