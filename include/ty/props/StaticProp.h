@@ -160,9 +160,7 @@ struct StaticFXProp : StaticProp {
     }
 
     Vector* GetPos(void) {
-        // this is wrong
-        // need to figure this out
-        return pModel->matrices[0].Row3();
+        return &unk58;
     }
 
     static bool bTempVisible;

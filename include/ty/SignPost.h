@@ -61,6 +61,8 @@ struct SignPost : StaticProp {
     void Idle(void);
     void Hit(void);
 
+    void CheckForHit(void);
+
     void SetState(SignPostState);
 
     SignPostDesc* GetDesc(void) {

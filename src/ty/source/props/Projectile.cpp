@@ -15,12 +15,12 @@ void Projectile::Init(GameObjDesc* pDesc) {
     pModel = Model::Create(pDesc->modelName, NULL);
     unk74 = false;
     unk75 = true;
-    mState = (ProjectileState)0;
+    mState = PROJECTILE_STATE_0;
 }
 
 void Projectile::Deinit(void) {
     GameObject::Deinit();
-    mState = (ProjectileState)0;
+    mState = PROJECTILE_STATE_0;
 }
 
 void Projectile::EndLife(void) {
@@ -28,7 +28,7 @@ void Projectile::EndLife(void) {
     unk70 = 0;
     mPosDiff.SetZero();
     mRot.SetZero();
-    SetState((ProjectileState)0);
+    SetState(PROJECTILE_STATE_0);
 }
 
 void Projectile::Message(MKMessage* pMsg) {
@@ -38,7 +38,7 @@ void Projectile::Message(MKMessage* pMsg) {
 void Projectile::Update(void) {
     unk6C++;
     
-    if (mState != (ProjectileState)2) {
+    if (mState != PROJECTILE_STATE_2) {
         return;
     }
 
@@ -110,13 +110,13 @@ void Projectile::CheckForHit(void) {
 void Projectile::DamageTy(void) {
     Vector Vn = mPosDiff;
     Vn.Normalise();
-    ty.Hurt((HurtType)5, (DDADamageCause)1, false, &Vn, 15.0f);
+    ty.Hurt(HURT_TYPE_5, DDA_DAMAGE_1, false, &Vn, 15.0f);
 }
 
 void Projectile::KnockBackTy(void) {
     Vector Vn = mPosDiff;
     Vn.Normalise();
-    ty.SetKnockBackFromDir(&Vn, 15.0f, (KnockBackType)0);
+    ty.SetKnockBackFromDir(&Vn, 15.0f, KB_TYPE_0);
 }
 
 bool Projectile::ResolveHit(void) {
@@ -125,7 +125,7 @@ bool Projectile::ResolveHit(void) {
 
 void Projectile::Fire(Vector* pVec) {
     pModel->matrices[0].SetTranslation(pVec);
-    SetState((ProjectileState)2);
+    SetState(PROJECTILE_STATE_2);
 
     unk70 = GetDesc()->unk84;
 
@@ -165,14 +165,21 @@ bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
         }
 
         float f30 = sqrtf(f4);
-        float f1 = Min<float>((f30 - GetDesc()->unk88) / sp10, 
-            (-GetDesc()->unk88 - f30) / sp10);
+
+        float f1 = Min<float>(
+            (f30 - GetDesc()->unk88) / sp10, 
+            (-GetDesc()->unk88 - f30) / sp10
+        );
+
         sp14 = f1;
         f29 = 1.0f / f1;
 
         if (horizDist * f29 > GetDesc()->unk88 || sp14 < 0.0f) {
-            float f1 = Max<float>((f30 - GetDesc()->unk88) / sp10,
-                (-GetDesc()->unk88 - f30) / sp10);
+            float f1 = Max<float>(
+                (f30 - GetDesc()->unk88) / sp10,
+                (-GetDesc()->unk88 - f30) / sp10
+            );
+
             sp14 = f1;
             f29 = 1.0f / f1;
             if (horizDist * f29 > GetDesc()->unk88 || sp14 < 0.0f) {
@@ -189,9 +196,9 @@ bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
 }
 
 void Projectile::SetState(ProjectileState newState) {
-    if (mState == (ProjectileState)0 && newState != (ProjectileState)0) {
+    if (mState == PROJECTILE_STATE_0 && newState != PROJECTILE_STATE_0) {
         objectManager.AddObject(this, pModel);
-    } else if (mState != (ProjectileState)0 && newState == (ProjectileState)0) {
+    } else if (mState != PROJECTILE_STATE_0 && newState == PROJECTILE_STATE_0) {
         objectManager.RemoveObject(this);
     }
 

@@ -152,17 +152,17 @@ struct Tools_ParticleRef {
 
 void Tools_DropShadow_Init(void);
 void Tools_DropShadow_Deinit(void);
-void Tools_DropShadow_Add(float, Vector*, Vector*, float);
+void Tools_DropShadow_Add(float, Vector* pPos, Vector* pNormal, float alpha);
 void Tools_DropShadow_Draw(void);
 void Tools_DropShadow_Update(void);
 void Tools_DrawDropShadow(Material* pMat, Vector* pColor /* Optional, pass NULL if unneeded */, float,
         float x, float y, float z, float, float, float, float angle, bool uvSetting);
 
 struct ShadowInfo {
-    Vector unk0;
+    Vector pos;
     Vector unk10;
     float unk20;
-    float unk24;
+    float alpha;
     void Draw(void); // needed to be defined in tools.cpp so .rodata is ordered correctly
 };
 
@@ -188,14 +188,12 @@ struct Tools_WayPoints {
 
     int GetIndex(int num) {
         if (num < 0) {
-            // if less than 0, return the last index
             return unk104 - 1;
-        }
-        if (num >= unk104) {
-            // if greater than or equal to unk104, return 0
+        } else if (num >= unk104) {
             return 0;
+        } else {
+            return num;
         }
-        return num;
     }
 
     void Subtract1Index(void) {

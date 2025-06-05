@@ -13,7 +13,8 @@ enum FootPrintTypes {
 };
 
 struct WaterSteamStruct {
-    char padding[0x10];
+    float unk0;
+    char padding_0x4[0xC];
 };
 
 struct GhostStruct {
@@ -138,6 +139,22 @@ struct BreathMistStruct {
     Vector vel;
 };
 
+struct TireDustStruct {
+    float unk0;
+};
+
+struct WaterDropGreenStruct {
+    float unk0;
+    float unk4;
+    Vector unk8;
+};
+
+struct WaterDropBlueStruct {
+    float unk0;
+    float unk4;
+    Vector unk8;
+};
+
 // End of unoffical
 
 struct TyParticleManager {
@@ -152,7 +169,7 @@ struct TyParticleManager {
 
     Material* pFireMaterial;
     Material* unk44;
-    Material* unk48;
+    Material* pFastGlowMaterial;
     Material* pDustMaterial;
     Material* pShockGlowMaterial;
     Material* unk54;
@@ -216,7 +233,7 @@ struct TyParticleManager {
     StructList<FireStruct> mFireData;
     StructList<Blitter_Particle> mFireParticles;
 
-    StructList<float> mTireDustData; // Custom type?
+    StructList<TireDustStruct> mTireDustData;
     StructList<Blitter_Particle> mTireDustParticles;
 
     StructList<BreathMistStruct> mBreathMistData;
@@ -234,6 +251,15 @@ struct TyParticleManager {
     StructList<GhostSmokeStruct> mGhostSmokeData;
     StructList<Blitter_Particle> mGhostSmokeParticles;
 
+    StructList<WaterSteamStruct> mWaterSteamData;
+    StructList<Blitter_Particle> mWaterSteamParticles;
+
+    StructList<WaterDropGreenStruct> mWaterDropGreenData;
+    StructList<Blitter_Particle> mWaterDropGreenParticles;
+
+    StructList<WaterDropBlueStruct> mWaterDropBlueData;
+    StructList<Blitter_Particle> mWaterDropBlueParticles;
+
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;
     
@@ -250,10 +276,10 @@ struct TyParticleManager {
     void SpawnExclamation(void);
     void StopExclamation(bool);
 
-    void SpawnGhost(Vector*);
-    void SpawnGhostSmoke(Vector*, int);
+    void SpawnGhost(Vector* pPos);
+    void SpawnGhostSmoke(Vector* pPos, int);
 
-    void SpawnWaterSteam(Vector*, float);
+    void SpawnWaterSteam(Vector* pPos, float scale);
     void SpawnFastGlow(Vector* pPos, float scale);
     void SpawnBilbyPickupAtom(Vector* pPos, float scale, int color);
     void SpawnTireDust(Vector* pPos, float scale, float alpha);
@@ -262,7 +288,7 @@ struct TyParticleManager {
     void SpawnAntHillChunk(Vector*, Vector*);
     void SpawnLeafGrassDust(Vector*, Vector*, bool);
     void SpawnFeather(Vector*, Vector*);
-    void SpawnShockGlow(Vector*, float);
+    void SpawnShockGlow(Vector* pPos, float scale);
 
     void SpawnWaterRipple(Vector*, float);
     void SpawnWaterDropGreen(Vector*, Vector*, float);
@@ -278,7 +304,7 @@ struct TyParticleManager {
 
     void SpawnGoo(Vector* pPos, Vector* pColor);
 
-    void SpawnFootPrint(FootPrintTypes, Vector*, Vector*, Rotation*);
+    void SpawnFootPrint(FootPrintTypes, Vector*, Vector*, Rotation*, Vector*);
 
     void SetCamera(Vector*, Vector*);
 

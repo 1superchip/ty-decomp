@@ -303,12 +303,17 @@ void Friend::PostUpdate(void) {
 
     if (mTyDistSq < FRIEND_AUTOTARGET_RANGE_SQ && (mFlags & FSF_Visible)) {
         Vector centrePos = {mPos.x, mPos.y + (GetDesc()->mLodDesc.height / 2.0f), mPos.z};
-        ty.mAutoTarget.Set((TargetPriority)3, NULL, NULL, &centrePos, pModel);
+        ty.mAutoTarget.Set(TP_3, NULL, NULL, &centrePos, pModel);
     }
 
     IceBlock_TestCollision(GetPos(), mLodManager.pDescriptor->radius, true, false, false);
 
     if ((mFlags & FSF_Visible) && (mFlags & FSF_Unknown8)) {
-        Tools_DropShadow_Add(GetDesc()->pVolume->v2.x, &mPos, &mCollisionNormal, 1.0f);
+        Tools_DropShadow_Add(
+            GetDesc()->pVolume->v2.x, 
+            &mPos, 
+            &mCollisionNormal, 
+            1.0f
+        );
     }
 }

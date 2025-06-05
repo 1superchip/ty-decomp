@@ -2,10 +2,6 @@
 #include "common/Vector.h"
 #include "ty/BoundingRegion.h"
 
-bool IsWithin(float x, float min, float max) {
-    return (x >= min && x <= max);
-}
-
 bool BoundingRegion::IsPointInBoundaryRect(Vector* pPoint) {
     u32 isWithin = pPoint->x >= rect.minPoint[0]
         && pPoint->x < rect.maxPoint[0]
@@ -24,8 +20,8 @@ bool BoundingRegion::IsPointWithin(Vector* pPoint) {
         return false;
     }
 
-    Vector max = {10000000.0f, pPoint->z, 0.0f, 0.0f};
-    return getIntersectCount(pPoint, &max) & 1;
+    Vector ptTest2 = {10000000.0f, pPoint->z, 0.0f, 0.0f};
+    return getIntersectCount(pPoint, &ptTest2) & 1;
 }
 
 // inline here "ArePointsWithin"?
@@ -38,7 +34,7 @@ bool BoundingRegion::ArePointsWithinAndAdjacent(Vector* pPoint, Vector* pPoint1)
 }
 
 bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
-    Vector* pLastVector = (pSegment->points + pSegment->numPoints) - 1;
+    Vector* pLastVector = pSegment->GetLastPoint();
     Vector* pPoints = pSegment->points;
     
     float xMin, xMax, zMin, zMax;

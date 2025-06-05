@@ -5,7 +5,10 @@
 #include "common/PtrListDL.h"
 
 enum DDADamageCause {
-    
+    DDA_DAMAGE_1 = 1,
+    DDA_DAMAGE_2 = 2,
+    DDA_DAMAGE_3 = 3,
+    DDA_DAMAGE_4 = 4,
 };
 
 enum DDAPickupType {
@@ -16,7 +19,9 @@ enum DDAPickupType {
 };
 
 enum DDAEnemyDamageCause {
-    
+    DDA_ENEMY_DAMAGE_1 = 1,
+    DDA_ENEMY_DAMAGE_2 = 2,
+    DDA_ENEMY_DAMAGE_3 = 3,
 };
 
 enum DDACameraAction {
@@ -90,7 +95,6 @@ struct DDACheckpointInfo {
     int unk3C;
 };
 
-// size of 0x74?
 struct DDASession {
 	int unk0;
     int levelNumber;
@@ -107,7 +111,8 @@ struct DDASession {
     DDACheckpointInfo* currentCheckpoint;
     int dbgMsgTimer;
     u8 unk20;
-    int unk24[(0x74-0x24) / 4];
+    char padding[0x4C];
+    int unk;
 
     void Init(void);
     void Update(void);

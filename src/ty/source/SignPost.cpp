@@ -173,7 +173,7 @@ void SignPost::Update(void) {
         }
 
         if (pHero->IsTy()) {
-            ty.mAutoTarget.Set((TargetPriority)1, NULL, NULL, &centrePos, pModel);
+            ty.mAutoTarget.Set(TP_1, NULL, NULL, &centrePos, pModel);
 
             if (GetDesc()->type == SP_DIRECTION2 && ty.mAutoTarget.unk1E8 == pModel) {
                 float mag = ApproxMag(&ty.unk338, &centrePos);
@@ -194,7 +194,7 @@ void SignPost::Update(void) {
                 Vector toLookPos;
                 toLookPos.Sub(&look, &ty.unk338);
 
-                if (toLookPos.Dot(ty.pModel->matrices[0].Row2()) < 0.0f && ty.unk1688 >= 100 && ty.unk1688 < 200) {
+                if (toLookPos.Dot(ty.pModel->matrices[0].Row2()) < 0.0f && (ty.unk1688 >= 100 && ty.unk1688 < 200)) {
                     ty.mAutoTarget.unk1F8 = look;
                 }
             }
@@ -337,6 +337,16 @@ void SignPost_ShowAll(void) {
     bIsHidden = false;
 }
 
+void SignPost::CheckForHit(void) {
+    CollisionResult collisionResult;
+    Boomerang* pRang = Boomerang_CheckForHit(pModel, -1, &collisionResult);
+
+    if (pRang) {
+        pRang->unk54 = true;
+        SetState(SPS_2);
+    }
+}
+
 void SignPost::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case MSG_BoomerangMsg:
@@ -346,6 +356,7 @@ void SignPost::Message(MKMessage* pMsg) {
 
             BoomerangMessage* pRangMsg = (BoomerangMessage*)pMsg;
             if (pRangMsg->pBoomerang == NULL || pRangMsg->pBoomerang->mRangType != BR_Frostyrang) {
+                // Don't enter the hit state if hit by the frostyrang
                 SetState(SPS_2);
             }
             break;

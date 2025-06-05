@@ -32,7 +32,7 @@ void DDASession::Init(void) {
     deathList.Init(38, sizeof(DDADeathInfo));
     dbgMsgTimer = 0;
     unk20 = 0;
-    unk24[19] = 0;
+    unk = 0;
     LoadStatsInfo();
 }
 
@@ -100,7 +100,7 @@ void DDASession::NewCheckpoint(int arg1) {
         EndCheckpoint();
     }
 
-    if(checkpointList.IsFull()) {
+    if (checkpointList.IsFull()) {
         return;
     }
 
@@ -130,8 +130,10 @@ void DDASession::NewCheckpoint(int arg1) {
     currentCheckpoint->unk28 = 0;
     currentCheckpoint->damageCause = 0;
     currentCheckpoint->unk3C = 0;
+
     memset(&currentCheckpoint->cameraInfo, 0, sizeof(DDACameraInfo));
-    unk24[19] = ty.mBoomerangManager.GetCurrentType();
+
+    unk = ty.mBoomerangManager.GetCurrentType();
 }
 
 void DDASession::EndCheckpoint(void) {
@@ -176,16 +178,16 @@ void DDASession::StoreDamageInfo(DDADamageCause damageCause) {
     
     currentCheckpoint->damageCause = damageCause;
     switch (damageCause) {
-        case 1:
+        case DDA_DAMAGE_1:
             currentCheckpoint->unk20++;
             break;
-        case 2:
+        case DDA_DAMAGE_2:
             currentCheckpoint->unk22++;
             break;
-        case 3:
+        case DDA_DAMAGE_3:
             currentCheckpoint->unk24++;
             break;
-        case 4:
+        case DDA_DAMAGE_4:
             currentCheckpoint->unk26++;
             break;
         default:
@@ -221,13 +223,13 @@ void DDASession::StoreEnemyDeathInfo(DDAEnemyDamageCause enemyDamageCause) {
     }
 
     switch (enemyDamageCause) {
-        case 1:
+        case DDA_ENEMY_DAMAGE_1:
             currentCheckpoint->unk18++;
             break;
-        case 2:
+        case DDA_ENEMY_DAMAGE_2:
             currentCheckpoint->unk1A++;
             break;
-        case 3:
+        case DDA_ENEMY_DAMAGE_3:
             currentCheckpoint->unk1C++;
             break;
         default:
@@ -241,11 +243,11 @@ void DDASession::StoreRangChanged(void) {
         return;
     }
 
-    if (unk24[19] == ty.mBoomerangManager.GetCurrentType()) {
+    if (unk == ty.mBoomerangManager.GetCurrentType()) {
         return;
     }
 
-    unk24[19] = ty.mBoomerangManager.GetCurrentType();
+    unk = ty.mBoomerangManager.GetCurrentType();
 
     currentCheckpoint->unk10++;
 }

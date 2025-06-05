@@ -3,7 +3,10 @@
 
 #include "ty/GameObject.h"
 
-enum ProjectileState {};
+enum ProjectileState {
+    PROJECTILE_STATE_0 = 0,
+    PROJECTILE_STATE_2 = 2
+};
 
 /// @brief Projectile Descriptor
 struct ProjectileDesc : GameObjDesc {

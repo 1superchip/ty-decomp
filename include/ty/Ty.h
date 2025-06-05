@@ -43,7 +43,7 @@ struct HeadTurningInfo {
 };
 
 enum KnockBackType {
-
+    KB_TYPE_0 = 0,
 };
 
 enum TyHeads {

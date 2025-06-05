@@ -49,42 +49,46 @@ void Flame::Deinit(void) {
 /// @param pColor Color of the particle, Optional (pass NULL for {1, 1, 1, 1})
 void Flame::Create(Vector* pDir, float dirLen, Vector* pColor) {
     Particle* p = mpSystem->CreateParticle();
-    if (p) {
-        Vector rand;
-        rand.x = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
-        rand.y = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
-        rand.z = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
-        
-        Vector dir = *pDir;
-        dir.Normalise();
-
-        float dx = dir.x;
-        float dy = dir.y;
-        float dz = dir.z;
-        dir.x += (rand.x * dir.y) + (rand.x * dir.z);
-        dir.y += (rand.y * dx) + (rand.y * dir.z);
-        dir.z += (rand.z * dx) + (rand.z * dy);
-        dir.Scale(Abs<float>(dirLen));
-
-        p->mX = mpSystem->mpPos->x;
-        p->mY = mpSystem->mpPos->y;
-        p->mZ = mpSystem->mpPos->z;
-
-        p->unk20 = dir.x;
-        p->unk24 = dir.y;
-        p->unk28 = dir.z;
-
-        if (pColor) {
-            p->mColor = *pColor;
-        } else {
-            p->mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-
-        p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
-        p->unk48 = _table_sinf(p->mAngle);
-        p->unk4C = _table_cosf(p->mAngle);
-        p->SetUnk58ArrayByIndex(0, unk4);
+    
+    if (p == NULL) {
+        return;
     }
+
+    float rand[3];
+    rand[0] = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+    rand[1] = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+    rand[2] = RandomFR(&gb.mRandSeed, -0.1f, 0.1f);
+    
+    float dx, dy;
+    
+    Vector dir = *pDir;
+    dir.Normalise();
+
+    dx = dir.x;
+    dy = dir.y;
+    dir.x += (rand[0] * dir.y) + (rand[0] * dir.z);
+    dir.y += (rand[1] * dx) + (rand[1] * dir.z);
+    dir.z += (rand[2] * dx) + (rand[2] * dy);
+    dir.Scale(Abs<float>(dirLen));
+
+    p->mX = mpSystem->mpPos->x;
+    p->mY = mpSystem->mpPos->y;
+    p->mZ = mpSystem->mpPos->z;
+
+    p->unk20 = dir.x;
+    p->unk24 = dir.y;
+    p->unk28 = dir.z;
+
+    if (pColor) {
+        p->mColor = *pColor;
+    } else {
+        p->mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
+    p->mAngle = RandomFR(&gb.mRandSeed, -PI, PI);
+    p->unk48 = _table_sinf(p->mAngle);
+    p->unk4C = _table_cosf(p->mAngle);
+    p->SetUnk58ArrayByIndex(0, unk4);
 }
 
 /// @brief Destroys all ParticleChunks

@@ -8,7 +8,7 @@ enum TyHealthType {
 };
 
 enum HurtType {
-
+    HURT_TYPE_5 = 5
 };
 
 struct HealthInfo {

@@ -614,16 +614,24 @@ float Tools_CriticalDamp(float f1, float f2, float f3, float strength) {
 
 bool Tools_BuildLTWMatrix(Matrix* m, Vector* forward, Vector* pVec) {
     static Vector j = {0.0f, 1.0f, 0.0f, 0.0f};
+
     Vector* s = (pVec != NULL) ? pVec : &j;
+
     Vector tmp;
     tmp.Inverse(forward);
     tmp.Cross(&tmp, s);
-    if (tmp.MagSquared() == 0.0f) return false;
+
+    if (tmp.MagSquared() == 0.0f) {
+        return false;
+    }
+
     m->SetRotationToNone();
+
     m->Row0()->Copy(&tmp);
     m->Row0()->Normalise();
     m->Row1()->Copy(s);
     m->Row2()->Cross(s, m->Row0());
+    
     return true;
 }
 
@@ -1035,21 +1043,21 @@ void Tools_DropShadow_Deinit(void) {
     bDropShadowsIsInit = false;
 }
 
-void Tools_DropShadow_Add(float f1, Vector* pVec, Vector* pVec1, float f2) {
+void Tools_DropShadow_Add(float f1, Vector* pPos, Vector* pNormal, float alpha) {
     if (!bDropShadowsIsInit) {
         return;
     }
 
-    if (shadows.CheckMemory()) {
+    if (shadows.full()) {
         return;
     }
 
     ShadowInfo* pShadow = shadows.GetNextEntry();
 
-    pShadow->unk24 = f2;
+    pShadow->alpha = alpha;
     pShadow->unk20 = f1;
-    pShadow->unk0.Copy(pVec);
-    pShadow->unk10.Copy(pVec1);
+    pShadow->pos.Copy(pPos);
+    pShadow->unk10.Copy(pNormal);
 }
 
 // may have been defined within the header?
@@ -1062,7 +1070,7 @@ inline void ShadowInfo::Draw(void) {
     transform.SetIdentity();
     Tools_BuildLTWMatrix(&transform, &sp18, &unk10);
 
-    transform.Row3()->Copy(&unk0);
+    transform.Row3()->Copy(&pos);
     transform.Row3()->y += 3.0f;
 
     View::GetCurrent()->SetLocalToWorldMatrix(&transform);
@@ -1073,7 +1081,7 @@ inline void ShadowInfo::Draw(void) {
     triStrips[2].pos.Set(-unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
     triStrips[3].pos.Set(unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
     
-    triStrips[0].color.Set(1.0f, 1.0f, 1.0f, unk24);
+    triStrips[0].color.Set(1.0f, 1.0f, 1.0f, alpha);
     triStrips[3].color = triStrips[2].color = triStrips[1].color = triStrips[0].color;
     
     triStrips[0].uv.x = 0.0f;
@@ -1092,14 +1100,14 @@ inline void ShadowInfo::Draw(void) {
 }
 
 void Tools_DropShadow_Draw(void) {
-    if (shadows.CheckMemory2()) {
+    if (shadows.empty()) {
         return;
     }
 
     gb.pShadowMat->Use();
 
     ShadowInfo* pInfo = shadows.GetCurrEntry();
-    for (int i = 0; i < shadows.GetCount(); i++) {
+    for (int i = 0; i < shadows.size(); i++) {
         pInfo[i].Draw();
     }
 }

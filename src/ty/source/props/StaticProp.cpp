@@ -213,14 +213,10 @@ void StaticFXProp::LoadDone(void) {
     bVisible = bTempVisible;
     bDefaultVisible = bVisible;
     Vector start = {0.0f, 300.0f, 0.0f, 0.0f};
-    start.x += unk58.x;
-    start.y += unk58.y;
-    start.z += unk58.z;
+    start.Add(GetPos());
 
     Vector end = {0.0f, -300.0f, 0.0f, 0.0f};
-    end.x += unk58.x;
-    end.y += unk58.y;
-    end.z += unk58.z;
+    end.Add(GetPos());
 
     if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE /* ~ID_WATER_BLUE */)
             && (GetDesc()->effectFlags & FX_WaterRipple)) {
@@ -277,7 +273,7 @@ void StaticFXProp::UpdateShake(void) {
         }
 
         if (Abs<float>(gb.unk78C) > 0.1f) {
-            Vector tmp = unk58;
+            Vector tmp = *GetPos();
             tmp.y += gb.unk78C;
             pModel->SetPosition(&tmp);
             pModel->SetLocalToWorldDirty();
@@ -292,20 +288,18 @@ void StaticFXProp::UpdateShake(void) {
                 b1 = true;
             }
         } else {
-            pModel->SetPosition(&unk58);
+            pModel->SetPosition(GetPos());
             b1 = false;
         }
     }
 }
 
 void StaticFXProp::UpdateWaterRipple(void) {
-    if (ty.pos.IsInsideSphere(&unk58, 800.0f) && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
+    if (ty.pos.IsInsideSphere(GetPos(), 800.0f) && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
         unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
-        Vector ripplePosition = {0.0f, 5.0f, 0.0f, 0.0f};
-        ripplePosition.x += waterCollisionPos.x;
-        ripplePosition.y += waterCollisionPos.y;
-        ripplePosition.z += waterCollisionPos.z;
-        particleManager->SpawnWaterRipple(&ripplePosition, RandomFR(&gb.mRandSeed, 80.0f, 120.0f));
+        Vector tmp = {0.0f, 5.0f, 0.0f, 0.0f};
+        tmp.Add(&waterCollisionPos);
+        particleManager->SpawnWaterRipple(&tmp, RandomFR(&gb.mRandSeed, 80.0f, 120.0f));
     }
 }
 
@@ -313,7 +307,7 @@ void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
 
     if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > (uint)unk9C)) {
-        Vector temp = unk58;
+        Vector temp = *GetPos();
         Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
         temp.y += RandomIR(&gb.mRandSeed, 700, 800);
         temp.x += RandomIR(&gb.mRandSeed, -1200, 1200);

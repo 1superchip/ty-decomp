@@ -275,7 +275,9 @@ void Gem::Update(void) {
         tempPos.y = unkFC;
         tempPos.z = mParticle.pos.z;
         Tools_DropShadow_Add(
-            40.0f, &tempPos, &mCollisionNormal,
+            40.0f, 
+            &tempPos, 
+            &mCollisionNormal,
             1.0f - Clamp<float>(0.0f, (mParticle.pos.y - unkFC) / 100.0f, 1.0f) * 0.5f
         );
     }
@@ -1004,7 +1006,7 @@ void Gem_PickupParticle_Draw(void) {
     if (pBlitterParticle) {
         View::GetCurrent()->SetLocalToWorldMatrix(NULL);
         elementInfo[gemElement].pParticleMaterial->Use();
-        pBlitterParticle->Draw(pickupDraw.GetCount());
+        pBlitterParticle->Draw(pickupDraw.size());
     }
 
     View::GetCurrent()->unk2C0 = f29;

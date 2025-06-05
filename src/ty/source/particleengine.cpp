@@ -60,7 +60,7 @@ void TyParticleManager::LoadResources(void) {
     pFireMaterial = Material::Create("fx_008");
 
     unk44 = Material::Create("fx_012");
-    unk48 = Material::Create("fx_020");
+    pFastGlowMaterial = Material::Create("fx_020");
     pDustMaterial = Material::Create("fx_059");
     pShockGlowMaterial = Material::Create("fx_030");
     unk7C = Material::Create("fx_038");
@@ -96,25 +96,39 @@ void TyParticleManager::Init(void) {
     bParticleManagerInited = true;
 
     mFireData.Init(50);
-    mFireParticles.Init(mFireData.GetCount());
+    mFireParticles.Init(mFireData.capacity());
 
     mTireDustData.Init(50);
-    mTireDustParticles.Init(mTireDustData.GetCount());
+    mTireDustParticles.Init(mTireDustData.capacity());
 
     mBreathMistData.Init(5);
-    mBreathMistParticles.Init(mBreathMistData.GetCount());
+    mBreathMistParticles.Init(mBreathMistData.capacity());
 
     mShockGlowData.Init(20);
-    mShockGlowParticles.Init(mShockGlowData.GetCount());
+    mShockGlowParticles.Init(mShockGlowData.capacity());
+
+    mWaterDropGreenData.Init(50);
+    mWaterDropGreenParticles.Init(mWaterDropGreenData.capacity());
+
+    mWaterDropBlueData.Init(50);
+    mWaterDropBlueParticles.Init(mWaterDropBlueData.capacity());
+
+    mShockGlowData.Init(20);
+    mShockGlowParticles.Init(mShockGlowData.capacity());
 
     mChompData.Init(20);
-    mChompParticles.Init(mChompData.GetCount());
+    mChompParticles.Init(mChompData.capacity());
 
     mGhostData.Init(5);
-    mGhostParticles.Init(mGhostData.GetCount());
+    mGhostParticles.Init(mGhostData.capacity());
 
     mGhostSmokeData.Init(30);
-    mGhostSmokeParticles.Init(mGhostSmokeData.GetCount());
+    mGhostSmokeParticles.Init(mGhostSmokeData.capacity());
+
+    mWaterSteamData.Init(30);
+    mWaterSteamParticles.Init(mWaterSteamData.capacity());
+
+    unkE4 = 0.0f;
 
     mBilbyAtomParticles.Init(50);
 
@@ -138,15 +152,31 @@ void TyParticleManager::Deinit(void) {
 
         mLeafList.Deinit();
         mFeatherList.Deinit();
+        mShockGlowData.Deinit();
+        //
+        //
+        //
+        mChompData.Deinit();
+        mGhostData.Deinit();
+        mGhostSmokeData.Deinit();
+        mWaterSteamData.Deinit();
 
 
         mBilbyAtomParticles.Deinit();
 
         mRippleList.Deinit();
         mGooList.Deinit();
+
         mFireParticles.Deinit();
         mTireDustParticles.Deinit();
         mBreathMistParticles.Deinit();
+        mShockGlowParticles.Deinit();
+        //
+        //
+        mChompParticles.Deinit();
+        mGhostParticles.Deinit();
+        mGhostSmokeParticles.Deinit();
+        mWaterSteamParticles.Deinit();
     }
 }
 
@@ -255,8 +285,21 @@ void TyParticleManager::SpawnGhostSmoke(Vector* pPos, int r5) {
     }
 }
 
-void TyParticleManager::SpawnWaterSteam(Vector* p, float f1) {
+void TyParticleManager::SpawnWaterSteam(Vector* pPos, float scale) {
+    WaterSteamStruct* pWaterSteamData = mWaterSteamData.GetNextEntry();
+    Blitter_Particle* pParticle = mWaterSteamParticles.GetNextEntry();
 
+    if (pWaterSteamData == NULL || pParticle == NULL) {
+        return;
+    }
+
+    pWaterSteamData->unk0 = 4.0f;
+
+    pParticle->pos = *pPos;
+    pParticle->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+    pParticle->angle = 0.0f;
+
+    pParticle->scale = scale;
 }
 
 void TyParticleManager::SpawnFastGlow(Vector* pPos, float scale) {
@@ -289,14 +332,14 @@ void TyParticleManager::SpawnBilbyPickupAtom(Vector* pPos, float scale, int colo
 }
 
 void TyParticleManager::SpawnTireDust(Vector* pPos, float scale, float alpha) {
-    float* pTireDustData = mTireDustData.GetNextEntry();
+    TireDustStruct* pTireDustData = mTireDustData.GetNextEntry();
     Blitter_Particle* pParticle = mTireDustParticles.GetNextEntry();
 
     if (pTireDustData == NULL || pParticle == NULL) {
         return;
     }
 
-    pTireDustData[0] = 1.0f;
+    pTireDustData->unk0 = 1.0f;
 
     pParticle->pos = *pPos;
 
@@ -332,6 +375,22 @@ void TyParticleManager::SpawnBreathMist(Vector* pPos, Vector* pVel, float scale)
     pParticle->scale = scale / 2.0f;
     pParticle->color.Set(1.0f, 1.0f, 1.0f, 138.0f / 255.0f);
     pParticle->angle = 0.0f;
+}
+
+void TyParticleManager::SpawnBridgeChunk(Vector*, Model*) {
+
+}
+
+void TyParticleManager::SpawnAntHillChunk(Vector*, Vector*) {
+
+}
+
+void TyParticleManager::SpawnLeafGrassDust(Vector*, Vector*, bool) {
+
+}
+
+void TyParticleManager::SpawnFeather(Vector*, Vector*) {
+    
 }
 
 void TyParticleManager::SpawnShockGlow(Vector* pPos, float scale) {
@@ -372,6 +431,50 @@ void TyParticleManager::SpawnWaterRipple(Vector* pPos, float f1) {
 
         pRipple->unk2C = 0;
     }
+}
+
+void TyParticleManager::SpawnWaterDropGreen(Vector* pPos, Vector* r5, float scale) {
+    WaterDropGreenStruct* pWaterDropGreenData = mWaterDropGreenData.GetNextEntry();
+    Blitter_Particle* pParticle = mWaterDropGreenParticles.GetNextEntry();
+
+    if (pWaterDropGreenData == NULL || pParticle == NULL) {
+        return;
+    }
+
+    pWaterDropGreenData->unk0 = 4.0f;
+    pWaterDropGreenData->unk8 = *r5;
+    pWaterDropGreenData->unk4 = pPos->y;
+
+    pParticle->pos = *pPos;
+    pParticle->scale = scale * 2.5f;
+    pParticle->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+    pParticle->angle = 0.0f;
+}
+
+void TyParticleManager::SpawnWaterDropBlue(Vector* pPos, Vector* r5, float scale) {
+    WaterDropBlueStruct* pWaterDropBlueData = mWaterDropBlueData.GetNextEntry();
+    Blitter_Particle* pParticle = mWaterDropBlueParticles.GetNextEntry();
+
+    if (pWaterDropBlueData == NULL || pParticle == NULL) {
+        return;
+    }
+
+    pWaterDropBlueData->unk0 = 4.0f;
+    pWaterDropBlueData->unk8 = *r5;
+    pWaterDropBlueData->unk4 = pPos->y;
+
+    pParticle->pos = *pPos;
+    pParticle->scale = scale * 2.5f;
+    pParticle->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+    pParticle->angle = 0.0f;
+}
+
+void TyParticleManager::SpawnBigSplash(Vector*, bool, float, bool, float, int) {
+
+}
+
+void TyParticleManager::SpawnSnowFlake(Vector*, Vector*, float, float, int) {
+
 }
 
 void TyParticleManager::SpawnFireParticle(Vector* pPos, float scaleFactor) {
@@ -431,6 +534,10 @@ void TyParticleManager::SpawnGoo(Vector* pPos, Vector* pColor) {
     }
 }
 
+void TyParticleManager::SpawnFootPrint(FootPrintTypes, Vector*, Vector*, Rotation*, Vector*) {
+
+}
+
 void TyParticleManager::SetCamera(Vector* p, Vector* p1) {
     unk20 = *p;
     unk30 = *p1;
@@ -479,14 +586,14 @@ void TyParticleManager::DrawPostWater(void) {
     if (pParticles) {
         pFireMaterial->Use();
 
-        pParticles->Draw(mFireParticles.GetCount());
+        pParticles->Draw(mFireParticles.size());
     }
 
     pParticles = mChompParticles.GetCurrEntry();
     if (pParticles) {
         pChompMaterial->Use();
 
-        pParticles->Draw(mChompParticles.GetCount());
+        pParticles->Draw(mChompParticles.size());
 
         mChompParticles.UnknownSetPointer();
     }
@@ -500,9 +607,9 @@ void TyParticleManager::DrawPostWater(void) {
 
     pParticles = mFastGlowParticles.GetCurrEntry();
     if (pParticles) {
-        unk48->Use();
+        pFastGlowMaterial->Use();
 
-        pParticles->Draw(mFastGlowParticles.GetCount());
+        pParticles->Draw(mFastGlowParticles.size());
 
         mFastGlowParticles.UnknownSetPointer();
     }
@@ -511,35 +618,35 @@ void TyParticleManager::DrawPostWater(void) {
     if (pParticles) {
         pDustMaterial->Use();
 
-        pParticles->Draw(mTireDustParticles.GetCount());
+        pParticles->Draw(mTireDustParticles.size());
     }
 
     pParticles = mBreathMistParticles.GetCurrEntry();
     if (pParticles) {
         pDustMaterial->Use();
 
-        pParticles->Draw(mBreathMistParticles.GetCount());
+        pParticles->Draw(mBreathMistParticles.size());
     }
 
     pParticles = mGhostParticles.GetCurrEntry();
     if (pParticles) {
         pGhostMaterial->Use();
 
-        pParticles->Draw(mGhostParticles.GetCount());
+        pParticles->Draw(mGhostParticles.size());
     }
 
     pParticles = mGhostSmokeParticles.GetCurrEntry();
     if (pParticles) {
         pGhostSmokeMaterial->Use();
 
-        pParticles->Draw(mGhostSmokeParticles.GetCount());
+        pParticles->Draw(mGhostSmokeParticles.size());
     }
 
     pParticles = mBilbyAtomParticles.GetCurrEntry();
     if (pParticles) {
         pBilbyAtomMaterial->Use();
 
-        pParticles->Draw(mBilbyAtomParticles.GetCount());
+        pParticles->Draw(mBilbyAtomParticles.size());
         mBilbyAtomParticles.UnknownSetPointer();
     }
 
@@ -563,7 +670,7 @@ void TyParticleManager::DrawPostWater(void) {
     if (pParticles) {
         pShockGlowMaterial->Use();
 
-        pParticles->Draw(mShockGlowParticles.GetCount());
+        pParticles->Draw(mShockGlowParticles.size());
     }
 
     GooStruct** ppGoos = mGooList.GetMem();
