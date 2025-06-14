@@ -1,7 +1,7 @@
 #ifndef __DOLPHIN_OSALLOC_H_
 #define __DOLPHIN_OSALLOC_H_
 
-//#include <dolphin/types.h>
+#include <dolphin/types.h>
 
 #ifdef __cplusplus
 extern "C" {

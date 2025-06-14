@@ -113,7 +113,7 @@ void AddToPackage(char* pName) {
             break;
         }
     }
-
+    
     if (i == nmbrOfPackageEntries && FileSys_Exists(pName, &pPackageEntries[nmbrOfPackageEntries].fileSize)) {
         pPackageEntries[nmbrOfPackageEntries].pFilename = pName;
         pPackageEntries[nmbrOfPackageEntries].fileOffset = FileSys_GetOffset(pName);
@@ -234,9 +234,12 @@ void MKPackage_Update(void) {
                 ((char*)pPackageEntries[nmbrEntriesLoaded].pFileData)[pPackageEntries[nmbrEntriesLoaded].fileSize] = '\0';
 
                 File_Read(
-                    afd, pPackageEntries[nmbrEntriesLoaded].pFileData, pPackageEntries[nmbrEntriesLoaded].fileSize,
+                    afd, 
+                    pPackageEntries[nmbrEntriesLoaded].pFileData, 
+                    pPackageEntries[nmbrEntriesLoaded].fileSize,
                     pPackageEntries[nmbrEntriesLoaded].fileSize
                 );
+
                 asyncState = 3;
                 break;
             case 3:
@@ -262,6 +265,7 @@ void MKPackage_Update(void) {
 
                     ((char*)pPackageEntries[nmbrEntriesLoaded + i].pFileData)[pPackageEntries[nmbrEntriesLoaded + i].fileSize] = '\0';
                 }
+
                 pChunkBuffer = (char*)malloc(chunkLength + 0x2000);
                 if (pChunkBuffer == NULL) {
                     lowMemory = true;
@@ -398,11 +402,14 @@ bool MKPackage_IsLoaded(float* pProgress) {
         if (nmbrEntriesLoaded < nmbrOfPackageEntries) {
             MKPackage_Update();
         }
+
         if (pProgress) {
             *pProgress = totalBytesInPackage != 0 ? (float)totalBytesLoaded / (float)totalBytesInPackage : 1.0f;
         }
+
         return nmbrEntriesLoaded == nmbrOfPackageEntries;
     }
+
     return true;
 }
 

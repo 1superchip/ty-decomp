@@ -826,7 +826,7 @@ config.libs = [
             Object(Matching, "Dolphin/os/__start.c"),
             Object(Matching, "Dolphin/os/OS.c"),
             Object(NonMatching, "Dolphin/os/OSAlarm.c"),
-            Object(NonMatching, "Dolphin/os/OSAlloc.c"),
+            Object(Matching, "Dolphin/os/OSAlloc.c"),
             Object(Matching, "Dolphin/os/OSArena.c"),
             Object(Matching, "Dolphin/os/OSAudioSystem.c"),
             Object(NonMatching, "Dolphin/os/OSCache.c"),
