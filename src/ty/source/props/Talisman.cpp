@@ -21,7 +21,7 @@ static ModuleInfo<Talisman> TalismanModule;
 
 // Loads the descriptor for each Talisman
 void Talisman_LoadResources(KromeIni* pIni) {
-    for (int i = 0; i < TALISMAN_COUNT; i++) {
+    for (int i = 0; i < ARRAY_SIZE(talismanData); i++) {
         TalismanDesc[i].Init(&TalismanModule, talismanData[i].pModelName, talismanData[i].pDescrName, 1, 1);
         TalismanDesc[i].Load(pIni);
         objectManager.AddDescriptor(&TalismanDesc[i]);
@@ -58,7 +58,6 @@ void Talisman::Reset(void) {
 }
 
 void Talisman::Update(void) {
-    // if Talisman isn't visible, don't update it
     if (!bCurrentVisible) {
         return;
     }
@@ -66,16 +65,22 @@ void Talisman::Update(void) {
     if ((gb.logicGameCount & 3) == 1) {
         Vector vec; // particlePos?
         Vector vec1; // vel?
+
         Vector colour = {1.0f, 1.0f, 0.0f, 0.0f};
+
         float randomAngle = ((RandomI(&gb.mRandSeed) % 100) * (2 * PI)) / 100.0f;
+
         float rand1 = ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f;
+
         vec.Set(_table_sinf(randomAngle) * rand1, RandomI(&gb.mRandSeed) % 5, _table_cosf(randomAngle) * rand1);
         vec1 = vec;
         vec1.Normalise();
         vec1.Scale(15.0f);
         vec1.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
         vec.Add(pModel->matrices[0].Row3());
+        
         pParticleSystem->scale = 1.0f;
+
         Particle_Special_Create(&pParticleSystem, &vec, &vec1, &colour);
     }
 }

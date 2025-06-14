@@ -58,7 +58,7 @@ void GuideParticle_LoadResources(KromeIni* pIni) {
 void GuideParticle_Show(void) {
     GuideParticle* pObjs = (GuideParticle*)guideParticleDesc.pInstances;
 
-    for (int i = 0; i < guideParticleDesc.unk74; i++, pObjs++) {
+    for (int i = 0; i < guideParticleDesc.instanceCount; i++, pObjs++) {
         pObjs->Reset();
     }
 
@@ -71,7 +71,7 @@ void GuideParticle_Hide(void) {
 }
 
 bool GuideParticle_HasPassedThoughAll(void) {
-    return counter == guideParticleDesc.unk74;
+    return counter == guideParticleDesc.instanceCount;
 }
 
 void GuideParticle::Init(GameObjDesc* pDesc) {

@@ -48,4 +48,15 @@ struct MTX34
 // Array size define
 #define ARRAY_SIZE(o) (sizeof((o)) / sizeof(*(o)))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#undef ARRAY_SIZE
+#define ARRAY_SIZE(arr) static_cast<int>(sizeof(arr) / sizeof(arr[0]))
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // !TYPES_H

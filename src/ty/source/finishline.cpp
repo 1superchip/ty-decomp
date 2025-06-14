@@ -15,19 +15,19 @@ static GameObjDesc finishLineDesc;
 static ModuleInfo<FinishLineStruct> finishLineModule;
 
 void FinishLine_Show(void) {
-    if (finishLineDesc.unk74 > 0) {
+    if (finishLineDesc.instanceCount > 0) {
         ((FinishLineStruct*)finishLineDesc.pInstances)->SetState(FLS_1);
     }
 }
 
 void FinishLine_Hide(void) {
-    if (finishLineDesc.unk74 > 0) {
+    if (finishLineDesc.instanceCount > 0) {
         ((FinishLineStruct*)finishLineDesc.pInstances)->SetState(FLS_0);
     }
 }
 
 bool FinishLine_IsCrossedBy(Vector* pPos) {
-    if (finishLineDesc.unk74 > 0) {
+    if (finishLineDesc.instanceCount > 0) {
         return ((FinishLineStruct*)finishLineDesc.pInstances)->IsCrossedBy(pPos);
     }
 

@@ -28,7 +28,7 @@ void MKSceneManager::DeinitModule(void) {
 }
 
 void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
-    for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
+    for (int i = 0; i < ARRAY_SIZE(pTerrainModel); i++) {
         pTerrainModel[i] = NULL;
     }
 
@@ -59,11 +59,11 @@ void MKSceneManager::Init(MKSceneManagerInit* initInfo) {
 }
 
 void MKSceneManager::Deinit(void) {
-    for (int i = 0; i < (int)ARRAY_SIZE(staticPropTree); i++) {
+    for (int i = 0; i < ARRAY_SIZE(staticPropTree); i++) {
         staticPropTree[i].Deinit();
     }
 
-    for (int i = 0; i < NUM_TERRAIN_MODELS; i++) {
+    for (int i = 0; i < ARRAY_SIZE(trees); i++) {
         trees[i].Deinit();
     }
 }
@@ -130,7 +130,7 @@ static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
     vecs[7].w = vecs[2].w;
     vecs[7].z = vecs[2].z + pDesc->pVolume->v2.z;
     
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < ARRAY_SIZE(vecs); i++) {
         vecs[i].ApplyMatrix(pProp->pLocalToWorld);
     }
 
@@ -691,7 +691,7 @@ void MKSceneManager::UpdateProps(void) {
     MKMessage message;
     message.unk0 = -3;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < ARRAY_SIZE(staticPropTree); i++) {
 
         SMNode* node = staticPropTree[i].pNodes;
 
@@ -785,7 +785,7 @@ void MKSceneManager::SendMessage(MKMessage* pMessage, uint mask, bool bIncludeSt
     // Only check static props if bIncludeStatic is true
     if (bIncludeStatic) {
         // Loop over and check all static props
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < ARRAY_SIZE(staticPropTree); i++) {
             SMNode* node = staticPropTree[i].pNodes;
 
             for (index = 0; index < staticPropTree[i].propCount; index++) {
@@ -800,7 +800,7 @@ void MKSceneManager::SendMessage(MKMessage* pMessage, uint mask, bool bIncludeSt
     }
 
     // Loop over and check all dynamic props
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_SIZE(dynamicPropArray); i++) {
         MKProp *dynamicProp = dynamicPropArray[i].pNext;
         while (dynamicProp != &dynamicPropArray[i]) {
             prop1C0 = dynamicProp->pNext;
@@ -810,7 +810,7 @@ void MKSceneManager::SendMessage(MKMessage* pMessage, uint mask, bool bIncludeSt
     }
 
     // Loop over and check all global props
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_SIZE(globalPropArray); i++) {
         MKProp* globalProp = globalPropArray[i].pNext;
         while (globalProp != &globalPropArray[i]) {
             prop1C0 = globalProp->pNext;
@@ -889,7 +889,7 @@ int MKSceneManager::GetPropsInRange(MKProp** ppProps, int maxCount, Vector* pTes
     int currPropArray = 0;
     MKProp** props;
     MKProp* prop;
-    for (int i = 0; i < 4; i++, currPropArray++) {
+    for (int i = 0; i < ARRAY_SIZE(dynamicPropArray); i++, currPropArray++) {
         if (targetPropArrayIndex == -1 || targetPropArrayIndex == currPropArray) {
             props = ppProps;
             for (prop = dynamicPropArray[i].pNext; prop != &dynamicPropArray[i] && ret < maxCount; prop = prop->pNext) {

@@ -197,7 +197,7 @@ void CausticEffect::LoadLine(KromeIniLine* pLine) {
 }
 
 void CausticEffect::LoadDone(void) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < ARRAY_SIZE(unkData); i++) {
         unkData[i] = 0.0f;
     }
 }
@@ -249,7 +249,7 @@ void LavaEffect::LoadLine(KromeIniLine* pLine) {
 }
 
 void LavaEffect::Deinit(void) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < ARRAY_SIZE(pMaterials); i++) {
         if (pMaterials[i]) {
             pMaterials[i]->Destroy();
         }

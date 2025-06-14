@@ -59,6 +59,7 @@ void Heap_MemFree(void* ptr) {
 /// @param lineNumber Line number to print
 /// @return Returns 0 if no error occurs otherwise exits the program
 int Heap_Check(char* file, int lineNumber) {
+    
     if ((int)OSCheckHeap(0) == -1) {
         printf("\nCorrupt HEAP\n");
         printf("%s Line: %d\n", file, lineNumber);

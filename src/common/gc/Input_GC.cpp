@@ -288,7 +288,7 @@ void Input_Vibrate(InputDevices deviceID, int r4, bool r5) {
 /// @brief Clears certain data in all joypads
 /// @param  None
 void Input_ClearPadData(void) {
-    for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+    for (int i = 0; i < ARRAY_SIZE(joyPad); i++) {
         joyPad[i].mPrevButtonFlags = 0;
         joyPad[i].mCurrButtonFlags = 0;
         joyPad[i].mCurrStickX = 0x7f;

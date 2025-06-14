@@ -218,7 +218,7 @@ void StaticFXProp::LoadDone(void) {
     Vector end = {0.0f, -300.0f, 0.0f, 0.0f};
     end.Add(GetPos());
 
-    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE /* ~ID_WATER_BLUE */)
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE)
             && (GetDesc()->effectFlags & FX_WaterRipple)) {
         // if collision against water occurs and this prop has Water Ripple effects
         // set collides with water and the position of the collision
@@ -275,9 +275,11 @@ void StaticFXProp::UpdateShake(void) {
         if (Abs<float>(gb.unk78C) > 0.1f) {
             Vector tmp = *GetPos();
             tmp.y += gb.unk78C;
+
             pModel->SetPosition(&tmp);
             pModel->SetLocalToWorldDirty();
-            if (b1 == false) {
+            
+            if (!b1) {
                 tmp.Set(
                     RandomFR(&gb.mRandSeed, -30.0f, 30.0f),
                     -5.0f,

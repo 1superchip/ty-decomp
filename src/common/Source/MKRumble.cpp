@@ -25,7 +25,7 @@ static bool vibrationPaused = false;
 void MKRumble_Reset(void) {
     vibrationPaused = false;
 
-    for(int i = 0; i < MAX_CHANS; i++) {
+    for(int i = 0; i < ARRAY_SIZE(ves); i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = 0;
         ves[i].unk8 = 0;
@@ -34,7 +34,7 @@ void MKRumble_Reset(void) {
 
     effectsPlaying = 0;
 
-    for(int i = 0; i < NUM_VIBRA_EFFECTS; i++) {
+    for(int i = 0; i < ARRAY_SIZE(vibrationEffect); i++) {
         vibrationEffect[i].unk14 = 0;
         vibrationEffect[i].unk0 = 60.0f;
         vibrationEffect[i].unk4 = 1.0f;
@@ -136,7 +136,7 @@ void MKRumble_Update(void) {
 void MKRumble_Pause(void) {
     vibrationPaused = true;
     
-    for (int i = 0; i < MAX_CHANS; i++) {
+    for (int i = 0; i < ARRAY_SIZE(ves); i++) {
         ves[i].unk0 = 0;
         ves[i].unk4 = false;
         ves[i].unk8 = 0.0f;

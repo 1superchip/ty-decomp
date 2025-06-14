@@ -300,7 +300,6 @@ bool System_Update_Normal(void) {
 // this function looks fine based on july 1st and jimmy neutron
 // Game Drawing function
 void System_GameDraw(void) {
-    // Call DEMOBeforeRender()
     DEMOBeforeRender();
 
     // Use Default View

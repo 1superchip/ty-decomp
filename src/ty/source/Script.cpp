@@ -17,7 +17,7 @@ void Script_LoadResources(KromeIni* pIni) {
 }
 
 bool ScriptProp::LoadLine(KromeIniLine* pLine) {
-    for (int i = 0; i < MessageCount; i++) {
+    for (int i = 0; i < ARRAY_SIZE(messages); i++) {
         if (messages[i].LoadLine(pLine, Str_Printf("Message%d", i))) {
             return true;
         }
@@ -44,7 +44,7 @@ void ScriptProp::Init(GameObjDesc* pDesc) {
     bDelayEachMessage = false;
     currentMessageIndex = 0;
 
-    for (int i = 0; i < MessageCount; i++) {
+    for (int i = 0; i < ARRAY_SIZE(messages); i++) {
         messages[i].Init();
     }
 }
@@ -104,7 +104,7 @@ void ScriptProp::Message(MKMessage* pMsg) {
             bEnabled = false;
             break;
         case MSG_Resolve:
-            for (int i = 0; i < MessageCount; i++) {
+            for (int i = 0; i < ARRAY_SIZE(messages); i++) {
                 messages[i].Resolve();
             }
             break;
@@ -114,7 +114,7 @@ void ScriptProp::Message(MKMessage* pMsg) {
 }
 
 void ScriptProp::Execute(void) {
-    for (int i = 0; i < MessageCount; i++) {
+    for (int i = 0; i < ARRAY_SIZE(messages); i++) {
         messages[i].Send();
     }
 }

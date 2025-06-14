@@ -64,7 +64,7 @@ void RkvTOC::Init(char* pName) {
         // alloc and read header
         RKVHeader* pHeader = (RKVHeader*)Heap_MemAlloc(sizeof(RKVHeader));
         File_Seek(rkvFd, -0x20, SEEK_END); // Header is last 32 bytes of the rkv file
-        File_Read(rkvFd, pHeader, sizeof(RKVHeader), 0x20);
+        File_Read(rkvFd, pHeader, sizeof(RKVHeader), sizeof(RKVHeader));
         nmbrOfEntries = pHeader->nmbrOfEntries;
         nmbrOfDirectories = pHeader->nmbrOfDirectories;
 
@@ -305,6 +305,7 @@ int FileSys_Save(char* name, bool arg1, void* pData, int dataLen) {
         File_Write(fd, pData, dataLen);
         File_Close(fd);
     }
+
     return fd < 0 ? -1 : 0;
 }
 

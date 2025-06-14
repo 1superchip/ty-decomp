@@ -14,7 +14,7 @@ extern "C" void strcpy(char*, char*);
 /// @brief Initiates all File entries
 /// @param  None
 void File_InitModule(void) {
-    for (int i = 0; i < MAX_FILES; ++i) {
+    for (int i = 0; i < ARRAY_SIZE(gcFiles); ++i) {
         memset(&gcFiles[i], 0, sizeof(FileEntry));
         gcFiles[i].streamOffset = -1;
     }
@@ -79,23 +79,24 @@ int File_Read(int fd, void* buf, int size, int arg3) {
     int alignedSize = OSRoundUp32B(size); // align size to 32 bytes
     
     FileEntry* entry = &gcFiles[fd];
-    entry->unk44 = buf;
+    entry->addr = buf;
 
     if ((alignedSize + 0x40 > arg3) || ((int)buf & 0x1f) || (arg3 & 0x1f)) {
         entry->unk54 = alignedSize + 0x40;
-        entry->unk44 = Heap_MemAlloc(entry->unk54);
-        entry->unk40 = entry->unk44;
+        entry->addr = Heap_MemAlloc(entry->unk54);
+        entry->unk40 = entry->addr;
     }
 
     if (gcFiles[fd].callback == NULL) {
-        int readLength = DVDReadPrio(&entry->fileInfo, entry->unk44, alignedSize, entry->streamOffset, 2);
+        int readLength = DVDReadPrio(&entry->fileInfo, entry->addr, alignedSize, entry->streamOffset, 2);
         entry->streamOffset += readLength;
         if (entry->unk54 > 0) {
-            memmove(buf, entry->unk44, arg3);
-            Heap_MemFree(entry->unk44);
-            entry->unk44 = 0;
+            memmove(buf, entry->addr, arg3);
+            Heap_MemFree(entry->addr);
+            entry->addr = NULL;
             entry->unk54 = 0;
         }
+
         return readLength;
     }
 
@@ -108,9 +109,11 @@ int File_Read(int fd, void* buf, int size, int arg3) {
     }
 
     gcFiles[fd].unk50 = 3;
+
     Heap_Check("File.cpp", 206);
-    int readPrioCode = DVDReadAsyncPrio(&entry->fileInfo, entry->unk44, alignedSize, entry->streamOffset, entry->callback, 2);
+    int readPrioCode = DVDReadAsyncPrio(&entry->fileInfo, entry->addr, alignedSize, entry->streamOffset, entry->callback, 2);
     Heap_Check("File.cpp", 208);
+
     if (readPrioCode != 0) {
         return 0;
     }
@@ -141,6 +144,7 @@ int File_Seek(int fd, int offset, int seekType) {
             gcFiles[fd].streamOffset = gcFiles[fd].fileInfo.length + offset;
             break;
     }
+
     return gcFiles[fd].streamOffset;
 }
 
@@ -172,24 +176,25 @@ int File_IsBusy(int fd) {
     } else {
         Heap_Check("File.cpp", 321);
 
-        if (entry->unk40 != NULL) {
-            memmove(entry->unk40, entry->unk44, entry->unk4C);
+        if (entry->unk40) {
+            memmove(entry->unk40, entry->addr, entry->unk4C);
             DCStoreRange((uint*)entry->unk40, entry->unk4C);
         } else {
-            DCStoreRange((uint*)entry->unk44, entry->unk4C);
+            DCStoreRange((uint*)entry->addr, entry->unk4C);
         }
 
         Heap_Check("File.cpp", 331);
         
         if (entry->unk54 > 0) {
-            Heap_MemFree(entry->unk44);
-            entry->unk44 = NULL;
+            Heap_MemFree(entry->addr);
+            entry->addr = NULL;
             entry->unk54 = 0;
         }
-        entry->unk50 = 2;
 
+        entry->unk50 = 2;
         Heap_Check("File.cpp", 339);
     }
+
     return false;
 }
 
@@ -205,6 +210,7 @@ int File_Sync(int fd, int arg1) {
         if (OSTicksToMilliseconds(OSGetTick() - startTick) > arg1) {
             return File_IsBusy(fd);
         }
+        
         OSYieldThread();
     }
 
@@ -212,7 +218,7 @@ int File_Sync(int fd, int arg1) {
 }
 
 bool File_IsAnyBusy(void) {
-    for (int fd = 0; fd < MAX_FILES; fd++) {
+    for (int fd = 0; fd < ARRAY_SIZE(gcFiles); fd++) {
         if (gcFiles[fd].streamOffset != -1 && File_IsBusy(fd)) {
             return true;
         }

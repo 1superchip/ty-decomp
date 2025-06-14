@@ -305,7 +305,7 @@ void DropShadow::Init(Vector* pMatrixPos, Vector* pVec1, Vector* pVec2, Vector* 
 }
 
 void DropShadow::SetRadius(float f) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < ARRAY_SIZE(mStrips); i++) {
         mStrips[i].pos.Normalise();
         mStrips[i].pos.Scale(f / 2.0f);
     }

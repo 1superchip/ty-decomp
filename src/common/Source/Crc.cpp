@@ -7,7 +7,7 @@ static int crcTable[0x100];
 static void Crc_MakeTable(void) {
     uint c;
     // compute crcTable
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < ARRAY_SIZE(crcTable); i++) {
         c = i;
         for (int j = 0; j < 8; j++) {
             if (c & 1) {
@@ -16,6 +16,7 @@ static void Crc_MakeTable(void) {
                 c >>= 1;
             }
         }
+        
         crcTable[i] = c;
     }
     // set it to computed so it isn't computed again

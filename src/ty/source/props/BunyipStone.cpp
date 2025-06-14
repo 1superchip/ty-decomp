@@ -21,7 +21,7 @@ void BunyipStone::Init(GameObjDesc* pDesc) {
 void BunyipStone::LoadDone(void) {
     StaticProp::LoadDone();
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < ARRAY_SIZE(stoneMatrixIndices); i++) {
         stoneMatrixIndices[i] = pModel->GetSubObjectMatrixIndex(
             pModel->GetSubObjectIndex(Str_Printf("A_Stone%d", i + 1))
         );

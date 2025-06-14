@@ -162,7 +162,7 @@ static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vect
     vecs[7].w = vecs[2].w;
     vecs[7].z = vecs[2].z + pVolume->v2.z;
     
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < ARRAY_SIZE(vecs); i++) {
         vecs[i].ApplyMatrix(&vecs[i], pMatrix);
     }
 
@@ -1080,7 +1080,7 @@ bool Collision_SweepSphereCollideDynamicModel(SphereRay* pRay, CollisionResult* 
         {v2.x, v2.y, v1.z}, 
     };
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < ARRAY_SIZE(corners); i++) {
         corners[i].ApplyMatrix(pDynItem->GetMatrix());
     }
 

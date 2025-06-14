@@ -129,12 +129,17 @@ void GameObject::Deallocate(GameObject* pObj) {
     return;
 }
 
-// maybe a ternary would match this as well as DrawDynamicProps?
 uint GameObject::CalcDetailLevel(void) {
-    float maxDrawSq = Sqr<float>(pDescriptor->maxDrawDist);
-    float tmp = distSquared / maxDrawSq;
-    char level = Min<int>(8, (1.0f - Sqr<float>(1.0f - tmp)) * 8.0f);
-    detailLevel = level;
+    
+    float distanceRatio;
+    float scaledLevel;
+    
+    distanceRatio = distSquared / Sqr<float>(pDescriptor->maxDrawDist);
+
+    scaledLevel = (1.0f - Sqr<float>(1.0f - distanceRatio)) * 8.0f;
+    
+    detailLevel = (char)Min<int>(8, scaledLevel);
+
     return detailLevel;
 }
 
@@ -186,11 +191,11 @@ void GameObjDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, i
 }
 
 u8* GameObjDesc::SetUpMem(u8* pMem) {
-    if (unk74 > 0) {
+    if (instanceCount > 0) {
         pInstances = (GameObject*)pMem;
-        memset((void*)pInstances, unk74, unk74 * pModule->pData->instanceSize);
+        memset((void*)pInstances, instanceCount, instanceCount * pModule->pData->instanceSize);
         pCurrInst = (u8*)pInstances;
-        pMem += unk74 * pModule->pData->instanceSize;
+        pMem += instanceCount * pModule->pData->instanceSize;
     }
     
     return pMem;
@@ -217,6 +222,7 @@ void GameObjDesc::LoadObjects(KromeIni* pIni, KromeIniLine* pLine) {
             if (pLine->pFieldName != NULL) {
                 pObj->LoadLine(pLine);
             }
+
             pLine = pIni->GetLineWithLine(pLine);
         }
 
@@ -254,6 +260,6 @@ void GameObjDesc::Load(KromeIni* pIni) {
 }
 
 DescriptorIterator GameObjDesc::Begin(void) {
-    DescriptorIterator it = {(u8*)pInstances, (u8*)pInstances + (pModule->pData->instanceSize * unk74)};
+    DescriptorIterator it = {(u8*)pInstances, (u8*)pInstances + (pModule->pData->instanceSize * instanceCount)};
     return it;
 }

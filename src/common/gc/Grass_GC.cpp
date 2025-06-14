@@ -348,7 +348,7 @@ void MKGrass_InitTypes(char* pName) {
 
     ini.Deinit();
 
-    for (int i = 0; i < MAX_GRASS_ENTRIES; i++) {
+    for (int i = 0; i < ARRAY_SIZE(GrassInfoGC); i++) {
         GrassInfoGC[i].clumpSize *= GrassInfoGC[i].density;
         GrassInfoGC[i].pushAwayRadius *= 100.0f;
         GrassInfoGC[i].maxVisibleRadius *= 100.0f;
@@ -389,7 +389,7 @@ void MKGrass_Deinit(void) {
 }
 
 void MKGrass_Update(void) {
-    for (int i = 0; i < MAX_GRASS_ENTRIES; i++) {
+    for (int i = 0; i < ARRAY_SIZE(GrassInfoGC); i++) {
         GrassInfoGC[i].unk30 += gDisplay.dt * GrassInfoGC[i].textureAnimSpeed;
         GrassInfoGC[i].unk34 = GrassInfoGC[i].unk30;
     }
@@ -406,17 +406,18 @@ void MKGrass_Init(void) {
 void MKGrassGC_LoadTextures(char** ppTextureNames) {
     char** textureNames = ppTextureNames;
     while (*textureNames) {
-        for (int i = 0; i < MAX_GRASS_ENTRIES; i++) {
+        for (int i = 0; i < ARRAY_SIZE(GrassInfoGC); i++) {
             if (stricmp(*textureNames, GrassInfoGC[i].materialName) == 0) {
                 GrassInfoGC[i].pMat = Material::Create(*textureNames);
             }
         }
+
         textureNames++;
     }
 }
 
 void MKGrassGC_UnloadTextures(void) {
-    for (int i = 0; i < MAX_GRASS_ENTRIES; i++) {
+    for (int i = 0; i < ARRAY_SIZE(GrassInfoGC); i++) {
         if (GrassInfoGC[i].pMat) {
             GrassInfoGC[i].pMat->Destroy();
             GrassInfoGC[i].pMat = NULL;

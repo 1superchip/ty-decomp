@@ -18,7 +18,7 @@ struct FileEntry {
     DVDFileInfo fileInfo;
     DVDCallback callback;
     void* unk40;
-    void* unk44;
+    void* addr;
     int streamOffset;
     int unk4C;
     int unk50;

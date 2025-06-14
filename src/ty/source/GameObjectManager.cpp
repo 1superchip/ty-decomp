@@ -26,11 +26,12 @@ void GameObjectManager::InitLevel(void) {
     if (bLevelInitialised == false) {
         GameObjDesc* descriptor = pDescs;
         while (descriptor != NULL) {
-            descriptor->unk74 = 0;
+            descriptor->instanceCount = 0;
             descriptor->pInstances = NULL;
             descriptor->pModule->Reset();
             descriptor = descriptor->unk80;
         }
+        
         pObjectMem = NULL;
         objectMemSize = 0;
         bLevelInitialised = true;
@@ -59,10 +60,11 @@ void GameObjectManager::DeinitLevel(void) {
             pNextDesc->pModule->pData->DeinitModule();
             pNextDesc->pModule->pData->bUpdate = false;
             pNextDesc->pModule->pData->unk18 = 0;
-            pNextDesc->unk74 = 0;
+            pNextDesc->instanceCount = 0;
             pNextDesc->pCurrInst = NULL;
             pNextDesc->pInstances = NULL;
         }
+
         pNextDesc = pNextDesc->unk80;
     }
 
@@ -75,14 +77,12 @@ void GameObjectManager::DeinitLevel(void) {
     bLevelInitialised = false;
 }
 
-// would this function go in KromeIni?
 char* RemStaticPrefix(char* str) {
     if (strnicmp(str, "static", sizeof("static") - 1) == 0) {
-        str = Str_Printf(str + sizeof("static") - 1);
-    } else {
-        str = Str_Printf(str);
+        return Str_Printf(str + sizeof("static") - 1);
     }
-    return str;
+
+    return Str_Printf(str);
 }
 
 void GameObjectManager::LoadLevel(KromeIni* pIni) {
@@ -96,7 +96,7 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
             GameObjDesc* pDesc = FindDescriptor(str);
             if (pDesc != NULL) {
                 int count = CountEntities(pIni, pLine);
-                pDesc->unk74 += count;
+                pDesc->instanceCount += count;
                 pDesc->pModule->pData->unk18 += count;
                 if (!pDesc->TestFlag(MODULE_ALLOCATION_OVERRIDE)) {
                     objectMemSize += count * pDesc->pModule->pData->instanceSize;
@@ -139,20 +139,23 @@ void GameObjectManager::LoadLevel(KromeIni* pIni) {
     }
 }
 
-void CheckVolume(GameObject* pObj, BoundingVolume* pBV) {
-    static BoundingVolume bv = { {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f} };
-    if (pBV == NULL) {
-        pObj->pDescriptor->pVolume = &bv;
-    }
-}
-
 void GameObjectManager::AddObject(GameObject* pObj, Matrix* pLTW, BoundingVolume* pBV) {
     pObj->pLocalToWorld = pLTW;
     pObj->pDescriptor->pVolume = pBV;
-    CheckVolume(pObj, pBV);
+
+    static BoundingVolume bv = {
+        {0.0f, 0.0f, 0.0f, 0.0f}, 
+        {0.0f, 0.0f, 0.0f, 0.0f}
+    };
+
+    if (pBV == NULL) {
+        pObj->pDescriptor->pVolume = &bv;
+    }
+
     if (pObj->pLocalToWorld == NULL) {
         pObj->pDescriptor->flags = (pObj->pDescriptor->flags & ~MKPROP_TypeMask) | MKPROP_Global;
     }
+    
     gSceneManager.AddProp(pObj);
 }
 
@@ -213,7 +216,7 @@ void GameObjectManager::AddDescriptor(GameObjDesc* pDesc) {
 }
 
 GameObjDesc* GameObjectManager::FindDescriptor(char* name) {
-    GameObjDesc* pDesc = (GameObjDesc*)pDescs;
+    GameObjDesc* pDesc = pDescs;
     while (pDesc != NULL) {
         if (stricmp(name, pDesc->descrName) == 0) {
             return pDesc;
@@ -273,13 +276,17 @@ int GameObjectManager::CountEntities(KromeIni* pIni, KromeIniLine* pIniLine) {
         while (pLine->comment == NULL && pLine->pFieldName == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
+
         count++;
+        
         while (pLine != NULL && (pLine->pFieldName != NULL || pLine->comment != NULL)) {
             pLine = pIni->GetLineWithLine(pLine);
         }
+
         while (pLine != NULL && pLine->pFieldName == NULL && pLine->section == NULL) {
             pLine = pIni->GetLineWithLine(pLine);
         }
     }
+
     return count;
 }

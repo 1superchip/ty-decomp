@@ -89,7 +89,7 @@ struct GameObjDesc : MKPropDescriptor {
     char descrName[0x20];
     char modelName[0x20];
     ModuleInfoBase* pModule;
-    int unk74;
+    int instanceCount;
     GameObject* pInstances; // Memory allocated to all Objects of this Descriptor
     u8* pCurrInst;
     GameObjDesc* unk80;
