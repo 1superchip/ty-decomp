@@ -63,7 +63,6 @@ struct StaticProp : GameObject {
     bool TyOn(void) {
         bool cond = ty.mContext.floor.bUnderFeet && ty.mContext.floor.GetDiff(&ty.pos) < 10.0f;
         return (ty.mContext.floor.bOn || cond) && (ty.mContext.floor.res.pInfo == &collisionInfo);
-        // TyContext inline
     }
 
     static StaticPropLoadInfo loadInfo;

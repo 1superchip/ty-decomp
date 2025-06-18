@@ -30,6 +30,10 @@ struct GlowParticleData {
 
 struct TySounds {
     char padding[0xA4];
+
+    void Init(void);
+    void Reset(void);
+    void UpdateSounds(void);
 };
 
 // Made up enum for type
@@ -46,7 +50,7 @@ struct Hero : GameObject {
     // velocity vector which points towards where ty will go when on contact with collision
     Vector velocity;
     Vector diveVec;
-    Shadow shadow;
+    Shadow mShadow;
     CheckpointStruct* pLastCheckPoint;
     float radius;
     float objectRadiusAdjustment;

@@ -242,6 +242,8 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     }
 }
 
+#include "Dolphin/os.h"
+
 /// @brief Loads and returns the filedata of pFilename
 /// @param pFilename Name of file to load and read
 /// @param pOutLen Optional pointer to store file length to
@@ -305,7 +307,7 @@ int FileSys_Save(char* name, bool arg1, void* pData, int dataLen) {
         File_Write(fd, pData, dataLen);
         File_Close(fd);
     }
-
+    
     return fd < 0 ? -1 : 0;
 }
 

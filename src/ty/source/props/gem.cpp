@@ -434,7 +434,7 @@ float Gem::GetMagneticRangeSqr(void) {
                     magneticRadius += (ty.tyBite.superBiteCharge / 150.0f) * (500000.0f - magneticRadius);
                     break;
             }
-        } else if (((int*)&ty)[0x1A90 / 4] == 3 && !pHero->opalMagnetData.IsActive()) {
+        } else if (ty.GetMedium() == TY_MEDIUM_3 && !pHero->opalMagnetData.IsActive()) {
             magneticRadius *= 2.1f;
         }
     }
@@ -551,7 +551,7 @@ void Gem::Magnetised(void) {
                     f31 = 0.25f;
                     break;
             }
-        } else if (((int*)&ty)[0x1A90 / 4] == 3) {
+        } else if (ty.GetMedium() == TY_MEDIUM_3) {
             f31 = 0.9f;
         }
     }

@@ -31,6 +31,7 @@ void OSDestroyHeap(size_t idx);
 OSHeapHandle OSSetCurrentHeap(OSHeapHandle);
 void *OSAllocFromHeap(OSHeapHandle, int);
 long OSCheckHeap(OSHeapHandle);
+void OSDumpHeap(OSHeapHandle);
 void OSFreeToHeap(OSHeapHandle heap, void *ptr);
 
 #define OSAlloc(size) OSAllocFromHeap(__OSCurrHeap, (size))

@@ -34,7 +34,7 @@ typedef struct THPPlayer {
 	s32 mInitReadSize;                // _BC
 	s32 mInitReadFrame;               // _C0
 	u32 mCurField;                    // _C4
-	s64 mRetraceCount;                // _C8
+	volatile s64 mRetraceCount;                // _C8
 	s32 mPrevCount;                   // _D0
 	s32 mCurCount;                    // _D4
 	s32 mVideoDecodeCount;            // _D8
@@ -45,14 +45,14 @@ typedef struct THPPlayer {
 	s32 mCurAudioTrack;               // _EC
 	s32 mCurVideoNumber;              // _F0
 	s32 mCurAudioNumber;              // _F4
-	THPTextureSet* mDispTextureSet;   // _F8
+	THPTextureSet* volatile mDispTextureSet;   // _F8
 	THPAudioBuffer* mPlayAudioBuffer; // _FC
 	THPReadBuffer mReadBuffer[10];    // _100
 	THPTextureSet mTextureSet[3];     // _178
 	THPAudioBuffer mAudioBuffer[3];   // _1A8
 } THPPlayer;
 
-// extern THPPlayer ActivePlayer;
+extern THPPlayer ActivePlayer;
 
 BOOL THPPlayerInit(int _);
 void THPPlayerQuit();

@@ -1,19 +1,16 @@
 #include "types.h"
 #include "Dolphin/os.h"
-
-extern uint ActivePlayer[];
+#include "Dolphin/THP/THPRead.h"
+#include "Dolphin/THP/THPAudioDecode.h"
+#include "Dolphin/THP/THPPlayer.h"
 
 void* PopReadedBuffer(void);
-void PushReadedBuffer2(void*);
 void* PopFreeAudioBuffer(void);
 
 void PushDecodedAudioBuffer(void*);
 
 static void* AudioDecoderForOnMemory(void*);
 static void* AudioDecoder(void*);
-static void* AudioDecode(void*);
-
-int THPAudioDecode(int, int, int);
 
 #define AUDIO_STACK_SIZE (0x1000)
 
@@ -66,49 +63,61 @@ static void* AudioDecoder(void* r3) {
     }
 }
 
-static void* AudioDecoderForOnMemory(void* pStart) {
-    int r29 = ActivePlayer[0xBC / 4];
-    int r31 = 0;
-    volatile int stack_r31[3];
-    int* sp8 = (int*)pStart;
-    int s;
-    while (1) {
-        stack_r31[0] = r31;
-        AudioDecode(&sp8);
-        s = ((r31 + ActivePlayer[0xC0 / 4]) % ActivePlayer[0x50 / 4]);
-        if (s == ActivePlayer[0x50 / 4] - 1) {
-            if (((char*)ActivePlayer)[0xA6] & 1) {
-                r29 = sp8[0];
-                sp8 = (int*)ActivePlayer[0xB4 / 4];
+static void* AudioDecoderForOnMemory(void* bufPtr) {
+    s32 readSize;
+    s32 frame;
+    THPReadBuffer readBuffer;
+
+    frame           = 0;
+    readSize        = ActivePlayer.mInitReadSize;
+    readBuffer.mPtr = (u8*)bufPtr;
+
+    while (TRUE) {
+        s32 remaining;
+        readBuffer.mFrameNumber = frame;
+        AudioDecode(&readBuffer);
+
+        remaining = (frame + ActivePlayer.mInitReadFrame) % ActivePlayer.mHeader.mNumFrames;
+
+        if (remaining == ActivePlayer.mHeader.mNumFrames - 1) {
+            if ((ActivePlayer.mPlayFlag & 1)) {
+                readSize        = *(s32*)readBuffer.mPtr;
+                readBuffer.mPtr = ActivePlayer.mMovieData;
             } else {
                 OSSuspendThread(&AudioDecodeThread);
             }
         } else {
-            int s = sp8[0];
-            sp8 = (int*)((char*)sp8 + r29);
-            r29 = s;
+            s32 size = *(s32*)readBuffer.mPtr;
+            readBuffer.mPtr += readSize;
+            readSize = size;
         }
-        r31++;
+        frame++;
     }
 }
 
-static void* AudioDecode(void* audio) {
-    int* r30 = (int*)(((int*)audio)[0] + 8);
-    int* r31;
-    int i;
-    int r29 = ((int*)audio)[0] + (ActivePlayer[0x6C / 4] * 4) + 8;
-    r31 = (int*)PopFreeAudioBuffer();
-    for(i = 0; i < ActivePlayer[0x6C / 4]; i++) {
-        switch (((u8*)ActivePlayer + i)[0x70]) {
-            case 1:
-                r31[2] = THPAudioDecode(r31[0], r30[0] * ActivePlayer[0xEC / 4] + r29, 0);
-                r31[1] = r31[0];
-                PushDecodedAudioBuffer(r31);
+
+static void AudioDecode(THPReadBuffer* readBuffer) {
+    THPAudioBuffer* audioBuf;
+    s32 i;
+    u32* offsets;
+    u8* audioData;
+
+    offsets   = (u32*)(readBuffer->mPtr + 8);
+    audioData = &readBuffer->mPtr[ActivePlayer.mCompInfo.mNumComponents * 4] + 8;
+    audioBuf  = (THPAudioBuffer*)PopFreeAudioBuffer();
+
+    for (i = 0; i < ActivePlayer.mCompInfo.mNumComponents; i++) {
+        switch (ActivePlayer.mCompInfo.mFrameComp[i]) {
+            case 1: {
+                audioBuf->mValidSample = THPAudioDecode(audioBuf->mBuffer, (audioData + *offsets * ActivePlayer.mCurAudioTrack), 0);
+                audioBuf->mCurPtr      = audioBuf->mBuffer;
+                PushDecodedAudioBuffer(audioBuf);
                 return;
-            default:
-                r29 += r30[0];
-                r30++;
+            }
         }
+
+        audioData += *offsets;
+        offsets++;
     }
 }
 
@@ -122,7 +131,7 @@ void PushFreeAudioBuffer(void* r3) {
     OSSendMessage(&FreeAudioBufferQueue, r3, 0);
 }
 
-void* PopDecodedAudioBuffer(int r3) {
+void* PopDecodedAudioBuffer(long r3) {
     OSMessage sp8;
     if (OSReceiveMessage(&DecodedAudioBufferQueue, &sp8, r3) == 1) {
         return sp8;

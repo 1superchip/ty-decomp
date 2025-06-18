@@ -150,8 +150,8 @@ struct ModuleInfo : ModuleInfoBase {
 
         pData->flags = 0;
 
-        pData->InitModule = GameObject::InitModule;
-        pData->DeinitModule = GameObject::DeinitModule;
+        pData->InitModule = T::InitModule;
+        pData->DeinitModule = T::DeinitModule;
         pData->pUpdateModule = T::UpdateModule;
         pData->pDrawModule = GameObject::DrawModule;
         pData->pAllocate = GameObject::Allocate;

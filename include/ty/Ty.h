@@ -52,7 +52,10 @@ enum TyHeads {
 
 // Ty movement state: Air, Water, Land, UnderWater
 enum TyMedium {
-
+    TY_MEDIUM_0 = 0,
+    TY_MEDIUM_1 = 1,
+    TY_MEDIUM_2 = 2,
+    TY_MEDIUM_3 = 3,
 };
 
 // No symbol
@@ -97,10 +100,17 @@ struct TyMediumMachine {
     void SetNewState(TyMedium nState, bool arg2) {
 
     }
+
+    TyMedium GetUnk0(void) {
+        return (TyMedium)unk0;
+    }
 };
 
 enum HeroActorState {
-
+    TY_AS_0 = 0,
+    TY_AS_1 = 1,
+    TY_AS_2 = 2,
+    TY_AS_3 = 3,
 };
 
 struct TyFSM {
@@ -169,6 +179,8 @@ struct TyFSM {
     bool WaterSurfaceState(int);
     bool FirstPersonState(int);
 
+    bool AirState(int);
+
     bool SolidSurfaceState(void) {
         return SolidSurfaceState(GetState());
     }
@@ -211,6 +223,14 @@ struct TyFSM {
     }
 
     void Update(Ty*);
+
+    void DeinitState(void) {
+
+    }
+
+    void Draw(void) {
+        
+    }
 };
 
 struct FloorInfo {
@@ -356,6 +376,29 @@ struct TyBite {
     bool unk155;
 };
 
+struct WaterSlideManager;
+struct WaterSlideData {
+    float unk0;
+    int unk4;
+    float* unk8;
+    float unkC;
+    float unk10;
+    float unk14;
+    int unk18;
+    int unk1C;
+    WaterSlideManager* pWSMan;
+    StateMachine<WaterSlideData> slideFsm;
+};
+
+struct TrailPoint {
+    Vector unk0;
+    Vector unk10;
+};
+
+struct DustTrail {
+    char padding[0x18];
+};
+
 struct Ty : Hero {
 
     int unk320;
@@ -467,11 +510,10 @@ struct Ty : Hero {
     char unkE74[240];
     int unkF64;
     int unkF68;
-    Material* unkF6C;
+    Material* pMatEyes;
     Material* pMatEyeballs;
     Material* rangTrailsMat;
-    CircularQueue<int> unkF78; // Fix type
-    CircularQueue<int> unkF88; // Fix type
+    CircularQueue<TrailPoint> mRangTrails[2];
     bool unkF98;
     HeadTurningInfo mHeadTurningInfo;
     RainbowEffect mTyRainbowEffect;
@@ -557,7 +599,49 @@ struct Ty : Hero {
 
     Quadratic mQuadratic;
 
-    // finish
+    WaterSlideData mWaterSlide;
+
+    float unk19E0;
+    char unk19E4[0x4];
+    float unk19E8;
+
+    CircularQueue<TrailPoint> mIceTrails[2];
+    bool unk1A0C;
+
+    Vector edgeVector;
+
+    DustTrail mDustTrail;
+
+    Vector deltaKnockbackPos;
+    
+    int unk1A48;
+    float unk1A4C;
+    
+    Vector fallGuideInfluenceDir;
+    float fallGuideInfluence;
+
+    uint cameraState;
+
+    float unk1A68;
+    float unk1A6C;
+    float unk1A70;
+
+    int unk1A74;
+
+    Vector lastSafePos;
+
+    SpecialPickupStruct* pSpecialPickup;
+
+    GameObject* pGameObject;
+
+    TyMediumMachine mMediumMachine;
+
+    virtual void Init(GameObjDesc* pDesc) {
+        GameObject::Init(pDesc);
+    }
+
+    virtual void Deinit(void);
+    virtual void Reset(void);
 
 
     virtual bool IsBiting(void);
@@ -569,8 +653,15 @@ struct Ty : Hero {
     virtual bool IsClaiming(void);
     virtual void SetFindItem(Vector*, SpecialPickupStruct*);
 
-    void SetBunyip(Bunyip*);
+    void LoadResources(void);
+
+    void Init(void);
+    void InitEvents(void);
     void PostLoadInit(void);
+    
+    void ResetVars(void);
+
+    void SetBunyip(Bunyip*);
     void AddShadowLight(Vector*, float);
     void SetAbsolutePosition(Vector*, int, float, bool);
     void SetBounceOffFromPos(Vector*, float, bool);
@@ -586,7 +677,7 @@ struct Ty : Hero {
     }
 
     TyMedium GetMedium(void) {
-
+        return mMediumMachine.GetUnk0();
     }
 
     bool TyOnPlatform(void) {
@@ -596,6 +687,24 @@ struct Ty : Hero {
     void SetWarpHide(void) {
         
     }
+
+    // Medium States
+    void WaterMediumInit(void);
+    void WaterMediumUpdate(void);
+    void WaterMediumDeinit(void);
+
+    void UnderWaterMediumInit(void);
+    void UnderWaterMediumUpdate(void);
+    void UnderWaterMediumDeinit(void);
+    
+    void AirMediumInit(void);
+    void AirMediumUpdate(void);
+    void AirMediumDeinit(void);
+    
+    void LandMediumInit(void);
+    void LandMediumUpdate(void);
+    void LandMediumDeinit(void);
+    //
 };
 
 extern Ty ty;

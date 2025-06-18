@@ -8,7 +8,6 @@ extern "C" {
 };
 
 extern u8 GetVideoVolume(void);
-extern volatile THPPlayer ActivePlayer;
 
 Video currentVideo;
 
