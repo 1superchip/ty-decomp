@@ -14,7 +14,9 @@ struct CheckpointStruct;
 struct WakeStruct;
 
 struct OpalMagnetData {
-    char padding[0x3C];
+    char padding_0x0[0x8];
+    Material* unk8;
+    char padding[0x30];
 
     void Init(void);
     void Deinit(void);
@@ -26,6 +28,12 @@ struct OpalMagnetData {
 
 struct GlowParticleData {
     char padding[0x44];
+
+    void Init(void);
+    void Deinit(void);
+    void Reset(void);
+    void Update(void);
+    void Activate(Vector, float);
 };
 
 struct TySounds {

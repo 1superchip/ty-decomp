@@ -153,11 +153,15 @@ void Ty_Deinit(void) {
 }
 
 void Ty_Update(void) {
-
+    if (bInitialised) {
+        ty.Update();
+    }
 }
 
 void Ty_Draw(void) {
-
+    if (bInitialised) {
+        ty.Draw();
+    }
 }
 
 char* playerFileNames[] = {
@@ -199,7 +203,7 @@ void Ty::LoadResources(void) {
         // GetNodesAndSubObjects();
         // LoadAnimations();
 
-        unk530 = 0.0;
+        unk530 = 0.0f;
     }
 }
 
@@ -209,4 +213,65 @@ void Ty::Init(void) {
     pLastCheckPoint = NULL;
 
     LoadResources();
+}
+
+void Ty::InitEvents(void) {
+
+}
+
+void Ty::PostLoadInit(void) {
+
+}
+
+void Ty::Deinit(void) {
+
+}
+
+void Ty::Reset(void) {
+
+}
+
+void Ty::ResetVars(void) {
+
+}
+
+void Ty::Update(void) {
+
+}
+
+void Ty::Draw(void) {
+    mFsm.Draw(this);
+}
+
+// void Ty::StartDeath(HurtType, bool) {
+
+// }
+
+void Ty::Hurt(HurtType, DDADamageCause, bool, Vector*, float) {
+
+}
+
+// void Ty::SetToIdle(bool, TyMedium) {
+
+// }
+
+bool Ty::IsClaiming(void) {
+    return mFsm.GetState() == 0x21;
+}
+
+void OpalMagnetData::Init(void) {
+    unk8 = Material::Create("FX_100");
+    Reset();
+}
+
+void OpalMagnetData::Deinit(void) {
+    if (unk8) {
+        unk8->Destroy();
+    }
+
+    unk8 = NULL;
+}
+
+void GlowParticleData::Init(void) {
+    Reset();
 }

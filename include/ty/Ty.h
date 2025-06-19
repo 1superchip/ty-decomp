@@ -10,6 +10,7 @@
 #include "ty/tools.h"
 #include "ty/DDA.h"
 #include "ty/Quadratic.h"
+#include "ty/global.h"
 
 struct Bunyip;
 
@@ -106,6 +107,7 @@ struct TyMediumMachine {
     }
 };
 
+// TODO: Finish this
 enum HeroActorState {
     TY_AS_0 = 0,
     TY_AS_1 = 1,
@@ -228,8 +230,12 @@ struct TyFSM {
 
     }
 
-    void Draw(void) {
-        
+    void Draw(Ty* pTy) {
+        if (!gb.unkFE && unk10 != -1) {
+            if (pStates[unk10].Draw) {
+                (pTy->*pStates[unk10].Draw)();
+            }
+        }
     }
 };
 
@@ -642,6 +648,8 @@ struct Ty : Hero {
 
     virtual void Deinit(void);
     virtual void Reset(void);
+    virtual void Update(void);
+    virtual void Draw(void);
 
 
     virtual bool IsBiting(void);
