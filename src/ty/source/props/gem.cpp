@@ -255,7 +255,7 @@ void Gem::Update(void) {
         case GEMSTATE_2:
             Idle();
             break;
-        case GEMSTATE_3:
+        case GEMSTATE_MAGNETISED:
             Magnetised();
             break;
         case GEMSTATE_4:
@@ -448,7 +448,7 @@ bool Gem::CheckMagnetism(float f1) {
     }
 
     if (f1 <= GetMagneticRangeSqr()) {
-        SetState(GEMSTATE_3);
+        SetState(GEMSTATE_MAGNETISED);
         return true;
     }
 
@@ -618,7 +618,7 @@ void Gem::SetState(GemState newState) {
             );
             mParticle.scale = 20.0f;
             break;
-        case GEMSTATE_3:
+        case GEMSTATE_MAGNETISED:
             mLerpTime = 0.0f;
             break;
         case GEMSTATE_1:

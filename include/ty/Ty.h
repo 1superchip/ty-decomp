@@ -63,14 +63,14 @@ enum TyMedium {
 struct TyMediumMachine {
 
     typedef void(Ty::*Func1)(void);
-    typedef void(Ty::*Func2)(void);
+    typedef void(Ty::*DeinitFunc)(void);
     typedef void(Ty::*Func3)(void);
     typedef void(Ty::*Func4)(void);
     typedef void(Ty::*Func5)(void);
 
     struct State {
         Func1 func1;
-        Func2 func2;
+        DeinitFunc Deinit;
         Func3 func3;
         Func4 func4;
         Func5 func5;
@@ -90,8 +90,14 @@ struct TyMediumMachine {
         unk4 = state;
     }
 
-    void CallDeinit(void) {
+    void CallDeinit(Ty* pTy) {
+        if (unk0 != -1) {
+            if (pStates[unk0].Deinit) {
+                (pTy->*pStates[unk0].Deinit)();
+            }
+        }
 
+        unk0 = -1;
     }
 
     void Update(Ty* pActor, bool arg2) {
@@ -113,6 +119,54 @@ enum HeroActorState {
     TY_AS_1 = 1,
     TY_AS_2 = 2,
     TY_AS_3 = 3,
+    TY_AS_4 = 4,
+    TY_AS_5 = 5,
+    TY_AS_6 = 6,
+    TY_AS_7 = 7,
+    TY_AS_8 = 8,
+    TY_AS_9 = 9,
+    TY_AS_10 = 10,
+    TY_AS_11 = 11,
+    TY_AS_12 = 12,
+    TY_AS_13 = 13,
+    TY_AS_14 = 14,
+    TY_AS_15 = 15,
+    TY_AS_16 = 16,
+    TY_AS_17 = 17,
+    TY_AS_18 = 18,
+    TY_AS_19 = 19,
+    TY_AS_20 = 20,
+    TY_AS_21 = 21,
+    TY_AS_22 = 22,
+    TY_AS_23 = 23,
+    TY_AS_24 = 24,
+    TY_AS_25 = 25,
+    TY_AS_26 = 26,
+    TY_AS_27 = 27,
+    TY_AS_28 = 28,
+    TY_AS_29 = 29,
+    TY_AS_30 = 30,
+    TY_AS_31 = 31,
+    TY_AS_32 = 32,
+    TY_AS_33 = 33,
+    TY_AS_34 = 34,
+    TY_AS_35 = 35,
+    TY_AS_36 = 36,
+    TY_AS_37 = 37,
+    TY_AS_38 = 38,
+    TY_AS_39 = 39,
+    TY_AS_40 = 40,
+    TY_AS_41 = 41,
+    TY_AS_42 = 42,
+    TY_AS_43 = 43,
+    TY_AS_44 = 44,
+    TY_AS_45 = 45,
+    TY_AS_46 = 46,
+    TY_AS_47 = 47,
+    TY_AS_48 = 48,
+    TY_AS_49 = 49,
+    TY_AS_50 = 50,
+    TY_AS_51 = 51,
 };
 
 struct TyFSM {
@@ -152,9 +206,7 @@ struct TyFSM {
     }
 
     void SetState(HeroActorState newState, bool arg2) {
-        if (arg2) {
-            unk14 = newState;
-        } else if (unk10 != newState) {
+        if (arg2 || unk10 != newState) {
             unk14 = newState;
         }
     }
@@ -226,8 +278,14 @@ struct TyFSM {
 
     void Update(Ty*);
 
-    void DeinitState(void) {
+    void DeinitState(Ty* pTy) {
+        if (unk10 != -1) {
+            if (pStates[unk10].Deinit) {
+                (pTy->*pStates[unk10].Deinit)();
+            }
+        }
 
+        unk10 = -1;
     }
 
     void Draw(Ty* pTy) {
@@ -486,7 +544,9 @@ struct Ty : Hero {
     MKAnimScript rangPropRightAnimScript;
     char padding594[0x20]; // MKAnimScript?
 
-    char padding348[0x828 - 0x5B4];
+    MKAnim* walkAnim;
+
+    char padding348[0x828 - 0x5B8];
     uint unk828;
     BoomerangType mBoomerangType;
     TyContext mContext;
@@ -651,7 +711,6 @@ struct Ty : Hero {
     virtual void Update(void);
     virtual void Draw(void);
 
-
     virtual bool IsBiting(void);
 
     virtual bool InWater(void) {
@@ -669,11 +728,14 @@ struct Ty : Hero {
     
     void ResetVars(void);
 
+    // Damage related
+    void StartDeath(HurtType, bool);
+    void Hurt(HurtType, DDADamageCause, bool, Vector*, float);
+
     void SetBunyip(Bunyip*);
     void AddShadowLight(Vector*, float);
     void SetAbsolutePosition(Vector*, int, float, bool);
     void SetBounceOffFromPos(Vector*, float, bool);
-    void Hurt(HurtType, DDADamageCause, bool, Vector*, float);
     void SetKnockBackFromDir(Vector*, float, KnockBackType);
 
     bool TryChangeState(bool, HeroActorState);
@@ -689,7 +751,7 @@ struct Ty : Hero {
     }
 
     bool TyOnPlatform(void) {
-
+        return false;
     }
 
     void SetWarpHide(void) {
@@ -712,6 +774,21 @@ struct Ty : Hero {
     void LandMediumInit(void);
     void LandMediumUpdate(void);
     void LandMediumDeinit(void);
+    //
+
+    // Rang Management
+    void InitRangChange(void);
+    void DeinitRangChange(void);
+    void RangChange(void);
+
+    void RangChangeTransition(void);
+
+    void SwapRangs(char*);
+
+    void InitTwirlRang(void);
+    void TwirlRang(void);
+
+    bool IsAbleToGlide(void);
     //
 };
 

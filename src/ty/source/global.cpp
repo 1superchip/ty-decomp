@@ -214,8 +214,8 @@ void LogicState::Update(void) {
 }
 
 bool LogicState::DebugState(GameState state) {
-    return state == (GameState)6 || state == (GameState)7 ||
-        state == (GameState)10 || state == (GameState)11;
+    return state == STATE_6 || state == STATE_7 ||
+        state == STATE_10 || state == STATE_11;
 }
 
 void LoadManuallyScrollingTextures(void) {

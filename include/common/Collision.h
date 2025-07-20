@@ -196,11 +196,11 @@ void Collision_AddDynamicModel(Model* pModel, CollisionInfo* pInfo, int subobjec
 void Collision_AddDynamicSubobject(Model* pModel, int subobject, CollisionInfo* pInfo);
 void Collision_DeleteDynamicModel(Model* pModel);
 
-int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int flags, int maxCollisions);
+int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int ignoreFlags, int maxCollisions);
 bool Collision_SweepSphereCollideDynamicModel(SphereRay*, CollisionResult*, DynamicItem*);
 bool Collision_RayCollideDynamicModel(Vector*, Vector*, CollisionResult* pCr, Model* pModel, int subobjectIdx);
-bool Collision_RayCollide(Vector*, Vector*, CollisionResult*, CollisionMode, int);
+bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, CollisionMode mode, int ignoreFlags);
 bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
-    CollisionResult* pCr, CollisionMode pMode, int flags);
+    CollisionResult* pCr, CollisionMode pMode, int ignoreFlags);
 
 #endif // COMMON_COLLISION

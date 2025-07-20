@@ -1,5 +1,6 @@
 #include "ty/Ty.h"
 #include "ty/global.h"
+#include "ty/ParticleEngine.h"
 
 static GameObjDesc tyDesc;
 Ty ty;
@@ -11,20 +12,20 @@ static bool bResourcesLoaded = false;
 
 bool TyFSM::SolidSurfaceState(int state) {
     if (
-        state == 3 || 
-        state == 5 ||
-        state == 0x23 ||
-        state == 0x20 ||
-        state == 0x22 ||
-        state == 0x1C ||
-        state == 0x21 ||
-        state == 0x2C ||
-        state == 0x24 ||
-        state == 0x2E ||
-        state == 2 ||
-        state == 4 ||
-        state == 0x28 ||
-        state == 0x29
+        state == TY_AS_3 || 
+        state == TY_AS_5 ||
+        state == TY_AS_35 ||
+        state == TY_AS_32 ||
+        state == TY_AS_34 ||
+        state == TY_AS_28 ||
+        state == TY_AS_33 ||
+        state == TY_AS_44 ||
+        state == TY_AS_36 ||
+        state == TY_AS_46 ||
+        state == TY_AS_2 ||
+        state == TY_AS_4 ||
+        state == TY_AS_40 ||
+        state == TY_AS_41
     ) {
         return true;
     }
@@ -33,7 +34,7 @@ bool TyFSM::SolidSurfaceState(int state) {
 }
 
 bool TyFSM::BiteState(int state) {
-    if (state == 1) {
+    if (state == TY_AS_1) {
         return true;
     }
 
@@ -42,19 +43,19 @@ bool TyFSM::BiteState(int state) {
 
 bool TyFSM::SwimmingState(int state) {
     if (
-        state == 0xE ||
-        state == 0xF ||
-        state == 0x26 ||
-        state == 0x10 ||
-        state == 0x11 ||
-        state == 0x27 ||
-        state == 0x12 ||
-        state == 0x31 ||
-        state == 0x13 ||
-        state == 0x14 ||
-        state == 0x1D ||
-        state == 0x16 ||
-        state == 0x18
+        state == TY_AS_14 ||
+        state == TY_AS_15 ||
+        state == TY_AS_38 ||
+        state == TY_AS_16 ||
+        state == TY_AS_17 ||
+        state == TY_AS_39 ||
+        state == TY_AS_18 ||
+        state == TY_AS_49 ||
+        state == TY_AS_19 ||
+        state == TY_AS_20 ||
+        state == TY_AS_29 ||
+        state == TY_AS_22 ||
+        state == TY_AS_24
     ) {
         return true;
     }
@@ -64,13 +65,13 @@ bool TyFSM::SwimmingState(int state) {
 
 bool TyFSM::IdleState(int state) {
     if (
-        state == 0x22 ||
-        state == 0x23 ||
-        state == 0x24 ||
-        state == 0x26 ||
-        state == 0x27 ||
-        state == 0x25 ||
-        state == 0x28
+        state == TY_AS_34 ||
+        state == TY_AS_35 ||
+        state == TY_AS_36 ||
+        state == TY_AS_38 ||
+        state == TY_AS_39 ||
+        state == TY_AS_37 ||
+        state == TY_AS_40
     ) {
         return true;
     }
@@ -79,7 +80,7 @@ bool TyFSM::IdleState(int state) {
 }
 
 bool TyFSM::KnockBackState(int state) {
-    if (state == 0x20 || state == 0x14 || state == 0x14 || state == 0x15) {
+    if (state == TY_AS_32 || state == TY_AS_20 || state == TY_AS_20 || state == TY_AS_21) {
         return true;
     }
 
@@ -87,7 +88,7 @@ bool TyFSM::KnockBackState(int state) {
 }
 
 bool TyFSM::MoveState(int state) {
-    if (state == 5 || state == 3 || state == 2 || state == 4) {
+    if (state == TY_AS_5 || state == TY_AS_3 || state == TY_AS_2 || state == TY_AS_4) {
         return true;
     }
 
@@ -95,24 +96,24 @@ bool TyFSM::MoveState(int state) {
 }
 
 bool TyFSM::SneakState(int state) {
-    return state == 2;
+    return state == TY_AS_2;
 }
 
 bool TyFSM::WaterSurfaceState(int state) {
-    return state == 0xE || state == 0x25 || state == 0xF || state == 0x26 || state == 0x15;
+    return state == TY_AS_14 || state == TY_AS_37 || state == TY_AS_15 || state == TY_AS_38 || state == TY_AS_21;
 }
 
 bool TyFSM::FirstPersonState(int state) {
-    return state == 0x2D;
+    return state == TY_AS_45;
 }
 
 bool TyFSM::AirState(int state) {
     if (
-        state == 0x1A ||
-        state == 0x7 ||
-        state == 0x8 ||
-        state == 0x9 ||
-        state == 0x1B
+        state == TY_AS_26 ||
+        state == TY_AS_7 ||
+        state == TY_AS_8 ||
+        state == TY_AS_9 ||
+        state == TY_AS_27
     ) {
         return true;
     }
@@ -208,7 +209,7 @@ void Ty::LoadResources(void) {
 }
 
 void Ty::Init(void) {
-    GameObject::Init(&tyDesc);
+    Ty::Init(&tyDesc);
 
     pLastCheckPoint = NULL;
 
@@ -220,15 +221,46 @@ void Ty::InitEvents(void) {
 }
 
 void Ty::PostLoadInit(void) {
+    BoomerangManagerInit bmInit = {
+        Boomerang_pDescriptors,
+        BR_Max,
+        gb.mGameData.GetBoomerang(),
+        true,
+        &unk534,
+        NULL,
+        {},
+        {
+            {"leftThrowBoomerang"},
+            {"rightThrowBoomerang"},
+            {"leftCatch"},
+            {"rightCatch"}
+        },
+        {
+            true,
+        }
+    };
 
+    mBoomerangManager.Init(&bmInit);
 }
 
 void Ty::Deinit(void) {
+    if (pHero->IsTy()) {
+        mFsm.DeinitState(this);
+        mMediumMachine.CallDeinit(this);
 
+        mTyRainbowEffect.Deinit();
+    }
+
+    mBoomerangManager.Deinit();
+    // FreeResources();
+    GameObject::Deinit();
 }
 
 void Ty::Reset(void) {
-
+    if (pHero->IsTy()) {
+        ResetVars();
+        SetAbsolutePosition(&pos, TY_AS_50, 1.0f, true);
+    }
 }
 
 void Ty::ResetVars(void) {
@@ -243,9 +275,18 @@ void Ty::Draw(void) {
     mFsm.Draw(this);
 }
 
-// void Ty::StartDeath(HurtType, bool) {
+void Ty::StartDeath(HurtType, bool) {
+    gb.unk7AC = true;
+    particleManager->StopExclamation(true);
 
-// }
+    dda.StoreDeathInfo();
+
+    if (InWater()) {
+        mFsm.Set(TY_AS_29);
+    } else {
+        mFsm.Set(TY_AS_28);
+    }
+}
 
 void Ty::Hurt(HurtType, DDADamageCause, bool, Vector*, float) {
 
@@ -256,7 +297,123 @@ void Ty::Hurt(HurtType, DDADamageCause, bool, Vector*, float) {
 // }
 
 bool Ty::IsClaiming(void) {
-    return mFsm.GetState() == 0x21;
+    return mFsm.GetState() == TY_AS_33;
+}
+
+void AutoTargetStruct::Set(TargetPriority prio, Vector*, Vector*, Vector*, Model*) {
+
+}
+
+void AutoTargetStruct::SetNearestTargetEnemy(Vector*, Model*, Vector*) {
+
+}
+
+void AutoVisible::AddToList(Vector*, Model*) {
+
+}
+
+void AutoTargetStruct::Reset(void) {
+
+}
+
+void Ty::WaterMediumInit(void) {
+
+}
+
+void Ty::WaterMediumUpdate(void) {
+    
+}
+
+void Ty::WaterMediumDeinit(void) {
+    
+}
+
+void Ty::UnderWaterMediumInit(void) {
+
+}
+
+void Ty::UnderWaterMediumUpdate(void) {
+    
+}
+
+void Ty::UnderWaterMediumDeinit(void) {
+    
+}
+
+void Ty::AirMediumInit(void) {
+
+}
+
+void Ty::AirMediumUpdate(void) {
+    
+}
+
+void Ty::AirMediumDeinit(void) {
+    
+}
+
+void Ty::LandMediumInit(void) {
+
+}
+
+void Ty::LandMediumUpdate(void) {
+    
+}
+
+void Ty::LandMediumDeinit(void) {
+    
+}
+
+bool Ty::IsBiting(void) {
+    return mFsm.GetState() == TY_AS_1;
+}
+
+void TySounds::Init(void) {
+
+}
+
+void TySounds::Reset(void) {
+
+}
+
+void TySounds::UpdateSounds(void) {
+
+}
+
+void Ty::InitRangChange(void) {
+
+}
+
+void Ty::DeinitRangChange(void) {
+
+}
+
+void Ty::RangChange(void) {
+
+}
+
+void Ty::RangChangeTransition(void) {
+
+}
+
+void Ty::SwapRangs(char*) {
+
+}
+
+void Ty::InitTwirlRang(void) {
+
+}
+
+void Ty::TwirlRang(void) {
+
+}
+
+bool Ty::IsAbleToGlide(void) {
+    return mBoomerangManager.AreBothReady() &&
+        gb.mGameData.HasBothRangs() &&
+        !mFsm.SwimmingState(mFsm.unk4) &&
+        mFsm.unk4 != TY_AS_51 &&
+        (mContext.floor.GetDiff(&pos) > 200.0f || (mContext.floor.GetCollisionFlags() & 8) == 0);
 }
 
 void OpalMagnetData::Init(void) {
@@ -272,6 +429,45 @@ void OpalMagnetData::Deinit(void) {
     unk8 = NULL;
 }
 
+void OpalMagnetData::Reset(void) {
+    mEndTime = 0;
+    unk4 = 0.0f;
+}
+
+void OpalMagnetData::Draw(void) {
+
+}
+
+void OpalMagnetData::Activate(void) {
+
+}
+
+bool OpalMagnetData::IsActive(void) {
+    return mEndTime > gb.logicGameCount;
+}
+
+void Particle_DestroyASystem(ParticleSystem**, float);
+
 void GlowParticleData::Init(void) {
     Reset();
+}
+
+void GlowParticleData::Deinit(void) {
+    if (pSys) {
+        Particle_DestroyASystem(&pSys, 0.0f);
+    }
+
+    pSys = NULL;
+}
+
+void GlowParticleData::Reset(void) {
+
+}
+
+void GlowParticleData::Update(void) {
+
+}
+
+void GlowParticleData::Activate(Vector, float) {
+
 }

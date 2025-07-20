@@ -218,7 +218,18 @@ struct JoyPad {
 };
 
 enum GameState {
-    STATE_NONE = 0,
+    STATE_NONE  = 0,
+    STATE_1     = 1,
+    STATE_2     = 2,
+    STATE_3     = 3,
+    STATE_4     = 4,
+    STATE_5     = 5,
+    STATE_6     = 6,
+    STATE_7     = 7,
+    STATE_8     = 8,
+    STATE_9     = 9,
+    STATE_10    = 10,
+    STATE_11    = 11,
 };
 
 struct LogicState {

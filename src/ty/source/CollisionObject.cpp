@@ -85,7 +85,7 @@ bool CollisionObject::Teleport(Vector* pDestination, float f1, int iterations) {
     Vector tmp = *pDestination;
     tmp.y += pColObjDesc->yOffset;
 
-    while (Collision_SphereCollide(&tmp, pColObjDesc->radius, NULL, pColObjDesc->ignoreMatID, NULL) && iterations != 0) {
+    while (Collision_SphereCollide(&tmp, pColObjDesc->radius, NULL, pColObjDesc->ignoreMatID, 0) && iterations != 0) {
         tmp.y += f1;
         iterations--;
         if (iterations <= 0) {

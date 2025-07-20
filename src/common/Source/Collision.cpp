@@ -561,7 +561,7 @@ static void StoreSphereResult(Item* pItem, Vector* pVec, CollisionResult* pResul
 
 // pCr is a pointer to an array of CollisionResults of length maxCollisions (maxCollisions - 1)?
 // returns the number of collisions that occurs
-int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int flags, int maxCollisions) {
+int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, int ignoreFlags, int maxCollisions) {
     int minx;
     int minz;
     int maxx;
@@ -579,7 +579,7 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
 
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL || pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                    (pItem->pTriangle->flags & flags) == 0) {
+                    (pItem->pTriangle->flags & ignoreFlags) == 0) {
                     // need radiusSq
                     Vector* triVert0 = (Vector*)&pItem->collisionThing->verts[0];
                     Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
@@ -743,7 +743,14 @@ bool CheckItemSphereRay(Item* pItem, Vector* pVec, Vector* pVec1) {
     return ret;
 }
 
-static bool Collision_PolyCollide(Vector* pStart, Vector* pEnd, Vector* pDir, CollisionResult* pCr, int flags) {
+/// @brief Tests if a collision occurs against a poly from the ray formed by vectors pStart and pEnd
+/// @param pStart Starting position of the raycast
+/// @param pEnd Ending position of the raycast
+/// @param pDir Ray normal
+/// @param pCr Optional collision result to store result to
+/// @param ignoreFlags Collision flags to ignore
+/// @return True if a collision occurred, otherwise false
+static bool Collision_PolyCollide(Vector* pStart, Vector* pEnd, Vector* pDir, CollisionResult* pCr, int ignoreFlags) {
     int minx;
     int minz;
     int maxx;
@@ -758,7 +765,7 @@ static bool Collision_PolyCollide(Vector* pStart, Vector* pEnd, Vector* pDir, Co
             while (pItem != NULL) {
                 if ((pItem->pTriangle->pCollisionInfo == NULL ||
                     pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                    (pItem->pTriangle->flags & flags) == 0) {
+                    (pItem->pTriangle->flags & ignoreFlags) == 0) {
 
                     bool bEndInFront = InFrontOfItem(pEnd, pItem);
                     bool bStartInFront = InFrontOfItem(pStart, pItem);
@@ -820,7 +827,7 @@ static bool Collision_PolyCollide(Vector* pStart, Vector* pEnd, Vector* pDir, Co
     return bFound;
 }
 
-static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* pCr, int flags) {
+static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* pCr, int ignoreFlags) {
     int minx;
     int minz;
     int maxx;
@@ -845,7 +852,7 @@ static void Collision_PolySweepSphereCollide(SphereRay* pRay, CollisionResult* p
                         if (!CheckItemSphereRay(pItem, &pRay->mMinPos, &pRay->mMaxPos) && 
                             (pItem->pTriangle->pCollisionInfo == NULL ||
                             pItem->pTriangle->pCollisionInfo->bEnabled) &&
-                            (pItem->pTriangle->flags & flags) == 0) {
+                            (pItem->pTriangle->flags & ignoreFlags) == 0) {
                             
                             Vector* p1 = (Vector*)&pItem->collisionThing->verts[0].pos;
                             Vector* p3 = (Vector*)&pItem->collisionThing->verts[1].pos;
@@ -1291,7 +1298,14 @@ inline bool Collision_RayCollideDynamicItem(Vector* vec1, Vector* vec2, Collisio
     return collide;
 }
 
-bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, CollisionMode mode, int flags) {
+/// @brief 
+/// @param pStart Starting position of the raycast
+/// @param pEnd Ending position of the raycast
+/// @param pCr Optional collision result to store result to
+/// @param mode 
+/// @param ignoreFlags Collision flags to ignore
+/// @return 
+bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, CollisionMode mode, int ignoreFlags) {
     bFound = false;
     
     // Check dynamic collisions if the mode includes dynamic collisions
@@ -1349,14 +1363,22 @@ bool Collision_RayCollide(Vector* pStart, Vector* pEnd, CollisionResult* pCr, Co
         // Stack_Collides()
         Vector rayNormal;
         rayNormal.Sub(pEnd, pStart);
-        return Collision_PolyCollide(pStart, pEnd, &rayNormal, pCr, flags);
+        return Collision_PolyCollide(pStart, pEnd, &rayNormal, pCr, ignoreFlags);
     }
 
     return bFound;
 }
 
+/// @brief 
+/// @param pStart 
+/// @param pEnd 
+/// @param sphereRadius 
+/// @param pCr 
+/// @param pMode 
+/// @param ignoreFlags 
+/// @return 
 bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadius,
-    CollisionResult* pCr, CollisionMode pMode, int flags) {
+    CollisionResult* pCr, CollisionMode pMode, int ignoreFlags) {
     SphereRay ray;
 
     bFound = false;
@@ -1387,7 +1409,7 @@ bool Collision_SweepSphereCollide(Vector* pStart, Vector* pEnd, float sphereRadi
     }
 
     if (pMode == COLLISION_MODE_ALL || pMode == COLLISION_MODE_POLY) {
-        Collision_PolySweepSphereCollide(&ray, pCr, flags);
+        Collision_PolySweepSphereCollide(&ray, pCr, ignoreFlags);
         // if a collision is found and the collision result parameter isn't NULL
         // normalise the result's normal field
         if (bFound && pCr != NULL) {

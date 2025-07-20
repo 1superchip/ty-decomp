@@ -1152,7 +1152,8 @@ void Frostyrang::HitWorld(Vector* pPos, int collisionFlags) {
 
     PlaySound(BR_SOUND_2, collisionFlags);
 
-    if (collisionFlags & 0x200) {
+    if (collisionFlags & ID_LAVA) {
+        // Spawn water steam if the frostyrang hits lava
         particleManager->SpawnWaterSteam(pPos, 30.0f);
         SoundBank_Play(0x1E, pPos, 0);
     } else if ((collisionFlags & ID_WATER_BLUE) == 0) {
@@ -1204,7 +1205,7 @@ struct IceBlockStruct;
 void IceBlock_Add(Vector*, Vector*, CollisionResult*, IceBlockStruct**);
 
 void Frostyrang::CollideWithEnvironment(CollisionResult* pCr) {
-    if (!TestColInfoFlag(pCr, 2) && !(pCr->collisionFlags & 0x200)) {
+    if (!TestColInfoFlag(pCr, 2) && !(pCr->collisionFlags & ID_LAVA)) {
         IceBlock_Add(&pCr->pos, &pCr->normal, pCr, NULL);
     }
 }
@@ -1732,7 +1733,7 @@ void Megarang::HitWorld(Vector* pPos, int collisionFlags) {
     if (!unk89 && unkFC <= 0) {
         PlaySound(BR_SOUND_2, collisionFlags);
 
-        if (collisionFlags & 0x400) {
+        if (collisionFlags & ID_WATER_BLUE) {
             particleManager->SpawnBigSplash(pPos, true, 0.3f, true, 1.7f, 6);
         } else {
             particleManager->SpawnSpark(pPos);
@@ -1810,8 +1811,8 @@ void Doomerang::Fire(Vector* pVel, Vector* p1) {
 
     mOldPos = mPos = *GetCatchPos();
 
-    if (ty.mFsm.GetStateEx() != 0x1C) {
-        ty.mFsm.SetState((HeroActorState)0x32, false);
+    if (ty.mFsm.GetStateEx() != TY_AS_28) {
+        ty.mFsm.SetState(TY_AS_50, false);
 
         boomerangs.AddEntry(this);
 
@@ -1893,9 +1894,11 @@ void Doomerang::UpdateFired(void) {
 
             CollisionResult cr;
 
-            if (Collision_SweepSphereCollide(
-                    &mOldPos, &mPos, 45.0f, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
-                
+            if (
+                Collision_SweepSphereCollide(
+                    &mOldPos, &mPos, 45.0f, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100
+                )
+            ) {
                 VibrateJoystick(1.0f, 0.0f, gDisplay.dt, 0, 4.0f);
                 if ((gb.logicGameCount % 3) == 0) {
                     Vector box = mPos;
@@ -2016,7 +2019,7 @@ void GameCamera_UseDoomarangCamera(bool, Vector*, Vector*, Vector*, float);
 void Doomerang::Deactivate(void) {
     pModel->EnableSubObject(subObjectIndex, false);
 
-    ty.mFsm.SetState((HeroActorState)0x23, false);
+    ty.mFsm.SetState(TY_AS_35, false);
 
     pModel->colour.w = 1.0f;
     

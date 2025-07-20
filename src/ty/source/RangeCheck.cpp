@@ -21,7 +21,7 @@ static LODEntry* lodEntryPool = NULL;
 static Vector cameraPos;
 static Vector cameraVector; // camera direction
 
-static int heroState = 0x23;
+static int heroState = TY_AS_35;
 static int maxLODEntries = 0x400;
 
 void LOD_Deinit(void) {
@@ -79,7 +79,7 @@ void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float 
 
         GameCamera_GetVectors(&source, &target, NULL);
 
-        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.mFsm.GetStateEx() != 0x2d) {
+        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.mFsm.GetStateEx() != TY_AS_45) {
             pModel->colour.w = Max<float>(arg5, pModel->colour.w - 0.05625f);
         } else {
             pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
@@ -315,7 +315,7 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
             Vector source;
             center.y += pDescriptor->height / 2.0f;
             GameCamera_GetVectors(&source, &target, NULL);
-            if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != 0x2d) {
+            if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != TY_AS_45) {
                 pModel->colour.w = Max<float>(pDescriptor->minalpha, pModel->colour.w - 0.05625f);
             } else {
                 pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);

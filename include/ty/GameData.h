@@ -254,6 +254,10 @@ struct GameData {
         return pSaveData->tyAttributes.bHasRangs[index];
     }
 
+    BoomerangType GetBoomerang(void) {
+        return (BoomerangType)pSaveData->currentRang;
+    }
+
     bool GetLevelEnterCount(LevelNumber level) {
         return pSaveData->levels[level].nmbrOfTimesEntered;
     }

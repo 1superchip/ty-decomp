@@ -91,7 +91,7 @@ void Projectile::CheckForHit(void) {
     }
 
     CollisionResult cr;
-    if (Collision_RayCollide(&unk5C, pPos, &cr, COLLISION_MODE_ALL, 0x400)) {
+    if (Collision_RayCollide(&unk5C, pPos, &cr, COLLISION_MODE_ALL, ID_WATER_BLUE)) {
         // if a collision occured, resolve the hit
         if (ResolveHit()) {
             *pPos = unk5C;

@@ -160,7 +160,7 @@ void StaticProp::LoadDone(void) {
     end.Add(&end, GetPos());
 
     if (GetDesc()->bUseGroundColor &&
-        Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, 0x400)) {
+        Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
         pModel->colour = Tools_GroundColor(&cr);
     }
 
@@ -297,7 +297,7 @@ void StaticFXProp::UpdateShake(void) {
 }
 
 void StaticFXProp::UpdateWaterRipple(void) {
-    if (ty.pos.IsInsideSphere(GetPos(), 800.0f) && bCollidesWithWater && (gb.logicGameCount > (uint)unk9C)) {
+    if (ty.pos.IsInsideSphere(GetPos(), 800.0f) && bCollidesWithWater && (gb.logicGameCount > unk9C)) {
         unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
         Vector tmp = {0.0f, 5.0f, 0.0f, 0.0f};
         tmp.Add(&waterCollisionPos);
@@ -308,7 +308,7 @@ void StaticFXProp::UpdateWaterRipple(void) {
 void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
 
-    if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > (uint)unk9C)) {
+    if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > unk9C)) {
         Vector temp = *GetPos();
         Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
         temp.y += RandomIR(&gb.mRandSeed, 700, 800);

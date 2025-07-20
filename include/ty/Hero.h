@@ -14,9 +14,10 @@ struct CheckpointStruct;
 struct WakeStruct;
 
 struct OpalMagnetData {
-    char padding_0x0[0x8];
+    int mEndTime; // Frame number on which magnet ends
+    float unk4;
     Material* unk8;
-    char padding[0x30];
+    Blitter_Particle mParticle;
 
     void Init(void);
     void Deinit(void);
@@ -27,7 +28,8 @@ struct OpalMagnetData {
 };
 
 struct GlowParticleData {
-    char padding[0x44];
+    char padding[0x40];
+    ParticleSystem* pSys;
 
     void Init(void);
     void Deinit(void);

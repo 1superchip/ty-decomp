@@ -59,6 +59,8 @@ struct BoomerangDesc : GameObjDesc {
     virtual void Load(KromeIni* pIni);
 };
 
+extern BoomerangDesc* Boomerang_pDescriptors[NUM_BOOMERANGS];
+
 struct DoomerangDesc : BoomerangDesc {
     float pitchSpeed;
     float turnSpeed;

@@ -37,12 +37,12 @@ enum ElementType {
 };
 
 enum GemState {
-    GEMSTATE_0 = 0,
-    GEMSTATE_1 = 1,
-    GEMSTATE_2 = 2,
-    GEMSTATE_3 = 3,
-    GEMSTATE_4 = 4,
-    GEMSTATE_5 = 5,
+    GEMSTATE_0          = 0,
+    GEMSTATE_1          = 1,
+    GEMSTATE_2          = 2,
+    GEMSTATE_MAGNETISED = 3,
+    GEMSTATE_4          = 4,
+    GEMSTATE_5          = 5,
 };
 
 enum GemType {};

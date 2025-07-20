@@ -242,8 +242,6 @@ static void FileSys_SetOrder(RkvFileEntry* pEntry) {
     }
 }
 
-#include "Dolphin/os.h"
-
 /// @brief Loads and returns the filedata of pFilename
 /// @param pFilename Name of file to load and read
 /// @param pOutLen Optional pointer to store file length to
@@ -338,7 +336,7 @@ void FileSys_OutputFileOrder(void) {
     }
 
     // sort by order
-    qsort(sortedEntries, data.nmbrOfEntries, 4, FileOrderSortCompare);
+    qsort(sortedEntries, data.nmbrOfEntries, sizeof(sortedEntries[0]), FileOrderSortCompare);
     
     index = 0;
     while (index < data.nmbrOfEntries) {
@@ -352,7 +350,7 @@ void FileSys_OutputFileOrder(void) {
             if (c > 1) {
                 // only sort if there are 2 or more entries
                 // sort by language?
-                qsort(&sortedEntries[index], c, 4, LanguageSortCompare);
+                qsort(&sortedEntries[index], c, sizeof(sortedEntries[0]), LanguageSortCompare);
             }
             index += c;
         } else {
@@ -368,15 +366,18 @@ void FileSys_OutputFileOrder(void) {
         bufferIndex = 0;
         while (index < data.nmbrOfEntries) {
             RkvFileEntry* pCurrEntry = sortedEntries[index];
+
             if (pCurrEntry->offset != -1) {
                 strcat(stringBuf, Str_Printf("%s\r\n", pCurrEntry->name));
                 bufferIndex++;
             }
+
             if (bufferIndex >= 0x100) {
                 File_Write(openFd, stringBuf, strlen(stringBuf));
                 *stringBuf = 0;
                 bufferIndex = 0;
             }
+
             index++;
         }
 
