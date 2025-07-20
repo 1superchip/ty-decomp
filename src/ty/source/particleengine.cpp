@@ -130,6 +130,9 @@ void TyParticleManager::Init(void) {
 
     unkE4 = 0.0f;
 
+    mSparkData.Init(150);
+    mSparkParticles.Init(mSparkData.capacity());
+
     mBilbyAtomParticles.Init(50);
 
     mRippleList.Init(100, sizeof(WaterRippleStruct));
@@ -161,6 +164,7 @@ void TyParticleManager::Deinit(void) {
         mGhostSmokeData.Deinit();
         mWaterSteamData.Deinit();
 
+        mSparkData.Deinit();
 
         mBilbyAtomParticles.Deinit();
 
@@ -177,12 +181,37 @@ void TyParticleManager::Deinit(void) {
         mGhostParticles.Deinit();
         mGhostSmokeParticles.Deinit();
         mWaterSteamParticles.Deinit();
+        mSparkParticles.Deinit();
     }
 }
 
 void TyParticleManager::SpawnSpark(Vector* pPos) {
     for (int i = 0; i < 10; i++) {
-        // SparkStruct* pSparkStruct = 
+        SparkStruct* pSparkStruct = mSparkData.GetNextEntry();
+        Blitter_Particle* pSparkParticle = mSparkParticles.GetNextEntry();
+
+        if (pSparkStruct == NULL || pSparkParticle == NULL) {
+            return;
+        }
+
+        pSparkStruct->unk10 = 1.0f;
+
+        Vector vv;
+
+        vv.Set(
+            -3.0f + ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f,
+            ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f,
+            -3.0f + ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f
+        );
+
+        pSparkStruct->unk0 = vv;
+
+        pSparkStruct->unk18 = pSparkStruct->unk1C = pSparkStruct->unk20 = 100 + (RandomI(&gb.mRandSeed) % 155);
+
+        pSparkParticle->pos = *pPos;
+        pSparkParticle->scale = 4.0f;
+        pSparkParticle->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+        pSparkParticle->angle = 0.0f;
     }
 }
 

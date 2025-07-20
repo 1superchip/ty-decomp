@@ -57,7 +57,12 @@ struct AntStruct {
 };
 
 struct SparkStruct {
-    char padding[0x24];
+    Vector unk0;
+    float unk10;
+    int unk14;
+    int unk18;
+    int unk1C;
+    int unk20;
 };
 
 struct FeatherStruct {
@@ -259,6 +264,9 @@ struct TyParticleManager {
 
     StructList<WaterDropBlueStruct> mWaterDropBlueData;
     StructList<Blitter_Particle> mWaterDropBlueParticles;
+
+    StructList<SparkStruct> mSparkData;
+    StructList<Blitter_Particle> mSparkParticles;
 
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;
