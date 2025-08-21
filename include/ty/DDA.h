@@ -2,6 +2,7 @@
 #define DDA_H
 
 #include "types.h"
+#include "ty/boomerang.h"
 #include "common/PtrListDL.h"
 
 enum DDADamageCause {
@@ -25,7 +26,19 @@ enum DDAEnemyDamageCause {
 };
 
 enum DDACameraAction {
-    
+    DDA_CAMERA_0    = 0,
+    DDA_CAMERA_1    = 1,
+    DDA_CAMERA_2    = 2,
+    DDA_CAMERA_3    = 3,
+    DDA_CAMERA_4    = 4,
+    DDA_CAMERA_5    = 5,
+    DDA_CAMERA_6    = 6,
+    DDA_CAMERA_7    = 7,
+    DDA_CAMERA_8    = 8,
+    DDA_CAMERA_9    = 9,
+    DDA_CAMERA_10   = 10,
+    DDA_CAMERA_11   = 11,
+    DDA_CAMERA_12   = 12,
 };
 
 struct DDADeathInfo {
@@ -112,7 +125,7 @@ struct DDASession {
     int dbgMsgTimer;
     u8 unk20;
     char padding[0x4C];
-    int unk;
+    BoomerangType currentBoomerang;
 
     void Init(void);
     void Update(void);

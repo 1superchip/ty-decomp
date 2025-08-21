@@ -80,10 +80,10 @@ void TyParticleManager::LoadResources(void) {
     unk90 = Material::Create("fx_078");
     pGooMaterial = Material::Create("fx_040");
 
-    unk98[0] = Material::Create("fx_068");
-    unk98[1] = Material::Create("fx_069");
-    unk98[2] = Material::Create("fx_070");
-    unk98[3] = Material::Create("fx_071");
+    pWaterWashMaterials[0] = Material::Create("fx_068");
+    pWaterWashMaterials[1] = Material::Create("fx_069");
+    pWaterWashMaterials[2] = Material::Create("fx_070");
+    pWaterWashMaterials[3] = Material::Create("fx_071");
 
     unkA8 = Material::Create("ty_footprint");
     unkAC = Material::Create("ty_footprint2");
@@ -133,6 +133,9 @@ void TyParticleManager::Init(void) {
     mSparkData.Init(150);
     mSparkParticles.Init(mSparkData.capacity());
 
+    mAntData.Init(50);
+    mAntParticles.Init(mAntData.capacity());
+
     mBilbyAtomParticles.Init(50);
 
     mRippleList.Init(100, sizeof(WaterRippleStruct));
@@ -157,14 +160,15 @@ void TyParticleManager::Deinit(void) {
         mFeatherList.Deinit();
         mShockGlowData.Deinit();
         //
-        //
-        //
+        mWaterDropGreenData.Deinit();
+        mWaterDropBlueData.Deinit();
         mChompData.Deinit();
         mGhostData.Deinit();
         mGhostSmokeData.Deinit();
         mWaterSteamData.Deinit();
-
+        //
         mSparkData.Deinit();
+        mAntData.Deinit();
 
         mBilbyAtomParticles.Deinit();
 
@@ -175,13 +179,21 @@ void TyParticleManager::Deinit(void) {
         mTireDustParticles.Deinit();
         mBreathMistParticles.Deinit();
         mShockGlowParticles.Deinit();
-        //
-        //
+        mWaterDropGreenParticles.Deinit();
+        mWaterDropBlueParticles.Deinit();
         mChompParticles.Deinit();
         mGhostParticles.Deinit();
         mGhostSmokeParticles.Deinit();
         mWaterSteamParticles.Deinit();
         mSparkParticles.Deinit();
+        mAntParticles.Deinit();
+        //
+        //
+        //
+        //
+        //
+        //
+        //
     }
 }
 
@@ -216,7 +228,36 @@ void TyParticleManager::SpawnSpark(Vector* pPos) {
 }
 
 void TyParticleManager::SpawnAnts(Vector* p, Vector* p1, Vector* p2) {
+    for (int i = 0; i < 3; i++) {
+        AntStruct* pAntStruct = mAntData.GetNextEntry();
+        Blitter_Particle* pParticle = mAntParticles.GetNextEntry();
 
+        if (pAntStruct == NULL || pParticle == NULL) {
+            return;
+        }
+
+        pAntStruct->unk10 = 1.0f;
+
+        Vector vv;
+
+        vv.Set(
+            ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f + -3.0f,
+            ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f,
+            ((RandomI(&gb.mRandSeed) % 100) * 6.0f) / 100.0f + -3.0f
+        );
+
+        pAntStruct->unk0 = vv;
+
+        pAntStruct->unk1C = pAntStruct->unk20 = pAntStruct->unk24 =(RandomI(&gb.mRandSeed) % 155) + 100;
+
+        pAntStruct->unk18 = RandomFR(&gb.mRandSeed, -100.0f, 100.0f);
+        pAntStruct->unk18 *= 0.001f;
+
+        pParticle->pos = *p;
+        pParticle->scale = 4.0f;
+        pParticle->color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+        pParticle->angle = (RandomFR(&gb.mRandSeed, 0.0f, 100.0f) * 6.28f) * 0.01f;
+    }
 }
 
 void TyParticleManager::SpawnChomp(Vector* pPos, float f1) {
@@ -700,6 +741,43 @@ void TyParticleManager::DrawPostWater(void) {
         pShockGlowMaterial->Use();
 
         pParticles->Draw(mShockGlowParticles.size());
+    }
+
+    for (int i = 0; i < ARRAY_SIZE(mWaterWashParticles); i++) {
+        pParticles = mWaterWashParticles[i].GetCurrEntry();
+        if (pParticles) {
+            pWaterWashMaterials[i]->Use();
+
+            pParticles->Draw(mWaterWashParticles[i].size());
+        }
+    }
+
+    pParticles = mWaterDropGreenParticles.GetCurrEntry();
+    if (pParticles) {
+        pShockGlowMaterial->Use();
+
+        pParticles->Draw(mWaterDropGreenParticles.size());
+    }
+
+    pParticles = mWaterDropBlueParticles.GetCurrEntry();
+    if (pParticles) {
+        pShockGlowMaterial->Use();
+
+        pParticles->Draw(mWaterDropBlueParticles.size());
+    }
+
+    pParticles = mSparkParticles.GetCurrEntry();
+    if (pParticles) {
+        pShockGlowMaterial->Use();
+
+        pParticles->Draw(mSparkParticles.size());
+    }
+
+    pParticles = mAntParticles.GetCurrEntry();
+    if (pParticles) {
+        pShockGlowMaterial->Use();
+
+        pParticles->Draw(mAntParticles.size());
     }
 
     GooStruct** ppGoos = mGooList.GetMem();

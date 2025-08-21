@@ -179,7 +179,10 @@ struct Tools_WayPoints {
     int unk100;
     int unk104;
 
-    enum LoadMode {};
+    enum LoadMode {
+        LOAD_MODE_0 = 0,
+        LOAD_MODE_1 = 1
+    };
     
     void Init(void);
     void Reset(void);

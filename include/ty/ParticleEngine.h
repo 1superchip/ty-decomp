@@ -53,7 +53,13 @@ struct SnowFlakeStruct {
 };
 
 struct AntStruct {
-    char padding[0x28];
+    Vector unk0;
+    float unk10;
+    char unk14[4];
+    float unk18;
+    int unk1C;
+    int unk20;
+    int unk24;
 };
 
 struct SparkStruct {
@@ -199,7 +205,7 @@ struct TyParticleManager {
     Material* unk90;
     Material* unk94;
 
-    Material* unk98[4];
+    Material* pWaterWashMaterials[4];
 
     Material* unkA8;
     Material* unkAC;
@@ -229,6 +235,7 @@ struct TyParticleManager {
     Blitter_Particle exclamationParticle;
 
     PtrListDL<GooStruct> mGooList;
+
     PtrListDL<WaterRippleStruct> mRippleList;
 
     StructList<Blitter_Particle> mFastGlowParticles;
@@ -267,6 +274,12 @@ struct TyParticleManager {
 
     StructList<SparkStruct> mSparkData;
     StructList<Blitter_Particle> mSparkParticles;
+
+    StructList<AntStruct> mAntData;
+    StructList<Blitter_Particle> mAntParticles;
+
+    StructList<int> mWaterWashLists[4];
+    StructList<Blitter_Particle> mWaterWashParticles[4];
 
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;

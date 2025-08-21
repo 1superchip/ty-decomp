@@ -32,7 +32,7 @@ void DDASession::Init(void) {
     deathList.Init(38, sizeof(DDADeathInfo));
     dbgMsgTimer = 0;
     unk20 = 0;
-    unk = 0;
+    currentBoomerang = BR_Standard;
     LoadStatsInfo();
 }
 
@@ -133,7 +133,7 @@ void DDASession::NewCheckpoint(int arg1) {
 
     memset(&currentCheckpoint->cameraInfo, 0, sizeof(DDACameraInfo));
 
-    unk = ty.mBoomerangManager.GetCurrentType();
+    currentBoomerang = ty.mBoomerangManager.GetCurrentType();
 }
 
 void DDASession::EndCheckpoint(void) {
@@ -243,11 +243,11 @@ void DDASession::StoreRangChanged(void) {
         return;
     }
 
-    if (unk == ty.mBoomerangManager.GetCurrentType()) {
+    if (currentBoomerang == ty.mBoomerangManager.GetCurrentType()) {
         return;
     }
 
-    unk = ty.mBoomerangManager.GetCurrentType();
+    currentBoomerang = ty.mBoomerangManager.GetCurrentType();
 
     currentCheckpoint->unk10++;
 }
@@ -258,43 +258,43 @@ void DDASession::StoreCameraInfo(DDACameraAction cameraAction) {
     }
 
     switch (cameraAction) {
-        case 0:
+        case DDA_CAMERA_0:
             currentCheckpoint->cameraInfo.unk2C++;
             break;
-        case 1:
+        case DDA_CAMERA_1:
             currentCheckpoint->cameraInfo.unk2E++;
             break;
-        case 2:
+        case DDA_CAMERA_2:
             currentCheckpoint->cameraInfo.unk2D++;
             break;
-        case 3:
+        case DDA_CAMERA_3:
             currentCheckpoint->cameraInfo.unk2F++;
             break;
-        case 4:
+        case DDA_CAMERA_4:
             currentCheckpoint->cameraInfo.unk30++;
             break;
-        case 5:
+        case DDA_CAMERA_5:
             currentCheckpoint->cameraInfo.unk31++;
             break;
-        case 6:
+        case DDA_CAMERA_6:
             currentCheckpoint->cameraInfo.unk32++;
             break;
-        case 7:
+        case DDA_CAMERA_7:
             currentCheckpoint->cameraInfo.unk33++;
             break;
-        case 8:
+        case DDA_CAMERA_8:
             currentCheckpoint->cameraInfo.unk34++;
             break;
-        case 9:
+        case DDA_CAMERA_9:
             currentCheckpoint->cameraInfo.unk35++;
             break;
-        case 10:
+        case DDA_CAMERA_10:
             currentCheckpoint->cameraInfo.unk36++;
             break;
-        case 11:
+        case DDA_CAMERA_11:
             currentCheckpoint->cameraInfo.unk37++;
             break;
-        case 12:
+        case DDA_CAMERA_12:
             currentCheckpoint->cameraInfo.unk38++;
             break;
     }

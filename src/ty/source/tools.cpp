@@ -1224,7 +1224,7 @@ bool Tools_WayPoints::Load(WayPointLoadInfo* pLoadInfo, Tools_WayPoints::LoadMod
     while (unk104 < MAX_WAYPOINTS && unk104 < pLoadInfo->unk0) {
         vecs[unk104] = pLoadInfo->vecs[unk104];
         
-        if (loadMode == 0 && unk104) {
+        if (loadMode == LOAD_MODE_0 && unk104) {
             if (Abs<float>(vecs[unk104].y - vecs[unk104 - 1].y) > 1.0f) {
                 vecs[unk104].y = vecs[unk104 - 1].y;
             }
@@ -1240,7 +1240,7 @@ bool Tools_WayPoints::LoadLine(KromeIniLine* pLine, Tools_WayPoints::LoadMode lo
     vecs[unk104].w = 1.0f;
 
     if (LoadLevel_LoadVector(pLine, "pos", &vecs[unk104]) || LoadLevel_LoadVector(pLine, "waypoint", &vecs[unk104])) {
-        if (loadMode == 0 && unk104 > 0) {
+        if (loadMode == LOAD_MODE_0 && unk104 > 0) {
             vecs[unk104].y = vecs[unk104 - 1].y;
         }
 

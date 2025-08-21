@@ -309,7 +309,7 @@ bool GCT_Trigger::TestPoint(Vector* pPoint) {
 }
 
 void GCT_WaypointPlaneManager::Init(WayPointLoadInfo* pLoadInfo, float f1, float f2) {
-    mWaypoints.Load(pLoadInfo, (Tools_WayPoints::LoadMode)1);
+    mWaypoints.Load(pLoadInfo, Tools_WayPoints::LOAD_MODE_1);
 
     Vector spherePos = {0.0f, 0.0f, 0.0f, 0.0f};
     for (int i = 0; i < mWaypoints.unk104; i++) {
