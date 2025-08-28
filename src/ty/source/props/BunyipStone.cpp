@@ -65,8 +65,8 @@ void BunyipStone::Update(void) {
         dist.Sub(pHero->GetPos(), GetPos());
 
         if (dist.MagSquared() < 2500.0f && Bunyip_Activate()) {
-            // if the hero is in distance and the Bunyip was activated
-            // set the timer 
+            // if the hero is in distance and the Bunyip was activated, set the timer
+            // Cooldown lasts for ~120 seconds at 60 FPS (PAL/50 FPS → ~144 seconds)
             cooldownTimer = gDisplay.fps * 120.0f;
             mBallState = BS_BALLSTATE_HIDE; // Start hiding the balls in the stone
         }

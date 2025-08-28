@@ -15,6 +15,7 @@ enum CollisionMode {
 };
 
 #define ID_WALL             (0x1)       // regular walls we can collide with
+#define ID_SLIPPERY         (0x2)       // slippery slopes
 #define ID_ICE              (0x8)       // will give ty inertia. For ice and oil
 #define ID_SAND             (0x10)      // sandy floor
 #define ID_QUICKSAND        (0x80)      // quicksand

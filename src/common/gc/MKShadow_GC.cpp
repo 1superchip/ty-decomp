@@ -370,7 +370,7 @@ void MKShadow_Animated::Build(char* pName) {
                         pModel->pTemplate->pModelData->pVertices;
                     int x = 0;
                     
-                    for (int v = 0; v < 3; v++) {
+                    for (int v = 0; v < ARRAY_SIZE(verts); v++) {
                         verts[v].matrixIndex = pModelVertices[((u16*)pDList)[x]].matrix1;
                         verts[v].mNormal.Set(
                             pModelVertices[((u16*)pDList)[x + 1]].normal[0] / 64.0f,

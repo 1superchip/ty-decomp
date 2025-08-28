@@ -7,7 +7,7 @@
 #include "common/MKAnimScript.h"
 #include "ty/tools.h"
 
-struct SoundEvent {
+struct AnimSoundEvent {
     int soundEventIndex;
     char* animEventName;
 };
@@ -23,7 +23,7 @@ struct AnimatingPropDesc : StaticPropDescriptor {
     u16 defaultGameObjFlags;
     int soundEventIndex;
     int nmbrOfSoundEvents;
-    SoundEvent* pSoundEvents;
+    AnimSoundEvent* pSoundEvents;
 
     void Init(ModuleInfoBase *pModuleBase, char *param_2, char *param_3, int param_4,
             int param_5, Tools_AnimEntry *pAnimEntry, int animEntryCount, Tools_AnimEvent *pAnimEvent, int animEventCount,

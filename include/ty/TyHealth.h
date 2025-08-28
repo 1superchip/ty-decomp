@@ -4,7 +4,8 @@
 #include "common/Vector.h"
 
 enum TyHealthType {
-
+    HEALTH_TYPE_0 = 0,
+    HEALTH_TYPE_1 = 1,
 };
 
 enum HurtType {
@@ -22,7 +23,7 @@ struct TyHealth {
     void Deinit(void);
     bool Hurt(HurtType);
     void Gain(int);
-    void SetHealthType(TyHealthType);
+    void SetType(TyHealthType);
     void SetNumSymbols(int);
     void DrawLooseFX(Vector);
     void DrawHudElement(Vector);

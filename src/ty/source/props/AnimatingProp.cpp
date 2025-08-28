@@ -2,7 +2,6 @@
 #include "ty/GameObjectManager.h"
 #include "common/Str.h"
 #include "common/system_extras.h"
-int SoundBank_ResolveSoundEventIndex(char*);
 
 static ModuleInfo<AnimatingProp> animPropModInfo;
 
@@ -53,7 +52,7 @@ void AnimatingPropDesc::Load(KromeIni* pIni) {
                 soundEventIndex = SoundBank_ResolveSoundEventIndex(pString);
             } else if (stricmp(pLine->pFieldName, "soundEvents") == 0 && pLine->elementCount > 0) {
                 nmbrOfSoundEvents = pLine->elementCount;
-                pSoundEvents = (SoundEvent*)Heap_MemAlloc(nmbrOfSoundEvents * sizeof(SoundEvent));
+                pSoundEvents = (AnimSoundEvent*)Heap_MemAlloc(nmbrOfSoundEvents * sizeof(AnimSoundEvent));
                 for (int i = 0; i < nmbrOfSoundEvents; i++) {
                     pSoundEvents[i].animEventName = mAnimScript.GetEventByName(Str_Printf("SoundEvent%d", i + 1));
                     pLine->AsString(i, &pString);

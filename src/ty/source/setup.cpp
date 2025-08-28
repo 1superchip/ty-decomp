@@ -506,8 +506,6 @@ void Setup_LoadLevel(void) {
     }
 }
 
-void SoundBank_PlayExclusiveAmbientSound(bool);
-
 void Setup_PostLoadLevel(void) {
     SoundBank_PlayExclusiveAmbientSound(true);
 

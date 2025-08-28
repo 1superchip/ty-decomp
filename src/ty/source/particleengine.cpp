@@ -447,8 +447,11 @@ void TyParticleManager::SpawnBreathMist(Vector* pPos, Vector* pVel, float scale)
     pParticle->angle = 0.0f;
 }
 
-void TyParticleManager::SpawnBridgeChunk(Vector*, Model*) {
+void TyParticleManager::SpawnBridgeChunk(Vector*, Model* pModel) {
+    Vector sp8;
+    sp8.Set(0.0f, 20.0f, 0.0f);
 
+    pModel->GetModelVolume();
 }
 
 void TyParticleManager::SpawnAntHillChunk(Vector*, Vector*) {
@@ -566,7 +569,7 @@ void TyParticleManager::SpawnFireParticle(Vector* pPos, float scaleFactor) {
 
     pParticle->angle = 0.0f;
 
-    pParticle->scale = ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f;
+    pParticle->scale = ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f;
     pParticle->scale *= scaleFactor;
 }
 

@@ -44,7 +44,7 @@ int Range_WhichZone(Vector* point, float* arg1) {
     }
 
     int zoneId = 0;
-    for (; zoneId < 8; zoneId++) {
+    for (; zoneId < ARRAY_SIZE(gb.level.lodRanges); zoneId++) {
         float zone = gb.level.lodRanges[zoneId];
         if (dist < zone) {
             if (arg1 == NULL) {

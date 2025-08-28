@@ -489,10 +489,10 @@ struct Ty : Hero {
     int unk3AC;
     Vector unk3B0;
 
-    int unk3C0;
+    MKAnim* unk3C0;
     Vector unk3C4;
 
-    int unk3D4;
+    MKAnim* unk3D4;
     Vector unk3D8;
 
     int unk3E8;
@@ -519,7 +519,7 @@ struct Ty : Hero {
     int unk474;
     Vector unk478;
 
-    int unk488;
+    MKAnim* unk488;
     Vector unk48C;
 
     int unk49C;
@@ -545,8 +545,66 @@ struct Ty : Hero {
     char padding594[0x20]; // MKAnimScript?
 
     MKAnim* walkAnim;
+    MKAnim* run00Anim;
+    MKAnim* pSneakAnim;
+    MKAnim* jogAnim;
+    MKAnim* unk5C4;
+    MKAnim* unk5C8;
+    MKAnim* dogPaddleAnim;
+    MKAnim* surfaceSwimAnim;
+    MKAnim* unk5D4;
+    MKAnim* swimSlowAnim;
+    MKAnim* swimFastAnim;
+    MKAnim* swimIdleAnim;
+    MKAnim* unk5E4;
+    MKAnim* unk5E8;
+    MKAnim* unk5EC;
+    MKAnim* drownGaspAnim;
+    MKAnim* drownDeadAnim;
 
-    char padding348[0x828 - 0x5B8];
+    MKAnim* unk5F8[(0x678 - 0x5F8) / sizeof(MKAnim*)];
+
+    MKAnim* hasBothRangsAnims[2];
+
+    MKAnim* unk680;
+    MKAnim* biteUnchargeAnim;
+
+    MKAnim* unk688[(0x69C - 0x688) / sizeof(MKAnim*)];
+
+    MKAnim* edgeWobbleAnim;
+    MKAnim* waterShakeAnim;
+
+    MKAnim* unk6A4;
+    MKAnim* unk6A8;
+    MKAnim* unk6AC;
+    MKAnim* unk6B0;
+    MKAnim* unk6B4;
+    MKAnim* unk6B8;
+    MKAnim* unk6BC;
+    MKAnim* unk6C0;
+    MKAnim* unk6C4;
+    MKAnim* unk6C8;
+    MKAnim* unk6CC;
+    MKAnim* unk6D0;
+    MKAnim* unk6D4;
+    MKAnim* unk6D8;
+    MKAnim* unk6DC;
+    MKAnim* unk6E0;
+    MKAnim* unk6E4;
+    MKAnim* unk6E8;
+    MKAnim* unk6EC;
+
+    MKAnim* splatLandAnim;
+    MKAnim* knowndownAnim;
+    MKAnim* getUpAnim;
+
+    MKAnim* unk6FC;
+    MKAnim* unk700;
+    MKAnim* unk704;
+
+    MKAnim* flinchAnims[3];
+
+    char padding348[0x828 - 0x714];
     uint unk828;
     BoomerangType mBoomerangType;
     TyContext mContext;
@@ -616,7 +674,7 @@ struct Ty : Hero {
     int directvel_to_velocity_interpolation;
     bool unk167C;
     char unk167D;
-    bool unk167E;
+    bool unk167E; // member of a struct (should slip flag?)
     float somVelMaxMag;
     bool fallDive;
     uint unk1688;
@@ -790,6 +848,8 @@ struct Ty : Hero {
 
     bool IsAbleToGlide(void);
     //
+
+    void SetFakeFloor(void);
 };
 
 extern Ty ty;

@@ -427,7 +427,7 @@ void Boomerang::Fire(Vector* pVec1, Vector* pVec2) {
 
     mSpline.Reset();
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_SIZE(splinePoints); i++) {
         splinePoints[i].Scale(GetDesc()->range);
         mSpline.AddNode(&splinePoints[i]);
     }

@@ -1,6 +1,7 @@
 #include "ty/Ty.h"
 #include "ty/global.h"
 #include "ty/ParticleEngine.h"
+#include "ty/bunyip.h"
 
 static GameObjDesc tyDesc;
 Ty ty;
@@ -227,8 +228,8 @@ void Ty::PostLoadInit(void) {
         gb.mGameData.GetBoomerang(),
         true,
         &unk534,
-        NULL,
-        {},
+        unk488,
+        {unk3C0, unk3D4},
         {
             {"leftThrowBoomerang"},
             {"rightThrowBoomerang"},
@@ -237,6 +238,9 @@ void Ty::PostLoadInit(void) {
         },
         {
             true,
+            unk6EC,
+            {unk6C4, unk6D8},
+            {unk6CC, unk6E0}
         }
     };
 
@@ -260,6 +264,14 @@ void Ty::Reset(void) {
     if (pHero->IsTy()) {
         ResetVars();
         SetAbsolutePosition(&pos, TY_AS_50, 1.0f, true);
+        lastSafePos = pos;
+
+        mTyRainbowEffect.Reset();
+
+        tyHealth.SetType(HEALTH_TYPE_0);
+        tySounds.Reset();
+        opalMagnetData.Reset();
+        glowParticleData.Reset();
     }
 }
 
@@ -317,7 +329,18 @@ void AutoTargetStruct::Reset(void) {
 }
 
 void Ty::WaterMediumInit(void) {
+    BoomerangManagerAnims swimAnims = {
+        true,
+        unk6C8,
+        {unk6C8, unk6DC},
+        {unk6D4, unk6E8}
+    };
 
+    mBoomerangManager.SetAnims(&swimAnims);
+
+    if (pBunyip) {
+        pBunyip->SetState(BUNYIP_DISAPPEAR);
+    }
 }
 
 void Ty::WaterMediumUpdate(void) {
@@ -329,7 +352,20 @@ void Ty::WaterMediumDeinit(void) {
 }
 
 void Ty::UnderWaterMediumInit(void) {
+    BoomerangManagerAnims underWaterAnims = {
+        true,
+        unk6C8,
+        {unk6C8, unk6DC},
+        {unk6D0, unk6E4}
+    };
 
+    mBoomerangManager.SetAnims(&underWaterAnims);
+
+    tyHealth.SetType(HEALTH_TYPE_1);
+
+    if (pBunyip) {
+        pBunyip->SetState(BUNYIP_DISAPPEAR);
+    }
 }
 
 void Ty::UnderWaterMediumUpdate(void) {
@@ -340,24 +376,62 @@ void Ty::UnderWaterMediumDeinit(void) {
     
 }
 
-void Ty::AirMediumInit(void) {
+static int airStuckCount = 0;
 
+void Ty::AirMediumInit(void) {
+    unk167E = false;
+
+    airStuckCount = 0;
+
+    BoomerangManagerAnims bmAnims = {
+        true,
+        unk6EC,
+        {unk6C4, unk6D8},
+        {unk6CC, unk6E0}
+    };
+
+    mBoomerangManager.SetAnims(&bmAnims);
 }
 
 void Ty::AirMediumUpdate(void) {
-    
+    float distSq = SquareDistance(&pos, &lastPos);
+    if (distSq < Sqr<float>(0.2f) && velocity.MagSquared() > Sqr<float>(4.0f)) {
+        airStuckCount++;
+
+        if (airStuckCount > 10) {
+            airStuckCount = 0;
+
+            velocity.SetZero();
+            SetFakeFloor();
+        }
+    } else {
+        airStuckCount = 0;
+    }
 }
 
 void Ty::AirMediumDeinit(void) {
-    
+    unk167E = (mContext.floor.GetDiff(&pos) < 50.0f) && (mContext.floor.GetCollisionFlags() & 2);
+
+    if (mContext.floor.bOn || mContext.floor.bUnderFeet) {
+        unk141C = gb.logicGameCount;
+    }
 }
 
 void Ty::LandMediumInit(void) {
+    BoomerangManagerAnims boomAnims = {
+        true,
+        unk6EC,
+        {unk6C4, unk6D8},
+        {unk6CC, unk6E0}
+    };
 
+    mBoomerangManager.SetAnims(&boomAnims);
 }
 
 void Ty::LandMediumUpdate(void) {
-    
+    if (unk167E && !(mContext.floor.GetCollisionFlags() & 2)) {
+        unk167E = false;
+    }
 }
 
 void Ty::LandMediumDeinit(void) {

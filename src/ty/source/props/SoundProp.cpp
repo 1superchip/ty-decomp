@@ -5,7 +5,6 @@
 #include "common/System_GC.h"
 #include "ty/global.h"
 
-extern int SoundBank_ResolveSoundEventIndex(char*);
 extern "C" int Sound_IsVoicePlaying(int);
 
 static GameObjDesc soundPropDesc;

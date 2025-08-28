@@ -6,8 +6,6 @@
 extern void Credits_Init(void);
 extern void Credits_Deinit(void);
 extern void Credits_Reset(void);
-enum MusicType {};
-void SoundBank_PlayMusic(MusicType, float, float);
 extern "C" void Sound_MusicPause(bool);
 enum PauseScreen_State {};
 void PauseScreen_Init(PauseScreen_State);
@@ -71,7 +69,7 @@ void D1Prop::Message(MKMessage* pMsg) {
             break;
         case MSG_Activate:
             if (System_GetCommandLineParameter("-introonly") == NULL && gb.autoLevelSwitch == false) {
-                SoundBank_PlayMusic((MusicType)7, 0.5f, 0.0f);
+                SoundBank_PlayMusic(MUSIC_TYPE_7, 0.5f, 0.0f);
                 gb.bOnPauseScreen = true;
                 PauseScreen_Init((PauseScreen_State)0x11);
                 Sound_MusicPause(false);
