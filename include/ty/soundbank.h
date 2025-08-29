@@ -12,10 +12,10 @@ void SoundBank_LoadResources(void);
 void SoundBank_Init(void);
 void SoundBank_Deinit(void);
 
-int SoundBank_Play(int, Vector*, uint);
-void SoundBank_Stop(int*);
+int SoundBank_Play(int soundEventIndex, Vector*, uint);
+void SoundBank_Stop(int* pVoiceCode);
 
-int SoundBank_GetID(int, unsigned int);
+int SoundBank_GetID(int soundEventIndex, unsigned int);
 
 void SoundBank_PlayExclusiveAmbientSound(bool);
 
@@ -33,7 +33,7 @@ int SoundBank_ResolveSoundEventIndex(char*);
 
 struct SoundEventHelper {
     int unk0;
-    
+
     void Update(int, bool, bool, GameObject*, Vector*, float, int);
     void Message(MKMessage*);
     
@@ -54,12 +54,43 @@ struct SoundEventHelper {
     }
 };
 
+struct SoundEventFader {
+    int unk0;
+    FaderObject fader;
+    
+    void Init(float, float);
+    void Reset(void);
+    void Update(int, bool, bool, GameObject*, Vector*, float, int);
+};
+
+struct DynamicPhrasePlayer {
+    int unk0;
+    int unk4;
+    int unk8;
+    int unkC;
+    int unk10;
+    int unk14;
+    
+    void Init(void);
+    void Deinit(void);
+    void Reset(void);
+    bool Preload(int, int, bool);
+    bool IsLoaded(void);
+    void Play(void);
+    void Stop(void);
+    void UnloadBank(void);
+    void UnloadPackage(void);
+    char* GetFileName(bool);
+    bool HasPlayed(void);
+    void Update(void);
+};
+
 struct SoundMaterial;
 
 struct SoundEvent {
-    int unk0;
-    int unk4;
-    uint unk8;
+    int range;
+    unsigned char numMaterials;
+    SoundMaterial* pMaterials;
 
     void Init(KromeIni*, KromeIniLine*);
     void Reset(void);
@@ -68,8 +99,20 @@ struct SoundEvent {
     int CountSoundMaterials(KromeIni*);
 };
 
+/// @brief Sound to be chosen for a SoundMaterial
+struct SoundMaterialSound {
+    char* pSoundName;
+    int soundId;
+    float chance;
+};
+
 struct SoundMaterial {
-    char padding[0x18];
+    unsigned int unk0; // flags
+    unsigned char volume;
+    float minPitch;
+    float maxPitch;
+    unsigned char numSounds;
+    SoundMaterialSound* pSounds;
 
     void Init(KromeIni*, unsigned char, float, float);
     int Play(Vector*, int, SoundEvent*);
@@ -79,12 +122,28 @@ struct SoundMaterial {
 
 struct SoundEventManager {
     SoundEvent* pSoundEvents;
-    char padding[0x48];
+    int levelBankID;
+    int voxLevelBankID;
+    int unkC;
+    int unk10;
+    int unk14;
+    int unk18;
+    unsigned char unk1C;
+    unsigned char unk1D;
+    int unk20;
+    int unk24;
+    int unk28;
+    FaderObject fader;
+    char* unk48;
 
     void Init(void);
     void Reset(void);
     void ParseSoundEvents(KromeIni*);
     void BuildSoundNameTable(KromeIni*);
+};
+
+enum SoundID {
+
 };
 
 #endif // SOUNDBANK_H

@@ -27,6 +27,7 @@ struct KromeIni {
     int unk38; // count for "[]" sections
     
     inline KromeIniLine* GetNextLine(void);
+    inline KromeIniLine* GetPreviousLine(void);
     
     // seems to just get the next line with the current line
     inline KromeIniLine* GetLineWithLine(KromeIniLine* pLine);
@@ -48,6 +49,18 @@ inline KromeIniLine* KromeIni::GetNextLine(void) {
     }
 
     return currentLineNum < nmbrOfLines ? &pLines[currentLineNum] : NULL;
+}
+
+inline KromeIniLine* KromeIni::GetPreviousLine(void) {
+    if (pFileMem == NULL) {
+        return NULL;
+    }
+
+    if (currentLineNum >= 0) {
+        currentLineNum--;
+    }
+
+    return currentLineNum >= 0 ? &pLines[currentLineNum] : NULL;
 }
 
 inline KromeIniLine* KromeIni::GetLineWithLine(KromeIniLine* pLine) {

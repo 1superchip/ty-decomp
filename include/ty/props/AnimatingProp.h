@@ -2,7 +2,6 @@
 #define ANIMATINGPROP_H
 
 #include "ty/props/StaticProp.h"
-#include "ty/soundbank.h"
 #include "ty/CommonGameObjectFlags.h"
 #include "common/MKAnimScript.h"
 #include "ty/tools.h"

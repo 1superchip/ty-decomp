@@ -169,7 +169,7 @@ void Torch::Update(void) {
     }
 
     bEmitFire2 = bEmitFire;
-    mSoundHelper.Update(199, 0, bEmitFire, NULL, &mFlamePos, distSquared, 0);
+    mSoundHelper.Update(0xC7, 0, bEmitFire, NULL, &mFlamePos, distSquared, 0);
 }
 
 void Torch::Draw(void) {
@@ -319,7 +319,7 @@ void Torch::CheckForHit(void) {
             }
 
             // Plays the torch model wobbling back-and-forth sound
-            SoundBank_Play(303, GetPos(), 0);
+            SoundBank_Play(0x12F, GetPos(), 0);
         }
 
         // Check if a boomerang collides with a sphere at mFlamePos
@@ -330,7 +330,7 @@ void Torch::CheckForHit(void) {
             if (pBoomerang->mRangType == BR_Frostyrang) {
                 mFrozenTimer = 300;
                 if (bEmitFire) {
-                    SoundBank_Play(200, GetPos(), 0);
+                    SoundBank_Play(0xC8, GetPos(), 0);
                     mSoundHelper.Stop(); // Stop playing the fire crackling sound
                 }
             } else if (bEmitFire) {

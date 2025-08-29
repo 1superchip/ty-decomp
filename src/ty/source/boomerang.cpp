@@ -1054,7 +1054,7 @@ void Flamerang::HitWorld(Vector* pPos, int collisionFlags) {
     if (collisionFlags & ID_WATER_BLUE) {
         particleManager->SpawnWaterSteam(pPos, 30.0f);
         particleManager->SpawnBigSplash(pPos, true, 0.1f, true, 1.0f, 2);
-        SoundBank_Play(30, pPos, 0);
+        SoundBank_Play(0x1E, pPos, 0);
     } else {
         Particle_Fire_CreateExplosion(pPos, 2.0f);
     }
@@ -1854,7 +1854,7 @@ void Doomerang::UpdateFired(void) {
 
         if (!unk89) {
             if (unkA8.unk0 <= -1 && gb.pDialogPlayer == NULL) {
-                unkA8.unk0 = SoundBank_Play(26, NULL, 0);
+                unkA8.unk0 = SoundBank_Play(0x1A, NULL, 0);
             }
 
             float old12C = unk12C;
