@@ -5,6 +5,13 @@
 #include "ty/GameObject.h"
 
 enum MusicType {
+    MUSIC_TYPE_0 = 0,
+    MUSIC_TYPE_1 = 1,
+    MUSIC_TYPE_2 = 2,
+    MUSIC_TYPE_3 = 3,
+    MUSIC_TYPE_4 = 4,
+    MUSIC_TYPE_5 = 5,
+    MUSIC_TYPE_6 = 6,
     MUSIC_TYPE_7 = 7,
 };
 

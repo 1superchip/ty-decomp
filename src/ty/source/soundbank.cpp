@@ -133,35 +133,55 @@ void SoundBank_PlayMusic(MusicType type, float f1, float f2) {
     static char buffer[32];
 
     switch (type) {
-        case 0:
+        case MUSIC_TYPE_0:
+            break;
+        case MUSIC_TYPE_1:
             sprintf(buffer, "music_%s%s", gb.level.GetID(), gb.level.IsBossEnabled() ? "_boss" : "");
             break;
-        case 1:
+        case MUSIC_TYPE_2:
             sprintf(buffer, Str_Printf("music_frontend_%s", Translation_GetLanguageCode(Translation_GetLanguage())));
             break;
-        case 2:
+        case MUSIC_TYPE_3:
             sprintf(buffer, "music_%s_mb", gb.level.GetID());
             break;
-        case 3:
+        case MUSIC_TYPE_4:
             sprintf(buffer, "music_%s_mg", gb.level.GetID());
             break;
-        case 4:
+        case MUSIC_TYPE_5:
             sprintf(buffer, "music_%s_ta", gb.level.GetID());
             break;
-        case 5:
+        case MUSIC_TYPE_7:
             if (Translation_GetLanguage() == LANGUAGE_ENGLISH || Translation_GetLanguage() == Language_American) {
                 sprintf(buffer, "music_credits");
             } else {
                 sprintf(buffer, "music_credits_le");
             }
             break;
-        case 6:
+        case MUSIC_TYPE_6:
             break;
-        case 7:
+        default:
             return;
     }
 
     soundEventManager.unk48 = NULL;
+
+    if (f2 > 0.0f) {
+        soundEventManager.unk48 = buffer;
+        
+        soundEventManager.unk18 = 3;
+
+        soundEventManager.fader.Fade(FaderObject::FADEMODE_7, f1, f2, 0.0f, true);
+
+        return;
+    } else if (f1 > 0.0f) {
+        soundEventManager.unk18 = 1;
+
+        soundEventManager.fader.Fade(FaderObject::FADEMODE_1, f1, 0.0f, 0.0f, true);
+    } else {
+        soundEventManager.unk18 = 0;
+
+        SoundBank_SetVolume(1.0f, 3);
+    }
 
     Sound_MusicStop();
     Sound_MusicPlay(buffer, 1, 0);
