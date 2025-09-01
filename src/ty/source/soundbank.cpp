@@ -13,6 +13,7 @@ extern "C" void Sound_StopAll(void);
 extern "C" void Sound_MusicStop(void);
 extern "C" void Sound_UnloadBank(int);
 extern "C" void Sound_MusicPlay(char*, int, int);
+extern "C" void Sound_SetVolume(int, int, int);
 
 void SoundBank_SetVolume(float, int);
 
@@ -133,8 +134,6 @@ void SoundBank_PlayMusic(MusicType type, float f1, float f2) {
     static char buffer[32];
 
     switch (type) {
-        case MUSIC_TYPE_0:
-            break;
         case MUSIC_TYPE_1:
             sprintf(buffer, "music_%s%s", gb.level.GetID(), gb.level.IsBossEnabled() ? "_boss" : "");
             break;
@@ -156,8 +155,6 @@ void SoundBank_PlayMusic(MusicType type, float f1, float f2) {
             } else {
                 sprintf(buffer, "music_credits_le");
             }
-            break;
-        case MUSIC_TYPE_6:
             break;
         default:
             return;
@@ -1287,17 +1284,50 @@ void SoundEventHelper::Update(int voiceCode, bool r5, bool r6, GameObject* pGame
     }
 }
 
-void SoundEventFader::Init(float, float) {
+void SoundEventFader::Init(float f1, float f2) {
+    helper.Init();
     fader.Reset();
+    unk20 = f1;
+    unk24 = f2;
 }
 
 void SoundEventFader::Reset(void) {
-    SoundBank_Stop(&unk0);
+    helper.Reset();
     fader.Reset();
 }
 
-void SoundEventFader::Update(int, bool, bool, GameObject*, Vector*, float, int) {
+void SoundEventFader::Update(int voiceCode, bool r5, bool r6, GameObject* pGameObject, Vector* pVec, float f1, int flags) {
+    int helperVoiceCode = helper.unk0;
+    if (helperVoiceCode != -1) {
+        if (!r6 && fader.currFadeState != FaderObject::FADESTATE_2 && unk24 > 0.0f) {
+            r6 = true;
+            fader.Fade(FaderObject::FADEMODE_5, 0.0f, unk24, 0.0f, true);
+        } else if (r6 && fader.currFadeState == FaderObject::FADESTATE_2) {
+            fader.Fade(FaderObject::FADEMODE_1, unk20, 0.0f, 0.0f, true);
+        }
 
+        if (fader.currFadeState != FaderObject::FADESTATE_0) {
+            fader.Update();
+
+            int percentage = fader.GetFadePercentage() * 255.0f;
+
+            Sound_SetVolume(helper.unk0, percentage, percentage);
+            
+            if (fader.currFadeState == FaderObject::FADESTATE_2) {
+                r6 = true;
+            }
+        }
+    }
+
+    helper.Update(voiceCode, r5, r6, pGameObject, pVec, f1, flags);
+
+    if (helperVoiceCode != helper.unk0 && (helperVoiceCode == -1 || helper.unk0 != -1)) {
+        fader.Fade(FaderObject::FADEMODE_1, unk20, 0.0f, 0.0f, true);
+
+        int percentage = fader.GetFadePercentage() * 255.0f;
+
+        Sound_SetVolume(helper.unk0, percentage, percentage);
+    }
 }
 
 void DynamicPhrasePlayer::Init(void) {

@@ -62,8 +62,10 @@ struct SoundEventHelper {
 };
 
 struct SoundEventFader {
-    int unk0;
+    SoundEventHelper helper;
     FaderObject fader;
+    float unk20;
+    float unk24;
     
     void Init(float, float);
     void Reset(void);
