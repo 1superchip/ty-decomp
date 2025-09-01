@@ -44,76 +44,88 @@ static BoundingVolume rangVol = {
 
 static BoomerangStaticInfo boomerangInfo[NUM_BOOMERANGS] = {
     {
+        // BR_Standard
         "prop_0484_rang_01",
         0x1E,
         0x2C,
-        {0x14, 0x15, 0x16, 0x171}
+        {SFX_TyRangStdThrow, 0x15, SFX_TyRangStdDeflect, 0x171}
     },
     {
+        // BR_Frostyrang
         "prop_0485_rang_02",
         0x21,
         0x2F,
         {0x172, 0x173, 0x174, 0x175}
     },
     {
+        // BR_Flamerang
         "prop_0486_rang_03",
         0x20,
         0x2E,
         {0x176, 0x177, 0x1C, 0x178}
     },
     {
+        // BR_Kaboomerang
         "prop_0538_rang_23",
         0x28,
         0x36,
         {0x17D, 0x17E, 0x17F, 0x180}
     },
     {
+        // BR_Doomerang
         "prop_0487_rang_06",
         0x2A,
         0x38,
         {0x181, 0x182, 0x183, 0x184}
     },
     {
+        // BR_Megarang
         "prop_0539_rang_22",
         0x27,
         0x35,
         {0x185, 0x186, 0x187, 0x188}
     },
     {
+        // BR_Zoomerang
         "prop_0489_rang_08",
         0x24,
         0x32,
         {0x189, 0x18A, 0x18B, 0x18C}
     },
     {
+        // BR_Infrarang
         "prop_0492_rang_11",
         0x26,
         0x34,
         {0x18D, 0x18E, 0x18F, 0x190}
     },
     {
+        // BR_Zappyrang
         "prop_0493_rang_20",
         0x23,
         0x31,
         {0x192, 0x193, 0x194, 0x195}
     },
     {
+        // BR_Aquarang
         "prop_0488_rang_07",
         0x1F,
         0x2D,
         {0x17, 0x18, 0x19, 0x196}
     },
     {
+        // BR_Multirang
         "prop_0491_rang_10",
         0x25,
         0x33,
-        {0x197, 0x198, 0x199, 0x19A}
+        {0x197, 0x198, 0x199, SFX_TyRangMultiHit}
     },
     {
+        // BR_Chronorang
         "prop_0537_rang_21",
         0x29,
         0x37,
-        {0x14, 0x15, 0x16, 0x268}
+        {SFX_TyRangStdThrow, 0x15, SFX_TyRangStdDeflect, SFX_TyRangChronoHit}
     },
 };
 
@@ -1928,7 +1940,7 @@ void Doomerang::UpdateFired(void) {
 
                     unkA8.Stop();
 
-                    SoundBank_Play(0x7A, NULL, 0);
+                    SoundBank_Play(SFX_EnvExplosionMid, NULL, 0);
                 }
             }
         }

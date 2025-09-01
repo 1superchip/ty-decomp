@@ -3,7 +3,9 @@
 #include "common/Translation.h"
 #include "common/FileSys.h"
 #include "common/Str.h"
+#include "common/MKPackage.h"
 
+extern "C" int Sound_GetID(char*);
 extern "C" int Sound_IsVoicePlaying(int);
 extern "C" void Sound_Update3d(int, int, Vector*);
 extern "C" void Sound_Stop3d(int);
@@ -15,7 +17,13 @@ extern "C" void Sound_UnloadBank(int);
 extern "C" void Sound_MusicPlay(char*, int, int);
 extern "C" void Sound_SetVolume(int, int, int);
 
-void SoundBank_SetVolume(float, int);
+extern "C" int Sound_PlayV(int, int, int);
+extern "C" int Sound_Play3d(int, int, Vector*, float);
+
+extern "C" void Sound_SetPitch3d(int, float);
+extern "C" void Sound_SetPitch(int, float);
+
+extern "C" void Sound_SetMasterVolume(float, float);
 
 extern "C" void Sound_MusicPause(bool);
 
@@ -26,6 +34,9 @@ extern "C" int Sound_LoadBank(char*);
 extern "C" void memset(void*, int, int);
 
 extern "C" char* sprintf(char*, ...);
+
+bool Dialog_IsLoading(void);
+bool Dialog_IsPlaying(void);
 
 static Tools_DynamicStringTable soundStringTable;
 static SoundEventManager soundEventManager;
@@ -263,8 +274,8 @@ void SoundEventManager::Init(void) {
     if (ini.Init("global.sound")) {
         BuildSoundNameTable(&ini);
 
-        pSoundEvents = (SoundEvent*)Heap_MemAlloc(0x269 * sizeof(SoundEvent));
-        memset(pSoundEvents, 0, 0x269 * sizeof(SoundEvent));
+        pSoundEvents = (SoundEvent*)Heap_MemAlloc(SFX_Max * sizeof(SoundEvent));
+        memset(pSoundEvents, 0, SFX_Max * sizeof(SoundEvent));
 
         ParseSoundEvents(&ini);
 
@@ -276,7 +287,7 @@ void SoundEventManager::Init(void) {
 
 void SoundEventManager::Reset(void) {
     if (pSoundEvents) {
-        for (int i = 0; i < 0x269; i++) {
+        for (int i = 0; i < SFX_Max; i++) {
             pSoundEvents[i].Reset();
         }
     }
@@ -300,7 +311,7 @@ void SoundEventManager::ParseSoundEvents(KromeIni* pIni) {
 
     while (pLine) {
         if (pLine->pFieldName && stricmp("SoundEvent", pLine->pFieldName) == 0) {
-            if (index >= 0x269) {
+            if (index >= SFX_Max) {
                 index++;
                 pLine = pIni->GetNextLine();
             } else {
@@ -363,7 +374,7 @@ void SoundEvent::Init(KromeIni* pIni, KromeIniLine* pLine) {
         if (stricmp("material", pLine->pFieldName) == 0) {
             numMaterials = CountSoundMaterials(pIni);
 
-            if (numMaterials) {
+            if (numMaterials > 0) {
                 pMaterials = (SoundMaterial*)Heap_MemAlloc(numMaterials * sizeof(SoundMaterial));
                 memset(pMaterials, 0, numMaterials * sizeof(SoundMaterial));
 
@@ -405,8 +416,6 @@ void SoundEvent::Init(KromeIni* pIni, KromeIniLine* pLine) {
         }
     }
 }
-
-extern "C" int Sound_GetID(char*);
 
 void SoundEvent::Reset(void) {
     for (int i = 0; i < numMaterials; i++) {
@@ -473,369 +482,49 @@ void SoundMaterial::Init(KromeIni* pIni, unsigned char _volume, float _minPitch,
     maxPitch = _maxPitch;
     unk0 = 0;
 
+    #define TRY_MATCH(MASK) ((stricmp(pMatID, #MASK) == 0) ? (unk0 |= (MASK), 1) : (0))
+
     for (int i = 0; i < pLine->elementCount; i++) {
-        char* pString;
+        char* pMatID;
 
-        if (pLine->AsString(i, &pString)) {
-            int b = stricmp(pString, "ID_NONE") == 0 ? 1 : 0;
-
-            if (b) {
-                continue;
+        if (pLine->AsString(i, &pMatID)) {
+            if (
+                !TRY_MATCH(ID_NONE) &&
+                !TRY_MATCH(ID_WALL) &&
+                !TRY_MATCH(ID_SLIPPERY) &&
+                !TRY_MATCH(ID_CAMERA_IGNORE) &&
+                !TRY_MATCH(ID_ICE) &&
+                !TRY_MATCH(ID_SAND) &&
+                !TRY_MATCH(ID_ENEMY_COLLIDE) &&
+                !TRY_MATCH(ID_MUD) &&
+                !TRY_MATCH(ID_QUICKSAND) &&
+                !TRY_MATCH(ID_BOOMERANG_IGNORE) &&
+                !TRY_MATCH(ID_LAVA) &&
+                !TRY_MATCH(ID_WATER_BLUE) &&
+                !TRY_MATCH(ID_SNOW) &&
+                !TRY_MATCH(ID_WOOD) &&
+                !TRY_MATCH(ID_TUNNEL) &&
+                !TRY_MATCH(ID_INVISCOLLIDE) &&
+                !TRY_MATCH(ID_SNOW_TOP) &&
+                !TRY_MATCH(ID_SOFT) &&
+                !TRY_MATCH(ID_WATER_SLIDE) &&
+                !TRY_MATCH(ID_GRASS_THIN) &&
+                !TRY_MATCH(ID_GRASS_THICK) &&
+                !TRY_MATCH(ID_ROCK) &&
+                !TRY_MATCH(ID_TREELEAVES) &&
+                !TRY_MATCH(ID_JUMP_CAMERA) &&
+                !TRY_MATCH(ID_NORMAL_CAM) &&
+                !TRY_MATCH(ID_CAM_GO_THROUGH) &&
+                !TRY_MATCH(ID_FAST) &&
+                !TRY_MATCH(ID_SLOW) &&
+                !TRY_MATCH(ID_TURNAWAY) &&
+                !TRY_MATCH(ID_METAL) &&
+                !TRY_MATCH(ID_ICE_SLIDE) &&
+                !TRY_MATCH(ID_HOLLOWWOOD) &&
+                !TRY_MATCH(ANY_WATER_ID)
+            ) {
+                pIni->Warning(Str_Printf("Unknown material ID - %s", pMatID));
             }
-            
-            if (stricmp(pString, "ID_WALL") == 0) {
-                unk0 |= 0x1;
-                b = 1;
-            } else {
-                b = 0;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SLIPPERY") == 0) {
-                unk0 |= 0x2;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_CAMERA_IGNORE") == 0) {
-                unk0 |= 0x4;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_ICE") == 0) {
-                unk0 |= 0x8;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SAND") == 0) {
-                unk0 |= 0x10;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_ENEMY_COLLIDE") == 0) {
-                unk0 |= 0x20;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_MUD") == 0) {
-                unk0 |= 0x40;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_QUICKSAND") == 0) {
-                unk0 |= 0x80;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_BOOMERANG_IGNORE") == 0) {
-                unk0 |= 0x100;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_LAVA") == 0) {
-                unk0 |= 0x200;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_WATER_BLUE") == 0) {
-                unk0 |= 0x400;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SNOW") == 0) {
-                unk0 |= 0x800;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_WOOD") == 0) {
-                unk0 |= 0x1000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_TUNNEL") == 0) {
-                unk0 |= 0x2000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_INVISCOLLIDE") == 0) {
-                unk0 |= 0x4000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SNOW_TOP") == 0) {
-                unk0 |= 0x8000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SOFT") == 0) {
-                unk0 |= 0x10000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_WATER_SLIDE") == 0) {
-                unk0 |= 0x20000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_GRASS_THIN") == 0) {
-                unk0 |= 0x40000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_GRASS_THICK") == 0) {
-                unk0 |= 0x80000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_ROCK") == 0) {
-                unk0 |= 0x100000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_TREELEAVES") == 0) {
-                unk0 |= 0x200000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_JUMP_CAMERA") == 0) {
-                unk0 |= 0x400000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_NORMAL_CAM") == 0) {
-                unk0 |= 0x800000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_CAM_GO_THROUGH") == 0) {
-                unk0 |= 0x1000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_FAST") == 0) {
-                unk0 |= 0x2000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_SLOW") == 0) {
-                unk0 |= 0x4000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_TURNAWAY") == 0) {
-                unk0 |= 0x8000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_METAL") == 0) {
-                unk0 |= 0x10000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_ICE_SLIDE") == 0) {
-                unk0 |= 0x20000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ID_HOLLOWWOOD") == 0) {
-                unk0 |= 0x40000000;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-            
-            if (stricmp(pString, "ANY_WATER_ID") == 0) {
-                unk0 |= 0x400;
-                b = true;
-            } else {
-                b = false;
-            }
-
-            if (b) {
-                continue;
-            }
-
-            pIni->Warning(Str_Printf("Unknown material ID - %s", pString));
         }
     }
 
@@ -847,20 +536,20 @@ void SoundMaterial::Init(KromeIni* pIni, unsigned char _volume, float _minPitch,
                 return;
             }
 
-            if (stricmp("sound", pLine->pFieldName) != 0) {
-                if (stricmp("minPitch", pLine->pFieldName) == 0) {
-                    pLine->AsFloat(0, &minPitch);
-                } else if (stricmp("maxPitch", pLine->pFieldName) == 0) {
-                    pLine->AsFloat(0, &maxPitch);
-                } else if (stricmp("volume", pLine->pFieldName) == 0) {
-                    int tempVolume;
-                    pLine->AsInt(0, &tempVolume);
-                    volume = tempVolume;
-                } else {
-                    pIni->Warning("Unknown SoundMaterial field");
-                }
-            } else {
+            if (stricmp("sound", pLine->pFieldName) == 0) {
                 break;
+            }
+
+            if (stricmp("minPitch", pLine->pFieldName) == 0) {
+                pLine->AsFloat(0, &minPitch);
+            } else if (stricmp("maxPitch", pLine->pFieldName) == 0) {
+                pLine->AsFloat(0, &maxPitch);
+            } else if (stricmp("volume", pLine->pFieldName) == 0) {
+                int temp;
+                pLine->AsInt(0, &temp);
+                volume = temp;
+            } else {
+                pIni->Warning("Unknown SoundMaterial field");
             }
         }
 
@@ -869,24 +558,20 @@ void SoundMaterial::Init(KromeIni* pIni, unsigned char _volume, float _minPitch,
 
     numSounds = CountSounds(pIni);
 
-    if (numSounds == 0) {
-        return;
-    }
+    if (numSounds > 0) {
+        int index = 0;
+        
+        pSounds = (SoundMaterialSound*)Heap_MemAlloc(numSounds * sizeof(SoundMaterialSound));
+        memset(pSounds, 0, numSounds * sizeof(SoundMaterialSound));
 
-    pSounds = (SoundMaterialSound*)Heap_MemAlloc(numSounds * sizeof(SoundMaterialSound));
-    memset(pSounds, 0, numSounds * sizeof(SoundMaterialSound));
+        pIni->GetLineWithLine(pLine);
+        pLine = pIni->GetPreviousLine();
 
-    pIni->GetLineWithLine(pLine);
-    pLine = pIni->GetPreviousLine();
-
-    int index = 0;
-    while (pLine && pLine->pFieldName && stricmp("material", pLine->pFieldName) != 0) {
-        if (stricmp("sound", pLine->pFieldName) == 0) {
-            char* pString;
-
-            if (pLine->AsString(0, &pString)) {
+        while (pLine && pLine->pFieldName && stricmp("material", pLine->pFieldName) != 0) {
+            char* pStr;
+            if (stricmp("sound", pLine->pFieldName) == 0 && pLine->AsString(0, &pStr)) {
                 pSounds[index].soundId = -1;
-                pSounds[index].pSoundName = soundStringTable.FindString(pString);
+                pSounds[index].pSoundName = soundStringTable.FindString(pStr);
                 pSounds[index].chance = 1.0f;
 
                 pLine = pIni->GetNextLine();
@@ -901,20 +586,12 @@ void SoundMaterial::Init(KromeIni* pIni, unsigned char _volume, float _minPitch,
                 }
 
                 index++;
-                continue;
+            } else {
+                pLine = pIni->GetNextLine();
             }
         }
-
-
-        pLine = pIni->GetNextLine();
     }
 }
-
-extern "C" int Sound_PlayV(int, int, int);
-extern "C" int Sound_Play3d(int, int, Vector*, float);
-
-extern "C" void Sound_SetPitch3d(int, float);
-extern "C" void Sound_SetPitch(int, float);
 
 int SoundMaterial::Play(Vector* r4, int r5, SoundEvent*) {
     float f2 = 1.0f;
@@ -1052,7 +729,7 @@ int SoundBank_ResolveSoundEventIndex(char* pName) {
     } else if (stricmp((char*)"SFX_EnvE4Tunnel" + 4, pName) == 0) {
         return 0x224;
     } else if (stricmp((char*)"SFX_EnvExplosionMid" + 4, pName) == 0) {
-        return 0x7a;
+        return SFX_EnvExplosionMid;
     } else if (stricmp((char*)"SFX_EnvFarThunder" + 4, pName) == 0) {
         return 0x1b2;
     } else if (stricmp((char*)"SFX_EnvFrog" + 4, pName) == 0) {
@@ -1146,39 +823,39 @@ int SoundBank_ResolveSoundEventIndex(char* pName) {
     } else if (stricmp((char*)"SFX_TrapdoorOpen" + 4, pName) == 0) {
         return 0x1e7;
     } else if (stricmp((char*)"SFX_TyBiteRelease" + 4, pName) == 0) {
-        return 0x13;
+        return SFX_TyBiteRelease;
     } else if (stricmp((char*)"SFX_TyBounce" + 4, pName) == 0) {
-        return 0x24;
+        return SFX_TyBounce;
     } else if (stricmp((char*)"SFX_TyCollectEgg" + 4, pName) == 0) {
-        return 0x1f;
+        return SFX_TyCollectEgg;
     } else if (stricmp((char*)"SFX_TyDiveBiteHitGround" + 4, pName) == 0) {
-        return 0x10c;
+        return SFX_TyDiveBiteHitGround;
     } else if (stricmp((char*)"SFX_TyJump" + 4, pName) == 0) {
-        return 0x0;
+        return SFX_TyJump;
     } else if (stricmp((char*)"SFX_TyKnockDown" + 4, pName) == 0) {
-        return 0x1;
+        return SFX_TyKnockDown;
     } else if (stricmp((char*)"SFX_TyLand" + 4, pName) == 0) {
-        return 0x4;
+        return SFX_TyLand;
     } else if (stricmp((char*)"SFX_TyLedgeGrab" + 4, pName) == 0) {
-        return 0x26;
+        return SFX_TyLedgeGrab;
     } else if (stricmp((char*)"SFX_TyLedgePullUp" + 4, pName) == 0) {
-        return 0x27;
+        return SFX_TyLedgePullUp;
     } else if (stricmp((char*)"SFX_TyLongfallLand" + 4, pName) == 0) {
-        return 0x5;
+        return SFX_TyLongfallLand;
     } else if (stricmp((char*)"SFX_TyRangDoomLP" + 4, pName) == 0) {
-        return 0x1a;
+        return SFX_TyRangDoomLP;
     } else if (stricmp((char*)"SFX_TyRangStdDeflect" + 4, pName) == 0) {
-        return 0x16;
+        return SFX_TyRangStdDeflect;
     } else if (stricmp((char*)"SFX_TyRangStdThrow" + 4, pName) == 0) {
-        return 0x14;
+        return SFX_TyRangStdThrow;
     } else if (stricmp((char*)"SFX_TySkid" + 4, pName) == 0) {
-        return 0x12c;
+        return SFX_TySkid;
     } else if (stricmp((char*)"SFX_TyStep" + 4, pName) == 0) {
-        return 0x2;
+        return SFX_TyStep;
     } else if (stricmp((char*)"SFX_TyWaterSlideJump" + 4, pName) == 0) {
-        return 0x127;
+        return SFX_TyWaterSlideJump;
     } else if (stricmp((char*)"SFX_TyWoodGroan" + 4, pName) == 0) {
-        return 0x3;
+        return SFX_TyWoodGroan;
     } else if (stricmp((char*)"SFX_UWGateOpens" + 4, pName) == 0) {
         return 0x103;
     } else if (stricmp((char*)"SFX_A1RufusSnore" + 4, pName) == 0) {
@@ -1351,8 +1028,34 @@ void DynamicPhrasePlayer::Reset(void) {
     Deinit();
 }
 
-bool DynamicPhrasePlayer::Preload(int, int, bool) {
+bool DynamicPhrasePlayer::Preload(int r4, int r5, bool r6) {
+    if (gpActivePhrasePlayer || Dialog_IsLoading() || Dialog_IsPlaying() || !MKPackage_IsLoaded(NULL)) {
+        if (gpActivePhrasePlayer) {
+            SoundBank_StopActivePhrasePlayer();
+        } else {
+            return false;
+        }
+    }
 
+    unk8 = r4;
+    unkC = r5;
+    unk10 = r6;
+
+    if (unk8 < 0) {
+        unk0 = -1;
+        unk14 = 0;
+
+        return false;
+    }
+
+    char* pFileName = GetFileName(true);
+
+    if (FileSys_Exists(pFileName, NULL)) {
+        MKPackage_LoadDynamic(pFileName, true);
+        unk14 = 1;
+    }
+
+    return true;
 }
 
 bool DynamicPhrasePlayer::IsLoaded(void) {
@@ -1385,15 +1088,34 @@ void DynamicPhrasePlayer::Stop(void) {
 }
 
 void DynamicPhrasePlayer::UnloadBank(void) {
-
+    if (unk4 > 0) {
+        Sound_UnloadBank(unk4);
+        unk4 = -1;
+    }
 }
 
 void DynamicPhrasePlayer::UnloadPackage(void) {
-    
+    switch (unk14) {
+        case 1:
+            MKPackage_Cancel();
+            // fallthrough
+        case 2:
+            MKPackage_Free();
+            break;
+    }
+
+    unk14 = 0;
 }
 
 char* DynamicPhrasePlayer::GetFileName(bool r4) {
-    
+    return Str_Printf(
+        "CS%s_%.2d_P%.2d%s%s",
+        !unk10 ? gb.level.GetID() : "L1",
+        unk8,
+        unkC,
+        Translation_GetLanguageCode(Translation_GetLanguage()),
+        r4 ? ".gsb" : ""
+    );
 }
 
 bool DynamicPhrasePlayer::HasPlayed(void) {
@@ -1401,6 +1123,38 @@ bool DynamicPhrasePlayer::HasPlayed(void) {
 }
 
 void DynamicPhrasePlayer::Update(void) {
-
+    switch (unk14) {
+        case 0:
+            break;
+        case 1:
+            if (MKPackage_IsLoaded(NULL)) {
+                unk14 = 2;
+            }
+            break;
+        case 2:
+            break;
+        case 3:
+            if (unk0 > -1 && !Sound_IsVoicePlaying(unk0)) {
+                unk0 = -1;
+                UnloadBank();
+                unk14 = 4;
+                gpActivePhrasePlayer = NULL;
+            }
+            break;
+        case 4:
+            break;
+    }
 }
 
+void SoundBank_StopActivePhrasePlayer(void) {
+    if (gpActivePhrasePlayer) {
+        gpActivePhrasePlayer->Deinit();
+    }
+}
+
+void SoundBank_SetVolume(float f1, int r3) {
+    Sound_SetMasterVolume(
+        (r3 & 1 ? f1 : 1.0f) * gb.mGameData.GetSoundVolume(),
+        (r3 & 2 ? f1 : 1.0f) * gb.mGameData.GetMusicVolume()
+    );
+}

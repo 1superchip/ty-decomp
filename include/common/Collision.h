@@ -14,21 +14,40 @@ enum CollisionMode {
     COLLISION_MODE_POLY      = 2, // Ground?
 };
 
+#define ID_NONE             (0x0)       // no material id
 #define ID_WALL             (0x1)       // regular walls we can collide with
 #define ID_SLIPPERY         (0x2)       // slippery slopes
+#define ID_CAMERA_IGNORE    (0x4)       // the camera will not try to find a better view
 #define ID_ICE              (0x8)       // will give ty inertia. For ice and oil
 #define ID_SAND             (0x10)      // sandy floor
+#define ID_ENEMY_COLLIDE    (0x20)      // enemies only check for collisions with this material
+#define ID_MUD              (0x40)      // muddy surfaces
 #define ID_QUICKSAND        (0x80)      // quicksand
-#define ID_boomerang_ignore (0x100)
+#define ID_boomerang_ignore (0x100)     //
+#define ID_BOOMERANG_IGNORE (0x100)     //
 #define ID_LAVA             (0x200)     // hot stuff. For lava and coals
 #define ID_WATER_BLUE       (0x400)     // Blue water
+#define ANY_WATER_ID        (0x400)     // extra for SoundMaterial::Init
 #define ID_SNOW             (0x800)     // snow
 #define ID_WOOD             (0x1000)    // bridge
 #define ID_TUNNEL           (0x2000)    // a tunnel
 #define ID_INVISCOLLIDE     (0x4000)    // invisible texture used for collision (like the vertical collision on the bridge)
+#define ID_SNOW_TOP         (0x8000)    // snowtop (labeled as ID_UNUSED_15 in global.mad)
+#define ID_SOFT             (0x10000)   // (labeled as ID_Soft in global.mad)
 #define ID_WATER_SLIDE      (0x20000)   // material ID for the water slide
+#define ID_GRASS_THIN       (0x40000)   // Thin grass pattern
 #define ID_GRASS_THICK      (0x80000)   // Dense grass pattern
 #define ID_ROCK             (0x100000)  // Rock ground
+#define ID_TREELEAVES       (0x200000)  // Tree leave texture ID so leaves wobble
+#define ID_JUMP_CAMERA      (0x400000)  // Enable the JumpCamera when Ty jumps off the ground with this ID applied
+#define ID_NORMAL_CAM       (0x800000)  // if the floor below ty has this ID, the camera's Y will be at it's normal height
+#define ID_CAM_GO_THROUGH   (0x1000000) // if the camera collides with a poly with this ID, then it won't register a hit
+#define ID_FAST             (0x2000000) // (1<<25) used to mark that movement should be fast here
+#define ID_SLOW             (0x4000000) // (1<<26) used to mark that movement should be slow here
+#define ID_TURNAWAY         (0x8000000) // used to turn ty away from walls
+#define ID_METAL            (0x10000000) // 1<<27 Metal surfaces
+#define ID_ICE_SLIDE        (0x20000000) // 1<<28 Waterslide, but icy
+#define ID_HOLLOWWOOD       (0x40000000) // 1<<29 Hollow wood.  Makes a different sound to normal wood.
 
 struct DynamicItem;
 

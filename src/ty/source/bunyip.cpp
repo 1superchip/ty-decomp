@@ -224,7 +224,7 @@ void Bunyip::SetState(BunyipState newState) {
             unkD9 = true;
             bunyipLifeSpan = gDisplay.fps * (float)gb.mDataVal.bunyipLifeSpan;
             SoundBank_PauseMusic(true, 0.5f);
-            SoundBank_Play(0x91, NULL, 0);
+            SoundBank_Play(SFX_BunyipAppear, NULL, 0);
             break;
         case BUNYIP_IDLE:
             mScale = 1.0f;

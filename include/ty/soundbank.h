@@ -38,6 +38,10 @@ void SoundBank_Update(void);
 
 int SoundBank_ResolveSoundEventIndex(char*);
 
+void SoundBank_StopActivePhrasePlayer(void);
+
+void SoundBank_SetVolume(float, int);
+
 struct SoundEventHelper {
     int unk0;
 
@@ -77,7 +81,7 @@ struct DynamicPhrasePlayer {
     int unk4;
     int unk8;
     int unkC;
-    int unk10;
+    bool unk10;
     int unk14;
     
     void Init(void);
@@ -152,7 +156,30 @@ struct SoundEventManager {
 };
 
 enum SoundID {
-
+    SFX_TyJump = 0x0,
+    SFX_TyKnockDown = 0x1,
+    SFX_TyStep = 0x2,
+    SFX_TyWoodGroan = 0x3,
+    SFX_TyLand = 0x4,
+    SFX_TyLongfallLand = 0x5,
+    SFX_TyBiteRelease = 0x13,
+    SFX_TyRangStdThrow = 0x14,
+    SFX_TyRangStdDeflect = 0x16,
+    SFX_TyRangDoomLP = 0x1A,
+    SFX_TyCollectEgg = 0x1F,
+    SFX_TyBounce = 0x24,
+    SFX_TyLedgeGrab = 0x26,
+    SFX_TyLedgePullUp = 0x27,
+    SFX_EnvExplosionMid = 0x7A,
+    SFX_BunyipAppear = 0x91,
+    SFX_TyDiveBiteHitGround = 0x10C,
+    SFX_TyWaterSlideJump = 0x127,
+    SFX_TySkid = 0x12C,
+    SFX_TyRangMultiHit = 0x19A,
+    SFX_TyRangChronoHit = 0x268,
+    SFX_Max = 0x269
 };
+
+#define SOUNDID_TO_STRING(id) ((char*)(#id + 4))
 
 #endif // SOUNDBANK_H
