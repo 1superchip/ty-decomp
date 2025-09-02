@@ -162,21 +162,84 @@ enum SoundID {
     SFX_TyWoodGroan = 0x3,
     SFX_TyLand = 0x4,
     SFX_TyLongfallLand = 0x5,
+
     SFX_TyBiteRelease = 0x13,
-    SFX_TyRangStdThrow = 0x14,
-    SFX_TyRangStdDeflect = 0x16,
+
+    SFX_TyRangStdThrow      = 0x14,
+    SFX_TyRangStdCatch      = 0x15,
+    SFX_TyRangStdDeflect    = 0x16,
+
+    SFX_TyRangAquaThrow     = 0x17,
+    SFX_TyRangAquaCatch     = 0x18,
+    SFX_TyRangAquaDeflect   = 0x19,
+
     SFX_TyRangDoomLP = 0x1A,
+
+    SFX_TyRangFlameDeflect = 0x1C,
+
     SFX_TyCollectEgg = 0x1F,
     SFX_TyBounce = 0x24,
     SFX_TyLedgeGrab = 0x26,
     SFX_TyLedgePullUp = 0x27,
     SFX_EnvExplosionMid = 0x7A,
     SFX_BunyipAppear = 0x91,
+    SFX_OpalCollect = 0xB7,
     SFX_TyDiveBiteHitGround = 0x10C,
     SFX_TyWaterSlideJump = 0x127,
     SFX_TySkid = 0x12C,
-    SFX_TyRangMultiHit = 0x19A,
+
+    SFX_TyRangStdHit = 0x171,
+
+    SFX_TyRangFrostyThrow   = 0x172,
+    SFX_TyRangFrostyCatch   = 0x173,
+    SFX_TyRangFrostyDeflect = 0x174,
+    SFX_TyRangFrostyHit     = 0x175,
+
+    SFX_TyRangFlameThrow    = 0x176,
+    SFX_TyRangFlameCatch    = 0x177,
+    SFX_TyRangFlameHit      = 0x178,
+
+    SFX_TyRangKaboomThrow   = 0x17D,
+    SFX_TyRangKaboomCatch   = 0x17E,
+    SFX_TyRangKaboomDeflect = 0x17F,
+    SFX_TyRangKaboomHit     = 0x180,
+
+    SFX_TyRangDoomThrow     = 0x181,
+    SFX_TyRangDoomCatch     = 0x182,
+    SFX_TyRangDoomDeflect   = 0x183,
+    SFX_TyRangDoomHit       = 0x184,
+
+    SFX_TyRangMegaThrow     = 0x185,
+    SFX_TyRangMegaCatch     = 0x186,
+    SFX_TyRangMegaDeflect   = 0x187,
+    SFX_TyRangMegaHit       = 0x188,
+
+    SFX_TyRangZoomThrow     = 0x189,
+    SFX_TyRangZoomCatch     = 0x18A,
+    SFX_TyRangZoomDeflect   = 0x18B,
+    SFX_TyRangZoomHit       = 0x18C,
+    
+    SFX_TyRangInfraThrow    = 0x18D,
+    SFX_TyRangInfraCatch    = 0x18E,
+    SFX_TyRangInfraDeflect  = 0x18F,
+    SFX_TyRangInfraHit      = 0x190,
+
+    SFX_191 = 0x191,
+    
+    SFX_TyRangZappyThrow    = 0x192,
+    SFX_TyRangZappyCatch    = 0x193,
+    SFX_TyRangZappyDeflect  = 0x194,
+    SFX_TyRangZappyHit      = 0x195,
+
+    SFX_TyRangAquaHit       = 0x196,
+
+    SFX_TyRangMultiThrow    = 0x197,
+    SFX_TyRangMultiCatch    = 0x198,
+    SFX_TyRangMultiDeflect  = 0x199,
+    SFX_TyRangMultiHit      = 0x19A,
+    
     SFX_TyRangChronoHit = 0x268,
+
     SFX_Max = 0x269
 };
 

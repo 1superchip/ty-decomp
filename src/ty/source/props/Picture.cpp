@@ -115,7 +115,7 @@ void Picture::Update(void) {
             bShow = true;
             if (mFrameNumber > -1) {
                 gb.mGameData.SetHasGalleryImage(mFrameNumber);
-                SoundBank_Play(0xB7, NULL, 0);
+                SoundBank_Play(SFX_OpalCollect, NULL, 0);
             }
             return;
         }
@@ -127,7 +127,7 @@ void Picture::Update(void) {
             bShow = true;
             if (mFrameNumber > -1) {
                 gb.mGameData.SetHasGalleryImage(mFrameNumber);
-                SoundBank_Play(0xB7, NULL, 0);
+                SoundBank_Play(SFX_OpalCollect, NULL, 0);
             }
             return;
         }

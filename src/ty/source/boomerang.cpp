@@ -48,84 +48,84 @@ static BoomerangStaticInfo boomerangInfo[NUM_BOOMERANGS] = {
         "prop_0484_rang_01",
         0x1E,
         0x2C,
-        {SFX_TyRangStdThrow, 0x15, SFX_TyRangStdDeflect, 0x171}
+        {SFX_TyRangStdThrow, SFX_TyRangStdCatch, SFX_TyRangStdDeflect, SFX_TyRangStdHit}
     },
     {
         // BR_Frostyrang
         "prop_0485_rang_02",
         0x21,
         0x2F,
-        {0x172, 0x173, 0x174, 0x175}
+        {SFX_TyRangFrostyThrow, SFX_TyRangFrostyCatch, SFX_TyRangFrostyDeflect, SFX_TyRangFrostyHit}
     },
     {
         // BR_Flamerang
         "prop_0486_rang_03",
         0x20,
         0x2E,
-        {0x176, 0x177, 0x1C, 0x178}
+        {SFX_TyRangFlameThrow, SFX_TyRangFlameCatch, SFX_TyRangFlameDeflect, SFX_TyRangFlameHit}
     },
     {
         // BR_Kaboomerang
         "prop_0538_rang_23",
         0x28,
         0x36,
-        {0x17D, 0x17E, 0x17F, 0x180}
+        {SFX_TyRangKaboomThrow, SFX_TyRangKaboomCatch, SFX_TyRangKaboomDeflect, SFX_TyRangKaboomHit}
     },
     {
         // BR_Doomerang
         "prop_0487_rang_06",
         0x2A,
         0x38,
-        {0x181, 0x182, 0x183, 0x184}
+        {SFX_TyRangDoomThrow, SFX_TyRangDoomCatch, SFX_TyRangDoomDeflect, SFX_TyRangDoomHit}
     },
     {
         // BR_Megarang
         "prop_0539_rang_22",
         0x27,
         0x35,
-        {0x185, 0x186, 0x187, 0x188}
+        {SFX_TyRangMegaThrow, SFX_TyRangMegaCatch, SFX_TyRangMegaDeflect, SFX_TyRangMegaHit}
     },
     {
         // BR_Zoomerang
         "prop_0489_rang_08",
         0x24,
         0x32,
-        {0x189, 0x18A, 0x18B, 0x18C}
+        {SFX_TyRangZoomThrow, SFX_TyRangZoomCatch, SFX_TyRangZoomDeflect, SFX_TyRangZoomHit}
     },
     {
         // BR_Infrarang
         "prop_0492_rang_11",
         0x26,
         0x34,
-        {0x18D, 0x18E, 0x18F, 0x190}
+        {SFX_TyRangInfraThrow, SFX_TyRangInfraCatch, SFX_TyRangInfraDeflect, SFX_TyRangInfraHit}
     },
     {
         // BR_Zappyrang
         "prop_0493_rang_20",
         0x23,
         0x31,
-        {0x192, 0x193, 0x194, 0x195}
+        {SFX_TyRangZappyThrow, SFX_TyRangZappyCatch, SFX_TyRangZappyDeflect, SFX_TyRangZappyHit}
     },
     {
         // BR_Aquarang
         "prop_0488_rang_07",
         0x1F,
         0x2D,
-        {0x17, 0x18, 0x19, 0x196}
+        {SFX_TyRangAquaThrow, SFX_TyRangAquaCatch, SFX_TyRangAquaDeflect, SFX_TyRangAquaHit}
     },
     {
         // BR_Multirang
         "prop_0491_rang_10",
         0x25,
         0x33,
-        {0x197, 0x198, 0x199, SFX_TyRangMultiHit}
+        {SFX_TyRangMultiThrow, SFX_TyRangMultiCatch, SFX_TyRangMultiDeflect, SFX_TyRangMultiHit}
     },
     {
         // BR_Chronorang
         "prop_0537_rang_21",
         0x29,
         0x37,
-        {SFX_TyRangStdThrow, 0x15, SFX_TyRangStdDeflect, SFX_TyRangChronoHit}
+        {SFX_TyRangStdThrow, SFX_TyRangStdCatch, SFX_TyRangStdDeflect, SFX_TyRangChronoHit}
     },
 };
 
@@ -477,7 +477,7 @@ void Boomerang::Deactivate(void) {
 
 void Boomerang::InitFired(void) {
     pModel->EnableSubObject(subObjectIndex, true);
-    unkA8.unk0 = PlaySound(BR_SOUND_0, 0);
+    unkA8.unk0 = PlaySound(BR_SOUND_THROW, 0);
 }
 
 extern "C" void Sound_Update3d(int, int, Vector*);
@@ -501,7 +501,7 @@ void Boomerang::UpdateFired(void) {
 
         // Check if a collision occurs
         CollisionResult cr;
-        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
 
             if (!SendHitMessage(&cr)) {
                 HitWorld(&cr.pos, cr.collisionFlags);
@@ -524,7 +524,7 @@ void Boomerang::UpdateFired(void) {
 
     if ((1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound(BR_SOUND_1, 0);
+        PlaySound(BR_SOUND_CATCH, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -750,7 +750,7 @@ void Doomerang::StopSounds(void) {
 int Boomerang::PlaySound(BoomerangSound sound, int collisionFlags) {
     return SoundBank_Play(
         GetDesc()->mpStaticInfo->sounds[sound], 
-        sound == BR_SOUND_1 ? NULL : &mPos, 
+        sound == BR_SOUND_CATCH ? NULL : &mPos, 
         collisionFlags
     );
 }
@@ -778,7 +778,7 @@ void Boomerang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound(BR_SOUND_2, collisionFlags);
+    PlaySound(BR_SOUND_DEFLECT, collisionFlags);
 
     if (collisionFlags & ID_WATER_BLUE) {
         particleManager->SpawnBigSplash(pPos, true, 0.3f, true, 1.7f, 6);
@@ -1061,12 +1061,12 @@ void Flamerang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound(BR_SOUND_2, collisionFlags);
+    PlaySound(BR_SOUND_DEFLECT, collisionFlags);
 
     if (collisionFlags & ID_WATER_BLUE) {
         particleManager->SpawnWaterSteam(pPos, 30.0f);
         particleManager->SpawnBigSplash(pPos, true, 0.1f, true, 1.0f, 2);
-        SoundBank_Play(0x1E, pPos, 0);
+        SoundBank_Play(0x1E, pPos, ID_NONE);
     } else {
         Particle_Fire_CreateExplosion(pPos, 2.0f);
     }
@@ -1162,12 +1162,12 @@ void Frostyrang::HitWorld(Vector* pPos, int collisionFlags) {
         return;
     }
 
-    PlaySound(BR_SOUND_2, collisionFlags);
+    PlaySound(BR_SOUND_DEFLECT, collisionFlags);
 
     if (collisionFlags & ID_LAVA) {
         // Spawn water steam if the frostyrang hits lava
         particleManager->SpawnWaterSteam(pPos, 30.0f);
-        SoundBank_Play(0x1E, pPos, 0);
+        SoundBank_Play(0x1E, pPos, ID_NONE);
     } else if ((collisionFlags & ID_WATER_BLUE) == 0) {
         particleManager->SpawnSpark(pPos);
     }
@@ -1320,7 +1320,7 @@ void Kaboomerang::UpdateFired(void) {
     if (!unk88) {
         CollisionResult cr;
         bool b = false;
-        if (Collision_RayCollide(&oldCentrePos, &mCentrePos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+        if (Collision_RayCollide(&oldCentrePos, &mCentrePos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
             b = SendHitMessage(&cr);
             unk54 = true;
             mPos = cr.pos;
@@ -1336,7 +1336,7 @@ void Kaboomerang::UpdateFired(void) {
             objectManager.SendMessage(&msg, 0, &mPos, 1000.0f, false);
 
             if (!b) {
-                PlaySound(BR_SOUND_3, 0);
+                PlaySound(BR_SOUND_HIT, 0);
             }
 
             mExplosion.Explode(&mPos, 0.0f);
@@ -1381,7 +1381,7 @@ void Aquarang::Init(GameObjDesc* pDesc, BoomerangWeapon* pWeapon) {
 }
 void Aquarang::InitFired(void) {
     pModel->EnableSubObject(subObjectIndex, true);
-    PlaySound(BR_SOUND_0, 0);
+    PlaySound(BR_SOUND_THROW, 0);
 }
 
 /// @brief Updates the boomerang in flight
@@ -1403,7 +1403,7 @@ void Aquarang::UpdateFired(void) {
         CollisionResult cr;
         cr.normal.SetZero();
 
-        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
             if (!SendHitMessage(&cr)) {
                 HitWorld(&cr.pos, cr.collisionFlags);
             }
@@ -1439,7 +1439,7 @@ void Aquarang::UpdateFired(void) {
             temp.Scale(15.0f);
             temp.Add(&mPos);
 
-            if (Collision_RayCollide(&temp, &deflectPos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+            if (Collision_RayCollide(&temp, &deflectPos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
                 deflectPos = cr.normal;
                 deflectPos.Scale(10.0f);
                 deflectPos.Add(&cr.pos);
@@ -1475,7 +1475,7 @@ void Aquarang::UpdateFired(void) {
 
     if ((1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound(BR_SOUND_1, 0);
+        PlaySound(BR_SOUND_CATCH, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -1613,7 +1613,7 @@ void Megarang::UpdateFired(void) {
 
         bool r31 = false;
 
-        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+        if (!unk54 && Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
             if (!SendHitMessage(&cr)) {
                 HitWorld(&cr.pos, cr.collisionFlags);
                 r31 = true;
@@ -1701,7 +1701,7 @@ void Megarang::UpdateFired(void) {
 
     if (!unk108 && (1.0f - time) * unk84 <= mpWeapon->unkA8 && !unk88) {
         unk88 = true;
-        PlaySound(BR_SOUND_1, 0);
+        PlaySound(BR_SOUND_CATCH, 0);
         mpWeapon->StartCatch(this);
     }
 }
@@ -1743,7 +1743,7 @@ void Megarang::HitWorld(Vector* pPos, int collisionFlags) {
     unk54 = true;
 
     if (!unk89 && unkFC <= 0) {
-        PlaySound(BR_SOUND_2, collisionFlags);
+        PlaySound(BR_SOUND_DEFLECT, collisionFlags);
 
         if (collisionFlags & ID_WATER_BLUE) {
             particleManager->SpawnBigSplash(pPos, true, 0.3f, true, 1.7f, 6);
@@ -1837,7 +1837,7 @@ void Doomerang::Fire(Vector* pVel, Vector* p1) {
 void Doomerang::InitFired(void) {
     pModel->EnableSubObject(subObjectIndex, true);
 
-    unkA8.unk0 = SoundBank_Play(0x1A, NULL, 0);
+    unkA8.unk0 = SoundBank_Play(0x1A, NULL, ID_NONE);
 
     pInAirDoomerang = this;
 
@@ -1866,7 +1866,7 @@ void Doomerang::UpdateFired(void) {
 
         if (!unk89) {
             if (unkA8.unk0 <= -1 && gb.pDialogPlayer == NULL) {
-                unkA8.unk0 = SoundBank_Play(0x1A, NULL, 0);
+                unkA8.unk0 = SoundBank_Play(0x1A, NULL, ID_NONE);
             }
 
             float old12C = unk12C;
@@ -1908,7 +1908,7 @@ void Doomerang::UpdateFired(void) {
 
             if (
                 Collision_SweepSphereCollide(
-                    &mOldPos, &mPos, 45.0f, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100
+                    &mOldPos, &mPos, 45.0f, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS
                 )
             ) {
                 VibrateJoystick(1.0f, 0.0f, gDisplay.dt, 0, 4.0f);
@@ -1922,10 +1922,10 @@ void Doomerang::UpdateFired(void) {
                 mSoundHelper.Update(0x23B, false, false, NULL, NULL, -1.0f, 0);
             }
 
-            if (Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, 0x8000 | 0x4000 | 0x100)) {
+            if (Collision_RayCollide(&mOldPos, &mPos, &cr, COLLISION_MODE_ALL, BOOMERANG_IGNORE_FLAGS)) {
                 mSoundHelper.Stop();
 
-                if ((cr.collisionFlags & 0x8000000) != 0 || (cr.collisionFlags & 0x20) != 0) {
+                if ((cr.collisionFlags & ID_TURNAWAY) != 0 || (cr.collisionFlags & ID_ENEMY_COLLIDE) != 0) {
                     mpWeapon->StartCatch(this);
                     unk88 = true;
                 } else {
@@ -1940,7 +1940,7 @@ void Doomerang::UpdateFired(void) {
 
                     unkA8.Stop();
 
-                    SoundBank_Play(SFX_EnvExplosionMid, NULL, 0);
+                    SoundBank_Play(SFX_EnvExplosionMid, NULL, ID_NONE);
                 }
             }
         }

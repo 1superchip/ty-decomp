@@ -637,7 +637,7 @@ void Gem::Collect(void) {
     Gem_PickupParticle_SpawnParticles(&mParticle.pos);
     gb.mGameData.CollectGem(mCollected);
     dda.StorePickupInfo(Pickup_Gem);
-    SoundBank_Play(0xB7, NULL, 0);
+    SoundBank_Play(SFX_OpalCollect, NULL, 0);
 }
 
 void Gem::CalcShadowPos(void) {

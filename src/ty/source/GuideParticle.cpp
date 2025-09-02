@@ -177,7 +177,7 @@ void GuideParticle::Update(void) {
             // Check if hero is within the bounds of this object
             if (Sqr<float>(locHeroPos.x) + Sqr<float>(locHeroPos.y) <= pHero->radius * pHero->radius + 32500.0f 
                     && locHeroPos.z <= 50.0f && locHeroPos.z >= -50.0f) {
-                SoundBank_Play(0xB7, NULL, 0);
+                SoundBank_Play(SFX_OpalCollect, NULL, 0);
                 unk88 = 1;
                 gateTimeOutCounter = 0;
                 counter++;

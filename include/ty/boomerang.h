@@ -13,6 +13,8 @@
 #include "ty/effects/Explosion.h"
 #include "ty/soundbank.h"
 
+#define BOOMERANG_IGNORE_FLAGS (ID_SNOW_TOP | ID_INVISCOLLIDE | ID_BOOMERANG_IGNORE)
+
 struct BoomerangStaticInfo {
     char* pModelName;
     int nameTranslationId;
@@ -39,10 +41,10 @@ enum BoomerangType {
 #define NUM_BOOMERANGS (BR_Max)
 
 enum BoomerangSound {
-    BR_SOUND_0 = 0,
-    BR_SOUND_1 = 1,
-    BR_SOUND_2 = 2,
-    BR_SOUND_3 = 3
+    BR_SOUND_THROW      = 0,
+    BR_SOUND_CATCH      = 1,
+    BR_SOUND_DEFLECT    = 2,
+    BR_SOUND_HIT        = 3
 };
 
 struct BoomerangDesc : GameObjDesc {
