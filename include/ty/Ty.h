@@ -45,10 +45,7 @@ struct HeadTurningInfo {
 
 enum KnockBackType {
     KB_TYPE_0 = 0,
-};
-
-enum TyHeads {
-
+    KB_TYPE_2 = 2,
 };
 
 // Ty movement state: Air, Water, Land, UnderWater
@@ -463,6 +460,11 @@ struct DustTrail {
     char padding[0x18];
 };
 
+enum TyHeads {
+    TY_HEAD_0 = 0,
+    TY_HEAD_1 = 1
+};
+
 struct Ty : Hero {
 
     int unk320;
@@ -794,6 +796,8 @@ struct Ty : Hero {
     void AddShadowLight(Vector*, float);
     void SetAbsolutePosition(Vector*, int, float, bool);
     void SetBounceOffFromPos(Vector*, float, bool);
+
+    void SetKnockBackFromPos(Vector*, float, KnockBackType);
     void SetKnockBackFromDir(Vector*, float, KnockBackType);
 
     bool TryChangeState(bool, HeroActorState);
@@ -834,6 +838,8 @@ struct Ty : Hero {
     void LandMediumDeinit(void);
     //
 
+    void ResetDrownTimer(void);
+
     // Rang Management
     void InitRangChange(void);
     void DeinitRangChange(void);
@@ -848,6 +854,8 @@ struct Ty : Hero {
 
     bool IsAbleToGlide(void);
     //
+
+    void EnableHead(TyHeads);
 
     void SetFakeFloor(void);
 };

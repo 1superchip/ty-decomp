@@ -2,6 +2,7 @@
 #define STRUCTLIST_H
 
 #include "types.h"
+#include "common/Heap.h"
 
 /// @brief A fixed-capacity, reverse-fill list structure
 /// @tparam T Type of elements stored in the list

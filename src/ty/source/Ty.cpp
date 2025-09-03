@@ -287,7 +287,7 @@ void Ty::Draw(void) {
     mFsm.Draw(this);
 }
 
-void Ty::StartDeath(HurtType, bool) {
+void Ty::StartDeath(HurtType hurtType, bool r5) {
     gb.unk7AC = true;
     particleManager->StopExclamation(true);
 
@@ -300,8 +300,61 @@ void Ty::StartDeath(HurtType, bool) {
     }
 }
 
-void Ty::Hurt(HurtType, DDADamageCause, bool, Vector*, float) {
+void VibrateJoystick(float, float, float, char, float);
 
+void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec, float f1) {
+    static int flinch = 0;
+    
+    if (gb.disableTriggers || gb.infinitePie) {
+        return;
+    }
+
+    if (invicibilityFrames > 0 || mFsm.GetStateEx() == TY_AS_28 || mFsm.GetStateEx() == TY_AS_29) {
+        return;
+    }
+
+    EnableHead(TY_HEAD_0);
+
+    if (hurtType == HURT_TYPE_1 || hurtType == HURT_TYPE_5) {
+        VibrateJoystick(0.5f, 1.0f, (f1 / 45.0f) + 0.2f, 0, 4.0f);
+    }
+
+    dda.StoreDamageInfo(damageCause);
+
+    if (ty.mMediumMachine.GetUnk0() == TY_MEDIUM_3 && mFsm.GetStateEx() != TY_AS_25) {
+        for (int i = 0; i < 31; i++) {
+
+        }
+
+        SoundBank_Play(0x9, NULL, ID_NONE);
+    }
+
+    if (tyHealth.Hurt(hurtType)) {
+        switch (hurtType) {
+            case HURT_TYPE_0:
+            case HURT_TYPE_3:
+            case HURT_TYPE_6:
+                flinch = (flinch + 1) % 3;
+                if (unk4EC.Condition()) {
+                    unk4EC.SetAnim(NULL);
+                }
+                break;
+            case HURT_TYPE_2:
+                SetKnockBackFromPos(&pos, f1, KB_TYPE_2);
+                break;
+            case HURT_TYPE_1:
+            case HURT_TYPE_4:
+                SetKnockBackFromPos(pVec, f1, KB_TYPE_0);
+                break;
+            case HURT_TYPE_5:
+                SetKnockBackFromDir(pVec, f1, KB_TYPE_0);
+                break;
+        }
+
+        invicibilityFrames = 240; // 240 frames
+    } else {
+        StartDeath(hurtType, false);
+    }
 }
 
 // void Ty::SetToIdle(bool, TyMedium) {
@@ -328,9 +381,13 @@ void AutoTargetStruct::Reset(void) {
 
 }
 
+void Ty::ResetDrownTimer(void) {
+    unk828 = gb.logicGameCount + (int)((gDisplay.fps * 180.0f) / tyHealth.GetHealthFieldUnk4());
+}
+
 void Ty::WaterMediumInit(void) {
     BoomerangManagerAnims swimAnims = {
-        true,
+        false,
         unk6C8,
         {unk6C8, unk6DC},
         {unk6D4, unk6E8}
@@ -351,6 +408,8 @@ void Ty::WaterMediumDeinit(void) {
     
 }
 
+void Hud_ShowHealthMeter(bool);
+
 void Ty::UnderWaterMediumInit(void) {
     BoomerangManagerAnims underWaterAnims = {
         true,
@@ -363,13 +422,22 @@ void Ty::UnderWaterMediumInit(void) {
 
     tyHealth.SetType(HEALTH_TYPE_1);
 
+    SoundBank_PlayExclusiveAmbientSound(false);
+
+    Hud_ShowHealthMeter(true);
+
+    ResetDrownTimer();
+
     if (pBunyip) {
         pBunyip->SetState(BUNYIP_DISAPPEAR);
     }
 }
 
 void Ty::UnderWaterMediumUpdate(void) {
-    
+    if (gb.logicGameCount >= unk828) {
+        ty.Hurt(HURT_TYPE_6, DDA_DAMAGE_3, false, NULL, 15.0f);
+        ResetDrownTimer();
+    }
 }
 
 void Ty::UnderWaterMediumDeinit(void) {

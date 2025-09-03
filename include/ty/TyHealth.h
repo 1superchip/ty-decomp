@@ -1,23 +1,47 @@
 #ifndef TYHEALTH_H
 #define TYHEALTH_H
 
+#include "ty/StructList.h"
+#include "common/Blitter.h"
+#include "common/Material.h"
 #include "common/Vector.h"
 
 enum TyHealthType {
     HEALTH_TYPE_0 = 0,
     HEALTH_TYPE_1 = 1,
+    HEALTH_TYPE_2 = 2,
 };
 
 enum HurtType {
-    HURT_TYPE_5 = 5
+    HURT_TYPE_0 = 0,
+    HURT_TYPE_1 = 1,
+    HURT_TYPE_2 = 2,
+    HURT_TYPE_3 = 3,
+    HURT_TYPE_4 = 4,
+    HURT_TYPE_5 = 5,
+    HURT_TYPE_6 = 6
 };
 
 struct HealthInfo {
-    char padding[0x24];
+    int unk0;
+    int unk4;
+    int unk8;
+    int unkC;
+    int unk10;
+    int unk14;
+    int unk18;
+    char* unk1C;
+    Material* unk20;
 };
 
 struct TyHealth {
-    char padding[0x24];
+    TyHealthType mType;
+    int unk4;
+    StructList<Blitter_Image> bubbleList;
+    Material* pMaterial;
+    int unk18;
+    char unk1C;
+    float unk20;
 
     void Init(TyHealthType);
     void Deinit(void);
@@ -29,7 +53,11 @@ struct TyHealth {
     void DrawHudElement(Vector);
     void DoLoseFX(void);
 
-    static HealthInfo heathInfo[3];
+    float GetHealthFieldUnk4(void) {
+        return heathInfo[mType].unk4;
+    }
+
+    static HealthInfo heathInfo[];
 };
 
 #endif // TYHEALTH_H
