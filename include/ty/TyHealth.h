@@ -28,8 +28,8 @@ struct HealthInfo {
     int unk8;
     int unkC;
     int unk10;
-    int unk14;
-    int unk18;
+    int unk14; // sound id
+    int unk18; // sound id
     char* unk1C;
     Material* unk20;
 };
@@ -39,7 +39,7 @@ struct TyHealth {
     int unk4;
     StructList<Blitter_Image> bubbleList;
     Material* pMaterial;
-    int unk18;
+    int unk18; // sound id
     char unk1C;
     float unk20;
 

@@ -26,10 +26,10 @@ struct PlatformRider {
 };
 
 struct PlatformUpdateInfo {
-    Matrix unk0;
-    Vector currRot; // unk40
-    Vector unk50;
-    Vector unk60Vecs[1]; // at least one element but more can exist
+    Matrix modelInverseMatrix; // Transforms from world space to the platform's local/model space
+    Vector currRot;
+    Vector avgAttachmentPos; // Average position of attachments in platform's local space
+    Vector attachmentPositions[1]; // Local-space positions of attachments (flexible array, size = numAttached)
 };
 
 struct PlatformDesc : StaticPropDescriptor {

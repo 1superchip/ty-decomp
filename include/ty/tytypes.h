@@ -45,9 +45,9 @@ struct Rotation {
     }
 
     void UnknownInline(float f1) {
-        // unk4 = NormaliseAngle(f1)
-        // unkC = _table_cosf(unk4 - PI/2)
-        // unk10 = _table_sinf(unk4 - PI/2)
+        unk4 = NormaliseAngle(f1);
+        unkC = _table_cosf(unk4 - PI/2);
+        unk10 = _table_sinf(unk4 - PI/2);
     }
 
     void SetUnk0(float val) {

@@ -102,7 +102,7 @@ void Lasso::Update(Vector* p, Vector* p1, float f1) {
 
     unk20 = f1;
 
-    if ((gb.logicGameCount & 1) != 0) {
+    if ((gb.logicGameCount % 2) != 0) {
         unk10C += 1.0f;
 
         if (unk10C > 8.0f) {

@@ -11,6 +11,84 @@ Hero* pHero;
 static bool bInitialised = false;
 static bool bResourcesLoaded = false;
 
+static TyMediumMachine::State mediumFSMStates[] = {
+    {
+        // MD_None
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    }, 
+    {
+        // TY_MEDIUM_1
+        &Ty::LandMediumInit,
+        &Ty::LandMediumDeinit,
+        &Ty::LandMediumUpdate
+    },
+    {
+        // TY_MEDIUM_2
+        &Ty::WaterMediumInit,
+        &Ty::WaterMediumDeinit,
+        &Ty::WaterMediumUpdate
+    },
+    {
+        // TY_MEDIUM_3
+        &Ty::UnderWaterMediumInit,
+        &Ty::UnderWaterMediumDeinit,
+        &Ty::UnderWaterMediumUpdate
+    },
+    {
+        // TY_MEDIUM_4
+        &Ty::AirMediumInit,
+        &Ty::AirMediumDeinit,
+        &Ty::AirMediumUpdate
+    }
+};
+
+static TyFSM::State tyStates[] = {
+    {},
+    {
+
+    },
+};
+
+void TyFSM::Update(Ty* pTy) {
+    if (unk14 != AS_None) {
+        if (unk10 != AS_None) {
+            if (pStates[unk10].Deinit) {
+                (pTy->*pStates[unk10].Deinit)();
+            }
+        }
+
+        unk4 = unk0;
+        unk0 = unk10;
+        unk10 = unk14;
+        unk14 = AS_None;
+
+        if (pStates[unk10].medium != MD_None) {
+            pTy->SetMedium(pStates[unk10].medium);
+        }
+
+        unk8 = gb.logicGameCount;
+        unkC = 0;
+
+        if (unk10 != AS_None) {
+            if (pStates[unk10].Init) {
+                (pTy->*pStates[unk10].Init)();
+            }
+        }
+    }
+
+    unkC++;
+
+    if (unk10 != AS_None) {
+        if (pStates[unk10].Active) {
+            (pTy->*pStates[unk10].Active)();
+        }
+    }
+}
+
 bool TyFSM::SolidSurfaceState(int state) {
     if (
         state == TY_AS_3 || 
@@ -19,11 +97,11 @@ bool TyFSM::SolidSurfaceState(int state) {
         state == TY_AS_32 ||
         state == TY_AS_34 ||
         state == TY_AS_28 ||
-        state == TY_AS_33 ||
+        state == AS_FindItem ||
         state == TY_AS_44 ||
         state == TY_AS_36 ||
         state == TY_AS_46 ||
-        state == TY_AS_2 ||
+        state == AS_Sneak ||
         state == TY_AS_4 ||
         state == TY_AS_40 ||
         state == TY_AS_41
@@ -35,7 +113,7 @@ bool TyFSM::SolidSurfaceState(int state) {
 }
 
 bool TyFSM::BiteState(int state) {
-    if (state == TY_AS_1) {
+    if (state == AS_Bite) {
         return true;
     }
 
@@ -89,7 +167,7 @@ bool TyFSM::KnockBackState(int state) {
 }
 
 bool TyFSM::MoveState(int state) {
-    if (state == TY_AS_5 || state == TY_AS_3 || state == TY_AS_2 || state == TY_AS_4) {
+    if (state == TY_AS_5 || state == TY_AS_3 || state == AS_Sneak || state == TY_AS_4) {
         return true;
     }
 
@@ -97,7 +175,7 @@ bool TyFSM::MoveState(int state) {
 }
 
 bool TyFSM::SneakState(int state) {
-    return state == TY_AS_2;
+    return state == AS_Sneak;
 }
 
 bool TyFSM::WaterSurfaceState(int state) {
@@ -105,7 +183,7 @@ bool TyFSM::WaterSurfaceState(int state) {
 }
 
 bool TyFSM::FirstPersonState(int state) {
-    return state == TY_AS_45;
+    return state == AS_FirstPerson;
 }
 
 bool TyFSM::AirState(int state) {
@@ -166,6 +244,90 @@ void Ty_Draw(void) {
     }
 }
 
+void Ty::StartBlendAnimation(MKAnim* pAnim, bool r5) {
+    unk530 = 1.0f;
+
+    if (r5) {
+        animScript.SetAnimKeepingPosition(pAnim);
+    } else {
+        animScript.SetAnim(pAnim);
+    }
+}
+
+void Ty::StartAnimation(MKAnimScript* pAnimScript, MKAnim* pAnim, int r6, bool r7) {
+    unk530 = 0.0f;
+    
+    if (pAnim) {
+        if (r6 > 0) {
+            pAnimScript->TweenAnim(pAnim, r6);
+        } else {
+            pAnimScript->SetAnim(pAnim);
+        }
+    }
+
+    unkF98 = false;
+}
+
+void Ty::StartAnimIfNew(MKAnimScript* pAnimScript, MKAnim* pAnim, int r6, bool r7) {
+    bool a = pAnimScript->currAnim == pAnim;
+    bool b = pAnimScript->unk1C > 0 && pAnimScript->nextAnim == pAnim;
+
+    if (!a && !b) {
+        ty.StartAnimation(pAnimScript, pAnim, r6, r7);
+    }
+}
+
+float Ty::GetSpeedFromJoyPad(float f1) {
+    return Min<float>(ApproxMag(gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C()), 1.0f) * f1;
+}
+
+void Ty::UpdateHorzVel(float smoothing) {
+    float xFactor = 0.0f;
+    float zFactor = 0.0f;
+
+    if (!IsJoyPadZero()) {
+        xFactor = mRot.GetUnkC() * magnitude;
+        zFactor = mRot.GetUnk10() * magnitude;
+    }
+    
+    velocity.x = AdjustFloat(velocity.x, xFactor, 1.0f - smoothing);
+    velocity.z = AdjustFloat(velocity.z, zFactor, 1.0f - smoothing);
+}
+
+extern "C" double atan2(double, double);
+
+float GameCamera_GetMoveYaw(void);
+
+float ValidPIRange(float);
+
+void Ty::UpdateYaw(float scale) {
+    if (!IsJoyPadZero()) {
+        float moveYaw = GameCamera_GetMoveYaw();
+
+        unk1414 = atan2(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C());
+        unk1414 += moveYaw;
+        
+        unk1414 = NormaliseAngle(unk1414);
+
+        float fVar3 = NormaliseAngle(-unk1414 - mRot.GetUnk4());
+
+        if (fVar3 > PI) {
+            fVar3 -= 2 * PI;
+        }
+        
+        mRot.UnknownInline(ValidPIRange(mRot.GetUnk4() + fVar3 * scale));
+    }
+}
+
+float Ty::GetYawFromJoy(void) {
+    if (IsJoyPadZero()) {
+        return ty.mRot.unk4;
+    } else {
+        float moveYaw = GameCamera_GetMoveYaw();
+        return -NormaliseAngle(moveYaw + (float)atan2(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C()));
+    }
+}
+
 char* playerFileNames[] = {
     "act_01_ty",
     "act_01_tyshadow",
@@ -173,9 +335,19 @@ char* playerFileNames[] = {
     "act_01_ty_02"
 };
 
+void BoomerangAnimInfo::Init(void) {
+
+}
+
+void BoomerangAnimInfo::Deinit(void) {
+    unk0->Destroy();
+    unk8.Deinit();
+}
+
 void Ty::LoadResources(void) {
-    rangPropLeftAnimScript.Init("prop_0137_rangpropleft");
-    rangPropRightAnimScript.Init("prop_0137_rangpropright");
+    rangPropAnimScripts[0].Init("prop_0137_rangpropleft");
+    rangPropAnimScripts[1].Init("prop_0137_rangpropright");
+    
     unk534.Init(playerFileNames[gb.unk100 * 4]);
 
     animScript.Init(&unk534);
@@ -209,16 +381,131 @@ void Ty::LoadResources(void) {
     }
 }
 
+void Ty::FreeResources(void) {
+    
+    if (pReflectionModel) {
+        pReflectionModel->pAnimation = NULL;
+        pReflectionModel->Destroy();
+
+        pReflectionModel = NULL;
+
+        mShadow.Deinit();
+
+        unk11F8[0].Deinit();
+        unk11F8[1].Deinit();
+    }
+
+    animScript.Deinit();
+    unk4EC.Deinit();
+    unk50C.Deinit();
+
+    unk52C = false;
+    
+    rangPropAnimScripts[0].Deinit();
+    rangPropAnimScripts[1].Deinit();
+
+    unk534.Deinit();
+}
+
 void Ty::Init(void) {
     Ty::Init(&tyDesc);
 
     pLastCheckPoint = NULL;
 
     LoadResources();
+
+    if (gb.level.GetCurrentLevel() != LN_OUTBACK_SAFARI) {
+        tyHealth.Init(HEALTH_TYPE_0);
+
+        pLocalToWorld = &pModel->matrices[0];
+        pGameObject = NULL;
+
+        mMediumMachine.Init(mediumFSMStates, MD_None);
+
+        mContext.Init(gb.mDataVal.jumpGravity, gb.mDataVal.jumpMaxGravity);
+
+        mRangTrails[0].Init(16);
+        mRangTrails[1].Init(16);
+
+        mIceTrails[0].Init(16);
+        mIceTrails[1].Init(16);
+
+        mTyRainbowEffect.Init(&ty.pos);
+
+        EnableHead(TYH_Normal);
+
+        mWaterSlide.Init();
+        tySounds.Init();
+        tyBite.Init();
+
+        InitEvents();
+
+        BoundingVolume volume = *(pModel->GetModelVolume());
+
+        volume.v2.y += 500.0f;
+
+        mBubble.Init(pModel->matrices[0].Row3(), &volume, 1.0f);
+
+        mDustTrail.Init(&pos, gb.mDataVal.swimSpeedFast, 35.0f, 0.6f);
+
+        if (gb.bE3) {
+            gb.mGameData.SetLearntToSwim(true);
+            gb.mGameData.SetLearntToDive(true);
+            gb.mGameData.SetHasRang(BR_Aquarang, true);
+        }
+    }
 }
 
 void Ty::InitEvents(void) {
+    MKAnimScript* pScript = &animScript;
 
+    unk7B0 = pScript->GetEventByName("leftThrowBoomerang");
+    unk7B4 = pScript->GetEventByName("rightThrowBoomerang");
+
+    unk7B8 = pScript->GetEventByName("leftCatch");
+    unk7BC = pScript->GetEventByName("rightCatch");
+
+    unk7C0 = pScript->GetEventByName("lefthand");
+    unk7C4 = pScript->GetEventByName("righthand");
+
+    unk7C8 = pScript->GetEventByName("blink");
+
+    unk7CC = pScript->GetEventByName("RangTyRightOff");
+    unk7D0 = pScript->GetEventByName("RangTyRightOn");
+
+    unk7D4 = pScript->GetEventByName("RangTyLeftOff");
+    unk7D8 = pScript->GetEventByName("RangTyLeftOn");
+
+    unk7DC = pScript->GetEventByName("RangTyRightSpecialIdle2Off");
+    unk7E0 = pScript->GetEventByName("RangTyRightSpecialIdle2On");
+
+    unk7E4 = pScript->GetEventByName("BiteHeadOn");
+    unk7E8 = pScript->GetEventByName("BiteHeadOff");
+
+    unk7EC = pScript->GetEventByName("leftToe");
+    unk7F0 = pScript->GetEventByName("rightToe");
+
+    unk7F4 = pScript->GetEventByName("leftFoot");
+    unk7F8 = pScript->GetEventByName("rightFoot");
+
+    unk800 = animScript.GetEventByName("TrailOff");
+    unk7FC = animScript.GetEventByName("TrailOn");
+
+    unk804 = animScript.GetEventByName("FliesOn");
+    
+    unk808 = animScript.GetEventByName("rangTwirlOn");
+    unk80C = animScript.GetEventByName("rangTwirlOff");
+
+    unk810 = animScript.GetEventByName("RangChange");
+
+    unk814 = animScript.GetEventByName("KnockDown");
+
+    unk818 = animScript.GetEventByName("TyLand");
+
+    unk81C = animScript.GetEventByName("TyJump");
+
+    unk820 = animScript.GetEventByName("ShowItem");
+    unk824 = animScript.GetEventByName("HideItem");
 }
 
 void Ty::PostLoadInit(void) {
@@ -252,18 +539,59 @@ void Ty::Deinit(void) {
         mFsm.DeinitState(this);
         mMediumMachine.CallDeinit(this);
 
+        ResetPitchAndRoll();
         mTyRainbowEffect.Deinit();
+        tyBite.Deinit();
+
+        mRangTrails[0].Deinit();
+        mRangTrails[1].Deinit();
+
+        mIceTrails[0].Deinit();
+        mIceTrails[1].Deinit();
+
+        mBubble.Deinit();
+
+        mWaterSlide.Deinit();
+
+        for (int i = 0; i < ARRAY_SIZE(pSystems); i++) {
+            if (pSystems[i]) {
+                pSystems[i]->Destroy();
+            }
+
+            pSystems[i] = NULL;
+        }
+
+        if (breathMist != 0) {
+            if (unkDC0[breathMist]) {
+                unkDC0[breathMist]->Destroy();
+            }
+
+            unkDC0[breathMist] = NULL;
+        }
+
+        breathMist = 0;
+
+        pGameObject = NULL;
+
+        mDustTrail.Deinit();
+
+        tyHealth.Deinit();
+
+        opalMagnetData.Deinit();
+        glowParticleData.Deinit();
     }
 
     mBoomerangManager.Deinit();
-    // FreeResources();
+    FreeResources();
     GameObject::Deinit();
+
+    mHeadTurningInfo.mNodeOverride.pAnimation = NULL;
 }
 
 void Ty::Reset(void) {
     if (pHero->IsTy()) {
         ResetVars();
-        SetAbsolutePosition(&pos, TY_AS_50, 1.0f, true);
+        SetAbsolutePosition(&pos, 50, 1.0f, true);
         lastSafePos = pos;
 
         mTyRainbowEffect.Reset();
@@ -280,7 +608,22 @@ void Ty::ResetVars(void) {
 }
 
 void Ty::Update(void) {
-
+    if (gb.pDialogPlayer) {
+        if (GetMedium() == TY_MEDIUM_3) {
+            ResetDrownTimer();
+        }
+    } else {
+        // CommonPreLogicChecks();
+        mFsm.Update(this);
+        mMediumMachine.Update(this, false);
+        // CommonPostLogicChecks();
+        // UpdateLastSafePos();
+        // UpdateBoomerangs();
+        // UpdateRangTrails();
+        // glowParticleData.Draw();
+        ty.mAutoTarget.Reset();
+        // UseSpecialParticleEffect();
+    }
 }
 
 void Ty::Draw(void) {
@@ -300,8 +643,6 @@ void Ty::StartDeath(HurtType hurtType, bool r5) {
     }
 }
 
-void VibrateJoystick(float, float, float, char, float);
-
 void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec, float f1) {
     static int flinch = 0;
     
@@ -313,7 +654,7 @@ void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec,
         return;
     }
 
-    EnableHead(TY_HEAD_0);
+    EnableHead(TYH_Normal);
 
     if (hurtType == HURT_TYPE_1 || hurtType == HURT_TYPE_5) {
         VibrateJoystick(0.5f, 1.0f, (f1 / 45.0f) + 0.2f, 0, 4.0f);
@@ -322,11 +663,27 @@ void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec,
     dda.StoreDamageInfo(damageCause);
 
     if (ty.mMediumMachine.GetUnk0() == TY_MEDIUM_3 && mFsm.GetStateEx() != TY_AS_25) {
-        for (int i = 0; i < 31; i++) {
+        for (int i = 0; i < 30; i++) {
+            Vector tmp = {
+                RandomFR(&gb.mRandSeed, -10.0f, 10.0f),
+                RandomFR(&gb.mRandSeed, -10.0f, 10.0f),
+                RandomFR(&gb.mRandSeed, -10.0f, 10.0f)
+            };
 
+            Vector spawnPos;
+
+            spawnPos.Add(&unk324, &tmp);
+
+            mBubble.Create(
+                &spawnPos, 
+                RandomFR(&gb.mRandSeed, 2.0f, 4.0f), 
+                mContext.water.pos.y,
+                4.5f,
+                0.0f
+            );
         }
 
-        SoundBank_Play(0x9, NULL, ID_NONE);
+        SoundBank_Play(SFX_TyWaterBubble, NULL, ID_NONE);
     }
 
     if (tyHealth.Hurt(hurtType)) {
@@ -334,9 +691,9 @@ void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec,
             case HURT_TYPE_0:
             case HURT_TYPE_3:
             case HURT_TYPE_6:
-                flinch = (flinch + 1) % 3;
+                flinch = (flinch + 1) % ARRAY_SIZE(flinchAnims);
                 if (unk4EC.Condition()) {
-                    unk4EC.SetAnim(NULL);
+                    StartAnimation(&unk4EC, flinchAnims[flinch], 0, false);
                 }
                 break;
             case HURT_TYPE_2:
@@ -357,12 +714,159 @@ void Ty::Hurt(HurtType hurtType, DDADamageCause damageCause, bool, Vector* pVec,
     }
 }
 
-// void Ty::SetToIdle(bool, TyMedium) {
+void Ty::SetToIdle(bool bResetVel, TyMedium newMedium) {
+    if (
+        mFsm.GetStateEx() == AS_FindItem || 
+        mFsm.GetStateEx() == TY_AS_28 || 
+        mFsm.GetStateEx() == TY_AS_29 ||
+        mFsm.unk14 == AS_FindItem || 
+        mFsm.unk14 == TY_AS_28 || 
+        mFsm.unk14 == TY_AS_29
+    ) {
+        return;
+    }
 
-// }
+    TyMedium nextMedium = newMedium;
+    if (nextMedium == MD_None) {
+        nextMedium = GetMedium();
+    }
+
+    switch (nextMedium) {
+        case TY_MEDIUM_1:
+            mFsm.SetState(TY_AS_35, true);
+            ty.mContext.water.bValid = false;
+            break;
+        case TY_MEDIUM_2:
+            mFsm.SetState(TY_AS_38, true);
+            break;
+        case TY_MEDIUM_3:
+            mFsm.SetState(TY_AS_39, true);
+            break;
+    }
+
+    if (bResetVel) {
+        velocity.SetZero();
+        lastVelocity.SetZero();
+        directVelocity.SetZero();
+    }
+}
 
 bool Ty::IsClaiming(void) {
-    return mFsm.GetState() == TY_AS_33;
+    return mFsm.GetState() == AS_FindItem;
+}
+
+void Ty::SetFindItem(Vector* pPos, SpecialPickupStruct* pPickup) {
+    if (mFsm.GetStateEx() == AS_FindItem || mFsm.GetStateEx() == TY_AS_28 || mFsm.GetStateEx() == TY_AS_29) {
+        pPickup->ScaleOut();
+    } else {
+        if (pBunyip) {
+            pBunyip->SetState(BUNYIP_IDLE);
+        }
+
+        pSpecialPickup = pPickup;
+
+        ty.SetAbsolutePosition(pPos, 20, 1.0f, true);
+
+        if (mContext.water.bValid) {
+            if (mContext.GetYDistanceToWater(&pos) > 85.0f) {
+                // No check for if the player has unlocked the ability to swim
+                SetMedium(TY_MEDIUM_3);
+            }
+        }
+
+        mFsm.SetState(AS_FindItem, false);
+    }
+}
+
+void GameCamera_SnapBehindHero(bool, bool);
+
+/// @brief 
+/// @param pPos 
+/// @param pNewRot 
+/// @return 
+bool Ty::StableReposition(Vector* pPos, Vector* pNewRot) {
+    if (SetAbsolutePosition(pPos, 20, 20.0f, true)) {
+        if (pNewRot) {
+            mRot.SetRotByVec(pNewRot);
+        }
+
+        TyMedium nextMedium = mContext.floor.bOn ? TY_MEDIUM_1 : TY_MEDIUM_4;
+
+        if (mContext.water.bValid) {
+            if (mContext.GetYDistanceToWater(&pos) > PaddleDepth) {
+                nextMedium = TY_MEDIUM_2;
+            }
+
+            if (mContext.GetYDistanceToWater(&pos) > 85.0f) {
+                nextMedium = TY_MEDIUM_3;
+            }
+        }
+
+        SetToIdle(true, nextMedium);
+
+        GameCamera_SnapBehindHero(true, false);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void Ty::SetBunyip(Bunyip* pNewBunyip) {
+    pBunyip = pNewBunyip;
+
+    if (mFsm.GetState() == AS_Sneak || mFsm.GetState() == TY_AS_3) {
+        pBunyip->SetState(BUNYIP_STATE_3);
+    } else {
+        pBunyip->SetState(BUNYIP_STATE_4);
+    }
+}
+
+void Ty::SetTwirlRangs(void) {
+    if (mFsm.GetState() != AS_Doomerang) {
+        mFsm.SetState(TY_AS_43, false);
+    }
+}
+
+void Ty::UpdateLocalToWorldMatrix(void) {
+    Vector translation;
+    Matrix tmpMat;
+
+    translation.Set(pos.x, pos.y + gb.unk78C + unk19E0, pos.z);
+
+    pModel->matrices[0].SetIdentity();
+
+    pModel->matrices[0].SetRotationPitch(mRot.GetUnk0());
+
+    tmpMat.SetRotationRoll(mRot.GetUnk8());
+
+    pModel->matrices[0].Multiply3x3(&tmpMat);
+
+    tmpMat.SetRotationYaw(mRot.GetUnk4());
+
+    pModel->matrices[0].Multiply3x3(&tmpMat);
+
+    pModel->matrices[0].SetTranslation(&translation);
+
+    pModel->SetLocalToWorldDirty();
+}
+
+bool Ty::FallMove(float f1, float f2, float f3) {
+    magnitude = GetSpeedFromJoyPad(f1);
+
+    UpdateYaw(f2);
+
+    UpdateHorzVel(f3);
+
+    velocity.y = lastVelocity.y;
+
+    mContext.VelocityInline(&velocity, 0.0f);
+
+    return velocity.MagSquared() > 0.0f;
+}
+
+bool Ty::IsJoyPadZero(void) {
+    return gb.mJoyPad1.GetUnk58() == 0.0f && gb.mJoyPad1.GetUnk5C() == 0.0f;
 }
 
 void AutoTargetStruct::Set(TargetPriority prio, Vector*, Vector*, Vector*, Model*) {
@@ -379,6 +883,42 @@ void AutoVisible::AddToList(Vector*, Model*) {
 
 void AutoTargetStruct::Reset(void) {
 
+}
+
+void GameCamera_SetPlatformYawDelta(float);
+
+void Ty::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
+        case MSG_UpdateAttachment: {
+            PlatformMoveMsg* pUpdateMsg = (PlatformMoveMsg*)pMsg;
+
+            Vector unk28 = mLedgePullUpData.unk4;
+
+            unk28.ApplyMatrix(pUpdateMsg->pModelInverseMatrix);
+            unk28.ApplyMatrix(pUpdateMsg->pModelMatrix);
+
+            Vector unk18 = {
+                unk28.x - mLedgePullUpData.unk4.x, 
+                unk28.y - mLedgePullUpData.unk4.y, 
+                unk28.z - mLedgePullUpData.unk4.z, 
+                1.0f
+            };
+
+            mLedgePullUpData.LedgeMoved(&unk18, pUpdateMsg->rot->y);
+
+            SetAbsolutePosition(pUpdateMsg->trans, 20, 1.0f, GetMedium() == TY_MEDIUM_1);
+
+            mRot.IncreaseUnk4(pUpdateMsg->rot->y);
+
+            UpdateLocalToWorldMatrix();
+
+            GameCamera_SetPlatformYawDelta(pUpdateMsg->rot->y);
+
+            break;
+        };
+    }
+
+    GameObject::Message(pMsg);
 }
 
 void Ty::ResetDrownTimer(void) {
@@ -441,7 +981,11 @@ void Ty::UnderWaterMediumUpdate(void) {
 }
 
 void Ty::UnderWaterMediumDeinit(void) {
-    
+    Hud_ShowHealthMeter(false);
+
+    tyHealth.SetType(HEALTH_TYPE_0);
+
+    SoundBank_PlayExclusiveAmbientSound(true);
 }
 
 static int airStuckCount = 0;
@@ -507,23 +1051,80 @@ void Ty::LandMediumDeinit(void) {
 }
 
 bool Ty::IsBiting(void) {
-    return mFsm.GetState() == TY_AS_1;
+    return mFsm.GetState() == AS_Bite;
 }
 
 void TySounds::Init(void) {
+    mFader1.Init(1.5f, 1.5f);
+    mFader3.Init(1.5f, 1.5f);
+    mFader2.Init(1.0f, 0.0f);
 
+    mPhrasePlayer.Init();
+
+    unk0 = -1;
+    unk4 = -1;
+    unk8 = -1;
+    unkC = -1;
+    unk10 = -1;
 }
 
 void TySounds::Reset(void) {
+    mFader1.Reset();
+    mFader2.Reset();
+    mFader3.Reset();
 
+    mPhrasePlayer.Deinit();
+
+    SoundBank_Stop(&unk0);
+    SoundBank_Stop(&unk4);
+    SoundBank_Stop(&unk8);
+    SoundBank_Stop(&unkC);
+    SoundBank_Stop(&unk10);
 }
 
 void TySounds::UpdateSounds(void) {
+    if (pHero->IsTy()) {
+        bool b, b1, b2;
+        int tyState = ty.mFsm.GetState();
 
+        DialogPlayer*& p = (DialogPlayer*&)gb.pDialogPlayer;
+
+        b = !p && (tyState == TY_AS_15);
+
+        b1 = !p && (tyState == TY_AS_14 || tyState == TY_AS_37);
+
+        b2 = !p && (
+            (
+                ((tyState == TY_AS_34 || tyState == TY_AS_35) && ty.mContext.floor.bOn) &&
+                ty.directvel_to_velocity_interpolation == 20
+            ) && ty.directVelocity.MagSquared() > 0.7f
+        );
+
+        // bool dialogOff = gb.pDialogPlayer == NULL;
+
+        // b = dialogOff && (tyState == TY_AS_15);
+
+        // b1 = dialogOff && (tyState == TY_AS_14 || tyState == TY_AS_37);
+
+        // b2 = dialogOff && (
+        //     (
+        //         ((tyState == TY_AS_34 || tyState == TY_AS_35) && ty.mContext.floor.bOn) &&
+        //         ty.directvel_to_velocity_interpolation == 20
+        //     ) && ty.directVelocity.MagSquared() > 0.7f
+        // );
+
+        mFader1.Update(0x6, false, b, NULL, NULL, -1.0f, ID_NONE);
+        mFader3.Update(0x25, false, b1, NULL, NULL, 0.0f, ID_WATER_BLUE);
+        mFader2.Update(0x14C, false, b2, NULL, NULL, -1.0f, ID_NONE);
+    }
 }
 
 void Ty::InitRangChange(void) {
+    unk530 = 0.0f;
 
+    if (unk778) {
+        animScript.TweenAnim(unk778, 5);
+    }
 }
 
 void Ty::DeinitRangChange(void) {

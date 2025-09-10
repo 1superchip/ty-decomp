@@ -10,12 +10,12 @@ static ModuleInfo<Platform> platformModuleInfo;
 static void* tempMem;
 static void* pCurrMem = tempMem;
 
-void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* trans, Vector* rot, Vector* def, Matrix* mat) {
+void Create_UpdateAttachMessage(PlatformMoveMsg* pMsg, Vector* pAttachmentPos, Vector* rot, Matrix* pInverseMatrix, Matrix* pModelMatrix) {
     pMsg->unk0 = MSG_UpdateAttachment;
-    pMsg->trans = trans;
+    pMsg->trans = pAttachmentPos;
     pMsg->rot = rot;
-    pMsg->vec = def;
-    pMsg->mat = mat;
+    pMsg->pModelInverseMatrix = pInverseMatrix;
+    pMsg->pModelMatrix = pModelMatrix;
 }
 
 PlatformUpdateInfo* TempAlloc(int size) {
@@ -141,29 +141,33 @@ void Platform::Message(MKMessage* pMsg) {
 }
 
 void Platform::BeginUpdate(void) {
-    Matrix mat;
+    Matrix invLtw;
 
     if (numAttached == 0) {
         return;
     }
 
     unk58 = TempAlloc(numAttached * sizeof(Vector) + sizeof(PlatformUpdateInfo));
-    mat.Inverse(&pModel->matrices[0]);
-    unk58->unk0 = mat;
+
+    invLtw.Inverse(&pModel->matrices[0]);
+
+    unk58->modelInverseMatrix = invLtw;
     unk58->currRot = mCurrRot;
-    unk58->unk50.Set(0.0f, 0.0f, 0.0f, 1.0f);
+    unk58->avgAttachmentPos.Set(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Calculate average position of all attachments in local space
 
     int idx = 0;
     GameObject** iter = attachments.GetPointers();
     while (*iter != NULL) {
-        unk58->unk60Vecs[idx].ApplyMatrix((*iter)->GetPos(), &mat);
-        unk58->unk50.Add(&unk58->unk60Vecs[idx]);
+        unk58->attachmentPositions[idx].ApplyMatrix((*iter)->GetPos(), &invLtw);
+        unk58->avgAttachmentPos.Add(&unk58->attachmentPositions[idx]);
         idx++;
         iter++;
     }
 
-    if (unk58 != NULL) {
-        unk58->unk50.Scale(1.0f / numAttached);
+    if (unk58) {
+        unk58->avgAttachmentPos.Scale(1.0f / numAttached);
     }
 }
 
@@ -175,7 +179,7 @@ void Platform::EndUpdate(void) {
         UpdateShadow();
     }
 
-    if (unk58 != NULL) {
+    if (unk58) {
         TempFree((void*)unk58);
     }
 
@@ -184,9 +188,9 @@ void Platform::EndUpdate(void) {
 
 void Platform::UpdateTilt(void) {
     if (GetDesc()->maxTilt > 0.0f) {
-        if (unk58 != NULL) {
-            if (unk58->unk50.MagSquared() > Sqr<float>(GetDesc()->radius)) {
-                Vector lPos = unk58->unk50;
+        if (unk58) {
+            if (unk58->avgAttachmentPos.MagSquared() > Sqr<float>(GetDesc()->radius)) {
+                Vector lPos = unk58->avgAttachmentPos;
                 lPos.y = 0.0f;
                 lPos.ClampMagnitude(GetDesc()->maxMag);
                 lPos.Scale(GetDesc()->maxTilt / GetDesc()->maxMag);
@@ -214,15 +218,17 @@ void Platform::UpdateRotationMatrix(void) {
 void Platform::UpdateAttached(void) {
     PlatformMoveMsg msg;
     Vector deltaPyr;
-    if (unk58 != NULL) {
+    
+    if (unk58) {
         deltaPyr.Sub(&mCurrRot, &unk58->currRot);
+
         GameObject** iter = attachments.GetPointers();
         int idx = 0;
         // iterate through attached objects and send the Move Message to them
         while (*iter != NULL) {
-            Vector* pVec = &unk58->unk60Vecs[idx];
-            pVec->ApplyMatrix(&pModel->matrices[0]);
-            Create_UpdateAttachMessage(&msg, &unk58->unk60Vecs[idx], &deltaPyr, (Vector*)unk58, &pModel->matrices[0]);
+            Vector* pAttachmentPos = &unk58->attachmentPositions[idx];
+            pAttachmentPos->ApplyMatrix(&pModel->matrices[0]);
+            Create_UpdateAttachMessage(&msg, &unk58->attachmentPositions[idx], &deltaPyr, &unk58->modelInverseMatrix, &pModel->matrices[0]);
             (*iter)->Message(&msg);
             idx++;
             iter++;

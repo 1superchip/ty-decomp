@@ -27,8 +27,8 @@ struct MKMessage_GOBJ : MKMessage {
 struct PlatformMoveMsg : MKMessage {
     Vector* trans;
     Vector* rot;
-    Vector* vec;
-    Matrix* mat;
+    Matrix* pModelInverseMatrix;
+    Matrix* pModelMatrix;
 };
 
 struct ModuleInfoBase;

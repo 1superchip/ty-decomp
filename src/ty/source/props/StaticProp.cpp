@@ -107,7 +107,7 @@ void StaticPropDescriptor::Load(KromeIni* pIni) {
                 }
 
                 LoadLevel_LoadBool(pLine, "bUseGroundColor", &bUseGroundColor);
-                NameFlagPair flagsTmp[3] = {{"Grabable", 1}, {"NoIce", 2}, {"JumpCamera", 4}};
+                NameFlagPair flagsTmp[] = {{"Grabable", 1}, {"NoIce", 2}, {"JumpCamera", 4}};
                 LoadLevel_LoadFlags(pLine, "collisionInfoFlags", flagsTmp, ARRAY_SIZE(flagsTmp), &collisionInfoFlags);
             }
 
@@ -194,7 +194,7 @@ void StaticFXProp::Init(GameObjDesc* pDesc) {
     StaticProp::Init(pDesc);
     // does not collide with water by default
     bCollidesWithWater = false;
-    unk9C = 10;
+    nextParticleSpawnFrame = 10;
     bVisible = true;
     bTempVisible = bVisible;
     autoRotation.SetZero();
@@ -297,8 +297,8 @@ void StaticFXProp::UpdateShake(void) {
 }
 
 void StaticFXProp::UpdateWaterRipple(void) {
-    if (ty.pos.IsInsideSphere(GetPos(), 800.0f) && bCollidesWithWater && (gb.logicGameCount > unk9C)) {
-        unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
+    if (ty.pos.IsInsideSphere(GetPos(), 800.0f) && bCollidesWithWater && (gb.logicGameCount > nextParticleSpawnFrame)) {
+        nextParticleSpawnFrame = gb.logicGameCount + RandomIR(&gb.mRandSeed, 60, 180);
         Vector tmp = {0.0f, 5.0f, 0.0f, 0.0f};
         tmp.Add(&waterCollisionPos);
         particleManager->SpawnWaterRipple(&tmp, RandomFR(&gb.mRandSeed, 80.0f, 120.0f));
@@ -308,14 +308,14 @@ void StaticFXProp::UpdateWaterRipple(void) {
 void StaticFXProp::UpdateDropLeaf(void) {
     int particleFlags = lodManager.pDescriptor->particleFlags;
 
-    if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > unk9C)) {
+    if (lodManager.TestLOD(particleFlags) && (gb.logicGameCount > nextParticleSpawnFrame)) {
         Vector temp = *GetPos();
         Vector vel = {0.0f, -10.0f, 0.0f, 0.0f};
         temp.y += RandomIR(&gb.mRandSeed, 700, 800);
         temp.x += RandomIR(&gb.mRandSeed, -1200, 1200);
         temp.z += RandomIR(&gb.mRandSeed, -1200, 1200);
         particleManager->SpawnLeafGrassDust(&temp, &vel, true);
-        unk9C = gb.logicGameCount + RandomIR(&gb.mRandSeed, 800, 1200);
+        nextParticleSpawnFrame = gb.logicGameCount + RandomIR(&gb.mRandSeed, 800, 1200);
     }
 }
 

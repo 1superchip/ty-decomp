@@ -114,7 +114,6 @@ void Explosion::Deinit(void) {
 }
 
 extern "C" double atan2(double, double);
-void VibrateJoystick(float, float, float, char, float);
 void GameCamera_Shake(Vector*);
 
 void Explosion::Explode(Vector* pPos, float f1) {

@@ -79,7 +79,7 @@ void Range_ModelSetAlpha(Model* pModel, int arg1, float arg2, float arg3, float 
 
         GameCamera_GetVectors(&source, &target, NULL);
 
-        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.mFsm.GetStateEx() != TY_AS_45) {
+        if (RayToSphere(&source, &target, &center, 10.0f + arg4, -1.0f, true) && ty.mFsm.GetStateEx() != AS_FirstPerson) {
             pModel->colour.w = Max<float>(arg5, pModel->colour.w - 0.05625f);
         } else {
             pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
@@ -102,10 +102,10 @@ void Range_Update(void) {
 
 LODEntry* LODEntry_GetNextEntryFromPool(void) {
     if (lodEntryPool == NULL) {
-        lodEntryPool = (LODEntry *)Heap_MemAlloc(maxLODEntries * sizeof(LODEntry));
+        lodEntryPool = (LODEntry*)Heap_MemAlloc(maxLODEntries * sizeof(LODEntry));
         nextAvailableLODEntryIndex = 0;
     }
-    memset((void *)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
+    memset((void*)&lodEntryPool[nextAvailableLODEntryIndex], 0, sizeof(LODEntry));
     return &lodEntryPool[nextAvailableLODEntryIndex++];
 }
 
@@ -315,7 +315,7 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
             Vector source;
             center.y += pDescriptor->height / 2.0f;
             GameCamera_GetVectors(&source, &target, NULL);
-            if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != TY_AS_45) {
+            if (RayToSphere(&source, &target, &center, 10.0f + pDescriptor->radius, -1.0f, true) && heroState != AS_FirstPerson) {
                 pModel->colour.w = Max<float>(pDescriptor->minalpha, pModel->colour.w - 0.05625f);
             } else {
                 pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);

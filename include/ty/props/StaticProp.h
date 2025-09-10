@@ -138,7 +138,7 @@ struct StaticFXProp : StaticProp {
     u8 b6 : 1;
     u8 b7 : 1;
     
-    int unk9C;
+    int nextParticleSpawnFrame; // Frame on which the next particle will spawn
     int rotateSubObjIndex;
     
     virtual bool LoadLine(KromeIniLine* pLine);

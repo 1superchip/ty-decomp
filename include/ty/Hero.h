@@ -5,11 +5,19 @@
 #include "ty/Shadow.h"
 #include "ty/effects/RainbowEffect.h"
 #include "ty/TyHealth.h"
+#include "ty/soundbank.h"
 
 // Hero might be at least 0x104 bytes long as Ty and Bushpig both have a
 // CheckpointStruct pointer at 0x100
 
-struct SpecialPickupStruct;
+
+struct SpecialPickupStruct {
+    int unk0[2];
+    void SetTransparent(bool);
+    void SetCollected(bool);
+    void ScaleOut(void);
+};
+
 struct CheckpointStruct;
 struct WakeStruct;
 
@@ -39,7 +47,17 @@ struct GlowParticleData {
 };
 
 struct TySounds {
-    char padding[0xA4];
+    int unk0;
+    int unk4;
+    int unk8;
+    int unkC;
+    int unk10;
+    
+    SoundEventFader mFader1;
+    SoundEventFader mFader2;
+    SoundEventFader mFader3;
+
+    DynamicPhrasePlayer mPhrasePlayer;
 
     void Init(void);
     void Reset(void);

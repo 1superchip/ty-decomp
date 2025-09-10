@@ -5,14 +5,12 @@
 
 void Hud_ShowLives(void);
 
-void VibrateJoystick(float, float, float, char, float);
-
 extern "C" int Sound_IsVoicePlaying(int);
 
 HealthInfo TyHealth::heathInfo[] = {
-    {2, 4, 1, 4, 0x10F, -1, -1, "paw_health"},
-    {2, 8, 1, 8, 0x21, 0x22, 0x23, "paw_air"},
-    {2, 4, 1, 8, -1, -1, -1, "paw_health"}
+    {2, 4, 1, 4, 0x10F, -1, -1, "paw_health", NULL},
+    {2, 8, 1, 8, 0x21, 0x22, 0x23, "paw_air", NULL},
+    {2, 4, 1, 8, -1, -1, -1, "paw_health", NULL}
 };
 
 void TyHealth::Init(TyHealthType type) {

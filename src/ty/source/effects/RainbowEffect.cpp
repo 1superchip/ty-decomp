@@ -45,7 +45,7 @@ void RainbowEffect_Update(ParticleSystem* pSys) {
             pParticle->mColor.w = pSys->mpType->mpEnvelopes[prevEnvIndex].unk4 + 
                 (f4 * pSys->mpType->mpEnvelopes[prevEnvIndex].unk14);
 
-            if (gb.logicGameCount & 1) {
+            if ((gb.logicGameCount % 2) != 0) {
                 pParticle->unk30 = Max<float>(pParticle->unk30 - (f31 * 25.0f), 0.11f);
                 pParticle->unk30 += RandomFR(&gb.mRandSeed, 0.0f, 0.2f);
             }
@@ -137,7 +137,7 @@ void RainbowEffect::Update(float f1) {
     Vector pp1;
     pp1.SetZero();
 
-    if (gb.logicGameCount & 1) {
+    if ((gb.logicGameCount % 2) != 0) {
         for (int i = 0; i < NUM_RAINBOWEFFECT_SUBS; i++) {
             subs[i].unk8++;
             if (!subs[i].unk4 || subs[i].unk8 == subs[i].unkC * 5) {

@@ -1824,7 +1824,7 @@ void Doomerang::Fire(Vector* pVel, Vector* p1) {
     mOldPos = mPos = *GetCatchPos();
 
     if (ty.mFsm.GetStateEx() != TY_AS_28) {
-        ty.mFsm.SetState(TY_AS_50, false);
+        ty.mFsm.SetState(AS_Doomerang, false);
 
         boomerangs.AddEntry(this);
 

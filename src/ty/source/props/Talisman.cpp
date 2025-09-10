@@ -62,7 +62,7 @@ void Talisman::Update(void) {
         return;
     }
     
-    if ((gb.logicGameCount & 3) == 1) {
+    if ((gb.logicGameCount % 4) == 1) {
         Vector vec; // particlePos?
         Vector vec1; // vel?
 

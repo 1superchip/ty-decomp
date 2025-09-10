@@ -163,7 +163,7 @@ enum SoundID {
     SFX_TyLand = 0x4,
     SFX_TyLongfallLand = 0x5,
 
-    SFX_Ty_0x9 = 0x9,
+    SFX_TyWaterBubble = 0x9,
 
     SFX_TyBiteRelease = 0x13,
 

@@ -199,8 +199,6 @@ void Bunyip::Disappear(void) {
     UpdatePos(GetPos(), &mRot);
 }
 
-void SoundBank_PauseMusic(bool, float);
-
 void Bunyip::SetState(BunyipState newState) {
     if (mState == newState) {
         return;

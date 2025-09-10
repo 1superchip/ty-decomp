@@ -195,7 +195,6 @@ bool LevelData::ShowGemCount(LevelNumber levelNr) {
     return levelInfo[levelNr].bShowGemCount;
 }
 
-void Ty_Deinit(void);
 void BushPig_Deinit(void);
 void GameCamera_Deinit(void);
 void MiniGame_Deinit(void);
@@ -220,7 +219,6 @@ void LetterBox_Deinit(void);
 void WaterSlide_Deinit(void);
 void Shatter_Deinit(void);
 void Enemies_DeinitBoundingRegions(void);
-void SoundBank_Deinit(void);
 
 struct FootEffect {
     char padding[0x10];
@@ -385,7 +383,6 @@ extern void IceBlock_Init(void);
 extern void Critters_Init(void);
 extern void Fly_InitTyFlies(void);
 extern void Dialog_Init(void);
-extern void Ty_Init(void);
 extern void BushPig_Init(void);
 extern void Level_Load(char*);
 extern void Waterfall_Init(void);

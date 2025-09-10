@@ -12,6 +12,9 @@
 #include "ty/Quadratic.h"
 #include "ty/global.h"
 
+void Ty_Init(void);
+void Ty_Deinit(void);
+
 struct Bunyip;
 
 struct Ty;
@@ -50,10 +53,11 @@ enum KnockBackType {
 
 // Ty movement state: Air, Water, Land, UnderWater
 enum TyMedium {
-    TY_MEDIUM_0 = 0,
+    MD_None = 0,
     TY_MEDIUM_1 = 1,
     TY_MEDIUM_2 = 2,
     TY_MEDIUM_3 = 3,
+    TY_MEDIUM_4 = 4,
 };
 
 // No symbol
@@ -98,11 +102,35 @@ struct TyMediumMachine {
     }
 
     void Update(Ty* pActor, bool arg2) {
+        if (unk4 != -1) {
+            if (unk0 != -1) {
+                if (pStates[unk0].Deinit) {
+                    (pActor->*pStates[unk0].Deinit)();
+                }
+            }
 
+            unk8 = unk0;
+            unk0 = unk4;
+            unk4 = -1;
+
+            if (unk0 != -1) {
+                if (pStates[unk0].func1) {
+                    (pActor->*pStates[unk0].func1)();
+                }
+            }
+        }
+
+        if (unk0 != -1) {
+            if (pStates[unk0].func3) {
+                (pActor->*pStates[unk0].func3)();
+            }
+        }
     }
 
     void SetNewState(TyMedium nState, bool arg2) {
-
+        if (arg2 || unk0 != nState) {
+            unk4 = nState;
+        }
     }
 
     TyMedium GetUnk0(void) {
@@ -112,9 +140,9 @@ struct TyMediumMachine {
 
 // TODO: Finish this
 enum HeroActorState {
-    TY_AS_0 = 0,
-    TY_AS_1 = 1,
-    TY_AS_2 = 2,
+    AS_None = 0,
+    AS_Bite = 1,
+    AS_Sneak = 2,
     TY_AS_3 = 3,
     TY_AS_4 = 4,
     TY_AS_5 = 5,
@@ -145,7 +173,7 @@ enum HeroActorState {
     TY_AS_30 = 30,
     TY_AS_31 = 31,
     TY_AS_32 = 32,
-    TY_AS_33 = 33,
+    AS_FindItem = 33,
     TY_AS_34 = 34,
     TY_AS_35 = 35,
     TY_AS_36 = 36,
@@ -157,12 +185,12 @@ enum HeroActorState {
     TY_AS_42 = 42,
     TY_AS_43 = 43,
     TY_AS_44 = 44,
-    TY_AS_45 = 45,
+    AS_FirstPerson = 45,
     TY_AS_46 = 46,
     TY_AS_47 = 47,
     TY_AS_48 = 48,
     TY_AS_49 = 49,
-    TY_AS_50 = 50,
+    AS_Doomerang = 50,
     TY_AS_51 = 51,
 };
 
@@ -181,7 +209,7 @@ struct TyFSM {
         ActiveFunc  Active;
         DrawFunc    Draw;
         EventFunc   Event;
-        int         medium; // Not sure?
+        TyMedium    medium;
     };
 
     int unk0;
@@ -269,8 +297,8 @@ struct TyFSM {
     }
 
     // needs to be defined before GetState?
-    int GetStateEx(void) {
-        return GetState();
+    HeroActorState GetStateEx(void) {
+        return (HeroActorState)GetState();
     }
 
     void Update(Ty*);
@@ -329,9 +357,9 @@ struct TyContext {
     float jumpGravity;
     float jumpMaxGravity;
 
-    void Init(float f1, float f2) {
-        jumpGravity = f1;
-        jumpMaxGravity = f2;
+    void Init(float gravity, float maxGravity) {
+        jumpGravity = gravity;
+        jumpMaxGravity = maxGravity;
 
         Reset();
     }
@@ -435,6 +463,9 @@ struct TyBite {
     Vector* unk150;
     bool isTargeting;
     bool unk155;
+
+    void Init(void);
+    void Deinit(void);
 };
 
 struct WaterSlideManager;
@@ -449,6 +480,9 @@ struct WaterSlideData {
     int unk1C;
     WaterSlideManager* pWSMan;
     StateMachine<WaterSlideData> slideFsm;
+
+    void Init(void);
+    void Deinit(void);
 };
 
 struct TrailPoint {
@@ -458,11 +492,15 @@ struct TrailPoint {
 
 struct DustTrail {
     char padding[0x18];
+
+    void Init(Vector*, float, float, float);
+    void Deinit();
 };
 
 enum TyHeads {
-    TY_HEAD_0 = 0,
-    TY_HEAD_1 = 1
+    TYH_Normal = 0,
+    TYH_1 = 1,
+    TYH_Max
 };
 
 struct Ty : Hero {
@@ -542,8 +580,7 @@ struct Ty : Hero {
     float unk530;
 
     MKAnimScript unk534;
-    MKAnimScript rangPropLeftAnimScript;
-    MKAnimScript rangPropRightAnimScript;
+    MKAnimScript rangPropAnimScripts[2];
     char padding594[0x20]; // MKAnimScript?
 
     MKAnim* walkAnim;
@@ -606,8 +643,62 @@ struct Ty : Hero {
 
     MKAnim* flinchAnims[3];
 
-    char padding348[0x828 - 0x714];
-    uint unk828;
+    char padding[0x778 - 0x714];
+
+    MKAnim* unk778;
+
+    char padding1[0x7B0 - 0x77C];
+
+    char* unk7B0;
+    char* unk7B4;
+
+    char* unk7B8;
+    char* unk7BC;
+
+    char* unk7C0;
+    char* unk7C4;
+
+    char* unk7C8;
+
+    char* unk7CC;
+    char* unk7D0;
+
+    char* unk7D4;
+    char* unk7D8;
+
+    char* unk7DC;
+    char* unk7E0;
+
+    char* unk7E4;
+    char* unk7E8;
+
+    char* unk7EC;
+    char* unk7F0;
+
+    char* unk7F4;
+    char* unk7F8;
+
+    char* unk7FC;
+    char* unk800;
+
+    char* unk804;
+
+    char* unk808;
+    
+    char* unk80C;
+
+    char* unk810;
+
+    char* unk814;
+
+    char* unk818;
+
+    char* unk81C;
+
+    char* unk820;
+    char* unk824;
+
+    uint unk828; // drownTriggerFrame (frame when Ty should drown)
     BoomerangType mBoomerangType;
     TyContext mContext;
     TyFSM mFsm;
@@ -619,8 +710,7 @@ struct Ty : Hero {
     Vector rangLight1;
     char unkA9C[0x318]; // ReflectionStruct
     ParticleSystem* pSystems[3];
-    int unkDC0;
-    ParticleSystem* unkDC4;
+    ParticleSystem* unkDC0[2];
     int breathMist;
     int randomNum;
     int unkDD0;
@@ -645,8 +735,7 @@ struct Ty : Hero {
     RainbowEffect mTyRainbowEffect;
     char unk1114;
     BoomerangManager mBoomerangManager;
-    BoomerangAnimInfo unk11F8;
-    BoomerangAnimInfo unk1220;
+    BoomerangAnimInfo unk11F8[2];
     int boomerangButton; // direction to change boomerangs
     bool unk124C;
     TyBite tyBite;
@@ -771,6 +860,8 @@ struct Ty : Hero {
     virtual void Update(void);
     virtual void Draw(void);
 
+    virtual void Message(MKMessage* pMsg);
+
     virtual bool IsBiting(void);
 
     virtual bool InWater(void) {
@@ -778,9 +869,10 @@ struct Ty : Hero {
     }
 
     virtual bool IsClaiming(void);
-    virtual void SetFindItem(Vector*, SpecialPickupStruct*);
+    virtual void SetFindItem(Vector* pPos, SpecialPickupStruct* pPickup);
 
     void LoadResources(void);
+    void FreeResources(void);
 
     void Init(void);
     void InitEvents(void);
@@ -788,24 +880,54 @@ struct Ty : Hero {
     
     void ResetVars(void);
 
+    // Animation related
+    void StartBlendAnimation(MKAnim*, bool);
+    void StartAnimation(MKAnimScript*, MKAnim*, int, bool);
+    void StartAnimIfNew(MKAnimScript*, MKAnim*, int, bool);
+
+    // Speed / Rotation
+    void UpdateHorzVel(float smoothing);
+    void UpdateYaw(float scale);
+    float GetYawFromJoy(void);
+    float GetSpeedFromJoyPad(float);
+    void SetPitchAndRoll(float, float);
+    void ResetPitchAndRoll(void);
+    void Pitch(void);
+    //
+
+    bool IsJoyPadZero(void);
+
     // Damage related
     void StartDeath(HurtType, bool);
     void Hurt(HurtType, DDADamageCause, bool, Vector*, float);
 
-    void SetBunyip(Bunyip*);
+    void SetBunyip(Bunyip* pNewBunyip);
+    void SetTwirlRangs(void);
+
     void AddShadowLight(Vector*, float);
-    void SetAbsolutePosition(Vector*, int, float, bool);
+    
+    // Positioning
+    bool StableReposition(Vector* pPos, Vector* pNewRot);
+
+    void UpdateLocalToWorldMatrix(void);
+
+    bool FallMove(float, float, float);
+
+    bool SetAbsolutePosition(Vector*, int, float, bool);
     void SetBounceOffFromPos(Vector*, float, bool);
 
     void SetKnockBackFromPos(Vector*, float, KnockBackType);
     void SetKnockBackFromDir(Vector*, float, KnockBackType);
+    //
+
+    void SetToIdle(bool bResetVel, TyMedium);
 
     bool TryChangeState(bool, HeroActorState);
     bool TryChangeState(int, HeroActorState);
 
     void SetMedium(TyMedium medium) {
-        // mMediumMachine.SetNewState(medium, false);
-        // mMediumMachine.Update(this, false);
+        mMediumMachine.SetNewState(medium, false);
+        mMediumMachine.Update(this, false);
     }
 
     TyMedium GetMedium(void) {
@@ -819,7 +941,7 @@ struct Ty : Hero {
     void SetWarpHide(void) {
         
     }
-
+    
     // Medium States
     void WaterMediumInit(void);
     void WaterMediumUpdate(void);
@@ -861,7 +983,6 @@ struct Ty : Hero {
 };
 
 extern Ty ty;
-
 
 // Not sure where to put this:
 #include "ty/tools.h"

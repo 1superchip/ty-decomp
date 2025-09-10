@@ -89,8 +89,6 @@ void DDASession::EndSession(void) {
     bSessionStarted = false;
 }
 
-extern "C" void memset(void*, int, int);
-
 void DDASession::NewCheckpoint(int arg1) {
     TimerInfo startTime; // checkpoint start time
     if (currentCheckpoint != NULL) {

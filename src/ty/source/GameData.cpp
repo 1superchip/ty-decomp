@@ -10,11 +10,6 @@
 // EXTERNS
 void Hud_SetGems(int);
 void Hud_ShowCogs(void);
-struct SpecialPickupStruct {
-    int unk0[2];
-    void SetTransparent(bool);
-    void SetCollected(bool);
-};
 SpecialPickupStruct* GetThunderEgg(ThunderEggType);
 SpecialPickupStruct* GetGoldenCog(GoldenCogType);
 void Basket_PlaceUnused(Vector*);
@@ -27,7 +22,6 @@ void TyMemCard_AutoSaveGame(void);
 void Bilby_SetRescued(BilbyType, bool);
 extern "C" void Sound_SetSystemAudioMode(int);
 extern "C" int Sound_GetSystemAudioMode(void);
-void SoundBank_SetVolume(float, int);
 View* GameCamera_View(void);
 void Hud_ShowLives(void);
 void Hud_ShowBilbies(void);
