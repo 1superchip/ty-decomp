@@ -307,6 +307,35 @@ struct FaderObject {
     void Fade(FaderObject::FadeMode, float, float, float, bool);
     FaderObject::FadeState GetNextState(FaderObject::FadeState, FaderObject::FadeMode);
     float GetFadePercentage(void);
+
+    void ChangeState(FadeState newState) {
+        prevFadeState = currFadeState;
+        currFadeState = newState;
+    }
+
+    bool IsCurrState0(void) {
+        return currFadeState == FADESTATE_0;
+    }
+
+    bool IsCurrState1(void) {
+        return currFadeState == FADESTATE_1;
+    }
+
+    bool IsCurrState2(void) {
+        return currFadeState == FADESTATE_2;
+    }
+
+    bool IsCurrState3(void) {
+        return currFadeState == FADESTATE_3;
+    }
+
+    bool IsPrevState1(void) {
+        return prevFadeState == FADESTATE_1;
+    }
+
+    bool IsPrevState2(void) {
+        return prevFadeState == FADESTATE_2;
+    }
 };
 
 template <typename T>

@@ -5,6 +5,8 @@
 #include "common/Material.h"
 #include "common/Vector.h"
 
+extern char* gpBuildVersion;
+
 struct ZCheckRequest {
     Vector unk0;
     int unk10;

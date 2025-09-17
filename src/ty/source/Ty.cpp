@@ -2,6 +2,8 @@
 #include "ty/global.h"
 #include "ty/ParticleEngine.h"
 #include "ty/bunyip.h"
+#include "ty/main.h"
+#include "ty/controlval.h"
 
 static GameObjDesc tyDesc;
 Ty ty;
@@ -200,6 +202,50 @@ bool TyFSM::AirState(int state) {
     return false;
 }
 
+void Hud_BoomerangScroll(int, int);
+
+void RangChangeData::PerformChange(void) {
+    if (boomerangButton == 0) {
+        return;
+    }
+
+    BoomerangType foundType = ty.mBoomerangManager.GetCurrentType();
+
+    while (Abs<int>(boomerangButton) != 0) {
+        foundType = boomerangButton > 0 ? GetNextRang(foundType) : GetPrevRang(foundType);
+
+        if (foundType == BR_Aquarang) {
+            // Disallow switching to the aquarang as it is only meant to be used underwater
+            // and is forced to be used underwater
+            foundType = boomerangButton > 0 ? GetNextRang(foundType) : GetPrevRang(foundType);
+        }
+
+        boomerangButton = boomerangButton + (boomerangButton > 0 ? -1 : 1);
+    }
+
+    if (ty.mBoomerangManager.GetCurrentType() != foundType) {
+        ty.mBoomerangManager.SetType(foundType);
+        
+        Hud_BoomerangScroll(foundType, 0);
+    }
+}
+
+void BoomerangAnimInfo::Init(BoomerangSide side) {
+    unk8.Init(&ty.rangPropAnimScripts[side]);
+
+    pModel = Model::Create(
+        ty.rangPropAnimScripts[side].GetMeshName(),
+        ty.rangPropAnimScripts[side].GetAnimName()
+    );
+
+    pModel->b5 = true;
+}
+
+void BoomerangAnimInfo::Deinit(void) {
+    pModel->Destroy();
+    unk8.Deinit();
+}
+
 void Ty_LoadResources(void) {
     tyDesc.Init(
         &tyModuleInfo,
@@ -298,8 +344,6 @@ extern "C" double atan2(double, double);
 
 float GameCamera_GetMoveYaw(void);
 
-float ValidPIRange(float);
-
 void Ty::UpdateYaw(float scale) {
     if (!IsJoyPadZero()) {
         float moveYaw = GameCamera_GetMoveYaw();
@@ -328,27 +372,29 @@ float Ty::GetYawFromJoy(void) {
     }
 }
 
-char* playerFileNames[] = {
-    "act_01_ty",
-    "act_01_tyshadow",
-    "act_01_ty_01",
-    "act_01_ty_02"
+struct PlayerFileNameStruct {
+    char* unk0;
+    char* unk4;
+    char* unk8;
+    char* unkC;
 };
 
-void BoomerangAnimInfo::Init(void) {
+// char* playerFileNames[] = {
+//     "act_01_ty",
+//     "act_01_tyshadow",
+//     "act_01_ty_01",
+//     "act_01_ty_02"
+// };
 
-}
-
-void BoomerangAnimInfo::Deinit(void) {
-    unk0->Destroy();
-    unk8.Deinit();
-}
+PlayerFileNameStruct playerFileNames[] = {
+    {"act_01_ty", "act_01_tyshadow", "act_01_ty_01", "act_01_ty_02"}
+};
 
 void Ty::LoadResources(void) {
     rangPropAnimScripts[0].Init("prop_0137_rangpropleft");
     rangPropAnimScripts[1].Init("prop_0137_rangpropright");
     
-    unk534.Init(playerFileNames[gb.unk100 * 4]);
+    unk534.Init(playerFileNames[gb.unk100].unk0);
 
     animScript.Init(&unk534);
     unk4EC.Init(&unk534);
@@ -362,22 +408,26 @@ void Ty::LoadResources(void) {
     } else {
         pModel = Model::Create(unk534.GetMeshName(), unk534.GetAnimName());
 
-        pReflectionModel = Model::Create(playerFileNames[gb.unk100 * 4 + 1], NULL);
+        pReflectionModel = Model::Create(playerFileNames[gb.unk100].unk4, NULL);
         pReflectionModel->pAnimation = pModel->GetAnimation();
 
         mShadow.Init(
-            playerFileNames[gb.unk100 * 4 + 1],
+            playerFileNames[gb.unk100].unk4,
             pModel,
             250.0f,
             NULL
         );
 
-        pMatEyes = Material::Find(playerFileNames[gb.unk100 * 4 + 3]);
+        pMatEyes = Material::Find(playerFileNames[gb.unk100].unkC);
         pMatEyeballs = Material::Find("Act_01_TY_01a");
         // GetNodesAndSubObjects();
         // LoadAnimations();
 
-        unk530 = 0.0f;
+        StartAnimation(&animScript, biteUnchargeAnim, 0, false);
+        StartAnimation(&unk4EC, biteUnchargeAnim, 0, true);
+
+        unk11F8[0].Init(BOOMERANG_SIDE_LEFT);
+        unk11F8[1].Init(BOOMERANG_SIDE_RIGHT);
     }
 }
 
@@ -406,6 +456,10 @@ void Ty::FreeResources(void) {
 
     unk534.Deinit();
 }
+
+void Particle_FrostyBreath_Init(ParticleSystem**, Vector*, BoundingVolume*);
+void Particle_Fire_Init(ParticleSystem**, Vector*, BoundingVolume*, float, bool);
+void Particle_Ice_Init(ParticleSystem**, Vector*);
 
 void Ty::Init(void) {
     Ty::Init(&tyDesc);
@@ -439,6 +493,23 @@ void Ty::Init(void) {
         tyBite.Init();
 
         InitEvents();
+
+        StartAnimation(&animScript, biteUnchargeAnim, 0, false);
+
+        mFsm.SetState(TY_AS_35, false);
+
+        opalMagnetData.Init();
+        glowParticleData.Init();
+
+        switch (breathMist) {
+            case 1:
+                Particle_FrostyBreath_Init(&unkDC0[breathMist], pModel->matrices[0].Row3(), pModel->GetModelVolume());
+                break;
+        }
+
+        Particle_Fire_Init(&pSystems[0], pModel->matrices[0].Row3(), pModel->GetModelVolume(), 2.0f, true);
+        Particle_Fire_Init(&pSystems[1], pModel->matrices[0].Row3(), pModel->GetModelVolume(), 2.0f, false);
+        Particle_Ice_Init(&pSystems[2], pModel->matrices[0].Row3());
 
         BoundingVolume volume = *(pModel->GetModelVolume());
 
@@ -604,7 +675,15 @@ void Ty::Reset(void) {
 }
 
 void Ty::ResetVars(void) {
+    gb.ResetLight();
 
+    tyBite.Reset();
+
+    mBoomerangManager.Reset();
+
+    mAutoTarget.Reset();
+
+    EnableHead(TYH_Normal);
 }
 
 void Ty::Update(void) {
@@ -865,8 +944,62 @@ bool Ty::FallMove(float f1, float f2, float f3) {
     return velocity.MagSquared() > 0.0f;
 }
 
+void Ty::UpdateAnimation(void) {
+    ProcessAnimationEvents(&animScript);
+    ProcessAnimationEvents(&unk4EC);
+
+    animScript.Animate();
+    unk4EC.Animate();
+
+    if (unk530 > 0.0f) {
+        pModel->pAnimation->Tween(animScript.unkC, 1.0f - unk530);
+        unk530 -= 0.1f;
+    } else {
+        animScript.Apply(pModel->pAnimation);
+    }
+
+    if (!unk4EC.Condition()) {
+        unk4EC.ApplyNode(pModel->pAnimation, unk488);
+    }
+
+    mBoomerangManager.UpdateAnimation(pModel);
+
+    if (unk52C) {
+        unk50C.ApplyNode(pModel->pAnimation, unk4B0);
+    }
+}
+
 bool Ty::IsJoyPadZero(void) {
     return gb.mJoyPad1.GetUnk58() == 0.0f && gb.mJoyPad1.GetUnk5C() == 0.0f;
+}
+
+bool Ty::TryChangeState(bool r4, HeroActorState nState) {
+    if (pBunyip) {
+        if (gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.activeControls[1]) {
+            pBunyip->SetState(BUNYIP_ROAR);
+        }
+
+        if (!mFsm.MoveState(nState) && !mFsm.SwimmingState(nState) && nState != TY_AS_35 && nState != TY_AS_7 && nState != TY_AS_26) {
+            return false;
+        }
+
+        if (pBunyip->GetState() == BUNYIP_PUNCH || pBunyip->GetState() == BUNYIP_ROAR) {
+            if (nState != TY_AS_35 && nState != TY_AS_26) {
+                nState = TY_AS_35;
+            }
+        }
+    }
+
+    if (r4 && ty.mFsm.GetStateEx() != nState) {
+        ty.mFsm.SetState(nState, false);
+        return true;
+    }
+
+    return false;
+}
+
+bool Ty::TryChangeState(int r4, HeroActorState nState) {
+    return TryChangeState(r4 ? true : false, nState);
 }
 
 void AutoTargetStruct::Set(TargetPriority prio, Vector*, Vector*, Vector*, Model*) {
@@ -892,19 +1025,21 @@ void Ty::Message(MKMessage* pMsg) {
         case MSG_UpdateAttachment: {
             PlatformMoveMsg* pUpdateMsg = (PlatformMoveMsg*)pMsg;
 
-            Vector unk28 = mLedgePullUpData.unk4;
+            Vector v = mLedgePullUpData.unk4;
 
-            unk28.ApplyMatrix(pUpdateMsg->pModelInverseMatrix);
-            unk28.ApplyMatrix(pUpdateMsg->pModelMatrix);
+            v.ApplyMatrix(pUpdateMsg->pModelInverseMatrix);
+            v.ApplyMatrix(pUpdateMsg->pModelMatrix);
 
-            Vector unk18 = {
-                unk28.x - mLedgePullUpData.unk4.x, 
-                unk28.y - mLedgePullUpData.unk4.y, 
-                unk28.z - mLedgePullUpData.unk4.z, 
+            Vector deltaPos = {
+                0.0f,
+                0.0f,
+                0.0f,
                 1.0f
             };
 
-            mLedgePullUpData.LedgeMoved(&unk18, pUpdateMsg->rot->y);
+            deltaPos.Sub(&v, &mLedgePullUpData.unk4);
+
+            mLedgePullUpData.LedgeMoved(&deltaPos, pUpdateMsg->rot->y);
 
             SetAbsolutePosition(pUpdateMsg->trans, 20, 1.0f, GetMedium() == TY_MEDIUM_1);
 
@@ -1120,27 +1255,54 @@ void TySounds::UpdateSounds(void) {
 }
 
 void Ty::InitRangChange(void) {
-    unk530 = 0.0f;
+    StartAnimation(&animScript, unk778, 5, false);
 
-    if (unk778) {
-        animScript.TweenAnim(unk778, 5);
-    }
+    mRangChangeData.boomerangButton = (gb.mJoyPad1.mButtonsPressed & tyControl.buttonVals[3]) ? 1 : -1;
+    mRangChangeData.unk4 = false;
 }
 
 void Ty::DeinitRangChange(void) {
-
+    mRangChangeData.PerformChange();
 }
 
 void Ty::RangChange(void) {
+    UpdateAnimation();
 
+    bool b = gb.mJoyPad1.IsNewlyPressed(3);
+    bool b1 = gb.mJoyPad1.IsNewlyPressed(2);
+
+    mRangChangeData.unk4 = mRangChangeData.unk4 || b1 || b;
+    
+
+    if (animScript.currAnim != unk778 && animScript.nextAnim != unk778) {
+        mRangChangeData.boomerangButton += b;
+        mRangChangeData.boomerangButton -= b1;
+        mRangChangeData.PerformChange();
+    }
+
+    if (animScript.Condition() && (animScript.currAnim == unk778 || animScript.currAnim == unk77C)) {
+        if (mRangChangeData.unk4) {
+            mRangChangeData.unk4 = false;
+            StartAnimation(&animScript, unk77C, 0, true);
+        } else {
+            StartAnimation(&animScript, unk780, 5, true);
+        }
+    }
+
+
+    RangChangeTransition();
 }
 
 void Ty::RangChangeTransition(void) {
-
+    if (animScript.Condition() || mBoomerangManager.HasFired()) {
+        // TryChangeState()
+    }
 }
 
-void Ty::SwapRangs(char*) {
-
+void Ty::SwapRangs(char* r4) {
+    if (r4 == unk810) {
+        mRangChangeData.PerformChange();
+    }
 }
 
 void Ty::InitTwirlRang(void) {
@@ -1148,7 +1310,13 @@ void Ty::InitTwirlRang(void) {
 }
 
 void Ty::TwirlRang(void) {
+    UpdateAnimation();
 
+    if (animScript.Condition() && animScript.currAnim == unk778) {
+        StartAnimation(&animScript, unk780, 5, false);
+    }
+
+    TryChangeState(animScript.Condition() && animScript.currAnim == unk780, TY_AS_35);
 }
 
 bool Ty::IsAbleToGlide(void) {

@@ -15,16 +15,18 @@
 void Ty_Init(void);
 void Ty_Deinit(void);
 
+void Ty_LoadResources(void);
+
 struct Bunyip;
 
 struct Ty;
 
 struct BoomerangAnimInfo {
-    Model* unk0;
+    Model* pModel;
     bool unk4;
     MKAnimScript unk8;
 
-    void Init(void);
+    void Init(BoomerangSide anim);
     void Deinit(void);
 };
 
@@ -242,6 +244,10 @@ struct TyFSM {
 
     int GetUnk0(void) {
         return unk0;
+    }
+
+    int GetUnk4(void) {
+        return unk4;
     }
 
     int GetState(void) {
@@ -466,6 +472,7 @@ struct TyBite {
 
     void Init(void);
     void Deinit(void);
+    void Reset(void);
 };
 
 struct WaterSlideManager;
@@ -495,6 +502,13 @@ struct DustTrail {
 
     void Init(Vector*, float, float, float);
     void Deinit();
+};
+
+struct RangChangeData {
+    int boomerangButton; // direction to change boomerangs
+    bool unk4;
+
+    void PerformChange(void);
 };
 
 enum TyHeads {
@@ -529,10 +543,10 @@ struct Ty : Hero {
     int unk3AC;
     Vector unk3B0;
 
-    MKAnim* unk3C0;
+    int unk3C0;
     Vector unk3C4;
 
-    MKAnim* unk3D4;
+    int unk3D4;
     Vector unk3D8;
 
     int unk3E8;
@@ -559,7 +573,7 @@ struct Ty : Hero {
     int unk474;
     Vector unk478;
 
-    MKAnim* unk488;
+    int unk488;
     Vector unk48C;
 
     int unk49C;
@@ -646,8 +660,10 @@ struct Ty : Hero {
     char padding[0x778 - 0x714];
 
     MKAnim* unk778;
+    MKAnim* unk77C;
+    MKAnim* unk780;
 
-    char padding1[0x7B0 - 0x77C];
+    char padding1[0x7B0 - 0x784];
 
     char* unk7B0;
     char* unk7B4;
@@ -736,8 +752,7 @@ struct Ty : Hero {
     char unk1114;
     BoomerangManager mBoomerangManager;
     BoomerangAnimInfo unk11F8[2];
-    int boomerangButton; // direction to change boomerangs
-    bool unk124C;
+    RangChangeData mRangChangeData;
     TyBite tyBite;
     Bunyip* pBunyip;
     int unk13AC;
@@ -865,7 +880,7 @@ struct Ty : Hero {
     virtual bool IsBiting(void);
 
     virtual bool InWater(void) {
-        return false;
+        return GetMedium() == TY_MEDIUM_2 || GetMedium() == TY_MEDIUM_3;
     }
 
     virtual bool IsClaiming(void);
@@ -884,6 +899,9 @@ struct Ty : Hero {
     void StartBlendAnimation(MKAnim*, bool);
     void StartAnimation(MKAnimScript*, MKAnim*, int, bool);
     void StartAnimIfNew(MKAnimScript*, MKAnim*, int, bool);
+
+    void ProcessAnimationEvents(MKAnimScript*);
+    void UpdateAnimation(void);
 
     // Speed / Rotation
     void UpdateHorzVel(float smoothing);

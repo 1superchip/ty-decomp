@@ -87,8 +87,8 @@ struct BoomerangManagerInit {
     BoomerangType defaultType;
     bool unkC;
     MKAnimScript* pAnimScript;
-    MKAnim* pAnim;
-    MKAnim* unk18[2]; // check type
+    int unk14; // nodeIndex?
+    int unk18[2]; // check type
     Tools_AnimEvent animEvents[5];
     BoomerangManagerAnims mAnims;
 };
@@ -97,7 +97,7 @@ struct BoomerangManager {
     BoomerangWeapon* mpWeapons[BOOMERANG_SIDE_COUNT];
     bool bShowRangs[BOOMERANG_SIDE_COUNT];
     MKAnimScript unkC[BOOMERANG_SIDE_COUNT];
-    MKAnim* unk4C[BOOMERANG_SIDE_COUNT]; // check type
+    unsigned int unk4C[BOOMERANG_SIDE_COUNT]; // check type
     BoomerangSide mCurrentSide;
     bool bEnabled;
     bool unk59;

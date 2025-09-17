@@ -222,13 +222,13 @@ void SoundBank_Update(void) {
         default:
             return;
         case 1:
-            if (soundEventManager.fader.currFadeState == FaderObject::FADESTATE_0) {
+            if (soundEventManager.fader.IsCurrState0()) {
                 soundEventManager.unk18 = 0;
                 return;
             }
             break;
         case 2:
-            if (soundEventManager.fader.currFadeState == FaderObject::FADESTATE_0) {
+            if (soundEventManager.fader.IsCurrState0()) {
                 soundEventManager.unk18 = 0;
                 Sound_MusicPause(1);
                 return;
@@ -976,21 +976,21 @@ void SoundEventFader::Reset(void) {
 void SoundEventFader::Update(int voiceCode, bool r5, bool r6, GameObject* pGameObject, Vector* pVec, float f1, int flags) {
     int helperVoiceCode = helper.unk0;
     if (helperVoiceCode != -1) {
-        if (!r6 && fader.currFadeState != FaderObject::FADESTATE_2 && unk24 > 0.0f) {
+        if (!r6 && !fader.IsCurrState2() && unk24 > 0.0f) {
             r6 = true;
             fader.Fade(FaderObject::FADEMODE_5, 0.0f, unk24, 0.0f, true);
-        } else if (r6 && fader.currFadeState == FaderObject::FADESTATE_2) {
+        } else if (r6 && fader.IsCurrState2()) {
             fader.Fade(FaderObject::FADEMODE_1, unk20, 0.0f, 0.0f, true);
         }
 
-        if (fader.currFadeState != FaderObject::FADESTATE_0) {
+        if (!fader.IsCurrState0()) {
             fader.Update();
 
             int percentage = fader.GetFadePercentage() * 255.0f;
 
             Sound_SetVolume(helper.unk0, percentage, percentage);
             
-            if (fader.currFadeState == FaderObject::FADESTATE_2) {
+            if (fader.IsCurrState2()) {
                 r6 = true;
             }
         }

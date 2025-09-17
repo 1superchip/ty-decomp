@@ -547,18 +547,18 @@ void BoomerangManager::StartThrowAnim(BoomerangSide side) {
     if (unk59) {
         unkC8 = BOOMERANG_SIDE_LEFT;
         unk4C[side] = init.unk18[side];
-        unk4C[BOOMERANG_SIDE_LEFT] = init.pAnim;
+        unk4C[BOOMERANG_SIDE_LEFT] = init.unk14;
         unkC[side].SetAnim(init.mAnims.unk4);
     } else {
         if (unkC8 == 2) {
             unkC8 = side;
             int nextSide = (side + 1) % BOOMERANG_SIDE_COUNT;
-            if (unk4C[nextSide] == init.pAnim) {
+            if (unk4C[nextSide] == init.unk14) {
                 unk4C[nextSide] = init.unk18[nextSide];
             }
         }
 
-        unk4C[side] = side == unkC8 ? init.pAnim : init.unk18[side];
+        unk4C[side] = side == unkC8 ? init.unk14 : init.unk18[side];
 
         unkC[side].SetAnim(init.mAnims.unk8[side]);
     }
@@ -569,12 +569,12 @@ void BoomerangManager::StartCatchAnim(BoomerangSide side) {
     if (unkC8 == BOOMERANG_SIDE_COUNT && init.mAnims.unk0) {
         r6 = true;
         int newIndex = (side + 1) % BOOMERANG_SIDE_COUNT;
-        if (unk4C[newIndex] == init.pAnim) {
+        if (unk4C[newIndex] == init.unk14) {
             unk4C[newIndex] = init.unk18[newIndex];
         }
     }
 
-    unk4C[side] = r6 ? init.pAnim : init.unk18[side];
+    unk4C[side] = r6 ? init.unk14 : init.unk18[side];
 
     unkC[side].SetAnim(init.mAnims.unk10[side]);
 }
@@ -591,13 +591,13 @@ bool BoomerangManager::IsOwnRang(Boomerang* pRang) {
 
 void BoomerangManager::UpdateAnimation(Model* pModel) {
 
-    int r31 = unk4C[0] != init.pAnim;
+    int r31 = unk4C[0] != init.unk14;
     
     for (int i = 0; i < BOOMERANG_SIDE_COUNT; i++) {
         int index = (r31 + i) % BOOMERANG_SIDE_COUNT;
 
         if (!unkC[index].Condition()) {
-            unkC[index].ApplyNode(pModel->pAnimation, (int)unk4C[index]);
+            unkC[index].ApplyNode(pModel->pAnimation, unk4C[index]);
         }
 
         unkC[index].Animate();

@@ -1620,31 +1620,31 @@ void FaderObject::Reset(void) {
 void FaderObject::Update(void) {
     if (currFadeState != FADESTATE_0 && --unkC < 0) {
         unkC = 0;
-        FadeState nextState = GetNextState(currFadeState, fadeMode);
-        prevFadeState = currFadeState;
-        currFadeState = nextState;
+
+        ChangeState(GetNextState(currFadeState, fadeMode));
     }
 }
 
 void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3, bool r5) {
     float f31 = 1.0f;
 
-    if (currFadeState != FADESTATE_0 && unkC > 0 && r5) {
+    if (!IsCurrState0() && unkC > 0 && r5) {
         int r0 = unkC;
-        if (currFadeState == FADESTATE_1) {
+        if (IsCurrState1()) {
             r0 = unk10;
-        } else if (currFadeState == FADESTATE_2) {
+        } else if (IsCurrState2()) {
             r0 = unk14;
-        } else if (currFadeState == FADESTATE_3) {
+        } else if (IsCurrState3()) {
             r0 = unk18;
         }
 
         f31 = (float)unkC / (float)r0;
         // if the current state is 1 and the next state is 2 OR
         //    the current state is 2 and the next state is 1
-        if ((currFadeState == FADESTATE_1 && GetNextState(FADESTATE_0, mode) == FADESTATE_2)
-            || (currFadeState == FADESTATE_2 && GetNextState(FADESTATE_0, mode) == FADESTATE_1)) {
-                f31 = 1.0f - f31;
+        if ((IsCurrState1() && GetNextState(FADESTATE_0, mode) == FADESTATE_2) || 
+            (IsCurrState2() && GetNextState(FADESTATE_0, mode) == FADESTATE_1)
+        ) {
+            f31 = 1.0f - f31;
         }
     }
 
@@ -1654,10 +1654,7 @@ void FaderObject::Fade(FaderObject::FadeMode mode, float f1, float f2, float f3,
 
     fadeMode = mode;
 
-    FaderObject::FadeState nextState = GetNextState(FADESTATE_0, mode);
-
-    prevFadeState = currFadeState;
-    currFadeState = nextState;
+    ChangeState(GetNextState(FADESTATE_0, mode));
 
     if (currFadeState == FADESTATE_1) {
         unkC = unk10;
@@ -1731,11 +1728,11 @@ FaderObject::FadeState FaderObject::GetNextState(FaderObject::FadeState currStat
 }
 
 float FaderObject::GetFadePercentage(void) {
-    if (currFadeState == FADESTATE_1 || (currFadeState == FADESTATE_0 && prevFadeState == FADESTATE_1)) {
+    if (IsCurrState1() || (IsCurrState0() && IsPrevState1())) {
         return 1.0f - ((float)unkC / (float)unk10);
     }
 
-    if (currFadeState == FADESTATE_2 || (currFadeState == FADESTATE_0 && prevFadeState == FADESTATE_2)) {
+    if (IsCurrState2() || (IsCurrState0() && IsPrevState2())) {
         return (float)unkC / (float)unk14;
     }
 

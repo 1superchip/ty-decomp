@@ -446,7 +446,7 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     corner[1][1] = pVolume->v1.y + pVolume->v2.y;
     corner[1][2] = pVolume->v1.z + pVolume->v2.z;
     int i;
-    int cond = 0x3f;
+    int cond = (1 << 5) | (1 << 4) | (1 << 3) | (1 << 2) | (1 << 1) | (1 << 0);
     int bits = 0;
     float diff = View::GetCurrent()->unk2BC - View::GetCurrent()->unk2C0;
     float min = 1e+06f;

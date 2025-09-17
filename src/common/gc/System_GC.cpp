@@ -24,6 +24,7 @@
 #include "common/Video.h"
 #include "common/MKShadow.h"
 #include "common/MKGrass.h"
+#include "ty/main.h"
 
 extern "C" void memset(void*, int, int);
 
@@ -115,7 +116,6 @@ static int stopFrame = -1;
 
 char* gpBuildVersion = "<not set>";
 
-extern void Game_InitSystem(void);
 extern void MKMemoryCard_InitModule(void);
 extern "C" void Sound_InitModule(void);
 
@@ -217,13 +217,9 @@ void System_DeinitModule(void) {
 
 void System_GameDraw(void);
 bool System_Update_Normal(void);
-extern void Game_Init(void);
-extern void Game_Deinit(void);
 extern "C" void Sound_Update(void);
 extern "C" int VIGetRetraceCount(void);
-extern int Game_Update(void);
 extern "C" int OSGetConsoleSimulatedMemSize(void);
-extern void Game_Draw(void);
 extern void MKMemoryCard_Update(void);
 
 // Main game loop function
