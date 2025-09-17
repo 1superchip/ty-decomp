@@ -17,7 +17,10 @@ static char videoVolume = 127;
 
 static int Video_GetYUVData(void**, void**, void**);
 
-enum sound_state {};
+enum sound_state {
+    SOUND_STATE_0 = 0,
+    SOUND_STATE_1 = 1,
+};
 static void Video_SwitchSoundState(sound_state);
 
 void Video_InitModule(void) {
@@ -40,7 +43,7 @@ void Video_DeinitModule(void) {
 Video* Video_CreateStreaming(char* pName, Material* pMaterial, bool, int track) {
     char buffer[256];
 
-    Video_SwitchSoundState((sound_state)1);
+    Video_SwitchSoundState(SOUND_STATE_1);
 
     sprintf(buffer, "video/%s.thp", pName);
     THPPlayerOpen(buffer, 0);
@@ -121,7 +124,7 @@ void Video_Destroy(Video* pVideo) {
         }
 
         currentVideo.bActive = false;
-        Video_SwitchSoundState((sound_state)0);
+        Video_SwitchSoundState(SOUND_STATE_0);
     }
 }
 

@@ -117,31 +117,31 @@ void LevelObjective::Increment(void) {
     Hud_ShowSpecialPickups();
     
     switch (gb.level.GetCurrentLevel()) {
-        case 4:
+        case LN_TWO_UP:
             SoundBank_Play(0x22C, NULL, 0);
             break;
-        case 6:
+        case LN_SHIP_REX:
             SoundBank_Play(0x22D, NULL, 0);
             break;
-        case 8:
+        case LN_BRIDGE_RIVER_TY:
             SoundBank_Play(0x22E, NULL, 0);
             break;
-        case 9:
+        case LN_SNOW_WORRIES:
             SoundBank_Play(0x22F, NULL, 0);
             break;
-        case 10:
+        case LN_OUTBACK_SAFARI:
             SoundBank_Play(0x230, NULL, 0);
             break;
-        case 12:
+        case LN_LYRE_LYRE:
             SoundBank_Play(0x231, NULL, 0);
             break;
-        case 13:
+        case LN_BLACK_STUMP:
             SoundBank_Play(0x232, NULL, 0);
             break;
-        case 14:
+        case LN_REX_MARKS_SPOT:
             SoundBank_Play(0x233, NULL, 0);
             break;
-        case 23:
+        case LN_FINAL_BATTLE:
             SoundBank_Play(0x234, NULL, 0);
             break;
         default:
