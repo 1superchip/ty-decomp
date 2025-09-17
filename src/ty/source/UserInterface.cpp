@@ -130,7 +130,8 @@ void UIImage::SetUVs(float uv0, float uv1, float uv2, float uv3) {
 void UIImage::SetPosition(Vector* pPos, char flags) {
     float dx = img.endX - img.startX;
     float dy = img.endY - img.startY;
-    if (!(flags & 3)) {
+
+    if (!(flags & (2 | 1))) {
         img.startX = pPos->x;
         img.endX = pPos->x + dx;
     } else if (flags & 1) {
@@ -140,7 +141,8 @@ void UIImage::SetPosition(Vector* pPos, char flags) {
         img.startX = pPos->x - dx;
         img.endX = pPos->x;
     }
-    if (!(flags & 12)) {
+
+    if (!(flags & (8 | 4))) {
         img.startY = pPos->y;
         img.endY = pPos->y + dy;
     } else if (flags & 4) {
@@ -150,6 +152,7 @@ void UIImage::SetPosition(Vector* pPos, char flags) {
         img.startY = pPos->y - dy;
         img.endY = pPos->y;
     }
+
     img.z = pPos->z;
 }
 
@@ -199,7 +202,7 @@ float UIText::Draw(char* pDrawString) {
     
     matrix.Scale(&s);
     
-    if (!(mFlags & 3)) {
+    if (!(mFlags & (2 | 1))) {
         matrix.Row3()->x = x + (unk8 / 2.0f) * mScaleX;
     } else if (mFlags & 1) {
         matrix.Row3()->x = x;
@@ -207,7 +210,7 @@ float UIText::Draw(char* pDrawString) {
         matrix.Row3()->x = x - (unk8 / 2.0f) * mScaleX;
     }
 
-    if (!(mFlags & 12)) {
+    if (!(mFlags & (8 | 4))) {
         matrix.Row3()->y = y + (fontHeight / 2.0f) * mScaleY;
     } else if (mFlags & 4) {
         matrix.Row3()->y = y;

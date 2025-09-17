@@ -65,6 +65,10 @@ struct Bunyip : AnimatingProp {
     int StateInline(void) {
         return (mState > 1 && mState != BUNYIP_DISAPPEAR) ? true : false;
     }
+
+    BunyipState GetState(void) {
+        return mState;
+    }
 };
 
 #endif // BUNYIP_H

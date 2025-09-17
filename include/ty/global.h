@@ -8,6 +8,7 @@
 #include "common/DirectLight.h"
 #include "common/Font.h"
 #include "ty/ExtendedAnalogControl.h"
+#include "ty/controlval.h"
 
 enum GameSubState {
     GSS_NONE        = -1,
@@ -215,6 +216,10 @@ struct JoyPad {
     void ResetButtonsPressed(void) {
         mButtonsPressed = 0;
     }
+
+    bool IsNewlyPressed(int index) {
+        return (mButtonsPressed & tyControl.buttonVals[index]) && !(mPrevButtonsPressed & tyControl.buttonVals[index]);
+    }
 };
 
 enum GameState {
@@ -334,7 +339,8 @@ struct LevelData {
     }
 
     void ChangeLevel(LevelNumber newLevel) {
-
+        lastLevelIdx = levelNumber;
+        levelNumber = newLevel;
     }
     
     void InitDefaults(void);

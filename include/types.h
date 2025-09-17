@@ -53,7 +53,7 @@ extern "C" {
 #endif
 
 #undef ARRAY_SIZE
-#define ARRAY_SIZE(arr) static_cast<int>(sizeof(arr) / sizeof(arr[0]))
+#define ARRAY_SIZE(arr) static_cast<int>(sizeof(arr) / sizeof((arr)[0]))
 
 #ifdef __cplusplus
 }
