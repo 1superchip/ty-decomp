@@ -269,16 +269,16 @@ void Torch::EmitFire(void) {
         Particle_Fire_Create(&mpParticleSys1, &mFlamePos, mDefaultScale.x * 2.0f, false);
         unkA8 += 0.2833f;
         while (unkA8 > 1.0f) {
-            Vector sp8;
+            Vector pp;
             unkA8 -= 1.0f;
 
-            sp8.Set(
+            pp.Set(
                 ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.x - 5.0f),
                 ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.y - 5.0f),
                 ((RandomI(&gb.mRandSeed) % 100) * 10.0f) / 100.0f + (mFlamePos.z - 5.0f)
             );
 
-            Particle_Fire_Create(&mpParticleSys0, &sp8, mDefaultScale.x, true);
+            Particle_Fire_Create(&mpParticleSys0, &pp, mDefaultScale.x, true);
         }
     }
 }

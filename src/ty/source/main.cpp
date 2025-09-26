@@ -81,6 +81,12 @@ int TyMemCard_Update(void);
 
 enum PauseScreen_State {};
 void PauseScreen_Init(PauseScreen_State);
+void PauseScreen_Update(void);
+void PauseMap_UpdateHeroPos(void);
+
+void BonusPickupParticle_Update(void);
+
+void Shatter_Update(void);
 
 void LogicGame(void) {
     gSceneManager.SetActivePoint(GameCamera_GetPos());
@@ -98,6 +104,62 @@ void LogicGame(void) {
                 break;
         }
     }
+
+    if (gb.unk700) {
+        gb.unk700 = false;
+
+        return;
+    }
+
+    if (!gb.bOnPauseScreen && gb.mLogicState.GetCurr() == STATE_5) {
+        if ((gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.buttonVals[1]) && !TyMemCard_IsAutoSaving()) {
+            if (gb.level.GetCurrentLevel() != LN_16) {
+                gb.bOnPauseScreen = true;
+                PauseScreen_Init((PauseScreen_State)0x4);
+            }
+        }
+    }
+
+    if (!gb.bOnPauseScreen && gb.mLogicState.GetCurr() == STATE_5) {
+        if ((gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.buttonVals[0]) && !TyMemCard_IsAutoSaving()) {
+            gb.bOnPauseScreen = true;
+            PauseScreen_Init((PauseScreen_State)0x3);
+        }
+    }
+
+    if (gb.bOnPauseScreen) {
+        PauseScreen_Update();
+        return;
+    } else {
+        PauseMap_UpdateHeroPos();
+    }
+
+    gb.logicGameCount++;
+
+    Range_Update();
+
+    dda.Update();
+    Gem_PickupParticle_Update();
+    BonusPickupParticle_Update();
+
+    defaultParticleManager.Update();
+
+    ManuallyScrollTextures();
+
+    HeatFlare_Update();
+
+    Tools_DropShadow_Update();
+
+    if (gb.logicGameCount % 10) {
+
+    }
+
+    Shatter_Update();
+
+    gSceneManager.UpdateProps();
+    objectManager.UpdateModules();
+
+    gb.mGameFsm.CallStateDeinit();
 }
 
 void ProcessCommandLine(void) {

@@ -326,6 +326,14 @@ struct TyFSM {
             }
         }
     }
+
+    void CallEvent(Ty* pTy, char* pEvent) {
+        if (unk10 != -1) {
+            if (pStates[unk10].Event) {
+                (pTy->*pStates[unk10].Event)(pEvent);
+            }
+        }
+    }
 };
 
 struct FloorInfo {
@@ -615,7 +623,42 @@ struct Ty : Hero {
     MKAnim* drownGaspAnim;
     MKAnim* drownDeadAnim;
 
-    MKAnim* unk5F8[(0x678 - 0x5F8) / sizeof(MKAnim*)];
+    MKAnim* unk5F8;
+    MKAnim* unk5FC;
+
+    MKAnim* unk600;
+    MKAnim* unk604;
+    MKAnim* unk608;
+    MKAnim* unk60C;
+    
+    MKAnim* unk610;
+    MKAnim* unk614;
+    MKAnim* unk618;
+    MKAnim* unk61C;
+    
+    MKAnim* unk620;
+    MKAnim* unk624;
+    MKAnim* unk628;
+    MKAnim* unk62C;
+    
+    MKAnim* unk630;
+    MKAnim* unk634;
+    MKAnim* unk638;
+    MKAnim* unk63C;
+    
+    MKAnim* unk640;
+    MKAnim* unk644;
+    MKAnim* unk648;
+    MKAnim* unk64C;
+    
+    MKAnim* unk650;
+    MKAnim* unk654;
+    MKAnim* unk658;
+    MKAnim* unk65C;
+
+    MKAnim* unk660;
+
+    MKAnim* unk664[(0x678 - 0x664) / sizeof(MKAnim*)];
 
     MKAnim* hasBothRangsAnims[2];
 
@@ -657,13 +700,17 @@ struct Ty : Hero {
 
     MKAnim* flinchAnims[3];
 
-    char padding[0x778 - 0x714];
+    char padding[0x758 - 0x714];
+    MKAnim* unk758;
+    char padding75C[0x778 - 0x75C];
 
     MKAnim* unk778;
     MKAnim* unk77C;
     MKAnim* unk780;
+    MKAnim* unk784;
 
-    char padding1[0x7B0 - 0x784];
+    MKAnim* ClaimLandAnims[5];
+    MKAnim* ClaimWaterAnims[5];
 
     char* unk7B0;
     char* unk7B4;
@@ -715,7 +762,7 @@ struct Ty : Hero {
     char* unk824;
 
     uint unk828; // drownTriggerFrame (frame when Ty should drown)
-    BoomerangType mBoomerangType;
+    BoomerangType mBoomerangType; // Boomerang type to switch back to when switching to aquarang
     TyContext mContext;
     TyFSM mFsm;
     int unkA54;
@@ -749,7 +796,7 @@ struct Ty : Hero {
     bool unkF98;
     HeadTurningInfo mHeadTurningInfo;
     RainbowEffect mTyRainbowEffect;
-    char unk1114;
+    bool unk1114;
     BoomerangManager mBoomerangManager;
     BoomerangAnimInfo unk11F8[2];
     RangChangeData mRangChangeData;
@@ -903,6 +950,11 @@ struct Ty : Hero {
     void ProcessAnimationEvents(MKAnimScript*);
     void UpdateAnimation(void);
 
+    void GetNewNodePositions(void);
+
+    void GetNodesAndSubObjects(void);
+    void LoadAnimations(void);
+
     // Speed / Rotation
     void UpdateHorzVel(float smoothing);
     void UpdateYaw(float scale);
@@ -910,7 +962,9 @@ struct Ty : Hero {
     float GetSpeedFromJoyPad(float);
     void SetPitchAndRoll(float, float);
     void ResetPitchAndRoll(void);
-    void Pitch(void);
+    void Pitch(float);
+
+    float GetBreakAndTurnAngle(void);
     //
 
     bool IsJoyPadZero(void);
@@ -981,6 +1035,19 @@ struct Ty : Hero {
     void ResetDrownTimer(void);
 
     // Rang Management
+    void CheckForRangChange(void);
+
+    void SwitchToAquaRang(void);
+    void SwitchBackFromAquaRang(void);
+
+    void StartRangSpecialAnimation(BoomerangSide side, MKAnim*);
+
+    void UpdateRangSpecial(void);
+
+    void UpdateBoomerangs(void);
+    
+    void ThrowBoomerang(void);
+
     void InitRangChange(void);
     void DeinitRangChange(void);
     void RangChange(void);

@@ -6,6 +6,7 @@
 
 enum TargetPriority {
     TP_1 = 1,
+    TP_2 = 2,
     TP_3 = 3
 };
 

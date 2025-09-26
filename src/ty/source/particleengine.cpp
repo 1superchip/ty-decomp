@@ -448,8 +448,8 @@ void TyParticleManager::SpawnBreathMist(Vector* pPos, Vector* pVel, float scale)
 }
 
 void TyParticleManager::SpawnBridgeChunk(Vector*, Model* pModel) {
-    Vector sp8;
-    sp8.Set(0.0f, 20.0f, 0.0f);
+    Vector vel;
+    vel.Set(0.0f, 20.0f, 0.0f);
 
     pModel->GetModelVolume();
 }

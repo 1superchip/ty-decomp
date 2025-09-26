@@ -1091,38 +1091,47 @@ void Material::Update(void) {
             }
         }
     } else if (matFlags & 0x40000) {
-        Matrix mat;
-        Matrix mat1;
+        Matrix temp1;
+        Matrix temp2;
+
         angle += frameSpeed * unkA8;
         NormaliseAngle(angle);
-        Vector vec = {0.0f, 0.0f, 0.0f, 0.0f};
-        vec.x = -unkA0;
-        vec.y = -unkA4;
-        mat.SetRotationToNone();
-        mat.SetTranslation(&vec);
-        Vector vec1 = {0.0f, 0.0f, 0.0f, 0.0f};
-        vec1.x = unkA0;
-        vec1.y = unkA4;
-        mat1.SetRotationRoll(angle);
-        mat1.SetTranslation(&vec1);
-        unk60.Multiply4x4(&mat, &mat1);
+
+        Vector pivot = {0.0f, 0.0f, 0.0f, 0.0f};
+        pivot.x = -unkA0;
+        pivot.y = -unkA4;
+        temp1.SetRotationToNone();
+        temp1.SetTranslation(&pivot);
+
+        Vector invPivot = {0.0f, 0.0f, 0.0f, 0.0f};
+        invPivot.x = unkA0;
+        invPivot.y = unkA4;
+        temp2.SetRotationRoll(angle);
+        temp2.SetTranslation(&invPivot);
+
+        unk60.Multiply4x4(&temp1, &temp2);
     } else if (matFlags & 0x80000) {
-        Matrix mat;
-        Matrix mat1;
+        Matrix temp1;
+        Matrix temp2;
+
         angle += frameSpeed * unkA8;
         NormaliseAngle(angle);
+
         float roll = _table_sinf(angle) * DegToRad(unkB0);
-        Vector vec = {0.0f, 0.0f, 0.0f, 0.0f};
-        vec.x = -unkA0;
-        vec.y = -unkA4;
-        mat.SetRotationToNone();
-        mat.SetTranslation(&vec);
-        Vector vec1 = {0.0f, 0.0f, 0.0f, 0.0f};
-        vec1.x = unkA0;
-        vec1.y = unkA4;
-        mat1.SetRotationRoll(roll);
-        mat1.SetTranslation(&vec1);
-        unk60.Multiply4x4(&mat, &mat1);
+
+        Vector pivot = {0.0f, 0.0f, 0.0f, 0.0f};
+        pivot.x = -unkA0;
+        pivot.y = -unkA4;
+        temp1.SetRotationToNone();
+        temp1.SetTranslation(&pivot);
+
+        Vector invPivot = {0.0f, 0.0f, 0.0f, 0.0f};
+        invPivot.x = unkA0;
+        invPivot.y = unkA4;
+        temp2.SetRotationRoll(roll);
+        temp2.SetTranslation(&invPivot);
+
+        unk60.Multiply4x4(&temp1, &temp2);
     } else if (matFlags & 0x100000) {
         Vector pyr;
         unk60.SetIdentity();

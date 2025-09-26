@@ -820,17 +820,17 @@ Boomerang* Boomerang_CheckForHit(Model* pModel, int subobjectIdx, CollisionResul
     return NULL;
 }
 
-Boomerang* Boomerang_CheckForHit(Vector* p, float f1, float f2, float f3) {
+Boomerang* Boomerang_CheckForHit(Vector* pPos, float f1, float f2, float f3) {
     Boomerang** ppBoomerangs = boomerangs.GetPointers();
 
     while (*ppBoomerangs) {
         if (!(*ppBoomerangs)->unk54) {
 
-            Vector sp8 = *p;
-            sp8.y -= f3 + 8.0f;
+            Vector cylPos = *pPos;
+            cylPos.y -= f3 + 8.0f;
             
             if (Tools_RayToVertCyl(
-                    &(*ppBoomerangs)->mOldPos, &(*ppBoomerangs)->mPos, &sp8, f2 + 8.0f, f1 + 16.0f)) {
+                    &(*ppBoomerangs)->mOldPos, &(*ppBoomerangs)->mPos, &cylPos, f2 + 8.0f, f1 + 16.0f)) {
                 return *ppBoomerangs;
             }
         }
@@ -1559,12 +1559,12 @@ void Megarang::Fire(Vector* pVec1, Vector* pVec2) {
 
         mOldPos = mPos = *GetCatchPos();
 
-        Vector sp98 = *unk108;
-        sp98.y += unk100;
+        Vector target = *unk108;
+        target.y += unk100;
 
-        mSpline.AddNode(&sp98);
+        mSpline.AddNode(&target);
 
-        unk84 = (unk104 * 0.5f) * ApproxMag(GetCatchPos(), &sp98);
+        unk84 = (unk104 * 0.5f) * ApproxMag(GetCatchPos(), &target);
 
         if (pVec2 == NULL) {
             mSpline.mpPoints[0].unk10.Scale(pVec1, 750.0f);

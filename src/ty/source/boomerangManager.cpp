@@ -109,7 +109,7 @@ void BoomerangWeapon::Reset(void) {
     }
 }
 
-bool BoomerangWeapon::Fire(Vector* p, Vector* p1) {
+bool BoomerangWeapon::Fire(Vector* pDir, Vector* p1) {
     if (IsReady()) {
         unkA6 = false;
 
@@ -119,7 +119,7 @@ bool BoomerangWeapon::Fire(Vector* p, Vector* p1) {
             unkA6 = true;
         }
 
-        direction = *p;
+        direction = *pDir;
 
         mFsm.SetState(BLS_Firing, false);
         mFsm.UnkFunc(this, false);
@@ -513,7 +513,7 @@ bool BoomerangWeapon::IsReady(void) {
 /// @param p1 
 /// @param bFireBoth Whether or not both boomerangs should be fired
 /// @return 
-bool BoomerangManager::Fire(Vector* p, Vector* p1, bool bFireBoth) {
+bool BoomerangManager::Fire(Vector* pDir, Vector* p1, bool bFireBoth) {
     bool ret = false;
 
     if (mType == mNextType && bEnabled && gb.mGameData.HasBoomerang(mType)) {
@@ -521,22 +521,22 @@ bool BoomerangManager::Fire(Vector* p, Vector* p1, bool bFireBoth) {
             // if both boomerangs need to be fired and both are ready
             // attempt to fire both
             unk59 = bFireBoth;
-            ret = mpWeapons[BOOMERANG_SIDE_LEFT][mType].Fire(p, p1) &&
-                mpWeapons[BOOMERANG_SIDE_RIGHT][mType].Fire(p, p1);
+            ret = mpWeapons[BOOMERANG_SIDE_LEFT][mType].Fire(pDir, p1) &&
+                mpWeapons[BOOMERANG_SIDE_RIGHT][mType].Fire(pDir, p1);
         } else if (gb.mGameData.HasBothRangs()) {
             // if both rangs are unlocked, we need to fire the next side
             if (mpWeapons[(mCurrentSide + 1) % BOOMERANG_SIDE_COUNT][mType].IsReady()) {
                 // if the next side is ready, then fire it
-                ret = mpWeapons[(mCurrentSide + 1) % BOOMERANG_SIDE_COUNT][mType].Fire(p, p1);
+                ret = mpWeapons[(mCurrentSide + 1) % BOOMERANG_SIDE_COUNT][mType].Fire(pDir, p1);
                 mCurrentSide = (BoomerangSide)((mCurrentSide + 1) % BOOMERANG_SIDE_COUNT);
             } else if (mpWeapons[mCurrentSide][mType].IsReady()) {
                 // if the next side isn't ready but the current side is
                 // fire the current side
-                ret = mpWeapons[mCurrentSide][mType].Fire(p, p1);
+                ret = mpWeapons[mCurrentSide][mType].Fire(pDir, p1);
             }
         } else {
             // If both rangs aren't unlocked, then fire the right side
-            ret = mpWeapons[BOOMERANG_SIDE_RIGHT][mType].Fire(p, p1);
+            ret = mpWeapons[BOOMERANG_SIDE_RIGHT][mType].Fire(pDir, p1);
         }
     }
 

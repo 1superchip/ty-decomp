@@ -154,19 +154,19 @@ void Vector::CClamp(Vector* pColour, float min, float max) {
 }
 
 void Vector::NormaliseRot(Vector* pVector) {
-    pVector->x = fmod(pVector->x, 6.2831854820251461);
-    pVector->y = fmod(pVector->y, 6.2831854820251461);
-    pVector->z = fmod(pVector->z, 6.2831854820251461);
+    pVector->x = fmod(pVector->x, 2 * PI);
+    pVector->y = fmod(pVector->y, 2 * PI);
+    pVector->z = fmod(pVector->z, 2 * PI);
 
     if (pVector->x < 0.0f) {
-        pVector->x += 6.2831855f;
+        pVector->x += (2 * PI);
     }
 
     if (pVector->y < 0.0f) {
-        pVector->y += 6.2831855f;
+        pVector->y += (2 * PI);
     }
 
     if (pVector->z < 0.0f) {
-        pVector->z += 6.2831855f;
+        pVector->z += (2 * PI);
     }
 }

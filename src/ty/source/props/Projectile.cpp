@@ -147,19 +147,22 @@ void Projectile::FireAtTarget(Vector* pVec1, Vector* pVec2) {
 
 bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
     float horizDist = sqrtf(Dist2D(pVec, pVec1));
-    float sp18;
-    float sp14;
-    float sp10;
-    sp18 = pVec1->y - pVec->y;
-    sp14 = horizDist / GetDesc()->unk88;
-    float f29 = 1.0f / sp14;
-    sp10 = -GetDesc()->unk98;
+    float distY;
+    float time;
+    float a;
+    
+    distY = pVec1->y - pVec->y;
+    time = horizDist / GetDesc()->unk88;
+    float f29 = 1.0f / time;
+
+    a = -GetDesc()->unk98;
+
     mPosDiff.Sub(pVec1, pVec);
     mPosDiff.Scale(f29);
-    mPosDiff.y = Kin_GetInitialVelocity(&sp18, NULL, &sp14, &sp10);
+    mPosDiff.y = Kin_GetInitialVelocity(&distY, NULL, &time, &a);
 
     if (mPosDiff.y > GetDesc()->unk88) {
-        float f4 = Sqr<float>(GetDesc()->unk88) + ((sp10 * 2.0f) * sp18);
+        float f4 = Sqr<float>(GetDesc()->unk88) + ((a * 2.0f) * distY);
         if (f4 < 0.0f) {
             return false;
         }
@@ -167,22 +170,22 @@ bool Projectile::CheckShotPossible(Vector* pVec, Vector* pVec1) {
         float f30 = sqrtf(f4);
 
         float f1 = Min<float>(
-            (f30 - GetDesc()->unk88) / sp10, 
-            (-GetDesc()->unk88 - f30) / sp10
+            (f30 - GetDesc()->unk88) / a, 
+            (-GetDesc()->unk88 - f30) / a
         );
 
-        sp14 = f1;
+        time = f1;
         f29 = 1.0f / f1;
 
-        if (horizDist * f29 > GetDesc()->unk88 || sp14 < 0.0f) {
+        if (horizDist * f29 > GetDesc()->unk88 || time < 0.0f) {
             float f1 = Max<float>(
-                (f30 - GetDesc()->unk88) / sp10,
-                (-GetDesc()->unk88 - f30) / sp10
+                (f30 - GetDesc()->unk88) / a,
+                (-GetDesc()->unk88 - f30) / a
             );
 
-            sp14 = f1;
+            time = f1;
             f29 = 1.0f / f1;
-            if (horizDist * f29 > GetDesc()->unk88 || sp14 < 0.0f) {
+            if (horizDist * f29 > GetDesc()->unk88 || time < 0.0f) {
                 return false;
             }
         }

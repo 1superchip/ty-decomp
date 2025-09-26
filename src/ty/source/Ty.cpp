@@ -3,7 +3,8 @@
 #include "ty/ParticleEngine.h"
 #include "ty/bunyip.h"
 #include "ty/main.h"
-#include "ty/controlval.h"
+#include "ty/props/WaterVolume.h"
+#include "common/Str.h"
 
 static GameObjDesc tyDesc;
 Ty ty;
@@ -404,7 +405,7 @@ void Ty::LoadResources(void) {
 
     if (gb.level.GetCurrentLevel() == LN_OUTBACK_SAFARI) {
         pModel = Model::Create(unk534.GetMeshName(), NULL);
-        // GetNodesAndSubObjects();
+        GetNodesAndSubObjects();
     } else {
         pModel = Model::Create(unk534.GetMeshName(), unk534.GetAnimName());
 
@@ -420,15 +421,19 @@ void Ty::LoadResources(void) {
 
         pMatEyes = Material::Find(playerFileNames[gb.unk100].unkC);
         pMatEyeballs = Material::Find("Act_01_TY_01a");
-        // GetNodesAndSubObjects();
-        // LoadAnimations();
+        GetNodesAndSubObjects();
+        LoadAnimations();
 
         StartAnimation(&animScript, biteUnchargeAnim, 0, false);
         StartAnimation(&unk4EC, biteUnchargeAnim, 0, true);
 
         unk11F8[0].Init(BOOMERANG_SIDE_LEFT);
         unk11F8[1].Init(BOOMERANG_SIDE_RIGHT);
+
+        breathMist = 0;
     }
+
+    actorInfo[1].pModel = pModel;
 }
 
 void Ty::FreeResources(void) {
@@ -697,7 +702,7 @@ void Ty::Update(void) {
         mMediumMachine.Update(this, false);
         // CommonPostLogicChecks();
         // UpdateLastSafePos();
-        // UpdateBoomerangs();
+        UpdateBoomerangs();
         // UpdateRangTrails();
         // glowParticleData.Draw();
         ty.mAutoTarget.Reset();
@@ -944,6 +949,195 @@ bool Ty::FallMove(float f1, float f2, float f3) {
     return velocity.MagSquared() > 0.0f;
 }
 
+void Ty::EnableHead(TyHeads head) {
+    // ASSERT("head >= TYH_Normal && head < TYH_Max", Str_Printf("Ty::EnableHead: head %d out of range [%d..%d]", head, TYH_Normal, TYH_Max), ...);
+
+    pModel->EnableSubObject(A_Head_idx,     head == TYH_Normal);
+    pModel->EnableSubObject(A_BiteHead_idx, head == TYH_1);
+}
+
+void Ty::CheckForRangChange(void) {
+    if (mFsm.GetStateEx() != AS_Doomerang) {
+        if (gb.mLogicState.GetCurr() == STATE_10 || gb.mLogicState.GetCurr() == STATE_11) {
+            return;
+        }
+        
+        bool b = gb.mJoyPad1.IsNewlyPressed(3);
+        bool b1 = gb.mJoyPad1.IsNewlyPressed(2);
+
+        if (b || b1) {
+            if (!InWater() && mBoomerangManager.GetCurrentType() != BR_Aquarang) {
+                if (
+                    ((mFsm.GetStateEx() != TY_AS_34 && mFsm.GetStateEx() != TY_AS_35 && mFsm.GetStateEx() != TY_AS_36) || (mBoomerangManager.HasFired() || !gb.mGameData.HasBothRangs())) 
+                    && mFsm.GetStateEx() != TY_AS_42
+                ) {
+                    BoomerangType type;
+                    if (b) {
+                        type = GetNextRang(mBoomerangManager.GetNextType());
+                    } else {
+                        type = GetPrevRang(mBoomerangManager.GetNextType());
+                    }
+
+                    if (type == BR_Aquarang) {
+                        type = b ? GetNextRang(type) : GetPrevRang(type);
+                    }
+
+                    mBoomerangManager.SetType(type);
+
+                    Hud_BoomerangScroll(type, b);
+                }
+            }
+        }
+    }
+}
+
+void Hud_InitBoomerangs(void);
+
+void Ty::SwitchToAquaRang(void) {
+    if (mBoomerangManager.GetCurrentType() != BR_Aquarang) {
+        mBoomerangType = mBoomerangManager.GetCurrentType();
+
+        mBoomerangManager.SetType(BR_Aquarang);
+
+        if (!gb.mGameData.CheckLearntToSwim()) {
+            mBoomerangManager.Disable();
+        }
+
+        Hud_InitBoomerangs();
+    }
+}
+
+void Ty::SwitchBackFromAquaRang(void) {
+    mBoomerangManager.SetType(mBoomerangType);
+    mBoomerangManager.Enable();
+    mBoomerangManager.ShowAll();
+
+    Hud_InitBoomerangs();
+}
+
+void Ty::StartRangSpecialAnimation(BoomerangSide side, MKAnim* pAnim) {
+    if (pAnim) {
+        unk11F8[side].unk4 = true;
+        unk11F8[side].unk8.SetAnim(pAnim);
+
+        mRangTrails[side].Reset();
+    } else {
+        mBoomerangManager.Show(side);
+        unk11F8[side].unk4 = false;
+    }
+}
+
+void Ty::UpdateRangSpecial(void) {
+    for (int i = 0; i < ARRAY_SIZE(unk11F8); i++) {
+        if (unk11F8[i].unk4) {
+            unk11F8[i].unk8.Animate();
+
+            unk11F8[i].unk8.Apply(unk11F8[i].pModel->pAnimation);
+
+            if (unk11F8[i].unk8.Condition() || ty.mFsm.GetStateEx() != TY_AS_35) {
+                unk11F8[i].unk4 = false;
+                unk11F8[i].pModel->matrices[0].SetIdentity();
+                unk11F8[i].pModel->colour.w = 1.0f;
+            }
+        }
+    }
+}
+
+View* GameCamera_View(void);
+
+void Ty::UpdateBoomerangs(void) {
+    UpdateRangSpecial();
+
+    Matrix left;
+    left.SetIdentity();
+
+    Matrix right;
+    right.SetIdentity();
+
+    if (mFsm.GetStateEx() == AS_FirstPerson) {
+        right = GameCamera_View()->unk48;
+        left = GameCamera_View()->unk48;
+    } else {
+        right = *pModel->pAnimation->GetNodeMatrix(unk474);
+        left = *pModel->pAnimation->GetNodeMatrix(unk460);
+
+        right.Row3()->Copy(&unk478);
+        left.Row3()->Copy(&unk464);
+    }
+
+    if (unk11F8[BOOMERANG_SIDE_RIGHT].unk4) {
+        right = *unk11F8[BOOMERANG_SIDE_RIGHT].pModel->pAnimation->GetNodeMatrix(
+            unk11F8[BOOMERANG_SIDE_RIGHT].pModel->pAnimation->GetNodeIndex("RangPropRight")
+        );
+    }
+
+    if (unk11F8[BOOMERANG_SIDE_LEFT].unk4) {
+        left = *unk11F8[BOOMERANG_SIDE_LEFT].pModel->pAnimation->GetNodeMatrix(
+            unk11F8[BOOMERANG_SIDE_LEFT].pModel->pAnimation->GetNodeIndex("RangPropLeft")
+        );
+    }
+
+    Matrix d;
+    d.SetIdentity();
+    d.SetRotationYaw(PI / 2.0f);
+    right.Multiply3x3(&d, &right);
+
+    d.SetIdentity();
+    d.SetRotationYaw(PI / 2.0f);
+    d.RotateRoll(PI);
+    left.Multiply3x3(&d, &left);
+
+    mBoomerangManager.Update(&left, &right, &pModel->colour);
+}
+
+void Fly_ShowTyFlies(void);
+
+void Ty::ProcessAnimationEvents(MKAnimScript* pAnimScript) {
+    if (pAnimScript->unkC == pAnimScript->unk1A) {
+        return;
+    }
+    
+    int i = 0;
+    char* pEventName;
+    while (pEventName = pAnimScript->GetEvent(i++)) {
+        mFsm.CallEvent(this, pEventName);
+
+        if (pEventName == unk7C8) {
+            // MakeHeroBlink();
+        } else if (pEventName == unk7CC) {
+            mBoomerangManager.Hide(BOOMERANG_SIDE_RIGHT);
+        } else if (pEventName == unk7D0) {
+            mBoomerangManager.Show(BOOMERANG_SIDE_RIGHT);
+        } else if (pEventName == unk7D4) {
+            mBoomerangManager.Hide(BOOMERANG_SIDE_LEFT);
+        } else if (pEventName == unk7D8) {
+            mBoomerangManager.Show(BOOMERANG_SIDE_LEFT);
+        } else if (pEventName == unk7E0) {
+            unk11F8[BOOMERANG_SIDE_RIGHT].pModel->matrices[0].SetIdentity();
+            unk11F8[BOOMERANG_SIDE_RIGHT].pModel->matrices[0].CopyRotation(&pModel->matrices[0]);
+            unk11F8[BOOMERANG_SIDE_RIGHT].pModel->matrices[0].SetTranslation(&unk3B0);
+            StartRangSpecialAnimation(BOOMERANG_SIDE_RIGHT, unk758);
+            SoundBank_Play(0x1BE, NULL, 0);
+        } else if (pEventName == unk7DC) {
+            StartRangSpecialAnimation(BOOMERANG_SIDE_RIGHT, NULL);
+        } else if (pEventName == unk7FC) {
+            unkF98 = true;
+        } else if (pEventName == unk800) {
+            unkF98 = false;
+        } else if (pEventName == unk808) {
+            tySounds.unk10 = SoundBank_Play(0x1BD, NULL, 0);
+        } else if (pEventName == unk80C) {
+            SoundBank_Stop(&tySounds.unk10);
+        } else if (pEventName == unk804) {
+            Fly_ShowTyFlies();
+        } else if (pEventName == unk818) {
+            SoundBank_Play(SFX_TyLand, NULL, mContext.floor.GetCollisionFlags());
+        } else if (pEventName == unk81C) {
+            SoundBank_Play(SFX_TyJump, NULL, mContext.floor.GetCollisionFlags());
+        }
+    }
+}
+
 void Ty::UpdateAnimation(void) {
     ProcessAnimationEvents(&animScript);
     ProcessAnimationEvents(&unk4EC);
@@ -966,6 +1160,108 @@ void Ty::UpdateAnimation(void) {
 
     if (unk52C) {
         unk50C.ApplyNode(pModel->pAnimation, unk4B0);
+    }
+}
+
+void Ty::SetPitchAndRoll(float f1, float f2) {
+    Vector localNode = *pModel->pAnimation->GetNodeOrigin(unk334);
+
+    Matrix custom;
+    custom.SetIdentity();
+
+    localNode.Inverse();
+
+    custom.Translate(&localNode);
+
+    Vector vector = {1.0f, 0.0f, 0.0f, 0.0f};
+
+    Tools_MatriceRotate(f1, &vector, &custom);
+
+    vector.Set(0.0f, -1.0f, 0.0f);
+
+    Tools_MatriceRotate(f2, &vector, &custom);
+
+    localNode.Inverse();
+
+    custom.Translate(&localNode);
+
+    Tools_SetNode(pModel->pAnimation, unk334, &custom, TOOLS_NODEFLAG_1);
+}
+
+void Ty::ResetPitchAndRoll(void) {
+    roll = 0.0f;
+
+    Matrix custom;
+    custom.SetIdentity();
+
+    Tools_SetNode(pModel->pAnimation, unk334, &custom, TOOLS_NODEFLAG_1);
+    Tools_SetNode(pModel->pAnimation, unk334, NULL, TOOLS_NODEFLAG_0);
+}
+
+Vector* GameCamera_GetDir(void);
+
+void Ty::ThrowBoomerang(void) {
+    if (pBunyip && !unk1114 && (gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.activeControls[2])) {
+        pBunyip->SetState(BUNYIP_PUNCH);
+        return;
+    }
+
+    static int lookTimeOut = gb.logicGameCount;
+
+    if (mBoomerangManager.GetCurrentType() != BR_Aquarang || GetMedium() == TY_MEDIUM_3) {
+        bool b = mBoomerangManager.GetCurrentType() == BR_Doomerang && GetMedium() != TY_MEDIUM_1;
+
+        if (!unk1114 && (gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.activeControls[2]) && !b) {
+            StartRangSpecialAnimation(BOOMERANG_SIDE_RIGHT, NULL);
+            StartRangSpecialAnimation(BOOMERANG_SIDE_LEFT, NULL);
+
+            SoundBank_Stop(&tySounds.unk10);
+
+            Vector dir = *mRot.GetFrontVector();
+
+            if (mFsm.GetStateEx() == TY_AS_6) {
+                float angle = GetBreakAndTurnAngle();
+                dir.x = _table_cosf(angle);
+                dir.z = _table_sinf(angle);
+            }
+
+            if (GetMedium() == TY_MEDIUM_3) {
+                dir.x *= _table_cosf(pitch);
+                dir.z *= _table_cosf(pitch);
+                dir.y = _table_sinf(pitch);
+            } else {
+                Vector end;
+                end.Scale(&dir, 300.0f);
+                end.Add(&pos);
+
+                CollisionResult cr;
+
+                // changed from 390.0f to 190.0f in the debug build
+                if (Tools_TestFloor(end, 200.0f, &cr, 390.0f, false)) {
+                    if (cr.pos.y > pos.y) {
+                        dir.Sub(&cr.pos, &ty.pos);
+                        dir.Normalise();
+                    }
+                }
+            }
+
+            if (mFsm.FirstPersonState()) {
+                dir = *GameCamera_GetDir();
+            }
+
+            mAutoTarget.SetUnk208(2);
+
+            // Fire both if kaboomerang
+            if (mBoomerangManager.Fire(&dir, mFsm.FirstPersonState() ? NULL : mAutoTarget.GetTargetPos(), mBoomerangManager.GetCurrentType() == BR_Kaboomerang)) {
+                lookTimeOut = gb.logicGameCount + (int)(gDisplay.fps * 0.8f);
+            }
+        }
+
+        if ((int)gb.logicGameCount > lookTimeOut) {
+            ty.mAutoTarget.SetUnk208(0);
+        }
+
+        unk1114 = gb.mJoyPad1.mNewButtonsPressedThisFrame & tyControl.activeControls[2];
     }
 }
 
@@ -1002,20 +1298,349 @@ bool Ty::TryChangeState(int r4, HeroActorState nState) {
     return TryChangeState(r4 ? true : false, nState);
 }
 
-void AutoTargetStruct::Set(TargetPriority prio, Vector*, Vector*, Vector*, Model*) {
+void Ty::GetNewNodePositions(void) {
+    pModel->pAnimation->GetNodeWorldPosition(unk320, &unk324);
+    pModel->pAnimation->GetNodeWorldPosition(unk334, &unk338);
+    pModel->pAnimation->GetNodeWorldPosition(unk49C, &unk4A0);
+    pModel->pAnimation->GetNodeWorldPosition(unk488, &unk48C);
+    pModel->pAnimation->GetNodeWorldPosition(unk3C0, &unk3C4);
+    pModel->pAnimation->GetNodeWorldPosition(unk3D4, &unk3D8);
+    pModel->pAnimation->GetNodeWorldPosition(unk460, &unk464);
+    pModel->pAnimation->GetNodeWorldPosition(unk474, &unk478);
+    pModel->pAnimation->GetNodeWorldPosition(unk348, &unk34C);
+    pModel->pAnimation->GetNodeWorldPosition(unk35C, &unk360);
+    pModel->pAnimation->GetNodeWorldPosition(unk370, &unk374);
+    pModel->pAnimation->GetNodeWorldPosition(unk384, &unk388);
+    pModel->pAnimation->GetNodeWorldPosition(unk398, &unk39C);
+    pModel->pAnimation->GetNodeWorldPosition(unk3AC, &unk3B0);
+    pModel->pAnimation->GetNodeWorldPosition(unk3E8, &unk3EC);
 
+    pModel->GetRefPointWorldPosition(unk410, &unk414);
+
+    pModel->pAnimation->GetNodeWorldPosition(unk424, &unk428);
+
+    pModel->GetRefPointWorldPosition(unk3FC, &unk400);
+    pModel->GetRefPointWorldPosition(unk438, &unk43C);
+    pModel->GetRefPointWorldPosition(unk44C, &unk450);
+
+    int numMatrices = pModel->pAnimation->GetNmbrOfMatrices();
+    for (int i = 0; i < numMatrices; i++) {
+        pModel->pAnimation->pMatrices[i].Row0();
+        pModel->pAnimation->pMatrices[i].Row1();
+        pModel->pAnimation->pMatrices[i].Row2();
+        pModel->pAnimation->pMatrices[i].Row3();
+    }
+}
+
+void Ty::Pitch(float f1) {
+    float smoothing = 0.15f;
+    float ang = NormaliseAngle(f1 - pitch);
+    if (ang > PI) {
+        ang -= 2 * PI;
+    }
+
+    pitch += ang * smoothing;
+
+    SetPitchAndRoll(pitch, 0.0f);
+}
+
+void AutoTargetStruct::Set(TargetPriority prio, Vector* r5, Vector* r6, Vector* r7, Model* pModel) {
+    Vector tyPos = ty.pos;
+    tyPos.y += ty.radius;
+
+    if (prio >= TP_2) {
+        if (r5 && ty.mBoomerangManager.GetCurrentType() == BR_Megarang) {
+            unk74.AddToList(r5, pModel);
+            unkD8.AddToList(r5, pModel);
+        }
+        
+        if (r6 && ty.mFsm.GetStateEx() == AS_Bite) {
+            unk13C.AddToList(r6, pModel);
+        }
+    }
+
+    if (prio == TP_3) {
+        SetNearestTargetEnemy(r7, pModel, &tyPos);
+        unk54 = unk5C = -0.4f;
+    }
+
+    if (r5) {
+
+    }
+
+    if (r6) {
+
+    }
+
+    if (r7) {
+
+    }
+
+    if (unk208 == 2) {
+        unk1E8 = unk1E0;
+        unk1F8 = targetPos;
+        targetPriority = unk1F0;
+    } else if (unk208 == 1) {
+        unk1E8 = unk1E4;
+        unk1F8 = unk1C0;
+        targetPriority = unk1EC;
+    } else if (unk208 == 3) {
+        unk1E8 = NULL;
+        unk1F8.SetZero();
+        targetPriority = 0;
+    }
 }
 
 void AutoTargetStruct::SetNearestTargetEnemy(Vector*, Model*, Vector*) {
 
 }
 
-void AutoVisible::AddToList(Vector*, Model*) {
+void AutoVisible::AddToList(Vector* pVec, Model* pModel) {
+    if (pVec->IsInsideSphere(&unk54, 750.0f) && numItems < 10 && pModel) {
+        unk0[numItems] = pModel->matrices[0].Row3();
+        unk28[numItems] = pVec->y - pModel->matrices[0].Row3()->y;
 
+        numItems++;
+    }
 }
 
 void AutoTargetStruct::Reset(void) {
+    for (int i = 0; i < ARRAY_SIZE(unk0); i++) {
+        unk0[i].unk0 = 0.0f;
+        unk0[i].unk4.SetZero();
+        unk0[i].unk14 = 0;
+    }
 
+    targetPos.SetZero();
+    unk1B0.SetZero();
+    unk1C0.SetZero();
+    unk1D0.SetZero();
+    
+    unk1E0 = NULL;
+    unk1E4 = NULL;
+    unk1E8 = NULL;
+    unk1EC = 0;
+    unk1F0 = 0;
+    targetPriority = 0;
+
+    unk1F8.SetZero();
+
+    unk74.numItems = unkD8.numItems = unk13C.numItems = 0;
+
+    unk48 = Sqr<float>(1000.0f);
+    unk4C = 0.8f;
+
+    if (ty.GetMedium() == TY_MEDIUM_4) {
+        unk50 = Sqr<float>(400.0f) * 2.0f;
+    } else {
+        unk50 = Sqr<float>(300.0f);
+    }
+
+    unk54 = 0.0f;
+
+    unk58 = Sqr<float>(800.0f);
+    unk5C = 0.0f;
+    unk60 = 300.0f;
+
+    tyRot = *ty.mRot.GetFrontVector();
+
+    if (ty.GetMedium() == TY_MEDIUM_3) {
+        unk60 *= 20.0f;
+        unk48 *= 2.0f;
+        unk58 *= 2.0f;
+        unk4C = 0.7f;
+
+        Matrix rotation;
+        rotation.SetRotationPitch(-ty.pitch);
+
+        tyRot.ApplyRotMatrix(&rotation);
+    }
+}
+
+void Ty::GetNodesAndSubObjects(void) {
+    pModel->SetPosition(&pos);
+    pModel->SetRotation(mRot.GetRotVector());
+    
+    pModel->RefPointExists("R_EYE", &unk410);
+    pModel->RefPointExists("R_WING_L", &unk438);
+    pModel->RefPointExists("R_WING_R", &unk44C);
+
+    if (pModel->pAnimation) {
+        pModel->pAnimation->NodeExists("Z_HEAD", &unk320);
+        pModel->pAnimation->NodeExists("Z_ROOT", &unk334);
+        pModel->pAnimation->NodeExists("Z_RANG_L", &unk460);
+        pModel->pAnimation->NodeExists("Z_RANG_R", &unk474);
+        pModel->pAnimation->NodeExists("Z_BICEP_L", &unk3C0);
+        pModel->pAnimation->NodeExists("Z_BICEP_R", &unk3D4);
+        pModel->pAnimation->NodeExists("Z_WAIST", &unk488);
+        pModel->pAnimation->NodeExists("Z_PELVIS", &unk49C);
+        pModel->pAnimation->NodeExists("Z_TOE_L", &unk348);
+        pModel->pAnimation->NodeExists("Z_TOE_R", &unk35C);
+        pModel->pAnimation->NodeExists("Z_HAND_L", &unk370);
+        pModel->pAnimation->NodeExists("Z_HAND_R", &unk384);
+        pModel->pAnimation->NodeExists("Z_GLOVE_L", &unk398);
+        pModel->pAnimation->NodeExists("Z_GLOVE_R", &unk3AC);
+        pModel->pAnimation->NodeExists("Z_NOSE", &unk424);
+        pModel->RefPointExists("R_NOSE", &unk3FC);
+        pModel->pAnimation->NodeExists("z_FaceMouth", &unk4B0);
+        pModel->pAnimation->NodeExists("n_TyOffset", &unk3E8);
+    }
+
+    A_Head_idx = pModel->GetSubObjectIndex("A_Head");
+    A_BiteHead_idx = pModel->GetSubObjectIndex("A_BiteHead");
+
+    EnableHead(TYH_Normal);
+}
+
+void Ty::LoadAnimations(void) {
+    pSneakAnim          = unk534.GetAnim("sneak");
+    walkAnim            = unk534.GetAnim("walk");
+    jogAnim             = unk534.GetAnim("jog");
+    run00Anim           = unk534.GetAnim("run00");
+    unk5C4      = unk534.GetAnim("hillSlideBelly");
+    unk5C8      = unk534.GetAnim("hillSlideBum");
+    dogPaddleAnim       = unk534.GetAnim("dogPaddle");
+    surfaceSwimAnim     = unk534.GetAnim("surfaceSwim");
+    unk5D4      = unk534.GetAnim("surfaceSwimIdle");
+    swimSlowAnim        = unk534.GetAnim("swimSlow");
+    swimFastAnim        = unk534.GetAnim("swimFast");
+    swimIdleAnim        = unk534.GetAnim("swimIdle");
+    unk5E4      = unk534.GetAnim("swimDiveOne");
+    unk5E8      = unk534.GetAnim("swimDiveTwo");
+    unk5EC      = NULL;
+    drownGaspAnim       = unk534.GetAnim("DrownGasp");
+    drownDeadAnim       = unk534.GetAnim("DrownDead");
+    unk5F8      = unk534.GetAnim("DrownSettle");
+    unk5FC      = unk534.GetAnim("bite1");
+    unk600      = unk534.GetAnim("bite1a");
+    unk604      = unk534.GetAnim("biteGrowl1");
+    unk608      = unk534.GetAnim("bite2");
+    unk60C      = unk534.GetAnim("biteGrowl2");
+    unk610      = unk534.GetAnim("bite3");
+    unk614      = unk534.GetAnim("biteGrowl3");
+    unk618      = unk534.GetAnim("bite4");
+    unk61C      = unk534.GetAnim("biteGrowl4");
+    unk620      = unk534.GetAnim("biteCharge");
+    unk624      = unk534.GetAnim("biteChargeLoop");
+    unk628      = unk534.GetAnim("biteFly");
+    unk62C      = unk534.GetAnim("biteFlyEnd");
+    unk630      = unk534.GetAnim("fallDive1");
+    unk634      = unk534.GetAnim("fallDiveCycle");
+    unk638      = unk534.GetAnim("fallDive2");
+    unk63C      = unk534.GetAnim("fallDive1_backwards");
+    unk640      = unk534.GetAnim("fallDive1_Bomb");
+    unk644      = unk534.GetAnim("fallDiveCycle_Bomb");
+    unk648      = unk534.GetAnim("fallDive2_Bomb");
+    unk65C      = unk534.GetAnim("biteStun");
+    unk650      = unk534.GetAnim("biteDiveForward");
+    unk658      = unk534.GetAnim("biteDiveHeadStuck");
+    unk654      = unk534.GetAnim("biteDiveIdle");
+    unk64C      = unk534.GetAnim("biteDiveRise");
+    // unk664      = unk534.GetAnim("grab");
+    // unk66c      = unk534.GetAnim(@3990);
+    // unk674      = unk534.GetAnim("PullUp");
+    // hasBothRangAnims[1] = unk534.GetAnim(@3992);
+    // unk660      = unk534.GetAnim(@3993);
+    // unk668      = unk534.GetAnim(@3994);
+    // unk670      = unk534.GetAnim(@3995);
+    // hasBothRangAnims[0] = unk534.GetAnim(@3996);
+    // unk680      = unk534.GetAnim(@3997);
+    biteUnchargeAnim    = unk534.GetAnim("relaxIdle");
+    // unk688      = unk534.GetAnim(@3999);
+    // unk68c      = unk534.GetAnim(@4000);
+    // unk690      = unk534.GetAnim(@4001);
+    // unk694      = unk534.GetAnim(@4002);
+    // unk698      = unk534.GetAnim(@4003);
+    // unk6a4      = unk534.GetAnim("jump");
+    // unk6a8      = unk534.GetAnim(@4005);
+    // unk6b8      = unk534.GetAnim(@4006);
+    // unk6ac      = unk534.GetAnim(@4007);
+    // unk6b0      = unk534.GetAnim(@4008);
+    // unk6b4      = unk534.GetAnim(@4009);
+    // unk6bc      = unk534.GetAnim("fall");
+    // unk6c0      = unk534.GetAnim(@4011);
+    // unk6c4      = unk534.GetAnim(@4012);
+    // unk6c8      = unk534.GetAnim(@4013);
+    // unk6cc      = unk534.GetAnim(@1046);
+    // unk6d0      = unk534.GetAnim(@4014);
+    // unk6d4      = unk534.GetAnim(@4015);
+    // unk6d8      = unk534.GetAnim(@4016);
+    // unk6dc      = unk534.GetAnim(@4017);
+    // unk6e0      = unk534.GetAnim(@1047);
+    // unk6e4      = unk534.GetAnim(@4018);
+    // unk6e8      = unk534.GetAnim(@4019);
+    // unk6ec      = unk534.GetAnim(@4012);
+    splatLandAnim       = unk534.GetAnim("splatLand");
+    getUpAnim           = unk534.GetAnim("getUp");
+    // knockdownAnim       = unk534.GetAnim(@4022);
+    // unk6fc      = unk534.GetAnim(@4023);
+    // unk700      = unk534.GetAnim(@4024);
+    // unk704      = unk534.GetAnim(@4025);
+    // flinchAnims[0]      = unk534.GetAnim("flinch1");
+    // flinchAnims[1]      = unk534.GetAnim("flinch2");
+    // flinchAnims[2]      = unk534.GetAnim("flinch3");
+    // unk714      = 0;
+    // unk718      = 0;
+    // unk71c      = unk534.GetAnim(@4029);
+    // unk720      = unk534.GetAnim(@4030);
+    // unk724      = nullptr;
+    // unk72c      = unk534.GetAnim("death");
+    // unk730      = 0;
+    // unk734      = 0;
+    // unk738      = 0;
+    // unk73c      = unk534.GetAnim(@4032);
+    // unk740      = unk534.GetAnim(@4033);
+    // unk744      = unk534.GetAnim(@4034);
+    // unk748      = unk534.GetAnim(@4035);
+    // unk74c      = unk534.GetAnim(@4036);
+    // unk750      = unk534.GetAnim(@4037);
+    // unk754      = unk534.GetAnim(@4038);
+    // edgeWobbleAnim      = unk534.GetAnim(@4039);
+    // waterShakeAnim      = unk534.GetAnim(@4040);
+    // afterDunnyAnim      = unk534.GetAnim(@4041);
+    // unk758      = rangPropRightAnimScript.GetAnim(@4000);
+    // skidAnim            = unk534.GetAnim("skid");
+    // skidRecoverAnim     = unk534.GetAnim(@4043);
+    // skidTurnAnim        = unk534.GetAnim(@4044);
+    // unk768      = unk534.GetAnim(@4045);
+    // bogusDiveAnim       = unk534.GetAnim(@4046);
+    // lipsDrownAnim       = unk534.GetAnim(@4047);
+    // sharkCageEnterAnim  = unk534.GetAnim(@4048);
+    // rangChangeStartAnim = unk534.GetAnim(@4049);
+    // unk77c      = unk534.GetAnim(@4050);
+    // unk780      = unk534.GetAnim(@4051);
+    unk784      = unk534.GetAnim("TyShootUp");
+
+    for (int i = 0; i < ARRAY_SIZE(ClaimLandAnims); i++) {
+        ClaimLandAnims[i] = unk534.GetAnim(Str_Printf("ClaimLand%d", i + 1));
+        ClaimWaterAnims[i] = unk534.GetAnim(Str_Printf("ClaimWater%d", i + 1));
+    }
+}
+
+void TyContext::WaterInfo::Update(Vector* p, Vector* p1) {
+    Vector start = *(p->y > p1->y ? p : p1);
+    Vector end = *(p->y > p1->y ? p1 : p);
+
+    start.y += 300.0f;
+    end.y -= 300.0f;
+
+    CollisionResult cr;
+
+    bValid = Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ~ID_WATER_BLUE);
+    if (bValid) {
+        pos = cr.pos;
+    }
+
+    if (!bValid) {
+        pos = *p;
+        bValid = WaterVolume_IsWithin(p, &pos.y);
+    }
+
+    if (bValid) {
+        bValid = p->y < pos.y;
+    } else if (ty.GetMedium() == TY_MEDIUM_3) {
+        bValid = true;
+    }
 }
 
 void GameCamera_SetPlatformYawDelta(float);
@@ -1268,6 +1893,8 @@ void Ty::DeinitRangChange(void) {
 void Ty::RangChange(void) {
     UpdateAnimation();
 
+    ThrowBoomerang();
+
     bool b = gb.mJoyPad1.IsNewlyPressed(3);
     bool b1 = gb.mJoyPad1.IsNewlyPressed(2);
 
@@ -1306,7 +1933,7 @@ void Ty::SwapRangs(char* r4) {
 }
 
 void Ty::InitTwirlRang(void) {
-
+    StartAnimation(&animScript, unk778, 5, true);
 }
 
 void Ty::TwirlRang(void) {
@@ -1316,7 +1943,9 @@ void Ty::TwirlRang(void) {
         StartAnimation(&animScript, unk780, 5, false);
     }
 
-    TryChangeState(animScript.Condition() && animScript.currAnim == unk780, TY_AS_35);
+    bool b = animScript.Condition() && animScript.currAnim == unk780;
+
+    TryChangeState(b, TY_AS_35);
 }
 
 bool Ty::IsAbleToGlide(void) {

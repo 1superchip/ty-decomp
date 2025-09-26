@@ -91,6 +91,12 @@ bool Tools_SweepSphereToPlane(Vector*, Vector*, float, Vector*, CollisionResult*
 Vector Tools_MakePlane(Vector*, Vector*);
 bool Tools_CapsuleTestMagSq(Vector*, Vector*, Vector*, float);
 
+inline bool Tools_TestFloor(Vector pVec, float f1, CollisionResult* pCr, float f2, bool b) {
+    pVec.y += f1;
+
+    return Tools_TestFloor(&pVec, pCr, f2, b);
+}
+
 struct Tools_AnimEntry {
     char* pName;
     MKAnim* pAnim;

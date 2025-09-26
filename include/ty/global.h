@@ -23,8 +23,8 @@ enum GameSubState {
     GSS_MiniGame_E4 = 18,
 };
 
-// does this use ImmediateFSM<T>?
 struct GameSubStateFSM {
+    // this must use StateMachine<T>
 
     typedef void(GameSubStateFSM::*InitFunc)(void);
     typedef void(GameSubStateFSM::*DeinitFunc)(void);
@@ -219,6 +219,11 @@ struct JoyPad {
 
     bool IsNewlyPressed(int index) {
         return (mButtonsPressed & tyControl.buttonVals[index]) && !(mPrevButtonsPressed & tyControl.buttonVals[index]);
+    }
+
+    // Checks active controls rather than buttonVals
+    bool IsNewlyPressed2(int index) {
+        return (mNewButtonsPressedThisFrame & tyControl.activeControls[index]);
     }
 };
 

@@ -63,7 +63,7 @@ struct BoomerangWeapon {
     bool IsOwnRang(Boomerang* pRang);
     bool IsReady(void);
 
-    bool Fire(Vector* p, Vector* p1);
+    bool Fire(Vector* pDir, Vector* p1);
     void Update(Matrix*, Vector*);
 
     void Disable(void);
@@ -116,7 +116,7 @@ struct BoomerangManager {
     void Draw(void);
     void DrawShadow(Vector*);
     void DrawReflection(void);
-    bool Fire(Vector*, Vector*, bool bFireBoth);
+    bool Fire(Vector* pDir, Vector*, bool bFireBoth);
     void StartThrowAnim(BoomerangSide side);
     void StartCatchAnim(BoomerangSide side);
     bool IsOwnRang(Boomerang* pRang);
@@ -137,6 +137,10 @@ struct BoomerangManager {
 
     BoomerangType GetCurrentType(void) {
         return mType;
+    }
+
+    BoomerangType GetNextType(void) {
+        return mNextType;
     }
 
     void HideAll(void) {

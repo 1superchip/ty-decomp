@@ -4,7 +4,6 @@
 #include "common/Model.h"
 #include "ty/DDA.h"
 #include "ty/GameObjectManager.h"
-#include "ty/controlval.h"
 #include "common/ParticleSystemManager.h"
 #include "common/MKRumble.h"
 #include "common/Translation.h"

@@ -88,6 +88,11 @@ struct Animation {
     void Set(float arg0) {
         Tween(arg0, 1.0f);
     }
+
+    // No official symbol
+    int GetNmbrOfMatrices(void) {
+        return GetNmbrOfNodes() + 1;
+    }
 };
 
 void Animation_CalculateFrame(Animation::FrameInstance*, AnimationData::Node*);

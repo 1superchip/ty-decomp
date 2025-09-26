@@ -76,6 +76,7 @@ void Gem_ShowAll(void);
 int Gem_GetCount(void);
 
 void Gem_PickupParticle_LoadResources(void);
+void Gem_PickupParticle_Update(void);
 void Gem_PickupParticle_Draw(void);
 void Gem_PickupParticle_SpawnParticles(Vector*);
 Material* Gem_GetParticleMaterial(ElementType type);
