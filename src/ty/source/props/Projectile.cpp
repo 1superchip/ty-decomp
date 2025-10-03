@@ -74,10 +74,10 @@ void Projectile::AddSpin(void) {
 
 void Projectile::CheckForHit(void) {
     Vector* pPos = pModel->matrices[0].Row3();
-    Vector sp18 = ty.pos;
-    sp18.y += 50.0f;
+    Vector tyMid = ty.pos;
+    tyMid.y += 50.0f;
 
-    if (!unk74 && sp18.IsInsideSphere(pPos, GetDesc()->unk8C)) {
+    if (!unk74 && tyMid.IsInsideSphere(pPos, GetDesc()->unk8C)) {
         unk74 = true;
         SoundBank_Play(GetDesc()->hitSound, pPos, 0);
         ResolveHit();
@@ -95,12 +95,16 @@ void Projectile::CheckForHit(void) {
         // if a collision occured, resolve the hit
         if (ResolveHit()) {
             *pPos = unk5C;
+
             float dot = cr.normal.Dot(&mPosDiff);
-            Vector tmp = cr.normal;
-            tmp.Scale(cr.normal.Dot(&mPosDiff));
-            mPosDiff.Subtract(&tmp);
-            tmp.Scale(0.7f);
-            mPosDiff.Subtract(&tmp);
+
+            Vector Vn = cr.normal;
+            Vn.Scale(cr.normal.Dot(&mPosDiff));
+
+            mPosDiff.Subtract(&Vn);
+            Vn.Scale(0.7f);
+            mPosDiff.Subtract(&Vn);
+
             SoundBank_Play(GetDesc()->groundHitSound, pPos, 0);
         }
     }

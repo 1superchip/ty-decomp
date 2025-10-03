@@ -49,7 +49,7 @@ void GameData_New(void) {
     gameData->currentLevel = LN_RAINBOW_CLIFFS;
     gameData->previousLevel = LN_RAINBOW_CLIFFS;
 
-    gameData->currentZone = 0;
+    gameData->currentZone = ZN_0;
 
     gameData->currentRang = BR_Standard;
 
@@ -140,7 +140,7 @@ void GameData::SynchroniseEnterLevel(void) {
     }
 
     SetHasRang(BR_Doomerang, false);
-    SoundBank_SetVolume(1.0f, 3);
+    SoundBank_SetVolume(1.0f, SOUND_VOLUME_SET | MUSIC_VOLUME_SET);
     Tools_EnableWideScreen(GameCamera_View(), (pGameSettings->unk5 == 1) ? true : false);
     float char3 = (float)pGameSettings->unk3;
     float char4 = (float)pGameSettings->unk4;

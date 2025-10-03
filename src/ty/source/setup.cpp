@@ -20,6 +20,8 @@
 #include "ty/RenderTexture.h"
 #include "ty/Path.h"
 #include "ty/ParticleEngine.h"
+#include "ty/main.h"
+#include "ty/frontend/FrontEnd.h"
 
 MKSceneManager gSceneManager;
 
@@ -58,7 +60,7 @@ LevelInfo levelInfo[TOTAL_LEVEL_MAX] = {
 };
 
 void LevelData::InitDefaults(void) {
-    lastLevelIdx = 0;
+    previousLevel = LN_RAINBOW_CLIFFS;
     nmbrOfLoadLevels = 0;
 
     mLights[0].Set(0.0f, 1.0f, 0.0f);
@@ -398,9 +400,6 @@ extern Vector* pCameraGrassPoint;
 extern bool bEnableGallery;
 extern bool bEnableMovies;
 
-struct GameCameraHeroInfo;
-extern GameCameraHeroInfo* Main_UpdateGlobalGameCameraHeroInfo(void);
-
 extern void GameCamera_Reset(GameCameraHeroInfo*, int);
 
 extern void Hud_Init(Ty*);
@@ -518,25 +517,12 @@ void Setup_PostLoadLevel(void) {
     gb.mGameData.StartTime();
 }
 
-struct ScreenFaderObject {
-    FaderObject mFader;
-
-    void Init(Vector*, float, float);
-};
-
-struct FrontEndRes {
-    char padding[0x404];
-    ScreenFaderObject mFrontEndFader;
-};
-
-extern FrontEndRes gFERes;
-
 void PreInitializeLevel(int r3) {
     gb.unk700 = true;
     gb.unk7AC = true;
     gb.level.unk400 = (LevelNumber)r3;
-    gFERes.mFrontEndFader.Init(NULL, 640.0f, 512.0f);
-    gFERes.mFrontEndFader.mFader.Fade(FaderObject::FADEMODE_5, 0.0f, 0.5f, 0.0f, false);
+    gFERes.mFader.Init(NULL, 640.0f, 512.0f);
+    gFERes.mFader.Fade(FaderObject::FADEMODE_5, 0.0f, 0.5f, 0.0f, false);
     gLevelLoadStartTime = Tools_GetTimeInSeconds();
 }
 

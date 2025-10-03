@@ -105,8 +105,6 @@ extern "C" void memset(void*, int, size_t);
 extern "C" int strcmpi(char*, char*);
 extern "C" void strcpy(char*, const char*);
 
-extern int gFrameCounter;
-
 #define RGB2COLOR(r, g, b) (((((r & 0xf8)>>3)<<11) | (((g & 0xfc)>>2)<<5) | ((b & 0xfc)>>3)))
 
 static inline float GetSin(int z, int x) {

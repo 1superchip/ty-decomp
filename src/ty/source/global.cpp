@@ -86,7 +86,7 @@ dpActorInfoStruct actorInfo[NUM_DIALOGPLAYER_ACTORS] = {
 int actorInfoCount = NUM_DIALOGPLAYER_ACTORS;
 float joystickDeadZone = 0.16f;
 
-static GameSubStateFSM::State gameSubStates[20] = {
+static StateMachine<GameSubStateFSM>::State gameSubStates[20] = {
     {NULL, NULL, &GameSubStateFSM::InGameUpdate, &GameSubStateFSM::InGameDraw}, 
     {NULL, NULL, NULL, NULL}, 
     {NULL, NULL, &GameSubStateFSM::BushPig_Update, &GameSubStateFSM::BushPig_Draw}, 
@@ -148,7 +148,7 @@ static GameSubStateFSM::State gameSubStates[20] = {
 };
 
 void GameSubStateFSM::Init(GameSubState newState) {
-    Init(gameSubStates, newState);
+    mFsm.Init(gameSubStates, newState, this);
     bInitialised = true;
 }
 

@@ -30,6 +30,18 @@ struct StateMachine {
         nextState = arg2;
     }
 
+    void Init(State* pStates, int state, T* pActor) {
+        mpStates = pStates;
+        currentState = state;
+        lastState = -1;
+        nextState = -1;
+
+        // Init new current state
+        if (mpStates[currentState].Init) {
+            (pActor->*mpStates[currentState].Init)();
+        }
+    }
+
     /// @brief Calls the current state's Deinit method
     /// @param pActor 
     void Deinit(T* pActor) {
@@ -72,7 +84,7 @@ struct StateMachine {
     /// @brief Updates the state machine
     /// @param pActor 
     /// @param bPrintStateChange Whether or not to print state changes
-    inline void UnkFunc(T* pActor, bool bPrintStateChange /* parameter in debug build */) {
+    inline void Update(T* pActor, bool bPrintStateChange /* parameter in debug build */) {
         if (nextState != -1) {
             // Deinit old current state
             if (currentState != -1 && mpStates[currentState].Deinit) {

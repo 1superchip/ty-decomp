@@ -122,7 +122,7 @@ bool BoomerangWeapon::Fire(Vector* pDir, Vector* p1) {
         direction = *pDir;
 
         mFsm.SetState(BLS_Firing, false);
-        mFsm.UnkFunc(this, false);
+        mFsm.Update(this, false);
 
         return true;
     } else {
@@ -281,7 +281,7 @@ void BoomerangWeapon::StartCatch(Boomerang* pRang) {
     if (mFsm.GetState() == BLS_Idle) {
         pBoomerang = pRang;
         mFsm.SetState(BLS_Catching, false);
-        mFsm.UnkFunc(this, false);
+        mFsm.Update(this, false);
     } else {
         DoCatch(pRang);
     }
@@ -305,7 +305,7 @@ void BoomerangWeapon::Update(Matrix* r4, Vector* r5) {
         it++;
     }
 
-    mFsm.UnkFunc(this, false);
+    mFsm.Update(this, false);
 }
 
 void BoomerangWeapon::Enable(void) {

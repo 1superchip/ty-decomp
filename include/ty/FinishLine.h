@@ -4,6 +4,8 @@
 #include "ty/GameObject.h"
 #include "common/MKAnimScript.h"
 
+void FinishLine_LoadResources(KromeIni* pIni);
+
 void FinishLine_Show(void);
 void FinishLine_Hide(void);
 bool FinishLine_IsCrossedBy(Vector*);

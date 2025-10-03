@@ -9,6 +9,7 @@
 #include "common/Font.h"
 #include "ty/ExtendedAnalogControl.h"
 #include "ty/controlval.h"
+#include "ty/StateMachine.h"
 
 enum GameSubState {
     GSS_NONE        = -1,
@@ -24,64 +25,24 @@ enum GameSubState {
 };
 
 struct GameSubStateFSM {
-    // this must use StateMachine<T>
-
-    typedef void(GameSubStateFSM::*InitFunc)(void);
-    typedef void(GameSubStateFSM::*DeinitFunc)(void);
-    typedef void(GameSubStateFSM::*UpdateFunc)(void);
-    typedef void(GameSubStateFSM::*DrawFunc)(void);
-    typedef void(GameSubStateFSM::*StateFunc5)(void);
-
-    struct State {
-        InitFunc    Init; // Init
-        DeinitFunc  Deinit; // Deinit?
-        UpdateFunc  Update; // Update
-        DrawFunc    Draw; // Draw
-        StateFunc5  func5; // Unused
-    };
-
-    GameSubState mCurrState;
-    int mNewState; // rename?
-    int mPrevPrevState; // rename?
-    State* pStates;
+    StateMachine<GameSubStateFSM> mFsm;
     int unk10; // rename?
 
     static bool bInitialised;
 
-    void Init(State* pFSMStates, GameSubState state) {
-        pStates = pFSMStates;
-        mCurrState = state;
-        mPrevPrevState = -1;
-        mNewState = -1;
-        if (pStates[mCurrState].Init) {
-            (this->*pStates[mCurrState].Init)();
-        }
-    }
-
     // This is CallStateDeinit?
     inline void CallStateDeinit(void) {
-        if (mCurrState != GSS_NONE) {
-            if (pStates[mCurrState].Deinit) {
-                (this->*pStates[mCurrState].Deinit)();
-            }
-        }
-        
-        mCurrState = GSS_NONE;
+        mFsm.Deinit(this);
     }
 
-    GameSubState GetState(void) {
-        return mCurrState;
-    }
-
-    void ChangeStateInternal(int nextState, bool bAlwaysChange) {
-        if (bAlwaysChange || (mCurrState != nextState)) {
-            mNewState = nextState;
-        }
-    }
-    
+    // Saves the previous state and sets the next state to nextState
     void ChangeState(int nextState) {
-        unk10 = GetState();
-        ChangeStateInternal(nextState, false);
+        unk10 = mFsm.GetState();
+        mFsm.SetState(nextState, false);
+    }
+
+    void Update(void) {
+        mFsm.Update(this, false);
     }
 
     void Init(GameSubState newState);
@@ -164,6 +125,10 @@ struct JoyPad {
 
     InputDevices GetDeviceID(void) {
         return mInputDeviceID;
+    }
+
+    void SetInputDevice(InputDevices newDeviceId) {
+        mInputDeviceID = newDeviceId;
     }
 
     void DeinitButtons(void) {
@@ -316,10 +281,10 @@ struct LevelData {
     float lodRanges[8];
     int collisionHeapSize[24]; // Collision heap size array for each level
     LevelNumber unk400;
-    int newLevelNumber;
+    LevelNumber newLevelNumber;
     int nmbrOfLoadLevels;
     LevelNumber levelNumber;
-    int lastLevelIdx;
+    LevelNumber previousLevel;
     bool bBossEnabled;
 
     void Init(void);
@@ -343,8 +308,12 @@ struct LevelData {
         return levelNumber;
     }
 
+    LevelNumber GetPreviousLevel(void) {
+        return previousLevel;
+    }
+
     void ChangeLevel(LevelNumber newLevel) {
-        lastLevelIdx = levelNumber;
+        previousLevel = levelNumber;
         levelNumber = newLevel;
     }
     
@@ -457,6 +426,8 @@ extern const char VersionNumber[];
 extern const float FOV;
 extern const float PaddleDepth;
 
+extern int gLevelLoadStartTime;
+
 inline bool TestColInfoFlag(CollisionResult* pCr, uint testFlags) {
     if (pCr->pInfo) {
         return pCr->pInfo->TestFlags(testFlags);
@@ -490,5 +461,7 @@ struct dpActorInfoStruct {
 extern dpActorInfoStruct actorInfo[];
 
 #define ACTOR_BUNYIP_ID (46)
+
+extern float joystickDeadZone;
 
 #endif // GLOBAL_H

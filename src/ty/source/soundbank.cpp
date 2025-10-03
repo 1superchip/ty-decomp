@@ -48,7 +48,7 @@ void SoundBank_LoadResources(void) {
 }
 
 void SoundBank_Init(void) {
-    if (gb.mLogicState.currState != STATE_9) {
+    if (gb.mLogicState.GetCurr() != STATE_9) {
         soundEventManager.unk10 = Sound_LoadBank("SFX_MainMenu");
     } else {
         char name[32];
@@ -188,12 +188,12 @@ void SoundBank_PlayMusic(MusicType type, float f1, float f2) {
     } else {
         soundEventManager.unk18 = 0;
 
-        SoundBank_SetVolume(1.0f, 3);
+        SoundBank_SetVolume(1.0f, SOUND_VOLUME_SET | MUSIC_VOLUME_SET);
     }
 
     Sound_MusicStop();
     Sound_MusicPlay(buffer, 1, 0);
-    SoundBank_SetVolume(1.0f, 3);
+    SoundBank_SetVolume(1.0f, SOUND_VOLUME_SET | MUSIC_VOLUME_SET);
 }
 
 void SoundBank_PauseMusic(bool r3, float f1) {
@@ -214,7 +214,7 @@ void SoundBank_PauseMusic(bool r3, float f1) {
 
 void SoundBank_PlayDialogMusic(bool r3) {
     gb.mGameData.SetMusicDucked(r3);
-    SoundBank_SetVolume(1.0f, 3);
+    SoundBank_SetVolume(1.0f, SOUND_VOLUME_SET | MUSIC_VOLUME_SET);
 }
 
 void SoundBank_Update(void) {
@@ -250,7 +250,7 @@ void SoundBank_Update(void) {
             break;
     }
 
-    SoundBank_SetVolume(soundEventManager.fader.GetFadePercentage(), 2);
+    SoundBank_SetVolume(soundEventManager.fader.GetFadePercentage(), MUSIC_VOLUME_SET);
     soundEventManager.fader.Update();
 }
 
@@ -1152,9 +1152,9 @@ void SoundBank_StopActivePhrasePlayer(void) {
     }
 }
 
-void SoundBank_SetVolume(float f1, int r3) {
+void SoundBank_SetVolume(float f1, int flags) {
     Sound_SetMasterVolume(
-        (r3 & 1 ? f1 : 1.0f) * gb.mGameData.GetSoundVolume(),
-        (r3 & 2 ? f1 : 1.0f) * gb.mGameData.GetMusicVolume()
+        ((flags & SOUND_VOLUME_SET) ? f1 : 1.0f) * gb.mGameData.GetSoundVolume(),
+        ((flags & MUSIC_VOLUME_SET) ? f1 : 1.0f) * gb.mGameData.GetMusicVolume()
     );
 }

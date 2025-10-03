@@ -24,6 +24,8 @@
 #include "common/Video.h"
 #include "common/MKShadow.h"
 #include "common/MKGrass.h"
+
+#define KEEP_DATA_POOLING
 #include "ty/main.h"
 
 extern "C" void memset(void*, int, int);

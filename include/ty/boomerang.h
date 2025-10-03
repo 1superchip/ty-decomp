@@ -308,9 +308,13 @@ struct ExplosionMessage : MKMessage {
     }
 };
 
+void Boomerang_LoadResources(KromeIni*);
+
 void Boomerang_Init(void);
 void Boomerang_Deinit(void);
 void Boomerang_Reset(void);
+
+void Boomerang_Draw(void);
 
 BoomerangType GetNextRang(BoomerangType type);
 BoomerangType GetPrevRang(BoomerangType type);

@@ -40,7 +40,10 @@ int SoundBank_ResolveSoundEventIndex(char*);
 
 void SoundBank_StopActivePhrasePlayer(void);
 
-void SoundBank_SetVolume(float, int);
+#define SOUND_VOLUME_SET (1)
+#define MUSIC_VOLUME_SET (2)
+
+void SoundBank_SetVolume(float, int flags);
 
 struct SoundEventHelper {
     int unk0;

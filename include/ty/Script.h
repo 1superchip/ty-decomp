@@ -4,6 +4,8 @@
 #include "ty/GameObject.h"
 #include "ty/Messages.h"
 
+void Script_LoadResources(KromeIni* pIni);
+
 #define MessageCount 10
 
 struct ScriptProp : GameObject {

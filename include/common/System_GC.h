@@ -125,6 +125,8 @@ struct Display {
 
 extern Display gDisplay;
 
+extern int gFrameCounter;
+
 extern "C" int main(int argc, char* argv[]);
 
 void System_InitModule(void*, char* pCmdLineArgs);

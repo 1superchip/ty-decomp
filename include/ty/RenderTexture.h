@@ -57,6 +57,8 @@ void RenderTexture_ResetWaterBlendValues(void);
 
 void RenderTexture_RenderWater(void);
 
+void RenderTexture_Update(void);
+
 void RenderTexture_SetWaterLow(char*, float height);
 void RenderTexture_SetWaterHigh(char*, float height);
 void RenderTexture_SetWaterOutput(char* pOutputName);

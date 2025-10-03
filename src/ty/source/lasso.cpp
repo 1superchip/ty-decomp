@@ -110,7 +110,7 @@ void Lasso::Update(Vector* p, Vector* p1, float f1) {
         }
     }
 
-    fsm.UnkFunc(this, false);
+    fsm.Update(this, false);
 }
 
 void Lasso::Draw(void) {

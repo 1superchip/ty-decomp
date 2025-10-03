@@ -1064,38 +1064,38 @@ void Tools_DropShadow_Add(float f1, Vector* pPos, Vector* pNormal, float alpha) 
 // need the inline qualifer so it generates as weak after Tools_DropShadow_Draw 
 inline void ShadowInfo::Draw(void) {
     Matrix transform;
-    Vector sp18 = {0.0f, 0.0f, 1.0f, 0.0f};
+    Vector fwd = {0.0f, 0.0f, 1.0f, 0.0f};
 
     transform.SetIdentity();
-    Tools_BuildLTWMatrix(&transform, &sp18, &unk10);
+    Tools_BuildLTWMatrix(&transform, &fwd, &unk10);
 
     transform.Row3()->Copy(&pos);
     transform.Row3()->y += 3.0f;
 
     View::GetCurrent()->SetLocalToWorldMatrix(&transform);
 
-    Blitter_TriStrip triStrips[4];
-    triStrips[0].pos.Set(-unk20 / 2.0f, 0.0f, unk20 / 2.0f);
-    triStrips[1].pos.Set(unk20 / 2.0f, 0.0f, unk20 / 2.0f);
-    triStrips[2].pos.Set(-unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
-    triStrips[3].pos.Set(unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
+    Blitter_TriStrip vertices[4];
+    vertices[0].pos.Set(-unk20 / 2.0f, 0.0f, unk20 / 2.0f);
+    vertices[1].pos.Set(unk20 / 2.0f, 0.0f, unk20 / 2.0f);
+    vertices[2].pos.Set(-unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
+    vertices[3].pos.Set(unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
     
-    triStrips[0].color.Set(1.0f, 1.0f, 1.0f, alpha);
-    triStrips[3].color = triStrips[2].color = triStrips[1].color = triStrips[0].color;
+    vertices[0].color.Set(1.0f, 1.0f, 1.0f, alpha);
+    vertices[3].color = vertices[2].color = vertices[1].color = vertices[0].color;
     
-    triStrips[0].uv.x = 0.0f;
-    triStrips[0].uv.y = 1.0f;
+    vertices[0].uv.x = 0.0f;
+    vertices[0].uv.y = 1.0f;
     
-    triStrips[1].uv.x = 1.0f;
-    triStrips[1].uv.y = 1.0f;
+    vertices[1].uv.x = 1.0f;
+    vertices[1].uv.y = 1.0f;
     
-    triStrips[2].uv.x = 0.0f;
-    triStrips[2].uv.y = 0.0f;
+    vertices[2].uv.x = 0.0f;
+    vertices[2].uv.y = 0.0f;
     
-    triStrips[3].uv.x = 1.0f;
-    triStrips[3].uv.y = 0.0f;
+    vertices[3].uv.x = 1.0f;
+    vertices[3].uv.y = 0.0f;
     
-    triStrips[0].Draw(ARRAY_SIZE(triStrips), 1.0f);
+    vertices[0].Draw(ARRAY_SIZE(vertices), 1.0f);
 }
 
 void Tools_DropShadow_Draw(void) {
@@ -1586,10 +1586,10 @@ void Tools_ProcessString(char* pStr) {
                 *pString = Tools_MapPadToKey(4);
                 break;
             case 0x96:
-                *pString = Tools_MapPadToKey(tyControl.activeControls[10]);
+                *pString = Tools_MapPadToKey(tyControl.buttonVals[2]);
                 break;
             case 0x97:
-                *pString = Tools_MapPadToKey(tyControl.activeControls[11]);
+                *pString = Tools_MapPadToKey(tyControl.buttonVals[3]);
                 break;
             case 0x9B:
                 *pString = Tools_MapPadToKey(tyControl.activeControls[5]);

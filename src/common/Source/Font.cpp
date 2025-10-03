@@ -340,7 +340,6 @@ int Font::DrawText3d(char* pText, Vector* pPos, float scaleX, float scaleY, Font
 
     sx *= scaleX;
     float sy = mHeight * scaleY;
-    Vector sp8;
     topLeft = *pPos;
 
     switch (justify) {

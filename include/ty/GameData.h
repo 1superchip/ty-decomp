@@ -132,7 +132,7 @@ struct SaveData {
     ZoneStruct zoneInfo[TOTAL_ZONES];
     LevelNumber currentLevel;
     LevelNumber previousLevel;
-    int currentZone;
+    ZoneNumber currentZone;
     int currentRang;
     Attributes tyAttributes;
     bool bHasTalismans[Total_Talismans];
@@ -140,6 +140,8 @@ struct SaveData {
     char unkADA[2];
     s16 lives;
     u8 galleryImages[TOTAL_GALLERYIMAGES / 8];
+    char unkB1E;
+    char unkB1F;
     int totalPlayTime;
 };
 
@@ -226,6 +228,10 @@ struct GameData {
         return pSaveData->tyAttributes.bLearntToSwim;
     }
 
+    bool CheckLearntToDive(void) {
+        return pSaveData->tyAttributes.bLearntToDive;
+    }
+
     bool HasBothRangs(void) {
         return pSaveData->tyAttributes.bBothRangs;
     }
@@ -238,10 +244,13 @@ struct GameData {
         return IsThunderEggCollected(eggIdx, pSaveData->currentLevel);
     }
 
+    ZoneNumber GetCurrentZone(void) {
+        return pSaveData->currentZone;
+    }
+
     bool IsZoneCompleted(ZoneNumber zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bZoneCompleted;
     }
-
     LevelNumber GetCurrentLevel(void) {
         return pSaveData->currentLevel;
     }
@@ -299,6 +308,22 @@ struct GameData {
     void SetChargeBites(int count) {
         // Set the charge bite opal count to (count * 100)
         numChargeBites = count * 100;
+    }
+
+    void RemoveChargeBite(void) {
+        numChargeBites -= 100;
+    }
+
+    bool CheckVideoFlag(unsigned char flag) {
+        return (pSaveData->unkB1F & flag) != 0;
+    }
+
+    void SetVideoFlag(unsigned char flag) {
+        pSaveData->unkB1F |= flag;
+    }
+
+    bool HasTalisman(TalismanType type) {
+        return pSaveData->bHasTalismans[type];
     }
 };
 

@@ -477,15 +477,15 @@ Vector UniformSpline::GetPosition(float time) {
         return mpPoints[i].mPos;
     }
 
-    Vector sp30;
-    sp30.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
+    Vector startVel;
+    startVel.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
 
-    Vector sp48;
-    sp48.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
+    Vector endVel;
+    endVel.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
 
     return Spline_GetPosition(
-        &mpPoints[i].mPos, &sp30,
-        &mpPoints[i + 1].mPos, &sp48, 
+        &mpPoints[i].mPos, &startVel,
+        &mpPoints[i + 1].mPos, &endVel, 
         f31
     );
 }
@@ -510,24 +510,24 @@ Vector UniformSpline::GetVelocity(float time) {
         return mpPoints[i].mPos;
     }
 
-    Vector sp30;
-    Vector sp48;
-    Vector ret;
+    Vector startVel;
+    Vector endVel;
+    Vector newVel;
 
-    sp30.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
-    sp48.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
+    startVel.Scale(&mpPoints[i].unk10, mpPoints[i].unk20);
+    endVel.Scale(&mpPoints[i + 1].unk10, mpPoints[i].unk20);
 
-    ret = Spline_GetVelocity(
-        &mpPoints[i].mPos, &sp30,
-        &mpPoints[i + 1].mPos, &sp48, 
+    newVel = Spline_GetVelocity(
+        &mpPoints[i].mPos, &startVel,
+        &mpPoints[i + 1].mPos, &endVel, 
         f31
     );
 
     if (mpPoints[i].unk20) {
-        ret.Scale(1.0f / mpPoints[i].unk20);
+        newVel.Scale(1.0f / mpPoints[i].unk20);
     }
 
-    return ret;
+    return newVel;
 }
 
 /// @brief Deinits a UniformSpline

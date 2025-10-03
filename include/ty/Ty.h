@@ -14,6 +14,8 @@
 
 void Ty_Init(void);
 void Ty_Deinit(void);
+void Ty_Update(void);
+void Ty_Draw(void);
 
 void Ty_LoadResources(void);
 
