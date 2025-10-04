@@ -22,6 +22,7 @@
 #include "ty/ParticleEngine.h"
 #include "ty/main.h"
 #include "ty/frontend/FrontEnd.h"
+#include "ty/effects/Weather.h"
 
 MKSceneManager gSceneManager;
 
@@ -199,7 +200,6 @@ bool LevelData::ShowGemCount(LevelNumber levelNr) {
 void BushPig_Deinit(void);
 void GameCamera_Deinit(void);
 void MiniGame_Deinit(void);
-void Weather_DeinitType(void);
 void BonusPickup_Deinit(void);
 void PauseScreen_DeinitLevel(void);
 void Fly_DeinitTyFlies(void);
@@ -378,7 +378,6 @@ void Setup_PreloadLevel(void) {
     Model::Purge();
 }
 
-extern void Weather_Enable(bool);
 extern void Shatter_Init(void);
 extern void IceBlock_Init(void);
 extern void Critters_Init(void);
@@ -390,10 +389,7 @@ extern void Waterfall_Init(void);
 extern void WaterSlide_Init(void);
 extern void Enemies_InitBoundingRegions(void);
 extern void MiniGame_Init(void);
-extern int Main_GetCameraDistanceTypeForLevel(void);
 extern void PauseScreen_InitLevel(void);
-extern void EnableTechnoRangs(void);
-extern void EnableElementalRangs(void);
 extern void EnableChangeLevel(bool);
 
 extern Vector* pCameraGrassPoint;

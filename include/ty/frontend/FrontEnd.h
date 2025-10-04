@@ -36,4 +36,6 @@ struct FrontEndCommonResources {
 
 extern FrontEndCommonResources gFERes;
 
+void FrontEnd_LoadResources(void);
+
 #endif // FRONTEND_H

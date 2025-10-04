@@ -21,6 +21,7 @@
 #include "ty/Script.h"
 #include "ty/SignPost.h"
 #include "ty/FinishLine.h"
+#include "ty/effects/Weather.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -28,7 +29,6 @@
 #include "common/Translation.h"
 #include "common/MKGrass.h"
 
-void Weather_Deinit(void);
 void GameCamera_InitModule(unsigned int*);
 
 void GameCamera_Update(GameCameraHeroInfo*);
@@ -48,6 +48,8 @@ void Main_InitGameSystems(void) {
     dda.Init();
 
     InitializeGame();
+
+    Weather_Enable(false);
 }
 
 void Main_InitStaticModules(void) {
@@ -186,6 +188,7 @@ bool Main_DoVideo(void) {
 
 Vector* GameCamera_GetPos(void);
 
+void TyMemCard_LoadResources(void);
 bool TyMemCard_IsAutoSaving(void);
 int TyMemCard_Update(void);
 bool TyMemCard_WasCardRemoved(void);
@@ -199,6 +202,8 @@ void BonusPickupParticle_Update(void);
 
 void Shatter_Update(void);
 void Hud_Update(void);
+void Dialog_Update(void);
+void Particle_Update(void);
 
 extern int dialogWaitHackCounter;
 
@@ -269,6 +274,7 @@ void LogicGame(void) {
     Range_Update();
 
     dda.Update();
+    Weather_Update();
     Gem_PickupParticle_Update();
     BonusPickupParticle_Update();
 
@@ -302,18 +308,23 @@ void LogicGame(void) {
     gSceneManager.UpdateProps();
     objectManager.UpdateModules();
 
-    if (dialogWaitHackCounter <= -1) {
-        Mist_Update();
-        Gem_ParticleSystem_Update();
-        MKGrass_Update();
-        Explosion_Update();
-        SleepyDust_UpdateAll();
-        RenderTexture_Update();
+    Dialog_Update();
+
+    if (dialogWaitHackCounter > -1) {
+        return;
     }
+
+    Mist_Update();
+    Gem_ParticleSystem_Update();
+    MKGrass_Update();
+    Explosion_Update();
+    SleepyDust_UpdateAll();
+    RenderTexture_Update();
 
     gb.mGameFsm.Update();
 
     VibrateUpdate();
+    Particle_Update();
 
     particleManager->SetCamera(&ty.pos, &ty.pos);
     particleManager->Update();
@@ -596,6 +607,8 @@ void Main_AutoLevelSwitch_Update(void) {
     }
 }
 
+void LoadResources_PreLoadGraphics(void);
+
 void Game_Init(void) {
     gb.bE3 = false;
 
@@ -618,6 +631,10 @@ void Game_Init(void) {
 
     SoundBank_LoadResources();
 
+    FrontEnd_LoadResources();
+    TyMemCard_LoadResources();
+    LoadResources_PreLoadGraphics();
+
     MKPackage_Load("frontend", false);
 
     if (gDisplay.region == 1) {
@@ -626,8 +643,6 @@ void Game_Init(void) {
         gb.mLogicState.Init(STATE_2);
     }
 }
-
-extern int dialogWaitHackCounter;
 
 void LanguageSelect_Init(void);
 void LanguageSelect_Update(void);

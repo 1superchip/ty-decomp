@@ -4,13 +4,14 @@
 #include "common/Font.h"
 #include "common/Str.h"
 
+// these may be class methods of Vector
 inline char* FormatVector(Vector* pVec) {
     return Str_Printf("(%5.3f, %5.3f, %5.3f)", pVec->x, pVec->y, pVec->z);
 }
 
-// inline char* PrintVector(Vector* pVec) {
-//     return Str_Printf("(%5.3f, %5.3f, %5.3f, %5.3f)", pVec->x, pVec->y, pVec->z, pVec->w);
-// }
+inline char* PrintVectorW(Vector* pVec) {
+    return Str_Printf("(%5.3f, %5.3f, %5.3f, %5.3f)", pVec->x, pVec->y, pVec->z, pVec->w);
+}
 
 #ifndef BARBIE_ICESKATING
 #define BARBIE_ICESKATING (0)

@@ -24,9 +24,14 @@ void Game_Deinit(void);
 
 float ValidPIRange(float);
 
+int Main_GetCameraDistanceTypeForLevel(void);
+
 struct GameCameraHeroInfo;
 GameCameraHeroInfo* Main_UpdateGlobalGameCameraHeroInfo(void);
 
 void Main_ChangeLevel(LevelNumber);
+
+void EnableTechnoRangs(void);
+void EnableElementalRangs(void);
 
 #endif // MAIN_H
