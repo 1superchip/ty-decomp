@@ -6,6 +6,11 @@
 #include "common/Material.h"
 
 struct MKParticleGenType {
+    enum PrimitiveType {
+        Type_Line   = 1,
+        Type_2      = 2
+    };
+
     struct Envelope {
         float unk0;
         float unk4;

@@ -11,6 +11,9 @@ struct RainInit {
     Vector color;
     char* pMaterialName;
     float materialScrollSpeed;
+
+    void Init(void); // Stripped
+    // void CreateDebugMenus(DebugOptionMenu*);
 };
 
 struct Rain {

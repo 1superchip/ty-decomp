@@ -1,5 +1,7 @@
 #include "ty/effects/Weather.h"
 
+#include "ty/tytypes.h"
+
 MKParticleGen gParticleGen;
 
 Rain gRain;
@@ -7,14 +9,15 @@ Rain gRain;
 Lightning gLightning;
 
 static WeatherInit* gpInit = NULL;
-static int gNumTypes = 0;
-static int gCurTypeMenu;
-static bool gbPauseWeather = false;
-static bool gbFixRain = false;
 
+static int gNumTypes = 0;
 static int gCurType = -1;
+static int gCurTypeMenu = 0;
 
 static bool gbEnableWeather = true;
+static bool gbPauseWeather = false;
+
+static bool gbFixRain = false;
 
 void Weather_Init(WeatherInit* pInit, int numTypes, char**) {
     gpInit = pInit;
@@ -23,8 +26,8 @@ void Weather_Init(WeatherInit* pInit, int numTypes, char**) {
     gCurType = -1;
 
     for (int i = 0; i < gNumTypes; i++) {
-        if (gpInit[i].type & 4) {
-            gpInit[i].genType.SetEnvelope(gpInit[i].genType.pEnvelopes, gpInit[i].genType.numEnvEntries);
+        if (gpInit[i].type & WEATHER_TYPE_4) {
+            gpInit[i].particleType.SetEnvelope(gpInit[i].particleType.pEnvelopes, gpInit[i].particleType.numEnvEntries);
         }
     }
 }
@@ -34,54 +37,119 @@ void Weather_Deinit(void) {
 }
 
 void Weather_Update(void) {
+    if (!gbEnableWeather || gCurType < 0) {
+        return;
+    }
 
+    if (gbPauseWeather) {
+        return;
+    }
+
+    if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+        gRain.Update();
+    }
+
+    if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+        gParticleGen.Update();
+    }
+    
+    if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
+        gLightning.Update();
+    }
 }
 
 void Weather_Draw(View* pView) {
-    if (gbEnableWeather && gCurType >= 0) {
-        static Vector origCameraPos = gParticleGen.mSrcPos;
+    if (!gbEnableWeather || gCurType < 0) {
+        return;
+    }
 
-        if (gpInit[gCurType].type & WEATHER_TYPE_2) {
-            gRain.Draw(pView, gbFixRain);
-        }
+    static Vector origCameraPos = *pView->unk48.Row3();
 
-        if (gpInit[gCurType].type & WEATHER_TYPE_4) {
-            gParticleGen.Draw(pView, gbFixRain ? NULL : pView->unk48.Row3(), &origCameraPos);
-        }
+    if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+        gRain.Draw(pView, gbFixRain);
+    }
 
-        if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
-            gLightning.Draw(pView);
-        }
+    if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+        Vector* p = gbFixRain ? NULL : pView->unk48.Row3();
+        gParticleGen.Draw(pView, p, &origCameraPos);
+    }
+
+    if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
+        gLightning.Draw(pView);
     }
 }
 
 void Weather_InitType(int type) {
+    if (!gpInit[type].bInitialised) {
+        gpInit[type].bInitialised = true;
 
+        if ((gpInit[type].type & WEATHER_TYPE_4) && gpInit[type].particleType.primitiveType == MKParticleGenType::Type_2) {
+            gpInit[type].pRainParticleMaterial = Material::Create(gpInit[type].particleType.pMatName);
+        }
+    }
 }
 
 void Weather_SetType(int type) {
     if (gCurType != -1) {
+        if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+            gRain.Deinit();
+        }
 
+        if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+            gParticleGen.Deinit();
+        }
+
+        if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
+            gLightning.Deinit();
+        }
     }
 
     gCurType = type;
     gCurTypeMenu = type;
 
-    if (gpInit[type].type & 4) {
-
+    if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+        gRain.Init(&gpInit[gCurType].rainInit);
     }
 
-    if (gpInit[type].type & 2) {
-        gParticleGen.Init(&gpInit[type].genType, NULL);
+    if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+        gParticleGen.Init(&gpInit[gCurType].particleType, gpInit[gCurType].pRainParticleMaterial);
     }
 
-    if (gpInit[type].type & WEATHER_TYPE_LIGHTNING) {
-
+    if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
+        gLightning.Init(&gpInit[gCurType].lightningInit);
     }
 }
 
 void Weather_DeinitType(void) {
+    if (gCurType != -1) {
+        if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+            gRain.Deinit();
+        }
 
+        if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+            gParticleGen.Deinit();
+        }
+
+        if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
+            gLightning.Deinit();
+        }
+
+        gCurType = -1;
+    }
+
+    for (int i = 0; i < gNumTypes; i++) {
+        if (gpInit[i].bInitialised) {
+            if (gpInit[i].pRainParticleMaterial) {
+                gpInit[i].pRainParticleMaterial->Destroy();
+
+                gpInit[i].pRainParticleMaterial = NULL;
+            }
+
+            gpInit[i].bInitialised = false;
+        }
+    }
+
+    Weather_Enable(false);
 }
 
 int Weather_GetType(void) {

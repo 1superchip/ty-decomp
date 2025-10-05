@@ -328,7 +328,7 @@ config.libs = [
             Object(NonMatching, "ty/source/effects/Teleport.cpp"),
             Object(Matching, "ty/source/effects/Trails.cpp"),
             Object(NonMatching, "ty/source/effects/Waterdrip.cpp"),
-            Object(NonMatching, "ty/source/effects/Weather.cpp"),
+            Object(Matching, "ty/source/effects/Weather.cpp"),
             Object(NonMatching, "ty/source/enemies/BadBoonie.cpp"),
             Object(NonMatching, "ty/source/enemies/Barracuda.cpp"),
             Object(NonMatching, "ty/source/enemies/Bat.cpp"),

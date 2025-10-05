@@ -13,22 +13,25 @@
 
 struct WeatherInit {
     int type;
-    MKParticleGenType genType;
-    char padding[0xEC - 0x80];
+    MKParticleGenType particleType;
+    RainInit rainInit;
+    LightningInit lightningInit;
+    bool bInitialised;
+    Material* pRainParticleMaterial;
 };
 
 void Weather_Init(WeatherInit* pInit, int numTypes, char**);
 void Weather_Deinit(void);
 void Weather_Update(void);
-void Weather_Draw(View*);
+void Weather_Draw(View* pView);
 
-void Weather_InitType(int);
+void Weather_InitType(int type);
 void Weather_SetType(int type);
 
 void Weather_DeinitType(void);
 
 int Weather_GetType(void);
 
-void Weather_Enable(bool);
+void Weather_Enable(bool bEnableWeather);
 
 #endif // WEATHER_H

@@ -169,10 +169,10 @@ void MKParticleGen::Draw(View* pView, Vector* pNewPos, Vector* pVec1) {
         switch (pType->primitiveType) {
             case 0:
                 break;
-            case 1:
+            case MKParticleGenType::Type_Line:
                 DrawLines(pView, &particleOffset);
                 break;
-            case 2:
+            case MKParticleGenType::Type_2:
                 DrawQuads(pView, &particleOffset);
                 break;
         }
