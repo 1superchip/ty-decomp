@@ -38,7 +38,9 @@ MKParticleGenType::Envelope testEnv[12] = {
     {10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
 };
 
-MKParticleGenType::Envelope defaultPGTEnvelope = {};
+MKParticleGenType::Envelope defaultPGTEnvelope[1] = {
+    {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
+};
 
 static bool gbDrawParticles = true;
 

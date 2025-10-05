@@ -49,6 +49,9 @@ struct MKParticleGenType {
     }
 };
 
+extern MKParticleGenType::Envelope wobbleEnv[16];
+extern MKParticleGenType::Envelope defaultPGTEnvelope[1];
+
 struct MKParticleGen {
     MKParticleGenType* pType;
     Material* pMat;

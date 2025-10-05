@@ -34,4 +34,10 @@ int Weather_GetType(void);
 
 void Weather_Enable(bool bEnableWeather);
 
+// Use an enum for names
+#define NUM_WEATHER_TYPES (7)
+
+extern WeatherInit gWeatherInit[];
+extern char* pWeatherTypeStrs[];
+
 #endif // WEATHER_H

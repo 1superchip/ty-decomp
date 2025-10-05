@@ -49,6 +49,8 @@ void Main_InitGameSystems(void) {
 
     InitializeGame();
 
+    Weather_Init(gWeatherInit, NUM_WEATHER_TYPES, pWeatherTypeStrs);
+
     Weather_Enable(false);
 }
 
