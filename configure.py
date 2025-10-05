@@ -318,7 +318,7 @@ config.libs = [
             Object(Matching, "ty/source/effects/Flame.cpp"),
             Object(NonMatching, "ty/source/effects/GreySmoke.cpp"),
             Object(Matching, "ty/source/effects/Lightning.cpp"),
-            Object(NonMatching, "ty/source/effects/Rain.cpp"),
+            Object(Matching, "ty/source/effects/Rain.cpp"),
             Object(Matching, "ty/source/effects/RainbowEffect.cpp"),
             Object(NonMatching, "ty/source/effects/SawDust.cpp"),
             Object(NonMatching, "ty/source/effects/SnowBall.cpp"),

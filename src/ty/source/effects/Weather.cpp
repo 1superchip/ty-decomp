@@ -2,6 +2,10 @@
 
 MKParticleGen gParticleGen;
 
+Rain gRain;
+
+Lightning gLightning;
+
 static WeatherInit* gpInit = NULL;
 static int gNumTypes = 0;
 static int gCurTypeMenu;
@@ -37,16 +41,16 @@ void Weather_Draw(View* pView) {
     if (gbEnableWeather && gCurType >= 0) {
         static Vector origCameraPos = gParticleGen.mSrcPos;
 
-        if (gpInit[gCurType].type & WEATHER_TYPE_4) {
-
+        if (gpInit[gCurType].type & WEATHER_TYPE_2) {
+            gRain.Draw(pView, gbFixRain);
         }
 
-        if (gpInit[gCurType].type & WEATHER_TYPE_2) {
-            gParticleGen.Draw(pView, !gbFixRain ? &origCameraPos : NULL, &origCameraPos);
+        if (gpInit[gCurType].type & WEATHER_TYPE_4) {
+            gParticleGen.Draw(pView, gbFixRain ? NULL : pView->unk48.Row3(), &origCameraPos);
         }
 
         if (gpInit[gCurType].type & WEATHER_TYPE_LIGHTNING) {
-            
+            gLightning.Draw(pView);
         }
     }
 }

@@ -4,16 +4,12 @@
 #include "common/View.h"
 #include "common/MKParticleGen.h"
 
+#include "ty/effects/Rain.h"
+#include "ty/effects/Lightning.h"
+
 #define WEATHER_TYPE_LIGHTNING (1)
 #define WEATHER_TYPE_2 (2)
 #define WEATHER_TYPE_4 (4)
-
-struct RainInit {
-    float unk0;
-    char* pModelName;
-    Vector color;
-    char* pMaterialName;
-};
 
 struct WeatherInit {
     int type;

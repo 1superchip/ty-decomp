@@ -16,6 +16,9 @@ struct LightningInit {
     float outerRadius;
     float numSecsFlashOff;
     float numSecsFlashOn;
+
+    void Init(void); // Stripped
+    // void CreateDebugMenus(DebugOptionMenu*);
 };
 
 struct Lightning {
