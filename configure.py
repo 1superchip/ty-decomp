@@ -570,7 +570,7 @@ config.libs = [
             Object(Matching, "ty/source/setup.cpp"),
             Object(Matching, "ty/source/Shadow.cpp"),
             Object(NonMatching, "ty/source/Shatter.cpp"),
-            Object(NonMatching, "ty/source/shears.cpp"),
+            Object(Matching, "ty/source/shears.cpp"),
             Object(Matching, "ty/source/SignPost.cpp"),
             Object(Matching, "ty/source/soundbank.cpp"),
             Object(NonMatching, "ty/source/SpecialPickup.cpp"),

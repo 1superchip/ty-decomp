@@ -88,7 +88,7 @@ struct MKAnimScript {
     bool HasLooped(void);
     int UpdatesUntilFinished(void);
     int GetLength(void);
-    void GetStartAndEnd(MKAnim*, short*, short*);
+    void GetStartAndEnd(MKAnim* pAnim, short* pStart, short* pEnd);
     void SetAnimKeepingPosition(MKAnim*);
     float GetNormalPosition(void);
     float GetFrameOfNormalPosition(float, MKAnim*);

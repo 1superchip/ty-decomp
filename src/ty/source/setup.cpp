@@ -23,6 +23,7 @@
 #include "ty/main.h"
 #include "ty/frontend/FrontEnd.h"
 #include "ty/effects/Weather.h"
+#include "ty/Shears.h"
 
 MKSceneManager gSceneManager;
 
@@ -204,7 +205,6 @@ void BonusPickup_Deinit(void);
 void PauseScreen_DeinitLevel(void);
 void Fly_DeinitTyFlies(void);
 void Critters_DeInit(void);
-void Shears_Deinit(void);
 void StaticSpikes_Deinit(void);
 void SpikeyIce_Deinit(void);
 void BarbedWire_Deinit(void);

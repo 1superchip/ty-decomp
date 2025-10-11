@@ -22,6 +22,7 @@
 #include "ty/SignPost.h"
 #include "ty/FinishLine.h"
 #include "ty/effects/Weather.h"
+#include "ty/Lasso.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -86,6 +87,8 @@ void Main_LoadStaticResources(void) {
 
     RainbowEffect_LoadResources();
     ChronorangEffects_LoadResources();
+
+    Lasso_LoadResources();
 
     Boomerang_LoadResources(&ini);
 
