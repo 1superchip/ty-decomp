@@ -23,6 +23,7 @@
 #include "ty/FinishLine.h"
 #include "ty/effects/Weather.h"
 #include "ty/Lasso.h"
+#include "ty/Shears.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -87,6 +88,8 @@ void Main_LoadStaticResources(void) {
 
     RainbowEffect_LoadResources();
     ChronorangEffects_LoadResources();
+
+    Shears_LoadResources();
 
     Lasso_LoadResources();
 
@@ -344,11 +347,13 @@ void LogicGame(void) {
 }
 
 void GameSubStateFSM::InGameUpdate(void) {
+    Shears_Update();
     Ty_Update();
 }
 
 void GameSubStateFSM::InGameDraw(void) {
     Boomerang_Draw();
+    Shears_Draw();
     Ty_Draw();
 
     if (!gb.pDialogPlayer) {

@@ -509,7 +509,7 @@ config.libs = [
             Object(NonMatching, "ty/source/AS_UnderWaterStates.cpp"),
             Object(NonMatching, "ty/source/AS_WaterStates.cpp"),
             Object(NonMatching, "ty/source/barbedWire.cpp"),
-            Object(NonMatching, "ty/source/BezierPathFollower.cpp"),
+            Object(Matching, "ty/source/BezierPathFollower.cpp"),
             Object(NonMatching, "ty/source/bilby.cpp"),
             Object(Matching, "ty/source/boomerang.cpp"),
             Object(NonMatching, "ty/source/BoomerangHud.cpp"),
