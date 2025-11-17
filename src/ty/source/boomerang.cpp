@@ -1101,7 +1101,7 @@ void Flamerang::UpdateParticleEffect(void) {
         if (RandomIR(&gb.mRandSeed, 0, 4) == 0) {
             Particle_Fire_Create(&pFireSys, &endPos, 0.5f, true);
         }
-    } else if ((gb.logicGameCount & 1) != 0 && !unk89) {
+    } else if ((gb.logicGameCount % 2) != 0 && !unk89) {
         Particle_Fire_Create(&mpFlameSys, &mPos, 2.0f, false);
 
         Vector ttt;
@@ -1197,7 +1197,7 @@ void Frostyrang::UpdateParticleEffect(void) {
         // } else {
         //     ty.rangLight1 = endPos;
         // }
-    } else if ((gb.logicGameCount & 1) != 0 && !unk89) {
+    } else if ((gb.logicGameCount % 2) != 0 && !unk89) {
         Vector npos;
 
         npos = mPos;
@@ -1481,7 +1481,7 @@ void Aquarang::UpdateFired(void) {
 }
 
 void Aquarang::UpdateParticleEffect(void) {
-    if ((gb.logicGameCount & 1) == 0 && unk6C != BOOMERANG_STATE_1) {
+    if ((gb.logicGameCount % 2) == 0 && unk6C != BOOMERANG_STATE_1) {
         Vector ttt = mPos;
 
         ttt.x += RandomFR(&gb.mRandSeed, -15.0f, 15.0f);

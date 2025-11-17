@@ -599,7 +599,7 @@ config.libs = [
             Object(NonMatching, "ty/source/WaterSlide.cpp"),
             Object(NonMatching, "ty/source/watertank.cpp"),
             Object(Matching, "ty/source/WeatherTypes.cpp"),
-            Object(NonMatching, "ty/source/windmill.cpp"),
+            Object(Matching, "ty/source/windmill.cpp"),
             Object(Matching, "ty/source/WobbleTexture.cpp"),
             # Object(NonMatching, "fileCache.c"),
             # Object(NonMatching, "List.c"),

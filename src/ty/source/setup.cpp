@@ -80,21 +80,26 @@ void LevelData::InitDefaults(void) {
 void LevelData::Init(void) {
     envRotate = 0.0f;
     envYRot = 0.0f;
+
     lightDir.x = 0.0f;
     lightDir.y = 0.0f;
     lightDir.z = 0.0f;
+
     fogPlane_0 = 0.0f;
     fogPlane_1 = 0.0f;
     farPlane = 25000.0f;
-    lodRanges[0] = 4000000.0f;
-    lodRanges[1] = 9000000.0f;
-    lodRanges[2] = 1.6e+07f;
-    lodRanges[3] = 3.6e+07f;
-    lodRanges[4] = 8.1e+07f;
-    lodRanges[5] = 1.96e+08f;
-    lodRanges[6] = 4.0e+08f;
-    lodRanges[7] = 9.0e+08f;
+
+    lodRanges[0] = 2000.0f * 2000.0f;
+    lodRanges[1] = 3000.0f * 3000.0f;
+    lodRanges[2] = 4000.0f * 4000.0f;
+    lodRanges[3] = 6000.0f * 6000.0f;
+    lodRanges[4] = 9000.0f * 9000.0f;
+    lodRanges[5] = 14000.0f * 14000.0f;
+    lodRanges[6] = 20000.0f * 20000.0f;
+    lodRanges[7] = 30000.0f * 30000.0f;
+
     nmbrOfLayers = 0;
+
     nmbrOfLoadLevels++;
 }
 

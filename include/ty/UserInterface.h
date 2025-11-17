@@ -54,7 +54,7 @@ struct UIText {
     void Init(Font* t_pFont, int stringIdx);
     void Deinit(void);
     float Draw(void);
-    float Draw(char* pDrawString);
+    float Draw(char* pDrawText);
     void SetPosition(Vector* pPos, char t_flags);
     void SetScale(float scale);
     void SetScaleEx(float xScale, float yScale);
@@ -74,6 +74,23 @@ struct UIText {
 
     float GetScale(void) {
         return mScaleX;
+    }
+
+    void InitFields(void) {
+        x = 0.0f;
+        y = 0.0f;
+
+        unk8 = 320.0f;
+        fontHeight = pFont->GetHeight();
+        
+        mRoll = 0.0f;
+
+        mScaleX = 1.0f;
+        mScaleY = 1.0f;
+
+        mFlags = 0;
+
+        color = 0x80808080;
     }
 };
 

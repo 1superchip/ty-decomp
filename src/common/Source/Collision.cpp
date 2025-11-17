@@ -106,82 +106,84 @@ bool IsPointOnFrontSide(Vector* pEnd, Vector* pStart, Vector* pVert0, Vector* pV
 }
 
 static void CalcAAB(BoundingVolume* pVolume, Matrix* pMatrix, Vector* pMin, Vector* pMax) {
-    Vector vecs[8];
-    Vector* pLocalVec = &vecs[1];
+    Vector point[8];
     
-    vecs[0].x = pVolume->v1.x;
-    vecs[0].y = pVolume->v1.y;
-    vecs[0].z = pVolume->v1.z;
-    vecs[0].w = pVolume->v1.w;
+    point[0].x = pVolume->v1.x;
+    point[0].y = pVolume->v1.y;
+    point[0].z = pVolume->v1.z;
+    point[0].w = pVolume->v1.w;
     
-    vecs[1].x = pVolume->v1.x;
-    vecs[1].y = pVolume->v1.y;
-    vecs[1].z = pVolume->v1.z;
-    vecs[1].w = pVolume->v1.w;
+    point[1].x = pVolume->v1.x;
+    point[1].y = pVolume->v1.y;
+    point[1].z = pVolume->v1.z;
+    point[1].w = pVolume->v1.w;
 
-    vecs[1].x = vecs[0].x + pVolume->v2.x;
+    point[1].x = point[0].x + pVolume->v2.x;
     
-    vecs[2].x = vecs[0].x;
-    vecs[2].y = vecs[0].y;
-    vecs[2].z = vecs[0].z;
-    vecs[2].w = vecs[0].w;
+    point[2].x = point[0].x;
+    point[2].y = point[0].y;
+    point[2].z = point[0].z;
+    point[2].w = point[0].w;
 
-    vecs[2].y = vecs[1].y + pVolume->v2.y;
+    point[2].y = point[1].y + pVolume->v2.y;
 
-    vecs[3].x = vecs[0].x;
-    vecs[3].y = vecs[0].y;
-    vecs[3].z = vecs[0].z;
-    vecs[3].w = vecs[0].w;
+    point[3].x = point[0].x;
+    point[3].y = point[0].y;
+    point[3].z = point[0].z;
+    point[3].w = point[0].w;
 
-    vecs[3].z = vecs[0].z + pVolume->v2.z;
+    point[3].z = point[0].z + pVolume->v2.z;
     
-    vecs[4].x = vecs[1].x;
-    vecs[4].y = vecs[0].y;
-    vecs[4].z = vecs[0].z;
-    vecs[4].w = vecs[0].w;
+    point[4].x = point[1].x;
+    point[4].y = point[0].y;
+    point[4].z = point[0].z;
+    point[4].w = point[0].w;
 
-    vecs[4].y = vecs[3].y + pVolume->v2.y;
+    point[4].y = point[3].y + pVolume->v2.y;
     
-    vecs[5].x = pVolume->v1.x + pVolume->v2.x;
-    vecs[5].y = vecs[0].y;
-    vecs[5].w = pVolume->v1.w;
-    vecs[5].z = pVolume->v1.z;
+    point[5].x = pVolume->v1.x + pVolume->v2.x;
+    point[5].y = point[0].y;
+    point[5].w = pVolume->v1.w;
+    point[5].z = pVolume->v1.z;
     
-    vecs[5].z = vecs[2].z + pVolume->v2.z;
+    point[5].z = point[2].z + pVolume->v2.z;
 
-    vecs[6].z = pVolume->v1.z;
-    vecs[7].z = vecs[2].z;
+    point[6].z = pVolume->v1.z;
+    point[7].z = point[2].z;
 
-    vecs[6].x = vecs[0].x;
-    vecs[6].y = vecs[2].y;
-    vecs[6].w = vecs[0].w;
-    vecs[6].z = vecs[2].z + pVolume->v2.z;
+    point[6].x = point[0].x;
+    point[6].y = point[2].y;
+    point[6].w = point[0].w;
+    point[6].z = point[2].z + pVolume->v2.z;
     
-    vecs[7].x = vecs[4].x;
-    vecs[7].y = vecs[3].y + pVolume->v2.y;
-    vecs[7].w = vecs[2].w;
-    vecs[7].z = vecs[2].z + pVolume->v2.z;
+    point[7].x = point[4].x;
+    point[7].y = point[3].y + pVolume->v2.y;
+    point[7].w = point[2].w;
+    point[7].z = point[2].z + pVolume->v2.z;
     
-    for (int i = 0; i < ARRAY_SIZE(vecs); i++) {
-        vecs[i].ApplyMatrix(&vecs[i], pMatrix);
+    for (int i = 0; i < ARRAY_SIZE(point); i++) {
+        point[i].ApplyMatrix(pMatrix);
     }
 
-    pMin->x = vecs[0].x;
-    pMin->y = vecs[0].y;
-    pMin->z = vecs[0].z;
-    pMin->w = vecs[0].w;
-    pMax->x = vecs[0].x;
-    pMax->y = vecs[0].y;
-    pMax->z = vecs[0].z;
-    pMax->w = vecs[0].w;
+    pMin->x = point[0].x;
+    pMin->y = point[0].y;
+    pMin->z = point[0].z;
+    pMin->w = point[0].w;
+    
+    pMax->x = point[0].x;
+    pMax->y = point[0].y;
+    pMax->z = point[0].z;
+    pMax->w = point[0].w;
 
-    for (int i = 1; i < 8; i++) {
-        pMin->x = Min<float>(pMin->x, vecs[i].x);
-        pMax->x = Max<float>(pMax->x, vecs[i].x);
-        pMin->y = Min<float>(pMin->y, vecs[i].y);
-        pMax->y = Max<float>(pMax->y, vecs[i].y);
-        pMin->z = Min<float>(pMin->z, vecs[i].z);
-        pMax->z = Max<float>(pMax->z, vecs[i].z);
+    for (int i = 1; i < ARRAY_SIZE(point); i++) {
+        pMin->x = Min<float>(pMin->x, point[i].x);
+        pMax->x = Max<float>(pMax->x, point[i].x);
+
+        pMin->y = Min<float>(pMin->y, point[i].y);
+        pMax->y = Max<float>(pMax->y, point[i].y);
+
+        pMin->z = Min<float>(pMin->z, point[i].z);
+        pMax->z = Max<float>(pMax->z, point[i].z);
     }
 }
 

@@ -74,87 +74,90 @@ void MKSceneManager::AddTerrainModel(Model* terrainModel, int layer, float drawD
 }
 
 static void CalcBoundingBox(MKProp* pProp, BoundingVolume* pVolume) {
-    Vector vecs[8];
+    Vector point[8];
     MKPropDescriptor* pDesc = pProp->pDescriptor;
     
-    vecs[0].x = pDesc->pVolume->v1.x;
-    vecs[0].y = pDesc->pVolume->v1.y;
-    vecs[0].z = pDesc->pVolume->v1.z;
-    vecs[0].w = pDesc->pVolume->v1.w;
+    point[0].x = pDesc->pVolume->v1.x;
+    point[0].y = pDesc->pVolume->v1.y;
+    point[0].z = pDesc->pVolume->v1.z;
+    point[0].w = pDesc->pVolume->v1.w;
     
-    vecs[1].x = pDesc->pVolume->v1.x;
-    vecs[1].y = pDesc->pVolume->v1.y;
-    vecs[1].z = pDesc->pVolume->v1.z;
-    vecs[1].w = pDesc->pVolume->v1.w;
+    point[1].x = pDesc->pVolume->v1.x;
+    point[1].y = pDesc->pVolume->v1.y;
+    point[1].z = pDesc->pVolume->v1.z;
+    point[1].w = pDesc->pVolume->v1.w;
 
-    vecs[1].x = vecs[0].x + pDesc->pVolume->v2.x;
+    point[1].x = point[0].x + pDesc->pVolume->v2.x;
     
-    vecs[2].x = vecs[0].x;
-    vecs[2].y = vecs[0].y;
-    vecs[2].z = vecs[0].z;
-    vecs[2].w = vecs[0].w;
+    point[2].x = point[0].x;
+    point[2].y = point[0].y;
+    point[2].z = point[0].z;
+    point[2].w = point[0].w;
 
-    vecs[2].y = vecs[1].y + pDesc->pVolume->v2.y;
+    point[2].y = point[1].y + pDesc->pVolume->v2.y;
 
-    vecs[3].x = vecs[0].x;
-    vecs[3].y = vecs[0].y;
-    vecs[3].z = vecs[0].z;
-    vecs[3].w = vecs[0].w;
+    point[3].x = point[0].x;
+    point[3].y = point[0].y;
+    point[3].z = point[0].z;
+    point[3].w = point[0].w;
 
-    vecs[3].z = vecs[0].z + pDesc->pVolume->v2.z;
+    point[3].z = point[0].z + pDesc->pVolume->v2.z;
     
-    vecs[4].x = vecs[1].x;
-    vecs[4].y = vecs[0].y;
-    vecs[4].z = vecs[0].z;
-    vecs[4].w = vecs[0].w;
+    point[4].x = point[1].x;
+    point[4].y = point[0].y;
+    point[4].z = point[0].z;
+    point[4].w = point[0].w;
 
-    vecs[4].y = vecs[3].y + pDesc->pVolume->v2.y;
+    point[4].y = point[3].y + pDesc->pVolume->v2.y;
     
-    vecs[5].x = pDesc->pVolume->v1.x + pDesc->pVolume->v2.x;
-    vecs[5].y = vecs[0].y;
-    vecs[5].w = pDesc->pVolume->v1.w;
-    vecs[5].z = pDesc->pVolume->v1.z;
+    point[5].x = pDesc->pVolume->v1.x + pDesc->pVolume->v2.x;
+    point[5].y = point[0].y;
+    point[5].w = pDesc->pVolume->v1.w;
+    point[5].z = pDesc->pVolume->v1.z;
     
-    vecs[5].z = vecs[2].z + pDesc->pVolume->v2.z;
+    point[5].z = point[2].z + pDesc->pVolume->v2.z;
 
-    vecs[6].z = pDesc->pVolume->v1.z;
-    vecs[7].z = vecs[2].z;
+    point[6].z = pDesc->pVolume->v1.z;
+    point[7].z = point[2].z;
 
-    vecs[6].x = vecs[0].x;
-    vecs[6].y = vecs[2].y;
-    vecs[6].w = vecs[0].w;
-    vecs[6].z = vecs[2].z + pDesc->pVolume->v2.z;
+    point[6].x = point[0].x;
+    point[6].y = point[2].y;
+    point[6].w = point[0].w;
+    point[6].z = point[2].z + pDesc->pVolume->v2.z;
     
-    vecs[7].x = vecs[4].x;
-    vecs[7].y = vecs[3].y + pDesc->pVolume->v2.y;
-    vecs[7].w = vecs[2].w;
-    vecs[7].z = vecs[2].z + pDesc->pVolume->v2.z;
+    point[7].x = point[4].x;
+    point[7].y = point[3].y + pDesc->pVolume->v2.y;
+    point[7].w = point[2].w;
+    point[7].z = point[2].z + pDesc->pVolume->v2.z;
     
-    for (int i = 0; i < ARRAY_SIZE(vecs); i++) {
-        vecs[i].ApplyMatrix(pProp->pLocalToWorld);
+    for (int i = 0; i < ARRAY_SIZE(point); i++) {
+        point[i].ApplyMatrix(pProp->pLocalToWorld);
     }
 
-    Vector min;
-    min.Set(vecs[0].x, vecs[0].y, vecs[0].z);
+    Vector propMin;
+    propMin.Set(point[0].x, point[0].y, point[0].z);
     
-    Vector max;
-    max.Set(vecs[0].x, vecs[0].y, vecs[0].z);
+    Vector propMax;
+    propMax.Set(point[0].x, point[0].y, point[0].z);
 
-    for (int i = 1; i < 8; i++) {
-        min.x = Min<float>(min.x, vecs[i].x);
-        max.x = Max<float>(max.x, vecs[i].x);
-        min.y = Min<float>(min.y, vecs[i].y);
-        max.y = Max<float>(max.y, vecs[i].y);
-        min.z = Min<float>(min.z, vecs[i].z);
-        max.z = Max<float>(max.z, vecs[i].z);
+    for (int i = 1; i < ARRAY_SIZE(point); i++) {
+        propMin.x = Min<float>(propMin.x, point[i].x);
+        propMax.x = Max<float>(propMax.x, point[i].x);
+
+        propMin.y = Min<float>(propMin.y, point[i].y);
+        propMax.y = Max<float>(propMax.y, point[i].y);
+
+        propMin.z = Min<float>(propMin.z, point[i].z);
+        propMax.z = Max<float>(propMax.z, point[i].z);
     }
 
-    pVolume->v1.x = min.x;
-    pVolume->v1.y = min.y;
-    pVolume->v1.z = min.z;
-    pVolume->v2.x = max.x - min.x;
-    pVolume->v2.y = max.y - min.y;
-    pVolume->v2.z = max.z - min.z;
+    pVolume->v1.x = propMin.x;
+    pVolume->v1.y = propMin.y;
+    pVolume->v1.z = propMin.z;
+
+    pVolume->v2.x = propMax.x - propMin.x;
+    pVolume->v2.y = propMax.y - propMin.y;
+    pVolume->v2.z = propMax.z - propMin.z;
 }
 
 

@@ -63,25 +63,31 @@ void Talisman::Update(void) {
     }
     
     if ((gb.logicGameCount % 4) == 1) {
-        Vector vec; // particlePos?
-        Vector vec1; // vel?
+        Vector particlePos;
+        Vector vel;
 
         Vector colour = {1.0f, 1.0f, 0.0f, 0.0f};
 
-        float randomAngle = ((RandomI(&gb.mRandSeed) % 100) * (2 * PI)) / 100.0f;
+        float angle = ((RandomI(&gb.mRandSeed) % 100) * (2 * PI)) / 100.0f;
 
-        float rand1 = ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f;
+        float radius = ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f;
 
-        vec.Set(_table_sinf(randomAngle) * rand1, RandomI(&gb.mRandSeed) % 5, _table_cosf(randomAngle) * rand1);
-        vec1 = vec;
-        vec1.Normalise();
-        vec1.Scale(15.0f);
-        vec1.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
-        vec.Add(pModel->matrices[0].Row3());
+        particlePos.Set(
+            _table_sinf(angle) * radius, 
+            RandomI(&gb.mRandSeed) % 5, 
+            _table_cosf(angle) * radius
+        );
+
+        vel = particlePos;
+        vel.Normalise();
+        vel.Scale(15.0f);
+        vel.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
+
+        particlePos.Add(GetPos());
         
         pParticleSystem->scale = 1.0f;
 
-        Particle_Special_Create(&pParticleSystem, &vec, &vec1, &colour);
+        Particle_Special_Create(&pParticleSystem, &particlePos, &vel, &colour);
     }
 }
 

@@ -10,7 +10,7 @@
 #define LODFlags_AlphaProp 8
 
 void LOD_Deinit(void);
-int Range_WhichZone(Vector* point, float*);
+int Range_WhichZone(Vector* pPoint, float* pOutLodBlend);
 bool Range_IsVisible(Vector*);
 void Range_ModelSetAlpha(Model*, int, float, float, float, float, int);
 void Range_Update(void);

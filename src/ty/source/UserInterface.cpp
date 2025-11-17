@@ -161,16 +161,7 @@ void UIText::Init(Font* t_pFont, int stringIdx) {
     pFont = t_pFont;
     mStringIdx = stringIdx;
     pText = NULL;
-    // Inline here
-    x = 0.0f;
-    y = 0.0f;
-    unk8 = 320.0f;
-    fontHeight = pFont->GetHeight();
-    mRoll = 0.0f;
-    mScaleX = 1.0f;
-    mScaleY = 1.0f;
-    mFlags = 0;
-    color = 0x80808080;
+    InitFields();
 }
 
 /// @brief Deinits UIText object
@@ -191,7 +182,7 @@ float UIText::Draw(void) {
     return 0.0f;
 }
 
-float UIText::Draw(char* pDrawString) {
+float UIText::Draw(char* pDrawText) {
     Vector s; // Matrix scale vector
 
     Matrix matrix;
@@ -223,11 +214,11 @@ float UIText::Draw(char* pDrawString) {
     // Interestingly, this code draws the string 2x for a background effect
     matrix.Row3()->x += 2.0f;
     matrix.Row3()->y += 2.0f;
-    pFont->DrawString(pDrawString, unk8, fontHeight, &matrix, mFlags, 0x80000000, NULL, NULL);
+    pFont->DrawString(pDrawText, unk8, fontHeight, &matrix, mFlags, 0x80000000, NULL, NULL);
     
     matrix.Row3()->x -= 2.0f;
     matrix.Row3()->y -= 2.0f;
-    float ret = pFont->DrawString(pDrawString, unk8, fontHeight, &matrix, mFlags, color, NULL, NULL);
+    float ret = pFont->DrawString(pDrawText, unk8, fontHeight, &matrix, mFlags, color, NULL, NULL);
     
     View::GetCurrent()->OrthoEnd();
     return ret;

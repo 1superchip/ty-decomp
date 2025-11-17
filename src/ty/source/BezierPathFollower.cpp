@@ -229,23 +229,23 @@ float BezierPathFollower::GetPositionAlongPath(Vector* p) {
         f28 += ApproxMag(&mSpline.mpPoints[i].mPos, &mSpline.mpPoints[i + 1].mPos);
     }
 
-    Vector m;
-    m.Sub(p, &mSpline.mpPoints[r31].mPos);
+    Vector diff;
+    diff.Sub(p, &mSpline.mpPoints[r31].mPos);
 
-    Vector sp8;
+    Vector dir;
     if (r31 == 0) {
-        sp8.Sub(&mSpline.mpPoints[r31 + 1].mPos, &mSpline.mpPoints[r31].mPos);
+        dir.Sub(&mSpline.mpPoints[r31 + 1].mPos, &mSpline.mpPoints[r31].mPos);
     } else if (r31 == mSpline.nodeIndex - 1) {
-        sp8.Sub(&mSpline.mpPoints[r31].mPos, &mSpline.mpPoints[r31 - 1].mPos);
-    } else if (m.Dot(&mSpline.mpPoints[r31].unk10) < 0.0f) {
-        sp8.Sub(&mSpline.mpPoints[r31].mPos, &mSpline.mpPoints[r31 - 1].mPos);
+        dir.Sub(&mSpline.mpPoints[r31].mPos, &mSpline.mpPoints[r31 - 1].mPos);
+    } else if (diff.Dot(&mSpline.mpPoints[r31].unk10) < 0.0f) {
+        dir.Sub(&mSpline.mpPoints[r31].mPos, &mSpline.mpPoints[r31 - 1].mPos);
     } else {
-        sp8.Sub(&mSpline.mpPoints[r31 + 1].mPos, &mSpline.mpPoints[r31].mPos);
+        dir.Sub(&mSpline.mpPoints[r31 + 1].mPos, &mSpline.mpPoints[r31].mPos);
     }
 
-    sp8.Normalise();
+    dir.Normalise();
 
-    f28 += m.Dot(&sp8);
+    f28 += diff.Dot(&dir);
 
     return f28;
 }

@@ -202,12 +202,12 @@ void SleepyDust::Update(void) {
                 v1.ApplyMatrix(&dustEntries[i].pModel->GetBoundingVolume(-1)->v1, &dustEntries[i].matrix);
                 v2.ApplyRotMatrix(&dustEntries[i].pModel->GetBoundingVolume(-1)->v2, &dustEntries[i].matrix);
 
-                Vector sp8 = dustEntries[i].pModel->GetBoundingVolume(-1)->v2;
+                Vector temp = dustEntries[i].pModel->GetBoundingVolume(-1)->v2;
 
-                sp8.x = sp8.y = sp8.z = 
-                    (Abs<float>(sp8.x) + Abs<float>(sp8.y) + Abs<float>(sp8.z)) / 3.0f;
+                temp.x = temp.y = temp.z = 
+                    (Abs<float>(temp.x) + Abs<float>(temp.y) + Abs<float>(temp.z)) / 3.0f;
 
-                dustEntries[i].matrix.Scale(&dustEntries[i].matrix, &sp8);
+                dustEntries[i].matrix.Scale(&dustEntries[i].matrix, &temp);
                 dustEntries[i].matrix.Scale(0.01f);
 
                 dustEntries[i].yaw += 0.02f;

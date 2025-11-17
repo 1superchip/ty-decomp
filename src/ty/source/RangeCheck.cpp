@@ -31,31 +31,41 @@ void LOD_Deinit(void) {
     lodEntryPool = NULL;
 }
 
-int Range_WhichZone(Vector* point, float* arg1) {
-    // no vector here
-    Vector diff;
-    diff.x = point->x - cameraPos.x;
-    diff.y = point->y - cameraPos.y;
-    diff.z = point->z - cameraPos.z;
-    float dist = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-    float fVar1 = 0.0f;
-    if (arg1 != NULL) {
-        *arg1 = 1.0f;
+/// @brief Determines which LOD zone a point belongs to.
+/// @param pPoint Pointer to the point in 3D space.
+/// @param pOutLodBlend If not NULL, receives the normalized interpolation value between 0.0f and 1.0f,
+///        where 0.0f means the point is exactly at the start of the current LOD zone, and 1.0f means
+///        the point is exactly at the end of the current LOD zone. Values in between indicate how far
+///        the point lies between the previous and current LOD ranges.
+/// @return The index of the LOD zone that the point belongs to. If the point is beyond all defined
+///         zones, returns the number of zones (one past the last valid index).
+int Range_WhichZone(Vector* pPoint, float* pOutLodBlend) {
+    float dx = pPoint->x - cameraPos.x;
+    float dy = pPoint->y - cameraPos.y;
+    float dz = pPoint->z - cameraPos.z;
+
+    float dist = (dx * dx) + (dy * dy) + (dz * dz);
+
+    float prevZoneRange = 0.0f;
+
+    if (pOutLodBlend != NULL) {
+        *pOutLodBlend = 1.0f;
     }
 
     int zoneId = 0;
     for (; zoneId < ARRAY_SIZE(gb.level.lodRanges); zoneId++) {
-        float zone = gb.level.lodRanges[zoneId];
-        if (dist < zone) {
-            if (arg1 == NULL) {
+        float zoneRange = gb.level.lodRanges[zoneId];
+
+        if (dist < zoneRange) {
+            if (pOutLodBlend == NULL) {
+                return zoneId;
+            } else {
+                *pOutLodBlend = (dist - prevZoneRange) / (zoneRange - prevZoneRange);
                 return zoneId;
             }
-            
-            *arg1 = (dist - fVar1) / (zone - fVar1);
-            return zoneId;
         }
         
-        fVar1 = zone;
+        prevZoneRange = zoneRange;
     }
 
     return zoneId;

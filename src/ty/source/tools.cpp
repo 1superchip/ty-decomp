@@ -220,6 +220,11 @@ float Tools_RandomGaussian(void) {
     return angle;
 }
 
+/// @brief 
+/// @param pModel 
+/// @param subobjectIdx 
+/// @param pMatrix 
+/// @param secondSubObject 
 void Tools_ApplyRotationToSubObject(Model* pModel, int subobjectIdx, Matrix* pMatrix, int secondSubObject) {
     int matrixIdx = pModel->GetSubObjectMatrixIndex(subobjectIdx);
     Matrix* pSubObjectMatrix = &pModel->pMatrices[matrixIdx];

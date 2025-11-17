@@ -92,20 +92,23 @@ inline void PtrListDL<T>::Init(int count, int size) {
 template <typename T>
 inline void PtrListDL<T>::Deinit(void) {
     T* memory = (T*)pMem;
-    T** temp = pMem;
-    while (*--temp != NULL) {
-        if (*temp < memory) {
-            memory = *temp;
+    T** pPtrs = pMem;
+
+    while (*--pPtrs != NULL) {
+        if (*pPtrs < memory) {
+            memory = *pPtrs;
         }
     }
 
-    if (temp != (T**)&gEmptyPtrListDL[0]) {
-        T** ptrs = pMem;
-        while (*ptrs != NULL) {
-            if (*ptrs < memory) {
-                memory = *ptrs;
+    if (pPtrs != (T**)&gEmptyPtrListDL[0]) {
+        pPtrs = pMem;
+
+        while (*pPtrs != NULL) {
+            if (*pPtrs < memory) {
+                memory = *pPtrs;
             }
-            ptrs++;
+
+            pPtrs++;
         }
 
         Heap_MemFree(memory);
@@ -125,7 +128,7 @@ inline void PtrListDL<T>::Destroy(T* p) {
     while (*memPtr != NULL) {
         if (*memPtr == p) {
             Destroy(memPtr);
-            break;
+            break; // return needed to match Windmill_Delete for july 1st prototype
         }
 
         memPtr++;

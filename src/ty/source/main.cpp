@@ -24,6 +24,7 @@
 #include "ty/effects/Weather.h"
 #include "ty/Lasso.h"
 #include "ty/Shears.h"
+#include "ty/windmill.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -88,6 +89,8 @@ void Main_LoadStaticResources(void) {
 
     RainbowEffect_LoadResources();
     ChronorangEffects_LoadResources();
+
+    WindMill_LoadResources();
 
     Shears_LoadResources();
 
