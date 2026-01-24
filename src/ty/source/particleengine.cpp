@@ -113,9 +113,6 @@ void TyParticleManager::Init(void) {
     mWaterDropBlueData.Init(50);
     mWaterDropBlueParticles.Init(mWaterDropBlueData.capacity());
 
-    mShockGlowData.Init(20);
-    mShockGlowParticles.Init(mShockGlowData.capacity());
-
     mChompData.Init(20);
     mChompParticles.Init(mChompData.capacity());
 
@@ -143,8 +140,14 @@ void TyParticleManager::Init(void) {
 
     mFastGlowParticles.Init(10);
 
+    mBridgeChunkData.Init(100, sizeof(BridgeChunkStruct));
+
+    unk.Init(30, sizeof(int[0x48/4]));
+
     mLeafList.Init(16, sizeof(LeafGrassDustChunkStruct));
     mFeatherList.Init(20, sizeof(FeatherStruct));
+
+    unk310.Init(10, sizeof(int[0x54/4]));
 }
 
 void TyParticleManager::Deinit(void) {
@@ -159,18 +162,22 @@ void TyParticleManager::Deinit(void) {
         mLeafList.Deinit();
         mFeatherList.Deinit();
         mShockGlowData.Deinit();
-        //
+        mBridgeChunkData.Deinit();
         mWaterDropGreenData.Deinit();
         mWaterDropBlueData.Deinit();
         mChompData.Deinit();
         mGhostData.Deinit();
         mGhostSmokeData.Deinit();
         mWaterSteamData.Deinit();
-        //
+        unk310.Deinit();
         mSparkData.Deinit();
         mAntData.Deinit();
-
         mBilbyAtomParticles.Deinit();
+
+        mWaterWashLists[0].Deinit();
+        mWaterWashLists[1].Deinit();
+        mWaterWashLists[2].Deinit();
+        mWaterWashLists[3].Deinit();
 
         mRippleList.Deinit();
         mGooList.Deinit();
@@ -187,6 +194,10 @@ void TyParticleManager::Deinit(void) {
         mWaterSteamParticles.Deinit();
         mSparkParticles.Deinit();
         mAntParticles.Deinit();
+        mWaterWashParticles[0].Deinit();
+        mWaterWashParticles[1].Deinit();
+        mWaterWashParticles[2].Deinit();
+        mWaterWashParticles[3].Deinit();
         //
         //
         //
@@ -447,11 +458,104 @@ void TyParticleManager::SpawnBreathMist(Vector* pPos, Vector* pVel, float scale)
     pParticle->angle = 0.0f;
 }
 
-void TyParticleManager::SpawnBridgeChunk(Vector*, Model* pModel) {
+struct FootEffect {
+    char padding[0x10];
+    void Init(void);
+    void Deinit(void);
+    void Spawn(Vector*, Vector*, BoundingVolume*, float, int, float, Vector*, bool);
+};
+extern FootEffect gbFootEffects;
+
+void TyParticleManager::SpawnBridgeChunk(Vector* pVec, Model* pModel) {
     Vector vel;
     vel.Set(0.0f, 20.0f, 0.0f);
+    
+    gbFootEffects.Spawn(
+        pVec,
+        &vel,
+        pModel->GetModelVolume(),
+        2.0f,
+        0x10,
+        0.7f,
+        pModel->matrices[0].Row3(),
+        false
+    );
 
-    pModel->GetModelVolume();
+    vel.Set(0.0f, 65.0f, 0.0f);
+
+    pVec->y -= 30.0f;
+    
+    gbFootEffects.Spawn(
+        pVec,
+        &vel,
+        pModel->GetModelVolume(),
+        2.0f,
+        0x10,
+        0.32f,
+        pModel->matrices[0].Row3(),
+        false
+    );
+
+    pVec->y += 30.0f;
+
+    for (int i = 0; i < 5; i++) {
+        if ((RandomI(&gb.mRandSeed) % 5) == 1) {
+            vel.Set(
+                0.0f,
+                RandomFR(&gb.mRandSeed, 33.0f, 65.0f),
+                0.0f
+            );
+
+            gbFootEffects.Spawn(
+                pVec,
+                &vel,
+                pModel->GetModelVolume(),
+                2.0f,
+                0x10,
+                0.57f,
+                pModel->matrices[0].Row3(),
+                false
+            );
+        }
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if ((RandomI(&gb.mRandSeed) % 5) != 1) {
+            continue;
+        }
+
+        if (mBridgeChunkData.IsFull()) {
+            break;
+        }
+
+        BridgeChunkStruct* pBridgeChunkData = mBridgeChunkData.GetNextEntry();
+
+        if (!pBridgeChunkData) {
+            break;
+        }
+
+        pBridgeChunkData->unk4 = 1.0f;
+
+        pBridgeChunkData->unk0 = true;
+
+        pBridgeChunkData->unk10 = *pVec;
+
+        pBridgeChunkData->unk8 = RandomFR(&gb.mRandSeed, 0.1f, 0.35f);
+
+        pBridgeChunkData->unk20.Set(0.0f, 0.0f, 0.0f);
+
+        pBridgeChunkData->pModel = pWoodModels[RandomI(&gb.mRandSeed) % 2];
+
+        pBridgeChunkData->unk40 = -(PI / 64.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 32.0f)) / 100.0f);
+        pBridgeChunkData->unk44 = -(PI / 64.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 32.0f)) / 100.0f);
+        pBridgeChunkData->unk48 = -(PI / 64.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 32.0f)) / 100.0f);
+
+        pBridgeChunkData->unk30.Set(
+            0.0f,
+            -((float)(RandomI(&gb.mRandSeed) % 1000)) / 200.0f,
+            0.0f
+        );
+    }
 }
 
 void TyParticleManager::SpawnAntHillChunk(Vector*, Vector*) {

@@ -166,6 +166,19 @@ struct WaterDropBlueStruct {
     Vector unk8;
 };
 
+struct BridgeChunkStruct {
+    bool unk0;
+    float unk4;
+    float unk8;
+    Model* pModel;
+    Vector unk10;
+    Vector unk20;
+    Vector unk30;
+    float unk40;
+    float unk44;
+    float unk48;
+};
+
 // End of unoffical
 
 struct TyParticleManager {
@@ -281,8 +294,17 @@ struct TyParticleManager {
     StructList<int> mWaterWashLists[4];
     StructList<Blitter_Particle> mWaterWashParticles[4];
 
+    char unk2CC[0x300 - 0x2CC];
+
+    PtrListDL<BridgeChunkStruct> mBridgeChunkData;
+
+    PtrListDL<int[0x48/4]> unk;
+
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;
+
+    PtrListDL<int[0x54/4]> unk310;
+    PtrListDL<int[0x54/4]> unk2;
     
     void LoadResources(void);
     void Init(void);
