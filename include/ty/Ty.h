@@ -978,6 +978,14 @@ struct Ty : Hero {
     void SetBunyip(Bunyip* pNewBunyip);
     void SetTwirlRangs(void);
 
+    void SpeedLinesEnable(Vector* pRotation);
+    void SpeedLinesDraw(void);
+    void SpeedLinesUpdate(void);
+
+    void EnableEntityLookAt(bool b);
+    void UpdateHeadTurning(void);
+    void HeadTurningSetNewOffset(void);
+
     void AddShadowLight(Vector*, float);
     
     // Positioning

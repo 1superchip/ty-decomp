@@ -179,6 +179,15 @@ struct BridgeChunkStruct {
     float unk48;
 };
 
+struct AntHillChunkStruct {
+    float unk0;
+    Model* pModel;
+    Vector unk8;
+    Vector unk18;
+    Vector unk28;
+    Vector unk38;
+};
+
 // End of unoffical
 
 struct TyParticleManager {
@@ -298,7 +307,7 @@ struct TyParticleManager {
 
     PtrListDL<BridgeChunkStruct> mBridgeChunkData;
 
-    PtrListDL<int[0x48/4]> unk;
+    PtrListDL<AntHillChunkStruct> mAntHillStructs;
 
     PtrListDL<LeafGrassDustChunkStruct> mLeafList;
     PtrListDL<FeatherStruct> mFeatherList;

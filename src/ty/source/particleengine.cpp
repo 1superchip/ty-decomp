@@ -142,7 +142,7 @@ void TyParticleManager::Init(void) {
 
     mBridgeChunkData.Init(100, sizeof(BridgeChunkStruct));
 
-    unk.Init(30, sizeof(int[0x48/4]));
+    mAntHillStructs.Init(30, sizeof(AntHillChunkStruct));
 
     mLeafList.Init(16, sizeof(LeafGrassDustChunkStruct));
     mFeatherList.Init(20, sizeof(FeatherStruct));
@@ -158,7 +158,7 @@ void TyParticleManager::Deinit(void) {
         mFastGlowParticles.Deinit();
         mTireDustData.Deinit();
         mBreathMistData.Deinit();
-
+        mAntHillStructs.Deinit();
         mLeafList.Deinit();
         mFeatherList.Deinit();
         mShockGlowData.Deinit();
@@ -544,7 +544,7 @@ void TyParticleManager::SpawnBridgeChunk(Vector* pVec, Model* pModel) {
 
         pBridgeChunkData->unk20.Set(0.0f, 0.0f, 0.0f);
 
-        pBridgeChunkData->pModel = pWoodModels[RandomI(&gb.mRandSeed) % 2];
+        pBridgeChunkData->pModel = pWoodModels[RandomI(&gb.mRandSeed) % ARRAY_SIZE(pWoodModels)];
 
         pBridgeChunkData->unk40 = -(PI / 64.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 32.0f)) / 100.0f);
         pBridgeChunkData->unk44 = -(PI / 64.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 32.0f)) / 100.0f);
@@ -558,8 +558,28 @@ void TyParticleManager::SpawnBridgeChunk(Vector* pVec, Model* pModel) {
     }
 }
 
-void TyParticleManager::SpawnAntHillChunk(Vector*, Vector*) {
+void TyParticleManager::SpawnAntHillChunk(Vector* p, Vector* p1) {
+    if (mAntHillStructs.IsFull()) {
+        return;
+    }
 
+    AntHillChunkStruct* pChunk = mAntHillStructs.GetNextEntry();
+    if (pChunk) {
+        pChunk->unk0 = 1.0f;
+
+        pChunk->unk8 = *p;
+        pChunk->unk28 = *p1;
+
+        pChunk->unk18.x = 0.0f;
+        pChunk->unk18.y = 0.0f;
+        pChunk->unk18.z = 0.0f;
+
+        pChunk->pModel = pTMoundModels[RandomI(&gb.mRandSeed) % ARRAY_SIZE(pTMoundModels)];
+
+        pChunk->unk38.x = -(PI / 32.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 16.0f)) / 100.0f);
+        pChunk->unk38.y = -(PI / 32.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 16.0f)) / 100.0f);
+        pChunk->unk38.z = -(PI / 32.0f) + (((RandomI(&gb.mRandSeed) % 100) * (PI / 16.0f)) / 100.0f);
+    }
 }
 
 void TyParticleManager::SpawnLeafGrassDust(Vector*, Vector*, bool) {

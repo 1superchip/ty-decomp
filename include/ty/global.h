@@ -460,6 +460,7 @@ struct dpActorInfoStruct {
 
 extern dpActorInfoStruct actorInfo[];
 
+#define ACTOR_TY_ID (1)
 #define ACTOR_BUNYIP_ID (46)
 
 extern float joystickDeadZone;

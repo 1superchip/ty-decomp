@@ -6,6 +6,14 @@
 #include "ty/props/WaterVolume.h"
 #include "common/Str.h"
 
+struct SpeedLines {
+    int unk0;
+    int unk4;
+    Model* pModel;
+    Material* pMat;
+    Vector rotation;
+};
+
 static GameObjDesc tyDesc;
 Ty ty;
 
@@ -55,6 +63,8 @@ static TyFSM::State tyStates[] = {
 
     },
 };
+
+static SpeedLines speedLines = {};
 
 void TyFSM::Update(Ty* pTy) {
     if (unk14 != AS_None) {
@@ -427,6 +437,11 @@ void Ty::LoadResources(void) {
         StartAnimation(&animScript, biteUnchargeAnim, 0, false);
         StartAnimation(&unk4EC, biteUnchargeAnim, 0, true);
 
+        if (speedLines.pModel == NULL) {
+            speedLines.pModel = Model::Create("prop_0154_speedlines", NULL);
+            speedLines.pMat = Material::Find("prop_0154_speedlines");
+        }
+
         unk11F8[0].Init(BOOMERANG_SIDE_LEFT);
         unk11F8[1].Init(BOOMERANG_SIDE_RIGHT);
 
@@ -448,6 +463,16 @@ void Ty::FreeResources(void) {
 
         unk11F8[0].Deinit();
         unk11F8[1].Deinit();
+
+        actorInfo[ACTOR_TY_ID].pModel = NULL;
+
+        if (speedLines.pModel) {
+            speedLines.pModel->Destroy();
+            Model::Purge();
+            Model::Purge();
+            Model::Purge();
+            speedLines.pModel = NULL;
+        }
     }
 
     animScript.Deinit();
@@ -501,7 +526,7 @@ void Ty::Init(void) {
 
         StartAnimation(&animScript, biteUnchargeAnim, 0, false);
 
-        mFsm.SetState(TY_AS_35, false);
+        mFsm.Set(TY_AS_35);
 
         opalMagnetData.Init();
         glowParticleData.Init();
@@ -910,6 +935,47 @@ void Ty::SetTwirlRangs(void) {
     if (mFsm.GetState() != AS_Doomerang) {
         mFsm.SetState(TY_AS_43, false);
     }
+}
+
+void Ty::SpeedLinesEnable(Vector* pRotation) {
+    if (pRotation) {
+        speedLines.rotation.Copy(pRotation);
+
+        if (speedLines.unk0 != 0) {
+            return;
+        }
+
+        speedLines.unk4 = 0;
+        speedLines.unk0 = 1;
+
+        speedLines.pModel->colour.w = 0.0f;
+    } else if (speedLines.unk0 != 0 && speedLines.unk0 != 3) {
+        speedLines.unk0 = 3;
+        speedLines.unk4 = 0;
+    }
+}
+
+void Ty::EnableEntityLookAt(bool b) {
+    mHeadTurningInfo.mNodeOverride.b1 = b;
+}
+
+void Ty::UpdateHeadTurning(void) {
+    if (mAutoTarget.targetPriority == 0 || mHeadTurningInfo.mNodeOverride.b1 == 0) {
+        NodeOverride_SetTarget(&mHeadTurningInfo.mNodeOverride, NULL, NULL);
+    } else {
+        mHeadTurningInfo.unk68 = false;
+        NodeOverride_SetTarget(&mHeadTurningInfo.mNodeOverride, &mAutoTarget.unk1F8, mAutoTarget.unk1E8);
+
+        if (mHeadTurningInfo.unk68) {
+            HeadTurningSetNewOffset();
+        }
+    }
+
+    NodeOverride_Update(&mHeadTurningInfo.mNodeOverride);
+}
+
+void Ty::HeadTurningSetNewOffset(void) {
+    
 }
 
 void Ty::UpdateLocalToWorldMatrix(void) {
