@@ -978,6 +978,60 @@ void Ty::HeadTurningSetNewOffset(void) {
     
 }
 
+void HeadTurningCallback(void) {
+
+}
+
+void Ty::ColorTyFromGround(float f1) {
+    CollisionResult cr;
+
+    Tools_GroundColor(&cr);
+}
+
+void Ty::AddShadowLight(Vector* pVec, float f1) {
+    if (f1 < 0.0f) {
+        f1 = 0.0f;
+    }
+
+    Vector temp;
+    temp.Scale(pVec, f1);
+    unkDE0.Add(&temp);
+    
+    unkDF0 += f1;
+}
+
+void Ty::CalculateShadowSunPos(void) {
+    Vector sunPos;
+
+    mShadow.GetLightPos(&sunPos);
+
+    AddShadowLight(&sunPos, 0.5f);
+
+    unkDE0.Scale(1.0f / unkDF0);
+    
+    Vector brightCol = {1.0f, 1.0f, 0.6f, 1.0f};
+
+    Vector centre;
+
+    float f31 = 0.5f / unkDF0;
+
+    pModel->GetCentre(&centre);
+
+    Vector dir;
+    dir.Sub(&centre, &unkDE0);
+    dir.Normalise();
+
+    ty.levelDataColours[1].InterpolateLinear(&brightCol, &ty.levelDataColours[1], f31);
+    ty.levelDataColours[2].InterpolateLinear(&brightCol, &ty.levelDataColours[2], f31);
+
+    ty.lights[1].InterpolateLinear(&dir, &ty.lights[1], f31);
+    ty.lights[2].InterpolateLinear(&dir, &ty.lights[2], f31);
+
+    ty.pModel->colour.InterpolateLinear(&brightCol, &ty.pModel->colour, sqrtf(f31));
+
+    unkDF0 = 0.0f;
+}
+
 void Ty::UpdateLocalToWorldMatrix(void) {
     Vector translation;
     Matrix tmpMat;
@@ -1013,6 +1067,14 @@ bool Ty::FallMove(float f1, float f2, float f3) {
     mContext.VelocityInline(&velocity, 0.0f);
 
     return velocity.MagSquared() > 0.0f;
+}
+
+void Ty::ClearRangTrails(void) {
+    mRangTrails[1].Reset();
+    mRangTrails[0].Reset();
+
+    mIceTrails[0].Reset();
+    mIceTrails[1].Reset();
 }
 
 void Ty::EnableHead(TyHeads head) {

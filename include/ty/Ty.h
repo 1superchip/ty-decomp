@@ -986,7 +986,13 @@ struct Ty : Hero {
     void UpdateHeadTurning(void);
     void HeadTurningSetNewOffset(void);
 
+    void ColorTyFromGround(float);
+
+    // Lighting
     void AddShadowLight(Vector*, float);
+    void CalculateShadowSunPos(void);
+    void DoFlamerangLighting(void);
+    //
     
     // Positioning
     bool StableReposition(Vector* pPos, Vector* pNewRot);
@@ -1000,6 +1006,12 @@ struct Ty : Hero {
 
     void SetKnockBackFromPos(Vector*, float, KnockBackType);
     void SetKnockBackFromDir(Vector*, float, KnockBackType);
+    //
+
+    // Rang Trails
+    void UpdateRangTrails(void);
+    void DrawRangTrails(void);
+    void ClearRangTrails(void);
     //
 
     void SetToIdle(bool bResetVel, TyMedium);
