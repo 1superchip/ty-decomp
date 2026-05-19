@@ -11,6 +11,7 @@
 #include "ty/DDA.h"
 #include "ty/Quadratic.h"
 #include "ty/global.h"
+#include "ty/Reflection.h"
 
 void Ty_Init(void);
 void Ty_Deinit(void);
@@ -773,7 +774,7 @@ struct Ty : Hero {
     int unkA78;
     Vector rangLight0;
     Vector rangLight1;
-    char unkA9C[0x318]; // ReflectionStruct
+    ReflectionStruct mReflection;
     ParticleSystem* pSystems[3];
     ParticleSystem* unkDC0[2];
     int breathMist;

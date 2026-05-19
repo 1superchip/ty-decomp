@@ -448,7 +448,7 @@ void Ty::LoadResources(void) {
         breathMist = 0;
     }
 
-    actorInfo[1].pModel = pModel;
+    actorInfo[ACTOR_TY_ID].pModel = pModel;
 }
 
 void Ty::FreeResources(void) {
@@ -521,6 +521,8 @@ void Ty::Init(void) {
         mWaterSlide.Init();
         tySounds.Init();
         tyBite.Init();
+
+        mReflection.Init();
 
         InitEvents();
 
@@ -641,7 +643,11 @@ void Ty::Deinit(void) {
         mMediumMachine.CallDeinit(this);
 
         ResetPitchAndRoll();
+
+        mReflection.Deinit();
+
         mTyRainbowEffect.Deinit();
+        
         tyBite.Deinit();
 
         mRangTrails[0].Deinit();
