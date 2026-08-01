@@ -993,6 +993,7 @@ struct Ty : Hero {
     void AddShadowLight(Vector*, float);
     void CalculateShadowSunPos(void);
     void DoFlamerangLighting(void);
+    void LightTy(void); // Move?
     //
     
     // Positioning
