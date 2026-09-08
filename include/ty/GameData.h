@@ -154,8 +154,12 @@ struct GameData {
     float GetSoundVolume(void);
     void SetMusicDucked(bool);
 
-    bool IsBilbyFree(LevelNumber level, int type) {
+    bool IsBilbyFree(int type, LevelNumber level) {
         return pSaveData->levels[level].bilbies[type] & 1;
+    }
+
+    bool IsBilbyFree(int type) {
+        return IsBilbyFree(type, pSaveData->currentLevel);
     }
 
     void SetDataDirty(bool bSet) {

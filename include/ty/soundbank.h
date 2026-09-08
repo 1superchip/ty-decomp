@@ -183,6 +183,8 @@ enum SoundID {
     SFX_TyRangFlameDeflect = 0x1C,
 
     SFX_TyCollectEgg = 0x1F,
+    SFX_TyCollectCog = 0x20,
+
     SFX_TyBounce = 0x24,
     SFX_TyLedgeGrab = 0x26,
     SFX_TyLedgePullUp = 0x27,

@@ -91,7 +91,7 @@ void GameData::SynchroniseEnterLevel(void) {
             // Set collected thunder eggs transparent
             pEgg->SetTransparent(true);
             // Hardcoded index for Time Attack ThunderEgg
-            if (i == 3) {
+            if (i == ThunderEggType_3) {
                 // If the index is 3, enable stopwatch
                 Stopwatch_Enable(true);
                 Stopwatch_Show();
@@ -112,7 +112,7 @@ void GameData::SynchroniseEnterLevel(void) {
     for (int i = 0; i < Total_Bilbies; i++) {
         bool rescued = ((pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 2) && (GetFreeBilbyCount() == 5))
             && !pSaveData->levels[pSaveData->currentLevel].thunderEggs[1];
-        if (pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 1) {
+        if (IsBilbyFree(i, pSaveData->currentLevel)) {
             Bilby_SetRescued((BilbyType)i, rescued);
         }
     }
@@ -364,7 +364,7 @@ int GameData::GetFreeBilbyCount(void) {
     int count = 0;
 
     for (int i = 0; i < Total_Bilbies; i++) {
-        if (pSaveData->levels[pSaveData->currentLevel].bilbies[i] & 1) {
+        if (IsBilbyFree(i)) {
             count++;
         }
     }
@@ -375,9 +375,9 @@ int GameData::GetFreeBilbyCount(void) {
 int GameData::GetTotalFreeBilbyCount(void) {
     int count = 0;
 
-    for (u32 i = 0; i < Total_Levels; i++) {
+    for (int i = 0; i < Total_Levels; i++) {
         for (int j = 0; j < Total_Bilbies; j++) {
-            if (IsBilbyFree((LevelNumber)i, j)) {
+            if (IsBilbyFree(j, (LevelNumber)i)) {
                 count++;
             }
         }

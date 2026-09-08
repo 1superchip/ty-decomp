@@ -97,7 +97,7 @@ void SpecialPickupStruct::Init(GameObjDesc* pDesc) {
         type = SPT_GoldenCog;
     }
 
-    SetState(SpecialPickupState_1, true);
+    SetState(SPS_Idle, true);
 
     subState = 0;
     
@@ -111,7 +111,7 @@ void SpecialPickupStruct::Init(GameObjDesc* pDesc) {
     pos.SetZero();
     unk4C.SetZero();
 
-    mEventMessage.Init();
+    OnCollected.Init();
     mRider.Init();
 
     unk70 = 1.0f;
@@ -142,7 +142,7 @@ void SpecialPickupStruct::Deinit(void) {
 extern "C" int stricmp(char*, char*);
 
 bool SpecialPickupStruct::LoadLine(KromeIniLine* pLine) {
-    return mEventMessage.LoadLine(pLine, "OnCollected") ||
+    return OnCollected.LoadLine(pLine, "OnCollected") ||
         LoadLevel_LoadInt(pLine, "type", &subType) ||
         LoadLevel_LoadVector(pLine, "pos", &pos) ||
         stricmp(pLine->pFieldName, "camera") == 0 || 
@@ -171,12 +171,12 @@ void SpecialPickupStruct::Update(void) {
     }
 
     switch (state) {
-        case SpecialPickupState_0:
+        case SPS_0:
             return;
-        case SpecialPickupState_1:
+        case SPS_Idle:
             Idle();
             break;
-        case SpecialPickupState_4:
+        case SPS_4:
             Collecting();
             switch (subState) {
                 case 6:
@@ -185,10 +185,10 @@ void SpecialPickupStruct::Update(void) {
                     return;
             }
             break;
-        case SpecialPickupState_2:
+        case SPS_2:
             Thrown();
             break;
-        case SpecialPickupState_3:
+        case SPS_3:
             Controlled();
             break;
         default:
@@ -202,6 +202,8 @@ void SpecialPickupStruct::Update(void) {
         dx, dz
     );
 
+    Vector lPos = *pModel->matrices[0].Row3();
+
     pModel->matrices[0].SetIdentity();
     pModel->matrices[0].SetRotationYaw(unk6C);
 
@@ -210,17 +212,19 @@ void SpecialPickupStruct::Update(void) {
 
     pModel->matrices[0].Multiply3x3(&sp48);
 
-    sp48.SetRotationYaw(rot);
+    sp48.SetRotationYaw(PI - rot);
     pModel->matrices[0].Multiply3x3(&sp48);
 
     pModel->matrices[0].Scale(unk70);
+
+    pModel->matrices[0].Row3()->Copy(&lPos);
 
     if (gb.logicGameCount % 2 == 0) {
 
     }
 
     if (pHero->IsTy() && type == SPT_GoldenCog) {
-        if (state == SpecialPickupState_4) {
+        if (state == SPS_4) {
             UpdateShadow(unk70);
         } else {
             UpdateShadow(1.0f);
@@ -230,6 +234,10 @@ void SpecialPickupStruct::Update(void) {
 
 void SpecialPickupStruct::Draw(void) {
     if (bHideAll) {
+        return;
+    }
+
+    if (state == SPS_0 || state == SPS_Collected || (state == SPS_4 && (subState == 1 || subState == 6))) {
         return;
     }
 
@@ -264,9 +272,9 @@ void SpecialPickupStruct::Reset(void) {
     bHideAll = false;
 
     if (bInitiallyVisible) {
-        state = SpecialPickupState_1;
+        state = SPS_Idle;
     } else {
-        state = SpecialPickupState_0;
+        state = SPS_0;
     }
 
     unk5D = false;
@@ -296,7 +304,7 @@ bool Dialog_IsPlaying(void);
 
 void SpecialPickupStruct::Idle(void) {
     if (!Dialog_IsLoading() && !Dialog_IsPlaying() && GetPos()->IsInsideSphere(&pHero->pos, pHero->objectRadiusAdjustment + 60.0f)) {
-        SetState(SpecialPickupState_4, false);
+        SetState(SPS_4, false);
     }
 
     unk6C = NormaliseAngle(unk6C + (PI / 128.0f));
@@ -306,16 +314,108 @@ void SpecialPickupStruct::Idle(void) {
     }
 }
 
-void SpecialPickupStruct::Collecting(void) {
+extern "C" void Sound_MusicDuckVolume(int, int, int);
 
+void SpecialPickupStruct::Collecting(void) {
+    switch (subState) {
+        case 1:
+            if (Dialog_IsLoading() || Dialog_IsPlaying()) {
+                return;
+            }
+            unk70 = 0.0f;
+            unk74 = 30.0f;
+
+            switch (type) {
+                case SPT_ThunderEgg:
+                    Sound_MusicDuckVolume(
+                        0,
+                        SoundBank_Play(SFX_TyCollectEgg, NULL, 0),
+                        15
+                    );
+                    break;
+                case SPT_GoldenCog:
+                    Sound_MusicDuckVolume(
+                        0,
+                        SoundBank_Play(SFX_TyCollectCog, NULL, 0),
+                        15
+                    );
+                    break;
+            }
+            break;
+        case 2:
+            unk70 += 0.07f;
+            if (unk70 > 1.25f) {
+                unk70 = 0.0f;
+                subState = 3;
+            }
+            break;
+        case 3:
+            unk70 -= 0.07f;
+            if (unk70 < 1.0f) {
+                unk70 = 1.0f;
+                subState = 4;
+            }
+            break;
+        case 4:
+            break;
+        case 5:
+            unk70 -= 0.17f;
+            if (unk70 < 0.0f) {
+                subState = 6;
+                unk70 = 1.0f;
+            }
+            break;
+        case 6:
+            if (!pHero->IsClaiming()) {
+                SetState(SPS_Collected, false);
+            }
+            break;
+    }
+
+    if (subState != 6) {
+        unk74 += 0.2f;
+        unk6C = NormaliseAngle(unk6C + (PI / 64.0f));
+    }
 }
 
-void SpecialPickupStruct::SetState(SpecialPickupState newState, bool) {
+void SpecialPickupStruct::SetState(SpecialPickupState newState, bool r5) {
+    if (newState != state || r5) {
+        state = newState;
 
+        if (state == SPS_Collected) {
+            OnCollected.Send();
+            mRider.Detach(this);
+            unk5D = true;
+        } else if (state == SPS_4) {
+            Vector lPos = *GetPos();
+            if (!pHero->InWater()) {
+                lPos.y = Tools_GetFloor(*GetPos(), NULL, 400.0f, true, ID_WATER_BLUE);
+            }
+
+            pHero->SetFindItem(&lPos, this);
+
+            subState = 1;
+        }
+    }
 }
 
 void SpecialPickupStruct::Thrown(void) {
     mQuadratic.Update((gDisplay.dt / unk78) * unk74);
+
+    *pModel->matrices[0].Row3() = mQuadratic.pos;
+
+    unk74 += 1.0f;
+
+    if ((gDisplay.dt / unk78) * unk74 > 1.0f) {
+        switch (subState) {
+            case 0:
+                SetState(SPS_Idle, false);
+                break;
+            case 1:
+                SetState(SPS_0, false);
+                break;
+        }
+    }
 }
 
 void SpecialPickupStruct::Controlled(void) {
@@ -357,7 +457,7 @@ void SpecialPickupStruct::SetCollected(bool r4) {
         state = SPS_Collected;
         unk5D = true;
     } else {
-        state = SpecialPickupState_0;
+        state = SPS_0;
         unk5D = false;
     }
 }

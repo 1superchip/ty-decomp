@@ -11,12 +11,12 @@ void SpecialPickup_ShowAll(void);
 void SpecialPickup_LoadResources(KromeIni* pIni);
 
 enum SpecialPickupState {
-    SpecialPickupState_0 = 0,
-    SpecialPickupState_1 = 1,
-    SpecialPickupState_2 = 2,
-    SpecialPickupState_3 = 3,
-    SpecialPickupState_4 = 4,
-    SPS_Collected = 5,
+    SPS_0           = 0,
+    SPS_Idle        = 1,
+    SPS_2           = 2,
+    SPS_3           = 3,
+    SPS_4           = 4,
+    SPS_Collected   = 5,
 };
 
 #include "ty/props/Platform.h"
@@ -60,7 +60,7 @@ struct SpecialPickupStruct : GameObject {
     Vector cameraDir;
     float unk124;
 
-    EventMessage mEventMessage;
+    EventMessage OnCollected;
     PlatformRider mRider;
 
     

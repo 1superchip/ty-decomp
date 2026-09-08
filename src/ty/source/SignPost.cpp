@@ -89,7 +89,7 @@ void SignPost::Init(GameObjDesc* pDesc) {
         GetDesc()->bUseGroundColor = false;
     }
 
-    mState = SPS_0;
+    mState = SignPostState_0;
 
     Reset();
 }
@@ -134,7 +134,7 @@ void SignPost::Reset(void) {
 
     unk94 = 0;
 
-    SetState(SPS_1);
+    SetState(SignPostState_1);
 
     collisionInfo.Enable();
 
@@ -164,10 +164,10 @@ void SignPost::Update(void) {
         GameObject::Update();
 
         switch (mState) {
-            case SPS_1:
+            case SignPostState_1:
                 Idle();
                 break;
-            case SPS_2:
+            case SignPostState_2:
                 Hit();
                 break;
         }
@@ -204,7 +204,7 @@ void SignPost::Update(void) {
 }
 
 void SignPost::Draw(void) {
-    if (mState == SPS_0 || bIsHidden) {
+    if (mState == SignPostState_0 || bIsHidden) {
         return;
     }
 
@@ -313,7 +313,7 @@ void SignPost::Hit(void) {
             }
             break;
         case 4:
-            SetState(SPS_1);
+            SetState(SignPostState_1);
             mRot = mDefaultRot;
             break;
     }
@@ -343,21 +343,21 @@ void SignPost::CheckForHit(void) {
 
     if (pRang) {
         pRang->unk54 = true;
-        SetState(SPS_2);
+        SetState(SignPostState_2);
     }
 }
 
 void SignPost::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case MSG_BoomerangMsg:
-            if (mState == SPS_2) {
+            if (mState == SignPostState_2) {
                 return;
             }
 
             BoomerangMessage* pRangMsg = (BoomerangMessage*)pMsg;
             if (pRangMsg->pBoomerang == NULL || pRangMsg->pBoomerang->mRangType != BR_Frostyrang) {
                 // Don't enter the hit state if hit by the frostyrang
-                SetState(SPS_2);
+                SetState(SignPostState_2);
             }
             break;
         default:

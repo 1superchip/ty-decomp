@@ -31,9 +31,9 @@ struct SignPostDesc : StaticPropDescriptor {
 };
 
 enum SignPostState {
-    SPS_0 = 0,
-    SPS_1 = 1,
-    SPS_2 = 2,
+    SignPostState_0 = 0,
+    SignPostState_1 = 1,
+    SignPostState_2 = 2,
 };
 
 struct SignPost : StaticProp {
