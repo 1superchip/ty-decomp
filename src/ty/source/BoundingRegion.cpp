@@ -34,8 +34,7 @@ bool BoundingRegion::ArePointsWithinAndAdjacent(Vector* pPoint, Vector* pPoint1)
 }
 
 bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
-    Vector* pLastVector = pSegment->GetLastPoint();
-    Vector* pPoints = pSegment->points;
+    Vector* pPoints = pSegment->GetFirstPoint();
     
     float xMin, xMax, zMin, zMax;
     zMin = 10000000.0f;
@@ -44,7 +43,7 @@ bool BoundingRegion::setPolyBoundingRect(RectXZ *pRect, PathSegment* pSegment) {
     xMax = -10000000.0f;
     
     // find min/max
-    while (pPoints <= pLastVector) {
+    while (pPoints <= pSegment->GetLastPoint()) {
         if (pPoints->x < xMin) {
             xMin = pPoints->x;
         }
@@ -112,22 +111,10 @@ bool BoundingRegion::isIntersect(Vector* pPoint, Vector* pPoint1, Vector* pPoint
 }
 
 bool BoundingRegion::isCounterClockWise(Vector* pPoint, Vector* pPoint1, Vector* pPoint2) {
-    /*
-	// might be cleaner than the current code?
 	float p01x = (pPoint1->x - pPoint->x);
     float p02x = (pPoint2->x - pPoint->x);
     float p01z = (pPoint1->z - pPoint->z);
     float p02z = (pPoint2->z - pPoint->z);
-    return p01x * p02z >
-            p01z * p02x ? true : false;
-			*/
-    
-    bool isCCW;
-    if ((pPoint1->x - pPoint->x) * (pPoint2->z - pPoint->z) > (pPoint1->z - pPoint->z) * (pPoint2->x - pPoint->x)) {
-        isCCW = true;
-    } else {
-        isCCW = false;
-    }
 
-    return isCCW;
+    return p01x * p02z > p01z * p02x ? true : false;
 }

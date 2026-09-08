@@ -98,7 +98,7 @@ void ReflectionStruct::Render(void) {
     float fov = atan2f(unk308 * 0.5f, dir.Dot(&pSavedView->mFwdDir)) * 2.0f;
 
     mView.SetAspectRatio(1.0f, 0.85f);
-    mView.SetProjection(fov, 30.0f, pSavedView->unk2BC);
+    mView.SetProjection(fov, 30.0f, pSavedView->farZ);
 
     ty.LightTy();
     

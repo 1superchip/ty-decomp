@@ -407,7 +407,7 @@ void Boomerang::Fire(Vector* pVec1, Vector* pVec2) {
 
     unk84 = GetDesc()->flightTime * gDisplay.fps;
 
-    Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
+    Vector up = {0.0f, 1.0f, 0.0f};
 
     Vector dir;
 
@@ -583,7 +583,7 @@ void Boomerang::SetOrientation(float f1, float f2, float f3) {
     Vector dir;
     dir.Sub(&mOldPos, &mPos);
 
-    Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
+    Vector up = {0.0f, 1.0f, 0.0f};
 
     Matrix rotation;
     rotation.SetIdentity();

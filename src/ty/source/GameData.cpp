@@ -1,4 +1,5 @@
 #include "types.h"
+#include "ty/SpecialPickup.h"
 #include "ty/global.h"
 #include "ty/GameData.h"
 #include "common/Heap.h"
@@ -10,16 +11,12 @@
 // EXTERNS
 void Hud_SetGems(int);
 void Hud_ShowCogs(void);
-SpecialPickupStruct* GetThunderEgg(ThunderEggType);
-SpecialPickupStruct* GetGoldenCog(GoldenCogType);
 void Basket_PlaceUnused(Vector*);
 void Stopwatch_Enable(bool);
 void Stopwatch_Show(void);
-void Hud_SetGems(int);
 void Hud_ShowOpals(void);
 void Crate_CheckGems(void);
 void TyMemCard_AutoSaveGame(void);
-void Bilby_SetRescued(BilbyType, bool);
 extern "C" void Sound_SetSystemAudioMode(int);
 extern "C" int Sound_GetSystemAudioMode(void);
 View* GameCamera_View(void);
@@ -108,8 +105,7 @@ void GameData::SynchroniseEnterLevel(void) {
         // Set the cog collected and place a Picnic Basket
         if (pSaveData->levels[pSaveData->currentLevel].cogs[i] && pCog) {
             pCog->SetCollected(true);
-            char* unkPtr = (char*)pCog->unk0[1];
-            Basket_PlaceUnused((Vector*)((char*)unkPtr + 0x5C));
+            Basket_PlaceUnused(pCog->GetPos());
         }
     }
     
@@ -257,7 +253,7 @@ void GameData::CollectGem(bool arg0) {
 
     if (numCollectedGems == GEMS_MAXOPALS) {
         // play a sound when all opals have been collected
-        SoundBank_Play(0x1bb, NULL, 0);
+        SoundBank_Play(SFX_OpalsAllCollected, NULL, 0);
     }
 
     Hud_ShowOpals();

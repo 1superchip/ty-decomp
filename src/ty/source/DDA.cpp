@@ -209,7 +209,7 @@ void DDASession::StorePickupInfo(DDAPickupType pickupType) {
         case Pickup_ThunderEgg:
             currentCheckpoint->thunderEggs++;
             break;
-        case Pickup_Bibly:
+        case Pickup_Bilby:
             currentCheckpoint->bilbies++;
             break;
     }

@@ -20,8 +20,7 @@ struct RkvFileEntry {
     char name[0x20];
     int directoryIndex;
     int length; // is this the decompressed length in sunny garcia?
-    // unk28 would have been some value for decompression in earlier games
-    int unk28; // unused in Ty
+    int compressedLength; // unused in Ty. Length of data if compressed in earlier games.
     int offset; // offset of file in RKV
     uint crc;
     uint timestamp;

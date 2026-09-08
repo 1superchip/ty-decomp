@@ -179,7 +179,7 @@ void VibrateReset(void) {
 }
 
 void GlobalVar::ResetLight(void) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < NUM_LEVELDATA_LIGHTS; i++) {
         mDirectLight.SetLight(i, &level.mLights[i], &level.mLightColors[i]);
     }
 

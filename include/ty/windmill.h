@@ -4,6 +4,10 @@
 #include "common/Collision.h"
 #include "common/Model.h"
 
+enum Windmill_State {
+    WMS_Idle = 1
+};
+
 struct WindmillStruct {
     Model* pModel;
     Vector pos;
@@ -11,7 +15,7 @@ struct WindmillStruct {
     char padding24[0x20];
     Vector unk44;
     Vector unk54;
-    int state;
+    Windmill_State state;
     int updateCounter;
     int drawCounter;
     float roll;

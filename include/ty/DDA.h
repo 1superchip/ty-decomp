@@ -16,7 +16,7 @@ enum DDAPickupType {
     Pickup_Gem = 1,
     Pickup_Cog = 2,
     Pickup_ThunderEgg = 3,
-    Pickup_Bibly = 4,
+    Pickup_Bilby = 4,
 };
 
 enum DDAEnemyDamageCause {

@@ -118,20 +118,20 @@ int SoundBank_GetID(int soundEventIndex, unsigned int r4) {
     return -1;
 }
 
-void SoundBank_PlayExclusiveAmbientSound(bool r3) {
+void SoundBank_PlayExclusiveAmbientSound(bool bDisableAmbUnderwaterSound) {
     if (soundEventManager.unk14 > -1) {
         Sound_Stop(soundEventManager.unk14);
     }
 
-    if (!r3) {
-        soundEventManager.unk14 = SoundBank_Play(0x71, NULL, 0);
+    if (!bDisableAmbUnderwaterSound) {
+        soundEventManager.unk14 = SoundBank_Play(SFX_EnvAmbUnderwaterLP, NULL, 0);
     } else {
         switch (gb.level.GetCurrentLevel()) {
             case LN_TWO_UP:
                 soundEventManager.unk14 = SoundBank_Play(0x70, NULL, 0);
                 break;
             case LN_BRIDGE_RIVER_TY:
-                soundEventManager.unk14 = SoundBank_Play(0x76, NULL, 0);
+                soundEventManager.unk14 = SoundBank_Play(SFX_EnvCricketsLP, NULL, 0);
                 break;
         }
     }

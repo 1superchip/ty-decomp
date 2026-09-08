@@ -50,7 +50,7 @@ struct MKProp {
     float unk14;
     u16 detailLevel;
     u16 rejectionResult;
-    float unk1C;
+    float unk1C; // alpha
     float distSquared;
     MKProp* pNext;
     MKProp* pPrev;

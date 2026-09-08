@@ -72,7 +72,7 @@ void ExtendedAnalogControl::Draw(void) {
     pos = *pView->unk48.Row3();
     
     zAxis = *pView->unk48.Row2();
-    zAxis.Scale(pView->unk2C0 + 400.0f + 2.0f);
+    zAxis.Scale(pView->nearZ + 400.0f + 2.0f);
     pos.Add(&zAxis);
 
     xAxis = *pView->unk48.Row0();
@@ -88,7 +88,7 @@ void ExtendedAnalogControl::Draw(void) {
     pos = *pView->unk48.Row3();
     
     zAxis = *pView->unk48.Row2();
-    zAxis.Scale(pView->unk2C0 + 400.0f + 2.0f);
+    zAxis.Scale(pView->nearZ + 400.0f + 2.0f);
     pos.Add(&zAxis);
 
     xAxis = *pView->unk48.Row0();

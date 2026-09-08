@@ -3,13 +3,16 @@
 
 #include "common/Input.h"
 #include "common/Material.h"
-#include "ty/GameData.h"
-#include "ty/DataVal.h"
 #include "common/DirectLight.h"
 #include "common/Font.h"
+
+#include "ty/GameEnums.h"
+#include "ty/GameData.h"
+
+#include "ty/StateMachine.h"
 #include "ty/ExtendedAnalogControl.h"
 #include "ty/controlval.h"
-#include "ty/StateMachine.h"
+#include "ty/DataVal.h"
 
 enum GameSubState {
     GSS_NONE        = -1,
@@ -231,8 +234,6 @@ struct LogicState {
     }
 };
 
-enum ElementType;
-
 struct LevelInfo {
     char* levelId;
     ElementType elementType;
@@ -247,6 +248,8 @@ struct LevelLayer {
     Model* pModel;
     char padding24[0x38 - 0x24];
 };
+
+#define NUM_LEVELDATA_LIGHTS (3)
 
 struct LevelData {
     LevelLayer layers[10];
@@ -273,8 +276,8 @@ struct LevelData {
     Vector lightDir;
     Vector halfLight;
     Vector alphaLightMapColor;
-    Vector mLights[3];
-    Vector mLightColors[3];
+    Vector mLights[NUM_LEVELDATA_LIGHTS];
+    Vector mLightColors[NUM_LEVELDATA_LIGHTS];
     Vector ambientLight;
     Vector worldMin;
     Vector worldMax;

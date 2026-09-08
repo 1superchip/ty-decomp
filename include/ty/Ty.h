@@ -1,6 +1,7 @@
 #ifndef TY_H
 #define TY_H
 
+#include "ty/global.h"
 #include "ty/Hero.h"
 #include "ty/tytypes.h"
 #include "ty/AutoTargetStruct.h"
@@ -10,7 +11,6 @@
 #include "ty/tools.h"
 #include "ty/DDA.h"
 #include "ty/Quadratic.h"
-#include "ty/global.h"
 #include "ty/Reflection.h"
 
 void Ty_Init(void);
@@ -484,6 +484,8 @@ struct TyBite {
     void Init(void);
     void Deinit(void);
     void Reset(void);
+
+    bool HasBitten(Model*, Vector*, float);
 };
 
 struct WaterSlideManager;

@@ -2,10 +2,7 @@
 #define SHATTERABLE_H
 
 #include "ty/props/StaticProp.h"
-
-struct ShatterStruct {
-    void Explode(Vector*, float, float);
-};
+#include "ty/Shatter.h"
 
 #define SHATTERABLE_SEARCHMASK (0x100)
 

@@ -2,6 +2,7 @@
 #define GEM_H
 
 #include "ty/GameObject.h"
+#include "ty/GameEnums.h"
 // #include "common/Material.h"
 #include "common/ParticleSystem.h"
 #include "ty/StructList.h"
@@ -25,15 +26,6 @@ struct ElementInfo {
     Model* pModel;
     Material* pMaterial;
     Material* pParticleMaterial;
-};
-
-enum ElementType {
-    ELEMENT_FIRE        = 0,
-    ELEMENT_ICE         = 1,
-    ELEMENT_AIR         = 2,
-    ELEMENT_RAINBOW     = 3,
-    ELEMENT_EARTH       = 4,
-    MAX_GEM_ELEMENTS    = 5,
 };
 
 enum GemState {

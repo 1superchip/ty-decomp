@@ -64,7 +64,7 @@ int Model::Draw(u16* pSubObjs) {
     GXColor color = *(GXColor*)&currView->fogColour;
     GXSetFog(GX_FOG_PERSP_LIN, currView->closeFogPlane,
         (currView->farFogPlane - currView->closeFogPlane) * 2.0f + currView->closeFogPlane,
-        currView->unk2C0, currView->unk2BC, (GXColor&)color);
+        currView->nearZ, currView->farZ, (GXColor&)color);
     
     Vertex* pVerts = pTemplate->pModelData->pVertices;
     
@@ -448,7 +448,7 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     int i;
     int cond = (1 << 5) | (1 << 4) | (1 << 3) | (1 << 2) | (1 << 1) | (1 << 0);
     int bits = 0;
-    float diff = View::GetCurrent()->unk2BC - View::GetCurrent()->unk2C0;
+    float diff = View::GetCurrent()->farZ - View::GetCurrent()->nearZ;
     float min = 1e+06f;
     float max = 0.0f;
 

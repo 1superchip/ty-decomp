@@ -4,6 +4,7 @@
 #include "ty/bunyip.h"
 #include "ty/main.h"
 #include "ty/props/WaterVolume.h"
+#include "ty/SpecialPickup.h"
 #include "common/Str.h"
 
 struct SpeedLines {

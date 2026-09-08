@@ -1,7 +1,7 @@
 
 #include "ty/main.h"
-#include "ty/Ty.h"
 #include "ty/global.h"
+#include "ty/Ty.h"
 #include "ty/GameObjectManager.h"
 #include "ty/heatflare.h"
 #include "ty/LensFlare.h"
@@ -25,6 +25,8 @@
 #include "ty/Lasso.h"
 #include "ty/Shears.h"
 #include "ty/windmill.h"
+#include "ty/bilby.h"
+#include "ty/SpecialPickup.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -211,7 +213,6 @@ void PauseMap_UpdateHeroPos(void);
 
 void BonusPickupParticle_Update(void);
 
-void Shatter_Update(void);
 void Hud_Update(void);
 void Dialog_Update(void);
 void Particle_Update(void);
@@ -298,11 +299,11 @@ void LogicGame(void) {
     Tools_DropShadow_Update();
 
     if ((gb.logicGameCount % 3) == 0) {
-        float f = gb.unk78C; // ???
-        if (Abs<float>(gb.unk78C) < 0.1f) {
+        float f = Abs<float>(gb.unk78C);
+        if (f < 0.1f) {
             gb.unk78C = 0.0f;
         } else {
-            gb.unk78C = f * -0.8f;
+            gb.unk78C = gb.unk78C * -0.8f;
         }
     }
 
@@ -331,6 +332,7 @@ void LogicGame(void) {
     Explosion_Update();
     SleepyDust_UpdateAll();
     RenderTexture_Update();
+    Bilby_Update();
 
     gb.mGameFsm.Update();
 
@@ -993,9 +995,6 @@ void EnableElementalRangs(void) {
     gb.mGameData.SetLearntToDive(true);
 }
 
-void SpecialPickup_EnableCheatLines(bool);
-void Bilby_EnableCheatLines(bool);
-
 static void DrawCheatLines(void) {
     bDrawCheatLines = !bDrawCheatLines;
 
@@ -1131,7 +1130,7 @@ void Main_CheckShortcutKeys(void) {
                         cheats[i].buttonIdx++;
 
                         if (cheats[i].buttonIdx >= cheats[i].numButtons) {
-                            SoundBank_Play(0x1BB, NULL, 0);
+                            SoundBank_Play(SFX_OpalsAllCollected, NULL, 0);
 
                             if (cheats[i].pFunc) {
                                 cheats[i].pFunc();

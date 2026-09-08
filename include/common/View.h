@@ -46,11 +46,11 @@ struct View {
     float unk2B0;
     float unk2B4;
     float unk2B8;
-    float unk2BC; // farZ
-    float unk2C0; // nearZ
+    float farZ;
+    float nearZ;
     float unk2C4;
     float unk2C8;
-    float unk2CC;
+    float mFov;
     float unk2D0;
     float unk2D4;
     float closeFogPlane;

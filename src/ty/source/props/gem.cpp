@@ -16,12 +16,12 @@ int Gem::totalGems = 0;
 static int bHideAll = false;
 static ModuleInfo<Gem> moduleInfo;
 static GameObjDesc opalDesc;
-static ParticleSystemType gemType[MAX_GEM_ELEMENTS];
+static ParticleSystemType gemType[ELEMENT_MAX];
 static ParticleSystem* pSystem = NULL;
 static int numDynamicData = 0;
 static ElementType gemElement = ELEMENT_FIRE;
 
-static ElementInfo elementInfo[MAX_GEM_ELEMENTS] = {
+static ElementInfo elementInfo[ELEMENT_MAX] = {
     {"prop_0270_fireopal", "fx_105", "fx_005", NULL, NULL, NULL},
     {"prop_0380_IceOpal", "fx_116", "fx_073", NULL, NULL, NULL},
     {"prop_0382_AirOpal", "fx_118", "fx_129", NULL, NULL, NULL},
@@ -30,7 +30,7 @@ static ElementInfo elementInfo[MAX_GEM_ELEMENTS] = {
 };
 
 void Gem_DrawModel(Vector* pPos, Vector* pScale, ElementType type) {
-    if (type < ELEMENT_FIRE || type >= MAX_GEM_ELEMENTS) {
+    if (type < ELEMENT_FIRE || type >= ELEMENT_MAX) {
         // if the type isn't valid, use the gemElement
         type = gemElement;
     }
@@ -46,7 +46,7 @@ void Gem_DrawModel(Vector* pPos, Vector* pScale, ElementType type) {
     pGemModel->Draw(NULL);
 }
 
-static GemParticleSysInfo gemPartSysInfo[MAX_GEM_ELEMENTS] = {
+static GemParticleSysInfo gemPartSysInfo[ELEMENT_MAX] = {
     {
         4.0f, 2.0f, 2.0f,
         {
@@ -111,7 +111,7 @@ void Gem_LoadResources(KromeIni* pIni) {
 
     spawnedGemList.Init(GEMS_MAXOPALS);
 
-    for (int i = 0; i < MAX_GEM_ELEMENTS; i++) {
+    for (int i = 0; i < ELEMENT_MAX; i++) {
         elementInfo[i].pMaterial = Material::Create(elementInfo[i].pMaterialName);
         elementInfo[i].pParticleMaterial = Material::Create(elementInfo[i].pMaterialName1);
         elementInfo[i].pModel = Model::Create(elementInfo[i].pModelName, NULL);
@@ -961,8 +961,8 @@ void Gem_PickupParticle_Draw(void) {
 
     GameCamera_Use(true);
 
-    float f29 = View::GetCurrent()->unk2C0;
-    View::GetCurrent()->unk2C0 = 30.0f;
+    float f29 = View::GetCurrent()->nearZ;
+    View::GetCurrent()->nearZ = 30.0f;
 
     GemModelDrawData* pModelData = modelDraw.GetCurrEntry();
     while (pModelData) {
@@ -990,7 +990,7 @@ void Gem_PickupParticle_Draw(void) {
         View::GetCurrent()->TransformPoint2Dto3D(
             pModelData->unk14, 
             pModelData->unk18,
-            View::GetCurrent()->unk2C0 + 10.0f, 
+            View::GetCurrent()->nearZ + 10.0f, 
             &pModelData->unk0
         );
 
@@ -1009,7 +1009,7 @@ void Gem_PickupParticle_Draw(void) {
         pBlitterParticle->Draw(pickupDraw.size());
     }
 
-    View::GetCurrent()->unk2C0 = f29;
+    View::GetCurrent()->nearZ = f29;
 }
 
 Material* Gem_GetParticleMaterial(ElementType type) {

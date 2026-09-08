@@ -87,7 +87,7 @@ void RkvTOC::Init(char* pName) {
         for (int entryIndex = 0; entryIndex < nmbrOfEntries; entryIndex++) {
             ByteReverse<int>(pFileEntries[entryIndex].directoryIndex);
             ByteReverse<int>(pFileEntries[entryIndex].length);
-            ByteReverse<int>(pFileEntries[entryIndex].unk28);
+            ByteReverse<int>(pFileEntries[entryIndex].compressedLength);
             ByteReverse<int>(pFileEntries[entryIndex].offset);
             ByteReverse<uint>(pFileEntries[entryIndex].crc);
             ByteReverse<uint>(pFileEntries[entryIndex].timestamp);

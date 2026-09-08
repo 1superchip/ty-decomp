@@ -24,7 +24,7 @@ void SoundBank_Stop(int* pVoiceCode);
 
 int SoundBank_GetID(int soundEventIndex, unsigned int);
 
-void SoundBank_PlayExclusiveAmbientSound(bool);
+void SoundBank_PlayExclusiveAmbientSound(bool bDisableAmbUnderwaterSound);
 
 void SoundBank_StopExclusiveAmbientSound(void);
 
@@ -186,7 +186,12 @@ enum SoundID {
     SFX_TyBounce = 0x24,
     SFX_TyLedgeGrab = 0x26,
     SFX_TyLedgePullUp = 0x27,
+
+    SFX_EnvAmbUnderwaterLP = 0x71,
+    SFX_EnvCricketsLP = 0x76,
+
     SFX_EnvExplosionMid = 0x7A,
+
     SFX_BunyipAppear = 0x91,
     SFX_OpalCollect = 0xB7,
     SFX_TyDiveBiteHitGround = 0x10C,
@@ -242,6 +247,18 @@ enum SoundID {
     SFX_TyRangMultiCatch    = 0x198,
     SFX_TyRangMultiDeflect  = 0x199,
     SFX_TyRangMultiHit      = 0x19A,
+
+    SFX_OpalsAllCollected   = 0x1BB,
+
+    SFX_ObjectiveA1         = 0x22C,
+    SFX_ObjectiveA3         = 0x22D,
+    SFX_ObjectiveB1         = 0x22E,
+    SFX_ObjectiveB2         = 0x22F,
+    SFX_ObjectiveB3         = 0x230,
+    SFX_ObjectiveC1         = 0x231,
+    SFX_ObjectiveC2         = 0x232,
+    SFX_ObjectiveC3         = 0x233,
+    SFX_ObjectiveE4         = 0x234,
     
     SFX_TyRangChronoHit = 0x268,
 

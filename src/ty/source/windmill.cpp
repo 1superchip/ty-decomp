@@ -45,7 +45,7 @@ WindmillStruct* Windmill_Add(Vector* pPos, Vector* pRot) {
         pWindMill->unk44 = pWindMill->pos = *pPos;
         pWindMill->unk54 = pWindMill->rot = *pRot;
 
-        pWindMill->state = 1;
+        pWindMill->state = WMS_Idle;
 
         pWindMill->updateCounter = pWindMill->drawCounter = 0;
 
@@ -90,7 +90,7 @@ void Windmill_Update(void) {
             pWindMill->updateCounter++;
             
             switch (pWindMill->state) {
-                case 1:
+                case WMS_Idle:
                     pWindMill->Idle();
                     break;
             }
@@ -138,7 +138,7 @@ void Windmill_Reset(void) {
         while (*ppWindMills) {
             WindmillStruct* pWindMill = *ppWindMills;
             
-            pWindMill->state = 1;
+            pWindMill->state = WMS_Idle;
             pWindMill->updateCounter = pWindMill->drawCounter = 0;
             
             ppWindMills++;

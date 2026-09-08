@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "ty/global.h"
+#include "ty/GameEnums.h"
 
 void Main_InitGameSystems(void);
 void Main_InitStaticModules(void);

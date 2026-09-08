@@ -268,7 +268,7 @@ void Friend::PreUpdate(void) {
     
     mTyDistSq = SquareDistance(&mPos, &ty.pos);
     Vector tyDir;
-    Vector dot = {0.0f, 1.0f, 0.0f, 0.0f};
+    Vector dot = {0.0f, 1.0f, 0.0f};
     tyDir.Sub(&ty.pos, &mPos);
     float length = tyDir.Normalise();
 

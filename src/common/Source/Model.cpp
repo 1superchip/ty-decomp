@@ -77,11 +77,10 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         pTemplates++;
     }
 
-    ModelTemplate* pFoundTemplate = *pTemplates;
-    if (pFoundTemplate != NULL) {
+    if (*pTemplates != NULL) {
         // if this template isn't a new instance, increment the reference count
-        pFoundTemplate->referenceCount++;
-        pModelTemplate = pFoundTemplate;
+        pModelTemplate = *pTemplates;
+        pModelTemplate->referenceCount++;
     } else {
         char* fileName = Str_Printf("%s%s", meshName, ".gmd");
         FileSys_Exists(fileName, &size);
@@ -97,9 +96,13 @@ Model* Model::Create(char* pMeshName, char* pAnimName) {
         modelTemplates.AddEntry(pModelTemplate);
     }
     
-    int modelSize = (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) +
-        sizeof(Model) + (pModelTemplate->pModelData->nmbrOfMatrices * sizeof(Matrix*));
-    pModel = (Model*)Heap_MemAlloc(pModelTemplate->pModelData->nmbrOfSubObjects + modelSize);
+    pModel = (Model*)Heap_MemAlloc(
+        sizeof(Model) +
+        (sizeof(Matrix) * (pModelTemplate->pModelData->nmbrOfMatrices - 1)) +
+        (pModelTemplate->pModelData->nmbrOfMatrices * sizeof(Matrix*)) +
+        pModelTemplate->pModelData->nmbrOfSubObjects
+    );
+
     pModel = modelInstances.AddEntry(pModel);
     pModel->pTemplate = pModelTemplate;
     pModel->pMatrices = pModel->matrices;
@@ -230,13 +233,16 @@ void Model::EnableOnlySubObject(int subObjectIndex, bool arg2) {
     }
 }
 
-void Model::SetInverseScaleValue(int idx, float arg2) {
+/// @brief Sets the normal scale compensation value for a specific bone matrix or for all matrices if the index is -1
+/// @param idx The index of the target matrix in the array or -1 to apply the scale compensation value to all matrices
+/// @param scaleFactor The normal scale compensation value to apply
+void Model::SetInverseScaleValue(int idx, float scaleFactor) {
     if (idx == -1) {
         for (int i = 0; i < pTemplate->pModelData->nmbrOfMatrices; i++) {
-            unkC[i] = arg2;
+            unkC[i] = scaleFactor;
         }
     } else {
-        unkC[idx] = arg2;
+        unkC[idx] = scaleFactor;
     }
 }
 

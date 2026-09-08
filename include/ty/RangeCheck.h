@@ -52,8 +52,8 @@ struct LODManager {
     int unk8;
     
     void Init(Model*, int, LODDescriptor*);
-    void InternalUpdate(Model*, int, float);
-    bool Draw(Model*, int, float, float, bool);
+    void InternalUpdate(Model*, int, float newAlpha);
+    bool Draw(Model*, int, float alpha, float distance, bool);
     void EnableSubObjects(Model*);
     
     bool TestLOD(int testFlag) {

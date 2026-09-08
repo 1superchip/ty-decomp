@@ -2,15 +2,8 @@
 #define COLLAPSIBLE_H
 
 #include "ty/props/StaticProp.h"
+#include "ty/Shatter.h"
 #include "common/KromeIni.h"
-
-// move this to the proper header
-struct ShatterStruct {
-    char padding_0x0[0x24];
-    Model* pModel;
-    void Fall(void);
-};
-ShatterStruct* Shatter_Add(Model*, float, float, int);
 
 enum CollapsibleState {
     COLLAPSIBLE_STATE_0 = 0,

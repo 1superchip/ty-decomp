@@ -24,6 +24,7 @@
 #include "ty/frontend/FrontEnd.h"
 #include "ty/effects/Weather.h"
 #include "ty/Shears.h"
+#include "ty/windmill.h"
 
 MKSceneManager gSceneManager;
 
@@ -213,17 +214,14 @@ void Critters_DeInit(void);
 void StaticSpikes_Deinit(void);
 void SpikeyIce_Deinit(void);
 void BarbedWire_Deinit(void);
-void Bilby_Deinit(void);
 void Spider_Deinit(void);
 void Reeds_Deinit(void);
 void IceBlock_Deinit(void);
-void Windmill_Deinit(void);
 void Waterfall_Deinit(void);
 void Wake_Deinit(void);
 void Dialog_Deinit(void);
 void LetterBox_Deinit(void);
 void WaterSlide_Deinit(void);
-void Shatter_Deinit(void);
 void Enemies_DeinitBoundingRegions(void);
 
 struct FootEffect {
@@ -383,7 +381,6 @@ void Setup_PreloadLevel(void) {
     Model::Purge();
 }
 
-extern void Shatter_Init(void);
 extern void IceBlock_Init(void);
 extern void Critters_Init(void);
 extern void Fly_InitTyFlies(void);
@@ -550,7 +547,7 @@ void InitializeGame(void) {
     gb.unkFE = false;
     gb.mDataVal.Load();
 
-    GameCamera_View()->SetProjection(FOV, GameCamera_View()->unk2C0, GameCamera_View()->unk2BC);
+    GameCamera_View()->SetProjection(FOV, GameCamera_View()->nearZ, GameCamera_View()->farZ);
 
     GameData_New();
     gb.mGameData.Init();

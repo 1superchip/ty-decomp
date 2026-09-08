@@ -118,31 +118,31 @@ void LevelObjective::Increment(void) {
     
     switch (gb.level.GetCurrentLevel()) {
         case LN_TWO_UP:
-            SoundBank_Play(0x22C, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveA1, NULL, 0);
             break;
         case LN_SHIP_REX:
-            SoundBank_Play(0x22D, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveA3, NULL, 0);
             break;
         case LN_BRIDGE_RIVER_TY:
-            SoundBank_Play(0x22E, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveB1, NULL, 0);
             break;
         case LN_SNOW_WORRIES:
-            SoundBank_Play(0x22F, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveB2, NULL, 0);
             break;
         case LN_OUTBACK_SAFARI:
-            SoundBank_Play(0x230, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveB3, NULL, 0);
             break;
         case LN_LYRE_LYRE:
-            SoundBank_Play(0x231, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveC1, NULL, 0);
             break;
         case LN_BLACK_STUMP:
-            SoundBank_Play(0x232, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveC2, NULL, 0);
             break;
         case LN_REX_MARKS_SPOT:
-            SoundBank_Play(0x233, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveC3, NULL, 0);
             break;
         case LN_FINAL_BATTLE:
-            SoundBank_Play(0x234, NULL, 0);
+            SoundBank_Play(SFX_ObjectiveE4, NULL, 0);
             break;
         default:
             SoundBank_Play(0x1B5, NULL, 0);

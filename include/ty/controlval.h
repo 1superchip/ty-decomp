@@ -1,6 +1,8 @@
 #ifndef CONTROLVAL_H
 #define CONTROLVAL_H
 
+#include "types.h"
+
 struct ControlVal {
 	// come up with a better names
     int activeControls[8];

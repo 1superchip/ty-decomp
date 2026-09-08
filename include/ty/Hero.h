@@ -7,16 +7,10 @@
 #include "ty/TyHealth.h"
 #include "ty/soundbank.h"
 
+struct SpecialPickupStruct;
+
 // Hero might be at least 0x104 bytes long as Ty and Bushpig both have a
 // CheckpointStruct pointer at 0x100
-
-
-struct SpecialPickupStruct {
-    int unk0[2];
-    void SetTransparent(bool);
-    void SetCollected(bool);
-    void ScaleOut(void);
-};
 
 struct CheckpointStruct;
 struct WakeStruct;

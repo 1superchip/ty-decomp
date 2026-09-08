@@ -272,7 +272,7 @@ void SignPost::Hit(void) {
         Vector tPos = *GetPos();
         tPos.y += 20.0f;
 
-        Vector vel = {0.0f, 20.0f, 0.0f, 0.0f};
+        Vector vel = {0.0f, 20.0f, 0.0f};
 
         gbFootEffects.Spawn(&tPos, &vel, pModel->GetModelVolume(), 2.0f, 0x10, 1.0f, GetPos(), false);
 

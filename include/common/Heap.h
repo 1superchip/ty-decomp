@@ -1,6 +1,8 @@
 #ifndef COMMON_HEAP
 #define COMMON_HEAP
 
+#include "types.h"
+
 void Heap_InitModule(int);
 void Heap_DeinitModule(void);
 int Heap_MemoryUsed(void);

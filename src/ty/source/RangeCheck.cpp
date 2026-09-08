@@ -300,7 +300,7 @@ void LODManager::Init(Model* pModel, int arg1, LODDescriptor* d) {
     }
 }
 
-void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
+void LODManager::InternalUpdate(Model* pModel, int arg1, float newAlpha) {
 
     if (arg1 != subobjectEnableFlags) {
         subobjectEnableFlags = arg1;
@@ -318,7 +318,7 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
 
     if (pDescriptor->flags & LODFlags_CameraFade) {
         if (subobjectEnableFlags == pDescriptor->invisibleZone - 1) {
-            pModel->colour.w = arg2;
+            pModel->colour.w = newAlpha;
         } else if (subobjectEnableFlags <= 0 && pDescriptor->flags & LODFlags_CameraFade) {
             Vector center = *pModel->matrices[0].Row3();
             Vector target;
@@ -334,23 +334,23 @@ void LODManager::InternalUpdate(Model* pModel, int arg1, float arg2) {
             pModel->colour.w = Min<float>(1.0f, pModel->colour.w + 0.05625f);
         }
     } else if (pDescriptor->flags & LODFlags_Alpha) {
-        pModel->colour.w = arg2;
+        pModel->colour.w = newAlpha;
     }
 
 }
 
-bool LODManager::Draw(Model* pModel, int arg1, float arg2, float arg3, bool arg4) {
+bool LODManager::Draw(Model* pModel, int arg1, float alpha, float distance, bool arg4) {
     bool ret;
     
-    InternalUpdate(pModel, arg1, arg2);
+    InternalUpdate(pModel, arg1, alpha);
 
     if ((pDescriptor->flags & LODFlags_Scissor) && pDescriptor->maxScissorDist > 0.0f) {
-        pModel->bScissoring = arg3 < Sqr<float>(pDescriptor->maxScissorDist);
+        pModel->bScissoring = distance < Sqr<float>(pDescriptor->maxScissorDist);
     }
 
     if (pModel->colour.w < 1.0f || pDescriptor->flags & LODFlags_AlphaProp) {
         if (subobjectEnableFlags <= 0 || (subobjectEnableFlags >= 7 || pDescriptor->flags & LODFlags_AlphaProp)) {
-            Draw_AddPostDrawModel(pModel, arg3, arg4);
+            Draw_AddPostDrawModel(pModel, distance, arg4);
             return true;
         } else {
             ret = pModel->Draw(NULL);

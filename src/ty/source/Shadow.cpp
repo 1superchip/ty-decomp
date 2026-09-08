@@ -146,7 +146,7 @@ bool Shadow::CheckForShadowShift(float f1, Vector* pVec, float f2, Vector* pVec2
     
     f31 += (((f31 + f2) * f24) / f2);
 
-    float f20 = View::GetCurrent()->unk2C0 * 1.5f;
+    float f20 = View::GetCurrent()->nearZ * 1.5f;
     float f23 = ((f24 * (f31 + f2)) / f2);
 
     f30 = (f31 + 100.0f) + f20;

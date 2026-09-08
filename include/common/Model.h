@@ -125,7 +125,14 @@ struct Model {
     ModelTemplate* pTemplate;
     Animation* pAnimation;
     Matrix* pMatrices;
-    float* unkC; // inverse scale values
+
+    // Inverse scale factors per bone matrix used to normalize transformed normals.
+    float* unkC; // pNormalScaleFactors
+
+    #if mips
+    char paddingUnk10[0xC]; // PS2 has 12 bytes of padding here (PC has more)
+    #endif
+
     u8* subobjectData;
     int renderType;
 
@@ -152,7 +159,7 @@ struct Model {
     bool IsSubObjectEnabled(int);
     void EnableSubObject(int subObjectIndex, bool);
     void EnableOnlySubObject(int subObjectIndex, bool);
-    void SetInverseScaleValue(int idx, float);
+    void SetInverseScaleValue(int idx, float scaleFactor);
     bool RefPointExists(char* pRefPointName, int* pRefPointIdx);
     int GetRefPointIndex(char* pRefPointName);
     Vector* GetRefPointOrigin(int refPointIndex);

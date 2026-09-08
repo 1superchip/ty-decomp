@@ -159,14 +159,18 @@ void View::SetCameraRollAndLookAt(Vector* pCamPos, Vector* pCamTarget, float rol
 
 extern "C" double tan(double);
 
-void View::SetProjection(float fov, float arg2, float arg3) {
-    float far_minus_near = arg3 - arg2;
-    float fVar27 = arg3 / far_minus_near;
+void View::SetProjection(float fov, float near_z, float far_z) {
+    float far_minus_near = far_z - near_z;
+    float fVar27 = far_z / far_minus_near;
+
     memset((void*)&unk108, 0, sizeof(Matrix));
-    unk2CC = fov;
+
+    mFov = fov;
+
     float tangent = tan(fov / 2.0f);
     float fVar26 = 1.0f / tangent;
     float fVar31 = fVar26 / 0.8f;
+    
     fVar26 *= unk2AC;
     fVar31 *= unk2B0;
 
@@ -176,39 +180,44 @@ void View::SetProjection(float fov, float arg2, float arg3) {
         {fVar26,       0.0f,         0.0f,             0.0f},
         {0.0f,         fVar31,       0.0f,             0.0f},
         {0.0f,         0.0f,         fVar27,           1.0f},
-        {0.0f,         0.0f,         -fVar27 * arg2,   0.0f}
+        {0.0f,         0.0f,         -fVar27 * near_z,   0.0f}
     }
     */
 
     unk108.data[0][0] = fVar26;
     unk108.data[1][1] = fVar31;
     unk108.data[2][2] = fVar27;
-    unk108.data[3][2] = -fVar27 * arg2;
+    unk108.data[3][2] = -fVar27 * near_z;
     unk108.data[2][3] = 1.0f;
     unk1C8.Multiply4x4(&unkC8, &unk108);
     unk148.Multiply4x4(&unk88, &unk1C8);
 
     float proj[4][4];
+
     proj[0][0] = fVar26;
     proj[0][1] = 0.0f;
     proj[0][2] = 0.0f;
     proj[0][3] = 0.0f;
+
     proj[1][0] = 0.0f;
     proj[1][1] = fVar31;
     proj[1][2] = 0.0f;
     proj[1][3] = 0.0f;
+
     proj[2][0] = 0.0f;
     proj[2][1] = 0.0f;
-    proj[2][2] = (-arg2 * (1.0f / far_minus_near));
-    proj[2][3] = -(arg3 * arg2) * (1.0f / far_minus_near);
+    proj[2][2] = (-near_z * (1.0f / far_minus_near));
+    proj[2][3] = -(far_z * near_z) * (1.0f / far_minus_near);
+    
     proj[3][0] = 0.0f;
     proj[3][1] = 0.0f;
     proj[3][2] = -1.0f;
     proj[3][3] = 0.0f;
     
     GXSetProjection(proj, GX_PERSPECTIVE);
-    unk2C0 = arg2;
-    unk2BC = arg3;
+
+    nearZ = near_z;
+    farZ = far_z;
 }
 
 void View::SetLocalToWorldMatrix(Matrix* pMatrix) {
@@ -255,7 +264,7 @@ void View::SetDirectLight(DirectLight* pDirectLight) {
 
     if (pLight != NULL) {
         
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < NUM_DIRECTLIGHT_LIGHTS; i++) {
             GXColor color;
             
             color.r = Min<int>(255, pLight->mLightColors[i].x * 255.0f);
@@ -326,7 +335,7 @@ void View::Use(void) {
         matrix.Transpose(&matrix);
         GXLoadPosMtxImm(matrix.data, GX_PNMTX0);
         GXLoadNrmMtxImm(matrix.data, GX_PNMTX0);
-        SetProjection(unk2CC, unk2C0, unk2BC);
+        SetProjection(mFov, nearZ, farZ);
         SetDirectLight(NULL);
     }
 }
@@ -513,7 +522,7 @@ void View::TransformPoint2Dto3D(float x, float y, float z, Vector* pOutPos) {
     Vector centrePos;
     Vector point;
 
-    float fVar1 = 2.0f * (float)tan(0.5f * unk2CC) * z;
+    float fVar1 = 2.0f * (float)tan(0.5f * mFov) * z;
 
     centrePos.Scale((Vector*)&unk48.data[2], z);
 
