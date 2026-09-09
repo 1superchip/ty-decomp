@@ -788,7 +788,7 @@ config.libs = [
         [
             Object(NonMatching, "Dolphin/dvd/dvdlow.c"),
             Object(NonMatching, "Dolphin/dvd/dvdfs.c"),
-            Object(NonMatching, "Dolphin/dvd/dvd.c"),
+            Object(Matching, "Dolphin/dvd/dvd.c"),
             Object(NonMatching, "Dolphin/dvd/dvdqueue.c"),
             Object(NonMatching, "Dolphin/dvd/dvderror.c"),
             Object(NonMatching, "Dolphin/dvd/fstload.c"),

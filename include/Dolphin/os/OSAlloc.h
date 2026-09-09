@@ -27,7 +27,7 @@ extern volatile OSHeapHandle __OSCurrHeap;
 
 void *OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps);
 OSHeapHandle OSCreateHeap(void *, void *);
-void OSDestroyHeap(size_t idx);
+void OSDestroyHeap(OSHeapHandle heap);
 OSHeapHandle OSSetCurrentHeap(OSHeapHandle);
 void *OSAllocFromHeap(OSHeapHandle, int);
 long OSCheckHeap(OSHeapHandle);
