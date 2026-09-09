@@ -7,7 +7,7 @@ void _ExitProcess(void);
 
 extern void (*_dtors[])(void);
 
-static void (*__console_exit)(void);
+void (*__console_exit)(void);
 void (*__stdio_exit)(void);
 static int __atexit_curr_func;
 int __aborting;

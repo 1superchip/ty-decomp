@@ -3,8 +3,8 @@
 #define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
 #define TRUNC(n, a) (((u32)(n)) & ~((a)-1))
 
-void* __OSArenaHi;
-void* __OSArenaLo = (void*)-1;
+static void* __OSArenaHi;
+static void* __OSArenaLo = (void*)-1;
 
 void* OSGetArenaHi(void) { return __OSArenaHi; }
 

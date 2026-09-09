@@ -1,13 +1,19 @@
 #ifndef _DOLPHIN_GXENUM
 #define _DOLPHIN_GXENUM
 
-#include <Dolphin/types.h>
+#include <dolphin/types.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef TARGET_PC
+#include <stdbool.h>
+
+typedef bool GXBool;
+#else
 typedef u8 GXBool;
+#endif
 
 #define GX_FALSE ((GXBool)0)
 #define GX_TRUE ((GXBool)1)
@@ -767,6 +773,20 @@ typedef enum _GXTlut {
   GX_BIGTLUT3 = 19,
 } GXTlut;
 
+typedef enum _GXTlutSize {
+  GX_TLUT_16 = 1,
+  GX_TLUT_32 = 2,
+  GX_TLUT_64 = 4,
+  GX_TLUT_128 = 8,
+  GX_TLUT_256 = 16,
+  GX_TLUT_512 = 32,
+  GX_TLUT_1K = 64,
+  GX_TLUT_2K = 128,
+  GX_TLUT_4K = 256,
+  GX_TLUT_8K = 512,
+  GX_TLUT_16K = 1024,
+} GXTlutSize;
+
 typedef enum _GXTlutFmt {
   GX_TL_IA8,
   GX_TL_RGB565,
@@ -877,6 +897,25 @@ typedef enum _GXVCachePerf {
   GX_VC_ALL = 0xf
 
 } GXVCachePerf;
+
+typedef enum _GXFBClamp {
+  GX_CLAMP_NONE = 0,
+  GX_CLAMP_TOP = 1,
+  GX_CLAMP_BOTTOM = 2,
+} GXFBClamp;
+
+typedef enum _GXCopyMode {
+  GX_COPY_PROGRESSIVE = 0,
+  GX_COPY_INTLC_EVEN = 2,
+  GX_COPY_INTLC_ODD = 3,
+} GXCopyMode;
+
+typedef enum _GXAlphaReadMode {
+  GX_READ_00 = 0,
+  GX_READ_FF = 1,
+  GX_READ_NONE = 2,
+
+} GXAlphaReadMode;
 
 #ifdef __cplusplus
 }

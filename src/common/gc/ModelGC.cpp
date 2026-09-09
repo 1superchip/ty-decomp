@@ -356,7 +356,7 @@ int Model::Draw(u16* pSubObjs) {
 
                                 GXSetChanCtrl(
                                     GX_COLOR0A0,
-                                    (r15 == 0 ? 1 : 0), 
+                                    (r15 == 0 ? GX_TRUE : GX_FALSE), 
                                     GX_SRC_REG, GX_SRC_VTX, 
                                     GX_LIGHT0 | GX_LIGHT1 | GX_LIGHT2, 
                                     GX_DF_CLAMP, 

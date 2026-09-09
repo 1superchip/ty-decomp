@@ -311,6 +311,8 @@ void BilbyStruct::Idle(void) {
     }
 }
 
+extern "C" void Sound_MusicDuckVolume(int, int, int);
+
 void BilbyStruct::Rescued(void) {
     unk32 = 1;
 
@@ -339,9 +341,11 @@ void BilbyStruct::Rescued(void) {
 
         mSoundHelper.Stop();
 
-        SoundBank_Play(0x8D, NULL, 0);
+        unk44 = SoundBank_Play(0x8D, NULL, 0);
 
-        pShatter->Explode(NULL, 0.1f, 4.0f);
+        Vector explodeVec = {0.0f, 9.0f, 0.0f, 1.0f};
+
+        pShatter->Explode(&explodeVec, 0.1f, 4.0f);
 
         unk31 = false;
         dda.StorePickupInfo(Pickup_Bilby);
@@ -352,6 +356,18 @@ void BilbyStruct::Rescued(void) {
                 GetPos()->x + -50.0f + (RandomI(&gb.mRandSeed) % 100),
                 (GetPos()->y + 130.0f) + -50.0f + (RandomI(&gb.mRandSeed) % 100),
                 GetPos()->z + -50.0f + (RandomI(&gb.mRandSeed) % 100)
+            );
+        }
+
+        unk40 = 0;
+        mCollisionInfo.Disable();
+
+        if (unk44 > -1 && !Sound_IsVoicePlaying(unk44) && !r27) {
+            unk44 = -1;
+            Sound_MusicDuckVolume(
+                0,
+                SoundBank_Play(0x8C, NULL, 0),
+                15
             );
         }
     }
@@ -374,6 +390,15 @@ enum BonusPickupType {
 };
 void BonusPickup_Spawn(Vector*, BonusPickupType, GameObject*);
 
+struct RescueMessage : MKMessage {
+    Vector unk4;
+    Vector unk14;
+    float unk1;
+    int unk18;
+    float unk2;
+    float unk3;
+};
+
 void Bilby_SetRescued(BilbyType type, bool r4) {
     if (!bBilbiesLoaded) {
         return;
@@ -390,6 +415,23 @@ void Bilby_SetRescued(BilbyType type, bool r4) {
 
             if (r4) {
                 SpecialPickupStruct* pEgg = GetThunderEgg(ThunderEggType_1);
+                if (pEgg) {
+                    switch (pEgg->state) {
+                        case SPS_0:
+                            RescueMessage msg;
+                            msg.unk0 = 0x35;
+                            msg.unk14 = *((*pBilbies)->GetPos());
+                            msg.unk14.y += 130.0f;
+                            msg.unk4 = *((*pBilbies)->GetPos());
+                            msg.unk4.y += 60.0f;
+                            msg.unk2 = 0.6f;
+                            msg.unk1 = 1.0f;
+                            msg.unk3 = 1.0f;
+                            msg.unk18 = 0;
+                            pEgg->Message(&msg);
+                            break;
+                    }
+                }
                 return;
             } else {
                 BonusPickup_Spawn((*pBilbies)->pModel->matrices[0].Row3(), BonusPickupType_0, NULL);

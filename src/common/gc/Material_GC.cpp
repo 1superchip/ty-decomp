@@ -905,7 +905,7 @@ void Material::Use(void) {
         if ((flags & Flag_AlphaMask) || blendMode != Blend_Opaque) {
             zCompSetting = true;
         }
-        GXSetZCompLoc(zCompSetting == false ? 1 : 0);
+        GXSetZCompLoc(zCompSetting == false ? GX_TRUE : GX_FALSE);
         // (currentMixedColor & 0xff) masks the alpha
         int r = unk5C * (currentMixedColor & 0xff);
         GXSetAlphaCompare(GX_GREATER, r, GX_AOP_AND, GX_ALWAYS, 255);
@@ -946,9 +946,9 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     void* imgPtr;
     u16 width;
     u16 height;
-    int format;
-    int wrap_s;
-    int wrap_t;
+    GXTexFmt format;
+    GXTexWrapMode wrap_s;
+    GXTexWrapMode wrap_t;
     u8 mipmap;
 
     Texture* pTex = GetTexture();
@@ -956,7 +956,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
         return;
     }
 
-    GXGetTexObjAll(&pTex->texObj, &imgPtr, &width, &height, (u8*)&format, (u8*)&wrap_s, (u8*)&wrap_t, (u8*)&mipmap);
+    GXGetTexObjAll(&pTex->texObj, &imgPtr, &width, &height, &format, &wrap_s, &wrap_t, &mipmap);
     pCaptureTexture = pTex;
     _GXRenderModeObj* rmodeObj = DEMOGetRenderModeObj();
     GXSetCopyFilter(0, 0, 0, 0);
@@ -1039,7 +1039,7 @@ void Material::CaptureDrawBuffer(float arg1, float arg2, float arg3, float arg4)
     GXTexCoord2f32(1.0f, 0.875f);
 
     GXSetTexCopySrc(0, 0, width, height);
-    GXSetTexCopyDst(width, height, (GXTexFmt)format, GX_FALSE);
+    GXSetTexCopyDst(width, height, format, GX_FALSE);
     GXCopyTex(imgPtr, GX_TRUE);
     GXLoadTexObj(&restorationTexObj, GX_TEXMAP0);
 

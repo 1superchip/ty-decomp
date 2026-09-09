@@ -40,6 +40,12 @@ typedef int BOOL;
 #define NULL 0
 #endif
 
+#ifdef __MWERKS__
+#define AT_ADDRESS(xyz) : (xyz)
+#else
+#define AT_ADDRESS
+#endif
+
 #if !defined(__cplusplus) || __cplusplus < 201103L
 #ifndef nullptr
 #define nullptr NULL

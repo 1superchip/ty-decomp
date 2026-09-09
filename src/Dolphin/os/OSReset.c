@@ -69,7 +69,7 @@ BOOL __OSCallResetFunctions(u32 arg0) {
   return 1;
 }
 
-asm void Reset(register s32 resetCode) {
+static asm void Reset(register s32 resetCode) {
   // clang-format off
     nofralloc
     b lbl_8038315C

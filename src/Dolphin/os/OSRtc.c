@@ -119,7 +119,7 @@ static BOOL ReadSram(void* buffer) {
   return !err;
 }
 
-BOOL WriteSram(void* buffer, u32 offset, u32 size);
+static BOOL WriteSram(void* buffer, u32 offset, u32 size);
 static void WriteSramCallback(s32 chan, OSContext* context) {
   Scb.sync = WriteSram(Scb.sram + Scb.offset, Scb.offset, RTC_SRAM_SIZE - Scb.offset);
   if (Scb.sync) {
@@ -127,7 +127,7 @@ static void WriteSramCallback(s32 chan, OSContext* context) {
   }
 }
 
-BOOL WriteSram(void* buffer, u32 offset, u32 size) {
+static BOOL WriteSram(void* buffer, u32 offset, u32 size) {
   BOOL err;
   u32 cmd;
 

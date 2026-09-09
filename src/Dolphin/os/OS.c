@@ -21,7 +21,7 @@ static DVDCommandBlock DriveBlock;
 static OSBootInfo* BootInfo;
 static u32* BI2DebugFlag;
 static u32* BI2DebugFlagHolder;
-__declspec(weak) BOOL __OSIsGcam = FALSE;
+BOOL __OSIsGcam = FALSE;
 static f64 ZeroF;
 static f32 ZeroPS[2];
 static BOOL AreWeInitialized = FALSE;
@@ -156,7 +156,7 @@ void* __OSSavedRegionEnd;
 extern u32 BOOT_REGION_START : 0x812FDFF0; //(*(u32 *)0x812fdff0)
 extern u32 BOOT_REGION_END : 0x812FDFEC;   //(*(u32 *)0x812fdfec)
 
-void ClearArena(void) {
+static void ClearArena(void) {
   if ((u32)(OSGetResetCode() + 0x80000000) != 0U) {
     __OSSavedRegionStart = 0U;
     __OSSavedRegionEnd = 0U;

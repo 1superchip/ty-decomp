@@ -43,13 +43,15 @@ loop:
   // clang-format on
 }
 
+static void __init_cpp(void);
+
 void __init_user() { __init_cpp(); }
 
 typedef void (*voidfunctionptr)(void); // pointer to function returning void
 __declspec(section ".init") extern voidfunctionptr _ctors[];
 __declspec(section ".init") extern voidfunctionptr _dtors[];
 
-void __init_cpp(void) {
+static void __init_cpp(void) {
   voidfunctionptr* constructor;
 
   /*
