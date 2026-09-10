@@ -1,6 +1,7 @@
 #include "ty/SpecialPickup.h"
 #include "ty/GameObjectManager.h"
 #include "ty/RangeCheck.h"
+#include "ty/ParticleEngine.h"
 
 static Material* pEggMat = NULL;
 static Texture* pEggTex[ELEMENT_MAX] = {};
@@ -45,11 +46,11 @@ void SpecialPickup_LoadResources(KromeIni* pIni) {
 
     pEggMat = NULL;
 
-    pEggTex[0] = NULL;
-    pEggTex[1] = Texture::Create("Prop_Common_Page_Bluenv");
-    pEggTex[2] = Texture::Create("Prop_Common_Page_GRenv");
-    pEggTex[3] = NULL;
-    pEggTex[4] = Texture::Create("Prop_Common_Page_Yenv");
+    pEggTex[ELEMENT_FIRE] = NULL;
+    pEggTex[ELEMENT_ICE] = Texture::Create("Prop_Common_Page_Bluenv");
+    pEggTex[ELEMENT_AIR] = Texture::Create("Prop_Common_Page_GRenv");
+    pEggTex[ELEMENT_RAINBOW] = NULL;
+    pEggTex[ELEMENT_EARTH] = Texture::Create("Prop_Common_Page_Yenv");
 }
 
 SpecialPickupStruct* GetThunderEgg(ThunderEggType type) {
@@ -60,7 +61,7 @@ SpecialPickupStruct* GetThunderEgg(ThunderEggType type) {
     DescriptorIterator it = thunderEggDesc.Begin();
     
     while (*it) {
-        if (type == (static_cast<SpecialPickupStruct*>(*it))->subType) {
+        if ((static_cast<SpecialPickupStruct*>(*it))->subType == type) {
             return static_cast<SpecialPickupStruct*>(*it);
         }
 
@@ -78,7 +79,7 @@ SpecialPickupStruct* GetGoldenCog(GoldenCogType type) {
     DescriptorIterator it = goldenCogDesc.Begin();
     
     while (*it) {
-        if (type == (static_cast<SpecialPickupStruct*>(*it))->subType) {
+        if ((static_cast<SpecialPickupStruct*>(*it))->subType == type) {
             return static_cast<SpecialPickupStruct*>(*it);
         }
 
@@ -134,7 +135,15 @@ void SpecialPickupStruct::Init(GameObjDesc* pDesc) {
     unk5E = false;
 }
 
+extern void Particle_DestroyASystem(ParticleSystem**, float);
+
 void SpecialPickupStruct::Deinit(void) {
+    if (pParticleSys) {
+        Particle_DestroyASystem(&pParticleSys, 0.0f);
+    }
+
+    pParticleSys = NULL;
+
     pEggMat = NULL;
     GameObject::Deinit();
 }
@@ -153,17 +162,113 @@ bool SpecialPickupStruct::LoadLine(KromeIniLine* pLine) {
         GameObject::LoadLine(pLine);
 }
 
+extern void Particle_Special_Init(ParticleSystem**, Vector*, BoundingVolume*);
+extern void Particle_Special_Create(ParticleSystem**, Vector*, Vector*, Vector*);
+
+void TimeTrial_Cancel(bool);
+
 void SpecialPickupStruct::LoadDone(void) {
     Reset();
+
+    Particle_Special_Init(&pParticleSys, GetPos(), pModel->GetModelVolume()); // inlines?
+
     objectManager.AddObject(this, pModel);
 }
 
-void SpecialPickupStruct::Message(MKMessage* pMsg) {
+extern "C" double atan2(double, double);
 
+void SpecialPickupStruct::Message(MKMessage* pMsg) {
+    switch (pMsg->unk0) {
+        case MSG_Resolve:
+            OnCollected.Resolve();
+            mRider.Resolve();
+            mRider.Attach(this);
+            break;
+        case MSG_Show:
+            if (state != SPS_Collected) {
+                SetState(SPS_Idle, false);
+            }
+            break;
+        case MSG_Hide:
+            if (state != SPS_Collected) {
+                SetState(SPS_0, false);
+            }
+            break;
+        case MSG_Enable:
+            if (state < SPS_4) {
+                particleManager->StopExclamation(true);
+
+                if (
+                    !camTarget.x && !camTarget.y && !camTarget.z &&
+                    !camSrc.x && !camSrc.y && !camSrc.z
+                ) {
+                    *GetPos() = *pHero->GetPos();
+                }
+
+                SetState(SPS_4, false);
+                TimeTrial_Cancel(false);
+            }
+            break;
+        case MSG_UpdateAttachment: {
+                PlatformMoveMsg* pMoveMsg = (PlatformMoveMsg*)pMsg;
+                GetPos()->Copy(pMoveMsg->trans);
+            }
+            break;
+        case MSG_SpecialPickup_53: {
+            SpecialPickUpMessage* pPickUpMsg = (SpecialPickUpMessage*)pMsg;
+
+            camSrc = pPickUpMsg->unk4;
+            camSrc.y += 50.0f;
+            camSrc.x += 50.0f;
+
+            camTarget = pPickUpMsg->unk4;
+
+            cameraDir.Sub(&camTarget, &camSrc);
+            cameraDir.Normalise();
+
+            unk124 = (float)atan2(
+                camSrc.z - camTarget.z,
+                camSrc.x - camTarget.x
+            ) + (PI / 2.0f);
+
+            *GetPos() = pPickUpMsg->unk14;
+
+            Vector mid;
+            mid.Sub(&pPickUpMsg->unk4, &pPickUpMsg->unk14);
+            mid.Scale(0.5f);
+            mid.Add(&pPickUpMsg->unk14);
+
+            mid.y += pPickUpMsg->unk24;
+
+            mQuadratic.SetPoints(&pPickUpMsg->unk14, &mid, &pPickUpMsg->unk4);
+
+            subState = pPickUpMsg->subState;
+            unk78 = pPickUpMsg->unk2C;
+            unk74 = 0.0f;
+
+            SoundBank_Play(0x1C2, NULL, 0);
+            SetState(SPS_2, false);
+            TimeTrial_Cancel(false);
+            break;
+        }
+        case MSG_SpecialPickup_54: {
+            SpecialPickUpMessage* pPickUpMsg = (SpecialPickUpMessage*)pMsg;
+
+            unk70 = pPickUpMsg->unk30;
+            pPickUpMsg->unk34 = &pModel->matrices[0];
+            unk74 = pPickUpMsg->unk24;
+
+            SetState(SPS_3, false);
+            TimeTrial_Cancel(false);
+            break;
+        }
+        default:
+            GameObject::Message(pMsg);
+            break;
+    }
 }
 
 Vector* GameCamera_GetPos(void);
-extern "C" double atan2(double, double);
 
 void SpecialPickupStruct::Update(void) {
     if (bHideAll) {
@@ -387,12 +492,12 @@ void SpecialPickupStruct::SetState(SpecialPickupState newState, bool r5) {
             mRider.Detach(this);
             unk5D = true;
         } else if (state == SPS_4) {
-            Vector lPos = *GetPos();
+            Vector setTo = *GetPos();
             if (!pHero->InWater()) {
-                lPos.y = Tools_GetFloor(*GetPos(), NULL, 400.0f, true, ID_WATER_BLUE);
+                setTo.y = Tools_GetFloor(*GetPos(), NULL, 400.0f, true, ID_WATER_BLUE);
             }
 
-            pHero->SetFindItem(&lPos, this);
+            pHero->SetFindItem(&setTo, this);
 
             subState = 1;
         }
@@ -400,13 +505,13 @@ void SpecialPickupStruct::SetState(SpecialPickupState newState, bool r5) {
 }
 
 void SpecialPickupStruct::Thrown(void) {
-    mQuadratic.Update((gDisplay.dt / unk78) * unk74);
+    mQuadratic.Update(unk74 * (gDisplay.dt / unk78));
 
     *pModel->matrices[0].Row3() = mQuadratic.pos;
 
     unk74 += 1.0f;
 
-    if ((gDisplay.dt / unk78) * unk74 > 1.0f) {
+    if (unk74 * (gDisplay.dt / unk78) > 1.0f) {
         switch (subState) {
             case 0:
                 SetState(SPS_Idle, false);
@@ -442,6 +547,16 @@ void SpecialPickupStruct::SetShowPos(Vector* pPos) {
         GetPos()->Copy(pPos);
         GetPos()->y += unk74;
     }
+}
+
+void SpecialPickUpMessage::Init(void) {
+    unk4.SetZero();
+    unk14.SetZero();
+    unk24 = 0.0f;
+    subState = 0;
+    unk2C = 0.0f;
+    unk30 = 1.0f;
+    unk34 = 0;
 }
 
 void SpecialPickupStruct::UpdateShadow(float f1) {

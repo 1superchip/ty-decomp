@@ -53,7 +53,7 @@ Texture* Texture::Create(char* pName) {
         pTex->height = texFile->height;
 
         switch (texFile->fmt) {
-        case 0:
+        case GTX_FMT_RGB5A3:
             // RGB5A3
             pTex->bTlut = false;
 
@@ -68,7 +68,7 @@ Texture* Texture::Create(char* pName) {
                 GX_FALSE
             );
             break;
-        case 1:
+        case GTX_FMT_INDEXED:
             // Indexed
             pTex->bTlut = true;
 
@@ -102,7 +102,7 @@ Texture* Texture::Create(char* pName) {
                 0
             );
             break;
-        case 2:
+        case GTX_FMT_CMPR:
             // CMPR
             pTex->bTlut = false;
 

@@ -10,8 +10,14 @@ extern bool Texture_bColourKey;
 extern int Texture_filterType;
 extern bool Texture_IsAlias;
 
+enum GTXFormat {
+    GTX_FMT_RGB5A3  = 0,
+    GTX_FMT_INDEXED = 1,
+    GTX_FMT_CMPR    = 2,
+};
+
 struct TexFile {
-    int fmt;
+    GTXFormat fmt;
     int width;
     int height;
     char padding[20];

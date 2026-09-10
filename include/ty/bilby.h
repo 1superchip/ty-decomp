@@ -55,7 +55,7 @@ struct BilbyStruct {
     bool unk32;
     BilbyState mState;
     short unk38;
-    short unk3A;
+    volatile short unk3A; // needs to be volatile to match Bilby::Rescued(void)
     short unk3C;
     short unk3E;
     short unk40;

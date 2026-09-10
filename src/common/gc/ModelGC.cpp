@@ -451,12 +451,11 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
     float diff = View::GetCurrent()->farZ - View::GetCurrent()->nearZ;
     float min = 1e+06f;
     float max = 0.0f;
-
-    // @bug shouldn't these be loading data[x][2] not data[x][3]?
-    float m02 = pMatrix->data[0][3];
-    float m12 = pMatrix->data[1][3];
-    float m22 = pMatrix->data[2][3];
-    float m32 = pMatrix->data[3][3];
+    
+    float m03 = pMatrix->data[0][3];
+    float m13 = pMatrix->data[1][3];
+    float m23 = pMatrix->data[2][3];
+    float m33 = pMatrix->data[3][3];
 
     float m00 = pMatrix->data[0][0];
     float m10 = pMatrix->data[1][0];
@@ -473,7 +472,7 @@ int Model_TrivialRejectTest(BoundingVolume* pVolume, Matrix* pMatrix) {
         float ty = corner[(i >> 1) & 1][1];
         float tz = corner[(i >> 2) & 1][2];
 
-        float z = tx * m02 + ty * m12 + tz * m22 + m32;
+        float z = tx * m03 + ty * m13 + tz * m23 + m33;
         
         float x = tx * m00 + ty * m10 + tz * m20 + m30;
         float y = tx * m01 + ty * m11 + tz * m21 + m31;

@@ -51,6 +51,9 @@ enum MESSAGE_ID {
     MSG_UNK_31 = 31,
 
     MSG_Abort = 48,
+
+    MSG_SpecialPickup_53 = 53,
+    MSG_SpecialPickup_54 = 54,
 };
 
 #endif // MESSAGEIDS_H

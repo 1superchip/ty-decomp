@@ -128,7 +128,7 @@ void SoundBank_PlayExclusiveAmbientSound(bool bDisableAmbUnderwaterSound) {
     } else {
         switch (gb.level.GetCurrentLevel()) {
             case LN_TWO_UP:
-                soundEventManager.unk14 = SoundBank_Play(0x70, NULL, 0);
+                soundEventManager.unk14 = SoundBank_Play(SFX_EnvAmbRainforestLP, NULL, 0);
                 break;
             case LN_BRIDGE_RIVER_TY:
                 soundEventManager.unk14 = SoundBank_Play(SFX_EnvCricketsLP, NULL, 0);

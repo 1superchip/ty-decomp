@@ -147,9 +147,11 @@ void Bilby_Draw(void) {
                     pos.x += _table_sinf(pCurr->unk84[i].unk10.y) * pCurr->unk84[i].unk10.x;
                     pos.z += _table_cosf(pCurr->unk84[i].unk10.y) * pCurr->unk84[i].unk10.x;
 
+                    float param = ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f;
+
                     particleManager->SpawnBilbyPickupAtom(
                         &pos,
-                        ((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f + (pCurr->unk84[i].unk10.x * 0.3f),
+                        (pCurr->unk84[i].unk10.x * 0.3f) + param,
                         pCurr->unk40
                     );
                 }
@@ -258,7 +260,7 @@ void BilbyStruct::Idle(void) {
         dist.Sub(GetPos(), pHero->GetPos());
         mSoundHelper.Stop();
 
-        mSoundHelper.Update(mType + 0x1FE, false, true, NULL, GetPos(), dist.MagSquared(), 0);
+        mSoundHelper.Update(mType + SFX_BilbyDadCooee, false, true, NULL, GetPos(), dist.MagSquared(), 0);
 
         mNextTime = gb.logicGameCount + (uint)(gDisplay.fps * RandomIR(&gb.mRandSeed, 7, 15));
     }
@@ -311,6 +313,12 @@ void BilbyStruct::Idle(void) {
     }
 }
 
+Vector* GameCamera_GetPos(void);
+extern "C" double atan2(double, double);
+extern "C" inline float atan2f(float y, float x) {
+    return atan2(y, x);
+}
+
 extern "C" void Sound_MusicDuckVolume(int, int, int);
 
 void BilbyStruct::Rescued(void) {
@@ -343,32 +351,111 @@ void BilbyStruct::Rescued(void) {
 
         unk44 = SoundBank_Play(0x8D, NULL, 0);
 
-        Vector explodeVec = {0.0f, 9.0f, 0.0f, 1.0f};
+        Vector tempVel = {0.0f, 9.0f, 0.0f, 1.0f};
 
-        pShatter->Explode(&explodeVec, 0.1f, 4.0f);
+        pShatter->Explode(&tempVel, 0.1f, 4.0f);
 
         unk31 = false;
         dda.StorePickupInfo(Pickup_Bilby);
 
         for (int i = 0; i < ARRAY_SIZE(unk84); i++) {
-            Vector t;
-            t.Set(
-                GetPos()->x + -50.0f + (RandomI(&gb.mRandSeed) % 100),
-                (GetPos()->y + 130.0f) + -50.0f + (RandomI(&gb.mRandSeed) % 100),
-                GetPos()->z + -50.0f + (RandomI(&gb.mRandSeed) % 100)
-            );
+            unk84[i].unk10.y = ((RandomI(&gb.mRandSeed) % 100) * (2.0f * PI)) / 100.0f;
+
+            unk84[i].unk0 = *GetPos();
+
+            unk84[i].unk10.x = (RandomI(&gb.mRandSeed) % 50) + 30.0f;
+            unk84[i].unk10.z = 0.0f;
+            unk84[i].unk10.w = 1.0f / ((RandomI(&gb.mRandSeed) % 10) + 1.0f);
         }
 
         unk40 = 0;
         mCollisionInfo.Disable();
+    }
 
-        if (unk44 > -1 && !Sound_IsVoicePlaying(unk44) && !r27) {
-            unk44 = -1;
-            Sound_MusicDuckVolume(
-                0,
-                SoundBank_Play(0x8C, NULL, 0),
-                15
-            );
+    if (unk44 > -1 && !Sound_IsVoicePlaying(unk44) && !r27) {
+        unk44 = -1;
+        Sound_MusicDuckVolume(
+            0,
+            SoundBank_Play(0x8C, NULL, 0),
+            15
+        );
+    }
+
+    if (unk40 < 255) {
+        unk40++;
+    }
+    
+    Vector cam = *GameCamera_GetPos();
+
+    Vector rot = {
+        0.0f, 
+        atan2f(cam.z - GetPos()->z, cam.x - GetPos()->x) + 1.570796f, 
+        0.0f
+    };
+
+    pModel->SetRotation(&rot);
+    mAnimScript.Animate();
+
+    for (int i = 0; i < ARRAY_SIZE(unk84); i++) {
+
+        unk84[i].unk10.y += 0.1f;
+        unk84[i].unk0.y += 2.0f;
+        unk84[i].unk10.x *= 0.97f;
+        unk84[i].unk10.z += unk84[i].unk10.w;
+
+        if (unk84[i].unk10.z > 10.0f) {
+            unk84[i].unk10.y = ((RandomI(&gb.mRandSeed) % 100) * (2.0f * PI)) / 100.0f;
+            unk84[i].unk0 = *GetPos();
+            unk84[i].unk10.x = (RandomI(&gb.mRandSeed) % 50) + 30.0f;
+            unk84[i].unk10.z = 0.0f;
+            unk84[i].unk10.w = 1.0f / ((RandomI(&gb.mRandSeed) % 10) + 1.0f);
+        }
+    }
+
+    // this may be a switch (switch matches debug build)
+    if (unk3A != 1) {
+        if (gb.logicGameCount >= unk48) {
+            unk3A++;
+        }
+    } else {
+        unk3E++;
+        if (unk3E > 170) {
+            unk2C -= 0.1f;
+            pModel->matrices[0].Scale(unk2C);
+            GetPos()->y += 10.0f;
+            pModel->SetLocalToWorldDirty();
+        }
+
+        if (unk3E > 180) {
+            SetState(BS_0);
+        }
+
+        if (r27) {
+            SpecialPickupStruct* pEgg = GetThunderEgg(TE_1);
+            if (pEgg->state == SPS_0) {
+                SpecialPickUpMessage msg;
+                msg.unk0 = MSG_SpecialPickup_53;
+
+                msg.unk14 = mPos;
+                msg.unk14.y += 130.0f;
+                
+                msg.unk4 = mPos;
+                msg.unk4.y += 60.0f;
+
+                if (pHero->IsBushPig()) {
+                    msg.unk2C = 0.3f;
+                    msg.unk4 = *pHero->GetPos();
+                    msg.unk4.y += 100.0f;
+                    pHero->velocity.SetZero();
+                } else {
+                    msg.unk2C = 0.6f;
+                }
+
+                msg.subState = 0;
+                msg.unk24 = 1.0f;
+                msg.unk30 = 1.0f;
+                pEgg->Message(&msg);
+            }
         }
     }
 }
@@ -390,15 +477,6 @@ enum BonusPickupType {
 };
 void BonusPickup_Spawn(Vector*, BonusPickupType, GameObject*);
 
-struct RescueMessage : MKMessage {
-    Vector unk4;
-    Vector unk14;
-    float unk1;
-    int unk18;
-    float unk2;
-    float unk3;
-};
-
 void Bilby_SetRescued(BilbyType type, bool r4) {
     if (!bBilbiesLoaded) {
         return;
@@ -414,20 +492,20 @@ void Bilby_SetRescued(BilbyType type, bool r4) {
             (*pBilbies)->SetState(BS_0);
 
             if (r4) {
-                SpecialPickupStruct* pEgg = GetThunderEgg(ThunderEggType_1);
+                SpecialPickupStruct* pEgg = GetThunderEgg(TE_1);
                 if (pEgg) {
                     switch (pEgg->state) {
                         case SPS_0:
-                            RescueMessage msg;
-                            msg.unk0 = 0x35;
+                            SpecialPickUpMessage msg;
+                            msg.unk0 = MSG_SpecialPickup_53;
                             msg.unk14 = *((*pBilbies)->GetPos());
                             msg.unk14.y += 130.0f;
                             msg.unk4 = *((*pBilbies)->GetPos());
                             msg.unk4.y += 60.0f;
-                            msg.unk2 = 0.6f;
-                            msg.unk1 = 1.0f;
-                            msg.unk3 = 1.0f;
-                            msg.unk18 = 0;
+                            msg.unk2C = 0.6f;
+                            msg.unk24 = 1.0f;
+                            msg.unk30 = 1.0f;
+                            msg.subState = 0;
                             pEgg->Message(&msg);
                             break;
                     }

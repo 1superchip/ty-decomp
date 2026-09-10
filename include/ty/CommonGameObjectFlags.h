@@ -46,8 +46,7 @@ struct CommonGameObjFlagsComponent {
     }
 
     void Init(CommonGameObjFlags objFlags) {
-        defaultFlags = objFlags;
-        flags = objFlags;
+        flags = defaultFlags = objFlags;
     }
 
     bool LoadFlag(KromeIniLine* pLine, char* str, CommonGameObjFlags objFlags) {

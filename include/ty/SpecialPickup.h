@@ -5,6 +5,8 @@
 #include "ty/RangeCheck.h"
 #include "ty/GameEnums.h"
 
+#include "common/ParticleSystem.h"
+
 void SpecialPickup_HideAll(void);
 void SpecialPickup_ShowAll(void);
 
@@ -49,15 +51,19 @@ struct SpecialPickupStruct : GameObject {
 
     SpecialPickupState state;
 
-    int unk[2];
+    int unkC0;
+    ParticleSystem* pParticleSys;
     
     LODManager mLodManager;
     
     Vector cameraSource;
     Vector cameraTarget;
+
     Vector camSrc;
     Vector camTarget;
+
     Vector cameraDir;
+
     float unk124;
 
     EventMessage OnCollected;
@@ -91,7 +97,15 @@ struct SpecialPickupStruct : GameObject {
     void SetTransparent(bool);
 };
 
-struct SpecialPickupMessage : MKMessage {
+struct SpecialPickUpMessage : MKMessage {
+    Vector unk4;
+    Vector unk14;
+    float unk24;
+    int subState;
+    float unk2C;
+    float unk30;
+    Matrix* unk34;
+
     void Init(void);
 };
 

@@ -78,22 +78,22 @@ void WeatherProp::Message(MKMessage* pMsg) {
             bEnabled = 0;
             Deactivate();
             break;
-        case 26:
+        case MSG_UNK_26:
             SetType(1);
             break;
-        case 27:
+        case MSG_UNK_27:
             SetType(2);
             break;
-        case 28:
+        case MSG_UNK_28:
             SetType(3);
             break;
-        case 29:
+        case MSG_UNK_29:
             SetType(4);
             break;
-        case 30:
+        case MSG_UNK_30:
             SetType(5);
             break;
-        case 31:
+        case MSG_UNK_31:
             SetType(6);
             break;
         case 0:

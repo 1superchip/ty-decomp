@@ -91,7 +91,7 @@ void GameData::SynchroniseEnterLevel(void) {
             // Set collected thunder eggs transparent
             pEgg->SetTransparent(true);
             // Hardcoded index for Time Attack ThunderEgg
-            if (i == ThunderEggType_3) {
+            if (i == TE_3) {
                 // If the index is 3, enable stopwatch
                 Stopwatch_Enable(true);
                 Stopwatch_Show();

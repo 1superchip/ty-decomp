@@ -189,6 +189,7 @@ enum SoundID {
     SFX_TyLedgeGrab = 0x26,
     SFX_TyLedgePullUp = 0x27,
 
+    SFX_EnvAmbRainforestLP = 0x70,
     SFX_EnvAmbUnderwaterLP = 0x71,
     SFX_EnvCricketsLP = 0x76,
 
@@ -250,7 +251,15 @@ enum SoundID {
     SFX_TyRangMultiDeflect  = 0x199,
     SFX_TyRangMultiHit      = 0x19A,
 
+    SFX_PLACEHOLDER         = 0x1B5,
+
     SFX_OpalsAllCollected   = 0x1BB,
+
+    SFX_BilbyDadCooee       = 0x1FE,
+    SFX_BilbyMumCooee       = 0x1FF,
+    SFX_BilbyBoyCooee       = 0x200,
+    SFX_BilbyGirlCooee      = 0x201,
+    SFX_BilbyGranCooee      = 0x202,
 
     SFX_ObjectiveA1         = 0x22C,
     SFX_ObjectiveA3         = 0x22D,
@@ -261,6 +270,10 @@ enum SoundID {
     SFX_ObjectiveC2         = 0x232,
     SFX_ObjectiveC3         = 0x233,
     SFX_ObjectiveE4         = 0x234,
+
+    SFX_WaterTroughShatter  = 0x25E,
+    SFX_FlameLogShatter     = 0x260,
+    SFX_IceWallShatter      = 0x261,
     
     SFX_TyRangChronoHit = 0x268,
 

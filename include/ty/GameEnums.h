@@ -68,14 +68,14 @@ enum ElementType {
 };
 
 enum ThunderEggType {
-    ThunderEggType_0 = 0,
-    ThunderEggType_1 = 1,
-    ThunderEggType_2 = 2,
-    ThunderEggType_3 = 3,
-    ThunderEggType_4 = 4,
-    ThunderEggType_5 = 5,
-    ThunderEggType_6 = 6,
-    ThunderEggType_7 = 7,
+    TE_0 = 0,
+    TE_1 = 1,
+    TE_2 = 2,
+    TE_3 = 3,
+    TE_4 = 4,
+    TE_5 = 5,
+    TE_6 = 6,
+    TE_7 = 7,
     TE_Max = 8,
 };
 

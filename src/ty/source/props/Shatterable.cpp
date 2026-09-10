@@ -217,14 +217,14 @@ void Shatterable::PlayShatterSound(void) {
     ) {
         SoundBank_Play(0x25D, GetPos(), 0);
     } else if (stricmp(GetDesc()->descrName, "WaterTrough") == 0) {
-        SoundBank_Play(0x25E, GetPos(), 0);
+        SoundBank_Play(SFX_WaterTroughShatter, GetPos(), 0);
     } else if (
         stricmp(GetDesc()->descrName, "BurningLog") == 0 || 
         stricmp(GetDesc()->descrName, "FlamingLog2") == 0
     ) {
-        SoundBank_Play(0x260, GetPos(), 0);
+        SoundBank_Play(SFX_FlameLogShatter, GetPos(), 0);
     } else if (stricmp(GetDesc()->descrName, "CollIceWall") == 0) {
-        SoundBank_Play(0x261, GetPos(), 0);
+        SoundBank_Play(SFX_IceWallShatter, GetPos(), 0);
     }
 }
 
