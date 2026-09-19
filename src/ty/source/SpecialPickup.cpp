@@ -307,60 +307,60 @@ void SpecialPickupStruct::Update(void) {
         GameCamera_GetPos()->z - pModel->matrices[0].Row3()->z
     );
 
-    Vector lPos = *pModel->matrices[0].Row3();
+    Vector newPos = *pModel->matrices[0].Row3();
 
     pModel->matrices[0].SetIdentity();
     pModel->matrices[0].SetRotationYaw(unk6C);
 
-    Matrix sp48;
-    sp48.SetRotationPitch(PI / 4.0f);
+    Matrix tempMatrix;
+    tempMatrix.SetRotationPitch(PI / 4.0f);
 
-    pModel->matrices[0].Multiply3x3(&sp48);
+    pModel->matrices[0].Multiply3x3(&tempMatrix);
 
-    sp48.SetRotationYaw(PI - rot);
-    pModel->matrices[0].Multiply3x3(&sp48);
+    tempMatrix.SetRotationYaw(PI - rot);
+    pModel->matrices[0].Multiply3x3(&tempMatrix);
 
     pModel->matrices[0].Scale(unk70);
 
-    pModel->matrices[0].Row3()->Copy(&lPos);
+    pModel->matrices[0].Row3()->Copy(&newPos);
 
     if (gb.logicGameCount % 4 == 1) {
         float angle = (((RandomI(&gb.mRandSeed) % 100) * (PI * 2.0f)) / 100.0f);
         float scalar = (((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f);
 
-        Vector pos;
-        Vector dir;
-        Vector color;
+        Vector particlePos;
+        Vector vel;
+        Vector colour;
 
-        pos.Set(
+        particlePos.Set(
             scalar * _table_sinf(angle),
             RandomI(&gb.mRandSeed) % 5,
             scalar * _table_cosf(angle)
         );
 
-        dir = pos;
-        dir.Normalise();
-        dir.Scale(15.0f);
+        vel = particlePos;
+        vel.Normalise();
+        vel.Scale(15.0f);
 
-        dir.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
+        vel.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
 
-        pos.Add(GetPos());
+        particlePos.Add(GetPos());
 
         switch (type) {
             case SPT_ThunderEgg:
-                color = thunderEggColour[gb.level.GetElementType()];
+                colour = thunderEggColour[gb.level.GetElementType()];
                 break;
             case SPT_GoldenCog:
-                color.Set(1.0f, 1.0f, 0.0f, 1.0f);
+                colour.Set(1.0f, 1.0f, 0.0f, 1.0f);
                 break;
             default:
-                color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+                colour.Set(1.0f, 1.0f, 1.0f, 1.0f);
                 break;
         }
 
         pParticleSys->scale = unk70;
 
-        Particle_Special_Create(&pParticleSys, &pos, &dir, &color);
+        Particle_Special_Create(&pParticleSys, &particlePos, &vel, &colour);
     }
 
     if (pHero->IsTy() && type == SPT_GoldenCog) {
