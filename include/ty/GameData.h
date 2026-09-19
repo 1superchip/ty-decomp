@@ -192,6 +192,10 @@ struct GameData {
         return IsThunderEggCollected(eggIdx, pSaveData->currentLevel);
     }
 
+    bool CheckCurrentLevelCog(int cogIdx) {
+        return pSaveData->levels[pSaveData->currentLevel].cogs[cogIdx];
+    }
+
     ZoneNumber GetCurrentZone(void) {
         return pSaveData->currentZone;
     }

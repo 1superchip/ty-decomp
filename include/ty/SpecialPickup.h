@@ -68,7 +68,6 @@ struct SpecialPickupStruct : GameObject {
 
     EventMessage OnCollected;
     PlatformRider mRider;
-
     
     virtual void Init(GameObjDesc* pDesc);
     virtual void Deinit(void);

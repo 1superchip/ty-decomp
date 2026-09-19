@@ -176,6 +176,9 @@ void SpecialPickupStruct::LoadDone(void) {
 }
 
 extern "C" double atan2(double, double);
+extern "C" inline float atan2f(float y, float x) {
+    return atan2(y, x);
+}
 
 void SpecialPickupStruct::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
@@ -218,15 +221,15 @@ void SpecialPickupStruct::Message(MKMessage* pMsg) {
             SpecialPickUpMessage* pPickUpMsg = (SpecialPickUpMessage*)pMsg;
 
             camSrc = pPickUpMsg->unk4;
-            camSrc.y += 50.0f;
-            camSrc.x += 50.0f;
+            camSrc.y += 200.0f;
+            camSrc.x += 200.0f;
 
             camTarget = pPickUpMsg->unk4;
 
             cameraDir.Sub(&camTarget, &camSrc);
             cameraDir.Normalise();
 
-            unk124 = (float)atan2(
+            unk124 = atan2f(
                 camSrc.z - camTarget.z,
                 camSrc.x - camTarget.x
             ) + (PI / 2.0f);
@@ -283,13 +286,12 @@ void SpecialPickupStruct::Update(void) {
             break;
         case SPS_4:
             Collecting();
-            switch (subState) {
-                case 6:
-                    break;
-                default:
-                    return;
+            if (subState == 6) {
+                return;
             }
             break;
+        case SPS_Collected:
+            return;
         case SPS_2:
             Thrown();
             break;
@@ -300,11 +302,9 @@ void SpecialPickupStruct::Update(void) {
             return;
     }
 
-    float dz = GameCamera_GetPos()->z - pModel->matrices[0].Row3()->z;
-    float dx = GameCamera_GetPos()->x - pModel->matrices[0].Row3()->x;
-
-    float rot = atan2(
-        dx, dz
+    float rot = atan2f(
+        GameCamera_GetPos()->x - pModel->matrices[0].Row3()->x, 
+        GameCamera_GetPos()->z - pModel->matrices[0].Row3()->z
     );
 
     Vector lPos = *pModel->matrices[0].Row3();
@@ -313,7 +313,7 @@ void SpecialPickupStruct::Update(void) {
     pModel->matrices[0].SetRotationYaw(unk6C);
 
     Matrix sp48;
-    sp48.SetRotationPitch(PI / 32.0f);
+    sp48.SetRotationPitch(PI / 4.0f);
 
     pModel->matrices[0].Multiply3x3(&sp48);
 
@@ -324,8 +324,43 @@ void SpecialPickupStruct::Update(void) {
 
     pModel->matrices[0].Row3()->Copy(&lPos);
 
-    if (gb.logicGameCount % 2 == 0) {
+    if (gb.logicGameCount % 4 == 1) {
+        float angle = (((RandomI(&gb.mRandSeed) % 100) * (PI * 2.0f)) / 100.0f);
+        float scalar = (((RandomI(&gb.mRandSeed) % 100) * 50.0f) / 100.0f);
 
+        Vector pos;
+        Vector dir;
+        Vector color;
+
+        pos.Set(
+            scalar * _table_sinf(angle),
+            RandomI(&gb.mRandSeed) % 5,
+            scalar * _table_cosf(angle)
+        );
+
+        dir = pos;
+        dir.Normalise();
+        dir.Scale(15.0f);
+
+        dir.y = RandomFR(&gb.mRandSeed, 30.0f, 44.0f);
+
+        pos.Add(GetPos());
+
+        switch (type) {
+            case SPT_ThunderEgg:
+                color = thunderEggColour[gb.level.GetElementType()];
+                break;
+            case SPT_GoldenCog:
+                color.Set(1.0f, 1.0f, 0.0f, 1.0f);
+                break;
+            default:
+                color.Set(1.0f, 1.0f, 1.0f, 1.0f);
+                break;
+        }
+
+        pParticleSys->scale = unk70;
+
+        Particle_Special_Create(&pParticleSys, &pos, &dir, &color);
     }
 
     if (pHero->IsTy() && type == SPT_GoldenCog) {
@@ -398,7 +433,7 @@ void SpecialPickupStruct::Reset(void) {
     cameraDir.Sub(&camTarget, &camSrc);
     cameraDir.Normalise();
 
-    unk124 = (float)atan2(
+    unk124 = atan2f(
         camSrc.z - camTarget.z,
         camSrc.x - camTarget.x
     ) + (PI / 2.0f);
@@ -420,6 +455,7 @@ void SpecialPickupStruct::Idle(void) {
 }
 
 extern "C" void Sound_MusicDuckVolume(int, int, int);
+void TyMemCard_AutoSaveGame(void);
 
 void SpecialPickupStruct::Collecting(void) {
     switch (subState) {
@@ -446,11 +482,67 @@ void SpecialPickupStruct::Collecting(void) {
                     );
                     break;
             }
+
+            if (!camTarget.x && !camTarget.y && !camTarget.z) {
+                if (!camSrc.x && !camSrc.y && !camSrc.z) {
+                    if (pHero->IsTy()) {
+                        camSrc = *pHero->GetPos();
+                        camSrc.y += 200.0f;
+                        camSrc.x += 210.0f;
+
+                        camTarget = *pHero->GetPos();
+                        camTarget.y += 40.0f;
+                    } else {
+                        camSrc = *pHero->GetPos();
+                        camSrc.y += 400.0f;
+                        camSrc.x += 400.0f;
+
+                        camTarget = *pHero->GetPos();
+                        camTarget.y += pHero->objectRadiusAdjustment;
+                    }
+
+                    cameraDir.Sub(&camTarget, &camSrc);
+                    cameraDir.Normalise();
+
+                    unk124 = atan2f(camSrc.z - camTarget.z, camSrc.x - camTarget.x) + (PI / 2.0f);
+                } else {
+                    camTarget = *pHero->GetPos();
+                    camTarget.y += 90.0f;
+                }
+            } else {
+                *GetPos() = *pHero->GetPos();
+            }
+
+            bool r31 = false;
+
+            switch (type) {
+                case SPT_ThunderEgg:
+                    if (!gb.mGameData.CheckCurrentLevelThunderEgg(subType)) {
+                        r31 = true;
+                    }
+                    gb.mGameData.CollectThunderEgg((ThunderEggType)subType);
+                    dda.StorePickupInfo(Pickup_ThunderEgg);
+                    break;
+                case SPT_GoldenCog:
+                    if (!gb.mGameData.CheckCurrentLevelCog(subType)) {
+                        r31 = true;
+                    }
+                    gb.mGameData.CollectCog((GoldenCogType)subType);
+                    dda.StorePickupInfo(Pickup_Cog);
+                    break;
+            }
+
+            if (r31) {
+                TyMemCard_AutoSaveGame();
+            }
+
+            subState = 6;
+
             break;
         case 2:
             unk70 += 0.07f;
             if (unk70 > 1.25f) {
-                unk70 = 0.0f;
+                unk70 = 1.25f;
                 subState = 3;
             }
             break;
@@ -560,7 +652,12 @@ void SpecialPickUpMessage::Init(void) {
 }
 
 void SpecialPickupStruct::UpdateShadow(float f1) {
-
+    float maxDist = Sqr<float>(500.0f);
+    float dist = SquareDistance(&ty.unk338, GetPos());
+    if (dist < maxDist) {
+        dist = maxDist / Max<float>(dist, 100.0f);
+        ty.AddShadowLight(GetPos(), (dist - 1.0f) * 0.02f * f1);
+    }
 }
 
 bool SpecialPickupStruct::IsCollected(void) {
@@ -582,4 +679,8 @@ void SpecialPickupStruct::SetTransparent(bool r4) {
     if (r4) {
         unk5D = false;
     }
+}
+
+void SpecialPickup_EnableCheatLines(bool r3) {
+    bDrawCheatLines = r3;
 }
