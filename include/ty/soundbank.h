@@ -260,6 +260,7 @@ enum SoundID {
     SFX_BilbyBoyCooee       = 0x200,
     SFX_BilbyGirlCooee      = 0x201,
     SFX_BilbyGranCooee      = 0x202,
+    SFX_RangCollectionLP    = 0x203,
 
     SFX_ObjectiveA1         = 0x22C,
     SFX_ObjectiveA3         = 0x22D,

@@ -8,16 +8,27 @@ extern "C" int stricmp(char*, char*);
 #define GLOBAL_MESSAGE_COUNT (43)
 
 char* globalMessageStrings[GLOBAL_MESSAGE_COUNT] = {
-    "Activate", "Deactivate", "Enable", "Disable",
-    "Show", "Hide", "Open", "Close", "Toggle", "Spawn",
-    "Shatter", "Fall", "ObjectiveIncrement", "LearntToSwim",
-    "LearntToDive", "GotBothRangs",  "WeatherLightning", "WeatherStormy",
-    "WeatherRain", "WeatherSnow", "WeatherPlankton", "WeatherFoggy",
-    "Start", "GotAquarang", "GotFlamerang", "GotFrostyrang", "GotSmasharang",
+    "Activate", "Deactivate", // Activate = 10, Deactivate = 11
+    "Enable", "Disable", // Enable = 11, Disable = 12
+    "Show", "Hide", 
+    "Open", "Close", 
+    "Toggle", "Spawn",
+    "Shatter", "Fall", 
+    "ObjectiveIncrement", 
+    "LearntToSwim", "LearntToDive", 
+    "GotBothRangs", // Message ID: 25 (Index 15 here + 10)
+    "WeatherLightning", "WeatherStormy", "WeatherRain", "WeatherSnow", "WeatherPlankton", "WeatherFoggy", // Starting Message ID: 26
+    "Start", // Start = 32
+
+    // Starting Message ID: 33
+    "GotAquarang", "GotFlamerang", "GotFrostyrang", "GotSmasharang",
     "GotZappyrang", "GotZoomerang", "GotMultirang", "GotInfrarang", "GotMegarang",
-    "GotKaboomarang", "GotChronorang", "GotDoomarang", "RequestElementalRang",
-    "RequestTechnoRang", "RequestTalisman", "Abort", "GotExtraHealth",
-    "FallingOffGeoFluffy", "TimeAttackStart", "TimeAttackEnd"
+    "GotKaboomarang", "GotChronorang", "GotDoomarang", 
+    "RequestElementalRang", "RequestTechnoRang", "RequestTalisman", 
+    "Abort", 
+    "GotExtraHealth", // GotExtraHealth = 49
+    "FallingOffGeoFluffy", // FallingOffGeoFluffy = 50
+    "TimeAttackStart", "TimeAttackEnd"
 };
 
 char* mkMessageStrings[2] = {"MK_Destroy", "Reset"};

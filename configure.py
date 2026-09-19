@@ -583,7 +583,7 @@ config.libs = [
             Object(Matching, "ty/source/Torch.cpp"),
             Object(NonMatching, "ty/source/Ty.cpp"),
             Object(NonMatching, "ty/source/TyAnimTables.cpp"),
-            Object(NonMatching, "ty/source/TyAttributes.cpp"),
+            Object(Matching, "ty/source/TyAttributes.cpp"),
             Object(NonMatching, "ty/source/TyCollisions.cpp"),
             Object(NonMatching, "ty/source/TyHealth.cpp"),
             Object(NonMatching, "ty/source/TyMemCard.cpp"),

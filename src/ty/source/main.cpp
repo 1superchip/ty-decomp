@@ -109,6 +109,8 @@ void Main_LoadStaticResources(void) {
 
     SignPost_LoadResources(&ini);
 
+    SpecialPickup_LoadResources(&ini);
+
     FinishLine_LoadResources(&ini);
     Torch_LoadResources(&ini);
 
@@ -362,7 +364,7 @@ void GameSubStateFSM::InGameDraw(void) {
     Ty_Draw();
 
     if (!gb.pDialogPlayer) {
-        
+        ty.mReflection.Draw();
     }
 }
 

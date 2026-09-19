@@ -40,6 +40,9 @@ enum MESSAGE_ID {
 
     MSG_ObjectiveIncrement = 22,
 
+    MSG_LearntToSwim = 23,
+    MSG_LearntToDive = 24,
+
     MSG_GotBothRangs = 25,
     
     // Weather?
@@ -50,7 +53,26 @@ enum MESSAGE_ID {
     MSG_UNK_30 = 30,
     MSG_UNK_31 = 31,
 
+    MSG_Start = 32,
+
+    MSG_GotAquarang = 33,
+    MSG_GotFlamerang = 34,
+    MSG_GotFrostyrang = 35,
+    MSG_GotSmasharang = 36,
+    MSG_GotZappyrang = 37,
+    MSG_GotZoomerang = 38,
+    MSG_GotMultirang = 39,
+    MSG_GotInfrarang = 40,
+    MSG_GotMegarang = 41,
+    MSG_GotKaboomarang = 42,
+    MSG_GotChronorang = 43,
+    MSG_GotDoomarang = 44,
+
     MSG_Abort = 48,
+
+    MSG_GotExtraHealth = 49,
+    
+    MSG_FallingOffGeoFluffy = 50,
 
     MSG_SpecialPickup_53 = 53,
     MSG_SpecialPickup_54 = 54,
