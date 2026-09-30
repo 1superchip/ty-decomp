@@ -101,10 +101,6 @@ struct CollisionInfo {
     void Enable(void) {
         bEnabled = true;
     }
-
-    void Disable(void) {
-        bEnabled = false;
-    }
     
     bool TestFlags(uint testFlags) {
         return (flags & testFlags) != 0;

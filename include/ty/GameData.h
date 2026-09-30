@@ -120,7 +120,7 @@ struct GameData {
     void SetCollectedGems(void);
     void GetCollectedGems(void);
     int GetGameCompletePercent(void);
-    int GetGoldenCogCount(LevelNumber);
+    int GetGoldenCogCount(LevelNumber level);
     int GetTotalGoldenCogCount(void);
     int GetTotalTalismanCount(void);
     int GetCollectedGemCount(LevelNumber);
@@ -153,6 +153,10 @@ struct GameData {
     float GetMusicVolume(void);
     float GetSoundVolume(void);
     void SetMusicDucked(bool);
+
+    bool IsDirty(void) {
+        return bIsDirty;
+    }
 
     bool IsBilbyFree(int type, LevelNumber level) {
         return pSaveData->levels[level].bilbies[type] & 1;
@@ -196,6 +200,10 @@ struct GameData {
         return pSaveData->levels[pSaveData->currentLevel].cogs[cogIdx];
     }
 
+    bool CheckCurrentLevelGoldenCogCount(void) {
+        return GetGoldenCogCount(pSaveData->currentLevel);
+    }
+
     ZoneNumber GetCurrentZone(void) {
         return pSaveData->currentZone;
     }
@@ -203,8 +211,13 @@ struct GameData {
     bool IsZoneCompleted(ZoneNumber zoneIdx) {
         return pSaveData->zoneInfo[zoneIdx].bZoneCompleted;
     }
+
     LevelNumber GetCurrentLevel(void) {
         return pSaveData->currentLevel;
+    }
+    
+    LevelNumber GetPreviousLevel(void) {
+        return pSaveData->previousLevel;
     }
 
     bool HasLevelBeenEntered(LevelNumber level) {

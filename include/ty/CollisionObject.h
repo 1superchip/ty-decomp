@@ -3,8 +3,11 @@
 
 #include "common/Collision.h"
 
-struct TyCollisionInfo {
-    bool bEnabled;
+// Move this somewhere else
+struct TyCollisionInfo : CollisionInfo {
+    void Disable(void) {
+        bEnabled = false;
+    }
 };
 
 struct ColObjDescriptorSubStruct {
@@ -53,7 +56,7 @@ struct ContextInfo {
 };
 
 struct CollisionObject {
-    ContextInfo contexts[3];
+    ContextInfo contexts[3]; // no array?
     Vector pos;
     ColObjDescriptor* pColObjDesc;
     u8 colObjCount;

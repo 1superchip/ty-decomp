@@ -4,7 +4,7 @@
 #include "ty/soundbank.h"
 #include "ty/Shatter.h"
 #include "common/Model.h"
-#include "common/Collision.h"
+#include "ty/CollisionObject.h"
 #include "common/MKAnimScript.h"
 #include "common/Vector.h"
 
@@ -64,7 +64,7 @@ struct BilbyStruct {
     uint mNextTime;
     SoundEventHelper mSoundHelper;
     ShatterStruct* pShatter;
-    CollisionInfo mCollisionInfo;
+    TyCollisionInfo mCollisionInfo;
     MKAnimScript mAnimScript;
     BilbyInternalStruct unk84[5];
     int unk124;

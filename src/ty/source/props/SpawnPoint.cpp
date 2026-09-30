@@ -3,12 +3,13 @@
 #include "ty/global.h"
 #include "ty/Ty.h"
 
+static char* spawnName = "spawnpoint";
+
 static GameObjDesc spawnDesc;
 static ModuleInfo<SpawnPoint> spawnModInfo;
-char* spawnname = "spawnpoint";
 
 void SpawnPoint_LoadResources(KromeIni* pIni) {
-    spawnDesc.Init(&spawnModInfo, spawnname, spawnname, 8, 2);
+    spawnDesc.Init(&spawnModInfo, spawnName, spawnName, 8, 2);
     objectManager.AddDescriptor(&spawnDesc);
 }
 
@@ -33,7 +34,7 @@ void SpawnPoint::LoadDone(void) {
 void SpawnPoint::Message(MKMessage* pMsg) {
     switch (pMsg->unk0) {
         case MSG_Resolve:
-            if (fromLevel == gb.mGameData.pSaveData->previousLevel) {
+            if (fromLevel == gb.mGameData.GetPreviousLevel()) {
                 ty.mSpawnPos = tySpawnPos;
                 ty.mSpawnRot = tySpawnRot;
             }

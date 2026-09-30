@@ -196,6 +196,9 @@ enum SoundID {
     SFX_EnvExplosionMid = 0x7A,
 
     SFX_BunyipAppear = 0x91,
+
+    SFX_CheckPointAppear = 0x96,
+
     SFX_OpalCollect = 0xB7,
     SFX_TyDiveBiteHitGround = 0x10C,
     SFX_TyWaterSlideJump = 0x127,

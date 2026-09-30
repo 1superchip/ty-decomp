@@ -27,6 +27,7 @@
 #include "ty/windmill.h"
 #include "ty/bilby.h"
 #include "ty/SpecialPickup.h"
+#include "ty/TyAttributes.h"
 
 #include "common/FileSys.h"
 #include "common/ParticleSystemManager.h"
@@ -118,6 +119,8 @@ void Main_LoadStaticResources(void) {
 
     Platform_LoadResources(&ini);
     AnimatingProp_LoadResources(&ini);
+
+    TyAttributes_LoadResources(&ini);
 
     ini.Deinit();
 
@@ -538,7 +541,10 @@ void Main_AutoLevelSwitch_Update(void) {
     if (!gb.bOnPauseScreen) {
         switch (gb.mLogicState.GetCurr()) {
             case STATE_5:
-                MaxMemoryUsed[gb.level.GetCurrentLevel()] = Max<int>(Heap_MemoryUsed(), MaxMemoryUsed[gb.level.GetCurrentLevel()]);
+                MaxMemoryUsed[gb.level.GetCurrentLevel()] = Max<int>(
+                    Heap_MemoryUsed(), 
+                    MaxMemoryUsed[gb.level.GetCurrentLevel()]
+                );
 
                 if (!gb.autoLevelSwitch || Dialog_IsLoading() || Dialog_IsPlaying() || (--gb.unkE88 >= 0)) {
                     break;
@@ -1089,11 +1095,11 @@ void Main_CheckShortcutKeys(void) {
 
         if (gb.mLogicState.GetCurr() == STATE_5) {
             if (
-                gb.mJoyPad1.mButtonsPressed != gb.mJoyPad1.mPrevButtonsPressed || 
-                gb.mJoyPad1.unk38 != 0.0f || 
-                gb.mJoyPad1.unk48 != 0.0f || 
-                gb.mJoyPad1.unk3C != 0.0f || 
-                gb.mJoyPad1.unk4C != 0.0f
+                gb.mJoyPad1.HavePressedButtonsChanged() || 
+                gb.mJoyPad1.GetUnk38() != 0.0f || 
+                gb.mJoyPad1.GetUnk48() != 0.0f || 
+                gb.mJoyPad1.GetUnk3C() != 0.0f || 
+                gb.mJoyPad1.GetUnk4C() != 0.0f
             ) {
                 timeout = (int)gDisplay.fps * 60;
             }
@@ -1119,7 +1125,7 @@ void Main_CheckShortcutKeys(void) {
         }
     }
 
-    if (gb.mJoyPad1.mButtonsPressed != gb.mJoyPad1.mPrevButtonsPressed) {
+    if (gb.mJoyPad1.HavePressedButtonsChanged()) {
         for (int i = 0; i < cheatCount; i++) {
             if (cheats[i].unk8 == gb.mLogicState.GetCurr()) {
                 int button = cheats[i].buttons[cheats[i].buttonIdx];

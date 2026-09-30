@@ -193,6 +193,10 @@ struct JoyPad {
     bool IsNewlyPressed2(int index) {
         return (mNewButtonsPressedThisFrame & tyControl.activeControls[index]);
     }
+
+    bool HavePressedButtonsChanged(void) {
+        return mButtonsPressed != mPrevButtonsPressed;
+    }
 };
 
 enum GameState {

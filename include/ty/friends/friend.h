@@ -39,7 +39,7 @@ struct Friend : GameObject {
     uint mFlags; // Current flags (in use flags)
     uint mDefFlags; // Default flags
     ImmediateFSM<Friend> mStateManager;
-    CollisionInfo mCollisionInfo;
+    TyCollisionInfo mCollisionInfo;
     MKAnimScript mAnimScript;
     LODManager mLodManager;
     int unkActorIdx;

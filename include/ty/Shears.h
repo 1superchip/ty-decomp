@@ -2,7 +2,7 @@
 #define SHEARS_H
 
 #include "common/Model.h"
-#include "common/Collision.h"
+#include "ty/CollisionObject.h"
 
 struct ShearsLoadInfo {
     Vector unk0;
@@ -41,7 +41,7 @@ struct ShearsStruct {
     int unkE4;
     float unkE8;
     int unkEC;
-    CollisionInfo mCollisionInfo;
+    TyCollisionInfo mCollisionInfo;
     
     void Logic(void);
     void CheckForTy(void);

@@ -43,7 +43,7 @@ struct StaticPropLoadInfo {
 
 struct StaticProp : GameObject {
     bool collide;
-    CollisionInfo collisionInfo;
+    TyCollisionInfo collisionInfo;
     LODManager lodManager;
     
     virtual bool LoadLine(KromeIniLine* pLine);
