@@ -33,23 +33,27 @@ extern "C" {
 
 #include "assets/Material_GC/rawCaptureTexData.inc"
 
+// extra 16 bytes to match rodata length
+const Vector MaterialGC_rodata_hack = {};
+
 static KromeIni materialIni __attribute__ ((aligned (32)));
+
+static PtrListDL<Material> materials;
+
+static int pPCMatChanges = 0;
+
 static GXTexObj restorationTexObj __attribute__ ((aligned (16)));
 static char restorationTexData[32768];
+
 static GXTexObj rawCaptureTexObj;
 char captureTexData[32768];
 
-static PtrListDL<Material> materials;
-static int pPCMatChanges = 0;
 Material* Material::pCurrMat[2];
 static void* pCaptureTexture = NULL;
 int Material::frameCounter = 0;
 int Material::updateEnabled = 0;
 
 GXColor Material_MixedColor = {0xff, 0xff, 0xff, 0xff};
-
-// extra 16 bytes to match rodata length
-const Vector MaterialGC_rodata_hack = {};
 
 // (0x100000 | 0x80000 | 0x40000 | 0x20000 | 0x10000 | 0x2000) = 0x1f2000
 

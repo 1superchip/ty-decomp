@@ -1,7 +1,7 @@
 #include "Dolphin/__start.h"
 #include "__ppc_eabi_linker.h"
 
-void __check_pad3(void) {
+static void __check_pad3(void) {
   if ((Pad3Button & 0x0eef) == 0x0eef) {
     OSResetSystem(OS_RESET_RESTART, 0, FALSE);
   }
@@ -139,7 +139,7 @@ inline static void __init_bss_section(void* dst, unsigned long size) {
 }
 
 #pragma scheduling off
-void __init_data(void) {
+static void __init_data(void) {
   __rom_copy_info* dci;
   __bss_init_info* bii;
 

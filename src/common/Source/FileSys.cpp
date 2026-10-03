@@ -13,12 +13,12 @@ extern "C" int strlen(char*);
 extern "C" char* strstr(char*, char*);
 extern "C" void qsort(void*, int, int, int (*compar)(const void*,const void*));
 
+static LoadInterceptFunc pLoadInterceptHandler;
+static ExistInterceptFunc pExistInterceptHandler;
 
 static RkvTOC data;
 static RkvTOC patch;
 
-static LoadInterceptFunc pLoadInterceptHandler;
-static ExistInterceptFunc pExistInterceptHandler;
 static s16 fileOrderId;
 
 // for RkvTOC

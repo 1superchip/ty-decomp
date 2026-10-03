@@ -2,12 +2,13 @@
 #include "ty/Ty.h"
 #include "Dolphin/gx.h"
 
-static float ref_oldViewport[6];
-
 static Material* pRefMat;
+
+static float ref_oldViewport[6];
 
 static u32 ref_oldScissorX;
 static u32 ref_oldScissorY;
+
 static u32 ref_oldScissorWidth;
 static u32 ref_oldScissorHeight;
 

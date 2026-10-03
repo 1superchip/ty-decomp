@@ -2,10 +2,10 @@
 #include "Dolphin/os.h"
 #include "Dolphin/os/OSPriv.h"
 
-void* ArenaEnd;
-void* ArenaStart;
-int NumHeaps;
-Heap* HeapArray;
+static Heap* HeapArray;
+static int NumHeaps;
+static void* ArenaStart;
+static void* ArenaEnd;
 volatile OSHeapHandle __OSCurrHeap = -1;
 
 #define InRange(addr, start, end) ((u8*)(start) <= (u8*)(addr) && (u8*)(addr) < (u8*)(end))

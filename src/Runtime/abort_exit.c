@@ -9,10 +9,11 @@ extern void (*_dtors[])(void);
 
 void (*__console_exit)(void);
 void (*__stdio_exit)(void);
+static void (*__atexit_funcs[64])(void);
 static int __atexit_curr_func;
+
 int __aborting;
 
-static void (*__atexit_funcs[64])(void);
 
 void exit(int status) {
   int i;

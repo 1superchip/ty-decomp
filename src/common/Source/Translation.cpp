@@ -12,14 +12,21 @@ extern "C" int strcmpi(char*, char*);
 extern "C" int strlen(char*);
 extern "C" void memmove(char*, char*, int);
 
+char* gpTranslation_StringArray[1025];
 
 static TranslationLanguage gCurrentLanguage = Language_NotSet;
 
 static int gNmbrOfStrings = 0;
 static char* gpTranslationBuffer = NULL;
 
+static char* gpEnumTagArray[1025];
+
 // this is the Language string used by the stripped DebugOptions code
 static char* pDOLanguage;
+
+static char* gpLanguageOptionStrings[9];
+static int gLanguageOptionLanguages[9];
+
 static int gLanguageDebugOption;
 
 static Language gLanguageInfo[LANGUAGE_NMBR_OF_LANGUAGES] = {
@@ -32,11 +39,6 @@ static Language gLanguageInfo[LANGUAGE_NMBR_OF_LANGUAGES] = {
 	{"Nederlands", "Dutch", "NL", "Translations.Dutch.txt", 0},
 	{"Japanese", "Japanese", "JP", "Translations.Japanese.txt", 0}
 };
-
-char* gpTranslation_StringArray[1025];
-static char* gpEnumTagArray[1025];
-static char* gpLanguageOptionStrings[9];
-static int gLanguageOptionLanguages[9];
 
 void Translation_InitModule(void) {
     int i;

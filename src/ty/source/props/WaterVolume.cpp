@@ -17,13 +17,13 @@ struct CritterField2LoadInfo {
     void LoadDone(Matrix*);
 };
 
-CritterField2LoadInfo wvLoadInfo = {
+static CritterField2LoadInfo wvLoadInfo = {
     {0.0f, 0.0f, 0.0f, 1.0f},
     {0.0f, 0.0f, 0.0f, 0.0f}, 
     {1.0f, 1.0f, 1.0f, 1.0f}, 
     0.0f
 };
-BoundingVolume waterBoundingVolume = {
+static BoundingVolume waterBoundingVolume = {
     {-0.5f, -0.5f, -0.5f, 1.0f},
     {1.0f, 1.0f, 1.0f, 1.0f}
 };

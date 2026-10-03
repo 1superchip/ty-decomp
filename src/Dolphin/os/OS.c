@@ -14,13 +14,14 @@ extern char _stack_addr[];
 
 extern char* __OSResetSWInterruptHandler[];
 
+static OSBootInfo* BootInfo;
+static u32* BI2DebugFlag;
+static u32* BI2DebugFlagHolder;
+
 vu16 __OSDeviceCode : (OS_BASE_CACHED | 0x30E6);
 static DVDDriveInfo DriveInfo ATTRIBUTE_ALIGN(32);
 static DVDCommandBlock DriveBlock;
 
-static OSBootInfo* BootInfo;
-static u32* BI2DebugFlag;
-static u32* BI2DebugFlagHolder;
 BOOL __OSIsGcam = FALSE;
 static f64 ZeroF;
 static f32 ZeroPS[2];

@@ -64,7 +64,7 @@ static inline void SplitLine2(char* pString) {
     }
 }
 
-void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
+static void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     int badAnimCount = 0;
     int animEventCount = 0;
     int animRangeCount = 0;

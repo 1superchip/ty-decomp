@@ -2,10 +2,11 @@
 #include "Dolphin/os/OSError.h"
 
 static vu32 RunQueueBits;
+static OSThreadQueue RunQueue[32];
+
 static volatile BOOL RunQueueHint;
 static vs32 Reschedule;
 
-static OSThreadQueue RunQueue[32];
 static OSThread IdleThread;
 static OSThread DefaultThread;
 static OSContext IdleContext;

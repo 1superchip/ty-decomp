@@ -11,7 +11,7 @@ char* pWeatherTypeStrs[] = {
     NULL
 };
 
-char* pLightningModelNames[] = {
+static char* pLightningModelNames[] = {
     "FX05_Lightning",
     "FX05_Lightning_02",
     "FX05_Lightning_03",
@@ -317,3 +317,15 @@ WeatherInit gWeatherInit[NUM_WEATHER_TYPES] = {
         NULL
     }
 };
+
+extern "C" int stricmp(char*, char*);
+
+int WeatherTypes_GetWeatherType(char* pType) {
+    for (int i = 0; i < NUM_WEATHER_TYPES; i++) {
+        if (stricmp(pType, pWeatherTypeStrs[i]) == 0) {
+            return i;
+        }
+    }
+
+    return -1;
+}

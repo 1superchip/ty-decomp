@@ -12,13 +12,13 @@ ParticleSystemType guideParticleSysType;
 
 static ModuleInfo<GuideParticle> guideParticleModule;
 
+static bool bHide = true;
+
 static Material* pSparkleMaterial;
 
 int GuideParticle::gateTimeOutCounter = 0;
 
 static int counter = 0;
-
-static bool bHide = true;
 
 void GuideParticle_CustomUpdate(ParticleSystem*);
 

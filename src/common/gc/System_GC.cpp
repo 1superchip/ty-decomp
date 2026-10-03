@@ -32,19 +32,14 @@ extern "C" void memset(void*, int, int);
 
 #define IDLE_THREAD_STACK_SIZE (0x8000)
 
-static char IdleThreadStack[IDLE_THREAD_STACK_SIZE];
-RenderState gRenderState;
-static Camera debugCamera;
-static char* ppCmdLineArgStrings[20];
-
-
 static int pf_enabled = 0;
+
+static char IdleThreadStack[IDLE_THREAD_STACK_SIZE];
+
 OSThread* pMainThread;
 int resetState = 0;
-static PtrListDL<ZCheckRequest> zCheckRequests;
-static int gSysOptions = 0;
-static bool bExit = false;
 
+static PtrListDL<ZCheckRequest> zCheckRequests;
 
 MKDefaults gMKDefaults = {
     {0}, // padding 0x0
@@ -95,13 +90,6 @@ Display gDisplay = {
     0.0f, // orthoXSize
     0.0f // orthoYSize
 };
-int gFrameCounter = 0;
-int gDrawCounter = 0;
-static bool bDebugEnabled = false;
-static bool bDebugMenuActive = false;
-static bool bDebugModeActive = false;
-static View* pGameView;
-static int cmdLineArgCount = 0;
 
 static char* gFillModeOptStrings[9] = {
     "Solid",
@@ -113,6 +101,21 @@ static char* gFillModeOptStrings[9] = {
     "NoUploads",
     "Strips"
 };
+
+RenderState gRenderState;
+static Camera debugCamera;
+static char* ppCmdLineArgStrings[20];
+
+static int gSysOptions = 0;
+static bool bExit = false;
+
+int gFrameCounter = 0;
+int gDrawCounter = 0;
+static bool bDebugEnabled = false;
+static bool bDebugMenuActive = false;
+static bool bDebugModeActive = false;
+static View* pGameView;
+static int cmdLineArgCount = 0;
 
 static int stopFrame = -1;
 

@@ -6,6 +6,10 @@ extern void Particle_Special_Create(ParticleSystem**, Vector*, Vector*, Vector*)
 extern void Particle_Special_Init(ParticleSystem**, Vector*, BoundingVolume*);
 extern void Particle_DestroyASystem(ParticleSystem**, float);
 
+// Descriptors for each type of Talisman
+static StaticPropDescriptor TalismanDesc[TALISMAN_COUNT];
+static ModuleInfo<Talisman> TalismanModule;
+
 // Data for each talisman type
 static TalismanInfo talismanData[TALISMAN_COUNT] = {
     {"prop_0525_DingoTalisman", "DingoTalisman"},
@@ -14,10 +18,6 @@ static TalismanInfo talismanData[TALISMAN_COUNT] = {
     {"prop_0527_PlatyTalisman", "PlatyTalisman"},
     {"prop_0522_TigerTalisman", "TigerTalisman"}
 };
-
-// Descriptors for each type of Talisman
-static StaticPropDescriptor TalismanDesc[TALISMAN_COUNT];
-static ModuleInfo<Talisman> TalismanModule;
 
 // Loads the descriptor for each Talisman
 void Talisman_LoadResources(KromeIni* pIni) {

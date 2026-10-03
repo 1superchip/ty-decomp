@@ -6,8 +6,6 @@
 #include "common/MKAnimScript.h"
 #include "common/PtrListDL.h"
 
-static MKAnimScript shearsBad;
-
 static bool bShearsLoaded = false;
 
 static PtrListDL<ShearsStruct> Shears;
@@ -17,6 +15,8 @@ int shearsMax = 0;
 static short startFrame = -1;
 static short midFrame = -1;
 static short endFrame = -1;
+
+static MKAnimScript shearsBad;
 
 void Shears_LoadResources(void) {
     shearsBad.Init("prop_0081_shears");

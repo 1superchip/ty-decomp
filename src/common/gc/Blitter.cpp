@@ -157,7 +157,7 @@ void Blitter_Line3D::Draw(int count, float arg2) {
 // fake!
 // this function is used to order floats
 void CalcUV(float& u, float& v, int y, float default00, float default01, float c, float s) {
-	u = (default00 - 0.5f) * c - (default01 - 0.5f) * s + 0.5f;
+    u = (default00 - 0.5f) * c - (default01 - 0.5f) * s + 0.5f;
 	v = (default00 - 0.5f) * s + (default01 - 0.5f) * c + 0.5f;
 	volatile float t = 1.0f;
 	t = -1.0f;
@@ -165,6 +165,8 @@ void CalcUV(float& u, float& v, int y, float default00, float default01, float c
 	volatile unsigned int x = 30;
 	t = x;
 }
+
+// defaultUV is in the wrong symbol order in symtab
 
 void Blitter_Particle::Draw(int count) {
     Blitter_Particle* pParticle = this;

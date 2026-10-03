@@ -228,12 +228,14 @@ void Animation_InterpolateFrame(Animation::FrameInstance* pFrame, AnimationData:
 void Animation_InterpolateFrameData(Animation::FrameInstance* pFrame, float arg1, Vector* pPos, Vector* pRot, 
     Vector* pScale, Vector* pPos1, Vector* pRot1, Vector* pScale1) {
     // Linearly interpolate position and scale
-    pFrame->position.x = (pPos1->x - pPos->x) * arg1 + pPos->x;
-    pFrame->position.y = (pPos1->y - pPos->y) * arg1 + pPos->y;
-    pFrame->position.z = (pPos1->z - pPos->z) * arg1 + pPos->z;
-    pFrame->scale.x = (pScale1->x - pScale->x) * arg1 + pScale->x;
-    pFrame->scale.y = (pScale1->y - pScale->y) * arg1 + pScale->y;
-    pFrame->scale.z = (pScale1->z - pScale->z) * arg1 + pScale->z;
+    
+    pFrame->position.x = pPos->x + (pPos1->x - pPos->x) * arg1;
+    pFrame->position.y = pPos->y + (pPos1->y - pPos->y) * arg1;
+    pFrame->position.z = pPos->z + (pPos1->z - pPos->z) * arg1;
+
+    pFrame->scale.x = pScale->x + (pScale1->x - pScale->x) * arg1;
+    pFrame->scale.y = pScale->y + (pScale1->y - pScale->y) * arg1;
+    pFrame->scale.z = pScale->z + (pScale1->z - pScale->z) * arg1;
 
     // Slerp rotation
     SlerpQuat(pRot, pRot1, arg1, &pFrame->rotation);

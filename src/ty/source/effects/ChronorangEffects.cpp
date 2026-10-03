@@ -9,7 +9,7 @@ Material* SleepyDust::pSleepyDustMat;
 ParticleSystemType Pollen::pollenType;
 ParticleSystemType SleepyDust::sleepyDustType;
 
-SleepyDust sleepyDust;
+static SleepyDust sleepyDust;
 
 /// @brief Custom update function for the Pollen Particle System
 /// @param pSys ParticleSystem to update

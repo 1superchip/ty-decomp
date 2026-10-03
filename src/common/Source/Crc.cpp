@@ -1,8 +1,9 @@
 #include "types.h"
 #include "common/Crc.h"
 
-static bool crcTableComputed = false;
 static int crcTable[0x100];
+
+static bool crcTableComputed = false;
 
 static void Crc_MakeTable(void) {
     uint c;

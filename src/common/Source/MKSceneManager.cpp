@@ -8,15 +8,19 @@
 extern "C" void memset(void*, int, int);
 
 static Vector occludeArray[16][10];
+static int occlusionObjects = 0;
+
 static u16 terrainSubObjects[1024];
+
 static SMTree staticPropTree[4];
 static MKProp staticPropArray[4];
+
 static MKProp dynamicPropArray[4];
 static MKProp globalPropArray[4];
+
 Model* pTerrainModel[NUM_TERRAIN_MODELS];
 float terrainDrawDist[NUM_TERRAIN_MODELS];
 
-static int occlusionObjects = 0;
 MKPropDescriptor* MKPropDescriptor::pDrawListDescs = NULL;
 
 void MKSceneManager::InitModule(void) {

@@ -22,7 +22,7 @@ typedef struct OSResetQueue {
   OSResetFunctionInfo* last;
 } OSResetQueue;
 
-OSResetQueue ResetFunctionQueue;
+static OSResetQueue ResetFunctionQueue;
 
 void OSRegisterResetFunction(OSResetFunctionInfo* func) {
   OSResetFunctionInfo* tmp;

@@ -10,7 +10,12 @@
 #include "ty/global.h"
 #include "common/StdMath.h"
 
-static const Vector RainbowEffect_RodataPadding[5] = {};
+// these are actually literals (@...)
+static const Vector RainbowEffect_RodataVector0 = {};
+static const Vector RainbowEffect_RodataVector1 = {};
+static const Vector RainbowEffect_RodataVector2 = {};
+static const Vector RainbowEffect_RodataVector3 = {};
+static const Vector RainbowEffect_RodataVector4 = {};
 
 ParticleSystemType RainbowEffect::rainbowEffectType;
 Material* RainbowEffect::pRainbowMat;

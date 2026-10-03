@@ -31,9 +31,6 @@ float randomFloats[32] = {
 extern "C" void Sound_SetPitch(int, float);
 extern "C" void strcpy(char*, const char*);
 
-static bool bDropShadowsIsInit = false;
-static StructList<ShadowInfo> shadows;
-
 extern "C" char* strstr(char*, char*);
 
 /*
@@ -1028,6 +1025,9 @@ void Tools_ParticleRef::Update(Model* pModel) {
     targetWorldPos.Sub(&targetWorldPos, &refPointWorldPos);
     targetWorldPos.Normalise();
 }
+
+static bool bDropShadowsIsInit = false;
+static StructList<ShadowInfo> shadows;
 
 void Tools_DropShadow_Init(void) {
     if (bDropShadowsIsInit) {

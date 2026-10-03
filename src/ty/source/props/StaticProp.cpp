@@ -12,8 +12,8 @@ extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
 
-ModuleInfo<StaticProp> staticPropModuleInfo;
-ModuleInfo<StaticFXProp> staticFXPropModuleInfo;
+static ModuleInfo<StaticProp> staticPropModuleInfo;
+static ModuleInfo<StaticFXProp> staticFXPropModuleInfo;
 
 static float OrderStaticPropFloats(void) {
     return 1.0f;

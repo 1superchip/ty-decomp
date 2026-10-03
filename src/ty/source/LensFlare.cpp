@@ -13,9 +13,10 @@ static char* LF_SUNTEXTURE_NAME = "fx_083";
 static Material* pMaterial;
 static Material* pSunMaterial;
 static ZCheckRequest* pZRequest;
-static int wait;
 
 static ZCheckRequest zRequestLast;
+
+static int wait;
 
 /*
 // these are unused variables that would have been used by code that was either stripped or unimplemented

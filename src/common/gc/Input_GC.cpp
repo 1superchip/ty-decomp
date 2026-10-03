@@ -14,15 +14,15 @@ static const u16 ButtonMasks[20] = {
 
 static PADStatus pad[PAD_MAX_CONTROLLERS];
 
-static int JoyStickCount = 1;
-static bool bEnableDS2KeyMapping = true;
-
 static Input_Joypad joyPad[PAD_MAX_CONTROLLERS] = {
     {&pad[0], 0x0000, 0x0000, 127, 127, 127, 127, 127, 127, 127, 127, 0, 0},
     {&pad[1], 0x0000, 0x0000, 127, 127, 127, 127, 127, 127, 127, 127, 0, 0},
     {&pad[2], 0x0000, 0x0000, 127, 127, 127, 127, 127, 127, 127, 127, 0, 0},
     {&pad[3], 0x0000, 0x0000, 127, 127, 127, 127, 127, 127, 127, 127, 0, 0}
 };
+
+static int JoyStickCount = 1;
+static bool bEnableDS2KeyMapping = true;
 
 void Input_InitModule(void) {
     PADInit();

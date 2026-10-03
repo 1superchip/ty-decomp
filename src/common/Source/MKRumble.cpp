@@ -16,9 +16,10 @@ static InputDeviceStruct ves[MAX_CHANS] = {
     {0, false, 0.0f}
 };
 
+static int effectsPlaying = 0;
+
 static VibrationEffect vibrationEffect[NUM_VIBRA_EFFECTS];
 
-static int effectsPlaying = 0;
 static bool vibrationPaused = false;
 
 /// @brief Resets all vibration effects
