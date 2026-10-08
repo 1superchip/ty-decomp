@@ -62,7 +62,6 @@ struct OSThread {
   OSThreadLink linkActive;
   u8* stackBase;
   u32* stackEnd;
-  s32 error;
 };
 
 enum OS_THREAD_STATE {

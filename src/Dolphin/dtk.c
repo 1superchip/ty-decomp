@@ -6,19 +6,11 @@
 extern u32 OSDisableInterrupts(void);
 extern void OSEnableInterrupts(u32);
 
-static DVDCommandBlock __block_for_run_callback;
-static DVDCommandBlock __block_for_prep_callback;
-static DVDCommandBlock __block_for_stream_status;
-static DVDCommandBlock __block_for_ais_isr;
-static DVDCommandBlock __block_for_flushtracks;
-static DVDCommandBlock __block_for_set_state;
-// static DVDCommandBlock __block_for_next_track;
-
 static DTKTrack* __DTKCurrentTrack;
 static DTKTrack* __DTKPlayListHead;
 static DTKTrack* __DTKPlayListTail;
 static vu32 __DTKState;
-// static vu32 __DTKTempState;
+
 static vu32 __DTKRepeatMode;
 static vu32 __DTKPosition;
 static vu32 __DTKInterruptFrequency;
@@ -27,6 +19,16 @@ static vu8 __DTKVolumeR;
 static volatile u32 __DTKShutdownFlag;
 static volatile u32 __DTKTrackEnded;
 static DTKFlushCallback __DTKFlushCallback;
+
+static DVDCommandBlock __block_for_run_callback;
+static DVDCommandBlock __block_for_prep_callback;
+static DVDCommandBlock __block_for_stream_status;
+static DVDCommandBlock __block_for_ais_isr;
+static DVDCommandBlock __block_for_flushtracks;
+static DVDCommandBlock __block_for_set_state;
+// static DVDCommandBlock __block_for_next_track;
+
+// static vu32 __DTKTempState;
 
 static void __DTKStartAi() {
   AISetStreamVolLeft(__DTKVolumeL);

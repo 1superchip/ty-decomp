@@ -263,39 +263,6 @@ Vector* PROJECT_TO_LINE_SEGMENT(Vector *pVec, Vector *pA, Vector *pB, Vector* pP
     return pProj;
 }
 
-float CylTest_CapsFirst(Vector* pVec, Vector* pVec1, float param_3, float param_4, Vector* pVec2) {
-    float x0 = pVec1->x - pVec->x;
-    float y0 = pVec1->y - pVec->y;
-    float z0 = pVec1->z - pVec->z;
-    float x1 = pVec2->x - pVec->x;
-    float y1 = pVec2->y - pVec->y;
-    float z1 = pVec2->z - pVec->z;
-    float local_3C = (x1 * x0) + (y1 * y0) + (z1 * z0);
-    if (local_3C < 0.0f || local_3C > param_3) {
-        return -1.0f;
-    }
-    float t = (x1 * x1) + (y1 * y1) + (z1 * z1) - (local_3C * local_3C) / (param_3);
-    if (t > param_4) {
-        return -1.0f;
-    }
-    return t;
-}
-
-void CollisionCpp_OrderFloats(void) {
-    volatile float x = -1e+12f;
-}
-
-float GetDiv(Vector* pos, Vector* rayPos, Vector* nDXYZ, float radius) {
-    Vector diff;
-    diff.Sub(rayPos, pos);
-    float nDot = diff.Dot(nDXYZ);
-    float h = Sqr<float>(radius) - (diff.MagSquared() - (nDot * nDot));
-    if (h < 0.0f) {
-        return -1.0f;
-    }
-    return nDot - sqrtf(h);
-}
-
 Vector* NEAREST_POINT(Vector *pVec, Vector *pA, Vector *pB) {
     Vector tmp;
     Vector tmp2;
@@ -341,6 +308,39 @@ static void NearestPointOnPolyEdge(Vector* pVec, Vector* pVec1, int* indices, in
     } else if (numVerts == 4) {
         NearestPointOnQuadEdge(pVec, &pVec1[indices[0]], &pVec1[indices[1]], &pVec1[indices[2]], &pVec1[indices[3]]);
     }
+}
+
+float CylTest_CapsFirst(Vector* pVec, Vector* pVec1, float param_3, float param_4, Vector* pVec2) {
+    float x0 = pVec1->x - pVec->x;
+    float y0 = pVec1->y - pVec->y;
+    float z0 = pVec1->z - pVec->z;
+    float x1 = pVec2->x - pVec->x;
+    float y1 = pVec2->y - pVec->y;
+    float z1 = pVec2->z - pVec->z;
+    float local_3C = (x1 * x0) + (y1 * y0) + (z1 * z0);
+    if (local_3C < 0.0f || local_3C > param_3) {
+        return -1.0f;
+    }
+    float t = (x1 * x1) + (y1 * y1) + (z1 * z1) - (local_3C * local_3C) / (param_3);
+    if (t > param_4) {
+        return -1.0f;
+    }
+    return t;
+}
+
+void CollisionCpp_OrderFloats(void) {
+    volatile float x = -1e+12f;
+}
+
+float GetDiv(Vector* pos, Vector* rayPos, Vector* nDXYZ, float radius) {
+    Vector diff;
+    diff.Sub(rayPos, pos);
+    float nDot = diff.Dot(nDXYZ);
+    float h = Sqr<float>(radius) - (diff.MagSquared() - (nDot * nDot));
+    if (h < 0.0f) {
+        return -1.0f;
+    }
+    return nDot - sqrtf(h);
 }
 
 // checks if the ray formed by pVec and pVec1 intersects the polygon with nmbrOfVertices vertices of pVec2

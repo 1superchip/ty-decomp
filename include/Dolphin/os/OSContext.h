@@ -153,7 +153,6 @@ typedef struct OSContext {
   u16 state;
 
   u32 gqr[8];
-  u32 psf_pad;
   f64 psf[32];
 
 } OSContext;

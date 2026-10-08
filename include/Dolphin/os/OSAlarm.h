@@ -14,7 +14,6 @@ typedef void (*OSAlarmHandler)(OSAlarm* alarm, OSContext* context);
 
 struct OSAlarm {
   OSAlarmHandler handler;
-  u32 tag;
   OSTime fire;
   OSAlarm* prev;
   OSAlarm* next;

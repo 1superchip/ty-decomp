@@ -1967,29 +1967,6 @@ void Doomerang::UpdateFired(void) {
     }
 }
 
-// Don't have a symbol for this but it is inlined in
-// EndGameObjective::Message
-void Doomerang::ResetEndGame(void) {
-    mPos = mOldPos = unk10C;
-    
-    unk12C = 0.0f;
-
-    velocity.Set(0.0f, 0.0f, -GetDesc()->speed);
-
-    mTrail.Reset();
-
-    Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
-    GameCamera_SnapDoomarangCamera(
-        &mPos,
-        &velocity,
-        &up,
-        0.0f
-    );
-
-    unk538 = false;
-    unk539 = true;
-}
-
 void Doomerang::UpdateParticleEffect(void) {
 
 }
@@ -2024,6 +2001,29 @@ void Doomerang::CheckForEnteringRegions(void) {
     }
 
     gb.mGameData.SetBossDefeated(ZN_5, true);
+}
+
+// Don't have a symbol for this but it is inlined in
+// EndGameObjective::Message
+void Doomerang::ResetEndGame(void) {
+    mPos = mOldPos = unk10C;
+    
+    unk12C = 0.0f;
+
+    velocity.Set(0.0f, 0.0f, -GetDesc()->speed);
+
+    mTrail.Reset();
+
+    Vector up = {0.0f, 1.0f, 0.0f, 0.0f};
+    GameCamera_SnapDoomarangCamera(
+        &mPos,
+        &velocity,
+        &up,
+        0.0f
+    );
+
+    unk538 = false;
+    unk539 = true;
 }
 
 void GameCamera_UseDoomarangCamera(bool, Vector*, Vector*, Vector*, float);

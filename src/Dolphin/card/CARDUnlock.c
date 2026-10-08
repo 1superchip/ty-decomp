@@ -33,12 +33,12 @@ static u8 CardData[] ATTRIBUTE_ALIGN(32) = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-typedef struct DecodeParameters {
+typedef struct CARDDecParam {
   u8* inputAddr;
   u32 inputLength;
   u32 aramAddr;
   u8* outputAddr;
-} DecodeParameters;
+} CARDDecParam;
 
 static unsigned long int next = 1;
 
@@ -49,44 +49,32 @@ static int CARDRand(void) {
 
 static void CARDSrand(unsigned int seed) { next = seed; }
 
-static u32 GetInitVal(void) {
-  u32 tmp;
-  u32 tick;
-
-  tick = OSGetTick();
-  CARDSrand(tick);
-  tmp = 0x7fec8000;
-  tmp |= CARDRand();
-  tmp &= 0xfffff000;
-  return tmp;
-}
-
 static u32 exnor_1st(u32 data, u32 rshift) {
   u32 wk;
-  u32 w;
+  u32 work;
   u32 i;
 
-  w = data;
+  work = data;
   for (i = 0; i < rshift; i++) {
-    wk = ~(w ^ (w >> 7) ^ (w >> 15) ^ (w >> 23));
-    w = (w >> 1) | ((wk << 30) & 0x40000000);
+    wk = ~(work ^ (work >> 7) ^ (work >> 15) ^ (work >> 23));
+    work = (work >> 1) | ((wk << 30) & 0x40000000);
   }
-  return w;
+  return work;
 }
 
 static u32 exnor(u32 data, u32 lshift) {
   u32 wk;
-  u32 w;
+  u32 work;
   u32 i;
 
-  w = data;
+  work = data;
   for (i = 0; i < lshift; i++) {
     // 1bit Left Shift
-    wk = ~(w ^ (w << 7) ^ (w << 15) ^ (w << 23));
-    w = (w << 1) | ((wk >> 30) & 0x00000002);
+    wk = ~(work ^ (work << 7) ^ (work << 15) ^ (work << 23));
+    work = (work << 1) | ((wk >> 30) & 0x00000002);
     // printf("i=%d, w=%8x\n", i, w);
   }
-  return w;
+  return work;
 }
 
 static u32 bitrev(u32 data) {
@@ -117,7 +105,7 @@ static u32 bitrev(u32 data) {
 #define SEC_AD3(x) ((u8)(((x) >> 19) & 0x03))
 #define SEC_BA(x) ((u8)(((x) >> 12) & 0x7f))
 
-static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, s32 mode) {
+static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, int mode) {
   CARDControl* card;
   BOOL err;
   u8 cmd[5];
@@ -147,6 +135,18 @@ static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, s32 mode) {
   err |= !EXIDeselect(chan);
 
   return err ? CARD_RESULT_NOCARD : CARD_RESULT_READY;
+}
+
+static u32 GetInitVal(void) {
+  u32 tmp;
+  u32 tick;
+
+  tick = OSGetTick();
+  CARDSrand(tick);
+  tmp = 0x7fec8000;
+  tmp |= CARDRand();
+  tmp &= 0xfffff000;
+  return tmp;
 }
 
 // Calculate Dummy Read Length, 4-32Bytes
@@ -205,14 +205,14 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
 
   CARDControl* card;
   DSPTaskInfo* task;
-  DecodeParameters* param;
+  CARDDecParam* param;
   u8* input;
   u8* output;
 
   card = &__CARDBlock[chan];
   task = &card->task;
-  param = (DecodeParameters*)card->workArea;
-  input = (u8*)((u8*)param + sizeof(DecodeParameters));
+  param = (CARDDecParam*)card->workArea;
+  input = (u8*)((u8*)param + sizeof(CARDDecParam));
   input = (u8*)OSRoundUp32B(input);
   output = input + 32;
 
@@ -282,7 +282,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
 
   DCFlushRange(input, 8);
   DCInvalidateRange(output, 4);
-  DCFlushRange(param, sizeof(DecodeParameters));
+  DCFlushRange(param, sizeof(CARDDecParam));
 
   task->priority = 255;
   task->iram_mmem_addr = (u16*)OSPhysicalToCached(CardData);
@@ -307,7 +307,7 @@ static void InitCallback(void* _task) {
   s32 chan;
   CARDControl* card;
   DSPTaskInfo* task;
-  DecodeParameters* param;
+  CARDDecParam* param;
 
   task = _task;
   for (chan = 0; chan < 2; ++chan) {
@@ -316,7 +316,7 @@ static void InitCallback(void* _task) {
       break;
     }
   }
-  param = (DecodeParameters*)card->workArea;
+  param = (CARDDecParam*)card->workArea;
 
   DSPSendMailToDSP(0xff000000);
   while (DSPCheckMailToDSP())
@@ -334,7 +334,7 @@ static void DoneCallback(void* _task) {
   s32 rlen;
   u32 rshift;
 
-  u8 unk;
+  u8 fsts;
   u32 wk, wk1;
   u32 Ans2;
 
@@ -342,7 +342,7 @@ static void DoneCallback(void* _task) {
   CARDControl* card;
   s32 result;
   DSPTaskInfo* task;
-  DecodeParameters* param;
+  CARDDecParam* param;
 
   u8* input;
   u8* output;
@@ -354,8 +354,8 @@ static void DoneCallback(void* _task) {
     }
   }
 
-  param = (DecodeParameters*)card->workArea;
-  input = (u8*)((u8*)param + sizeof(DecodeParameters));
+  param = (CARDDecParam*)card->workArea;
+  input = (u8*)((u8*)param + sizeof(CARDDecParam));
   input = (u8*)OSRoundUp32B(input);
   output = input + 32;
 
@@ -382,13 +382,13 @@ static void DoneCallback(void* _task) {
     __CARDMountCallback(chan, CARD_RESULT_NOCARD);
     return;
   }
-  result = __CARDReadStatus(chan, &unk);
+  result = __CARDReadStatus(chan, &fsts);
   if (!EXIProbe(chan)) {
     EXIUnlock(chan);
     __CARDMountCallback(chan, CARD_RESULT_NOCARD);
     return;
   }
-  if (result == CARD_RESULT_READY && !(unk & 0x40)) {
+  if (result == CARD_RESULT_READY && !(fsts & 0x40)) {
     EXIUnlock(chan);
     result = CARD_RESULT_IOERROR;
   }

@@ -94,7 +94,6 @@ typedef struct CARDFileInfo {
   s32 offset;
   s32 length;
   u16 iBlock;
-  u16 __padding;
 } CARDFileInfo;
 
 typedef struct CARDStat {

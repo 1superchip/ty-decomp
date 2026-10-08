@@ -7,11 +7,9 @@
 #include "common/Heap.h"
 #include "common/Utils.h"
 
-static char packageName[0x20];
-static PackageEntry pPackageEntries[1024];
-static TimerInfo packageTime;
-
 static bool packageLoaded = false;
+
+static char packageName[0x20];
 
 static int nmbrOfPackageEntries = 0;
 static int nmbrOfAutoEntries = 0;
@@ -19,6 +17,9 @@ static int nmbrEntriesLoaded = 0;
 
 static int totalBytesInPackage = 0;
 static int totalBytesLoaded = 0;
+
+static PackageEntry pPackageEntries[1024];
+static TimerInfo packageTime;
 
 static char* pPackageText = NULL;
 

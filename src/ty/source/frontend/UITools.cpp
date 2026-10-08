@@ -330,11 +330,11 @@ void UIButtonGroup::Draw(void) {
 }
 
 char* buttonString[5] = {
-    "\x88\x00",
-    "\x87\x00",
-    "\x84\x82\x00",
-    "\x81\x83\x00",
-    "\x7F\x89\x00"
+    "\x88",
+    "\x87",
+    "\x84\x82",
+    "\x81\x83",
+    "\x7F\x89"
 };
 
 void UIButtonPrompt::Draw(int numPrompts) {

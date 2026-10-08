@@ -12,6 +12,8 @@ extern "C" void strcpy(char*, char*);
 extern "C" int stricmp(char*, char*);
 extern "C" void strncpy(char*, char*, int);
 
+static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
+
 static ModuleInfo<StaticProp> staticPropModuleInfo;
 static ModuleInfo<StaticFXProp> staticFXPropModuleInfo;
 
@@ -23,8 +25,6 @@ StaticPropLoadInfo StaticProp::loadInfo = {
     {0.0f, 0.0f, 0.0f, 0.0f}, // Default Rotation
     {1.0f, 1.0f, 1.0f, 0.0f} // Default Scale
 };
-
-static const Vector unused_vec = {0.0f, 0.0f, 0.0f, 0.0f};
 
 bool StaticFXProp::bTempVisible = false;
 

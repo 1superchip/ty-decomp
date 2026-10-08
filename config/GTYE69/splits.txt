@@ -2656,9 +2656,6 @@ ty/source/WobbleTexture.cpp:
 	.rodata     start:0x8023F060 end:0x8023F0E0
 	.sdata2     start:0x80401BA8 end:0x80401BE8
 
-Dolphin/os/__start.c:
-	.init       start:0x80003100 end:0x80003354
-
 Dolphin/exi/EXIBios.c:
 	.text       start:0x801C60B8 end:0x801C7984
 	.bss        start:0x802BB330 end:0x802BB3F0
@@ -2913,6 +2910,9 @@ Dolphin/os/OSTime.c:
 	.text       start:0x801DBC14 end:0x801DC038
 	.data       start:0x802714C0 end:0x80271520
 
+Dolphin/os/__start.c:
+	.init       start:0x80003100 end:0x80003354
+
 Dolphin/os/__ppc_eabi_init.cpp:
 	.init       start:0x80003354 end:0x800033A8
 	.text       start:0x801DC038 end:0x801DC0CC
@@ -2921,9 +2921,6 @@ Dolphin/db.c:
 	.text       start:0x801DC0CC end:0x801DC1B8
 	.data       start:0x80271520 end:0x80271538
 	.sbss       start:0x803FAED0 end:0x803FAED8
-
-Runtime/__mem.c:
-	.init       start:0x800033A8 end:0x800034E0
 
 Dolphin/PPCArch.c:
 	.text       start:0x801DC1B8 end:0x801DC254
@@ -3330,6 +3327,9 @@ notify.c:
 
 flush_cache.c:
 	.text       start:0x801FC02C end:0x801FC064
+
+Runtime/__mem.c:
+	.init       start:0x800033A8 end:0x800034E0
 
 mem_TRK.c:
 	.init       start:0x800034E0 end:0x80003534

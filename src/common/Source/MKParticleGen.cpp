@@ -4,6 +4,12 @@
 #include "common/Str.h"
 #include "common/Blitter.h"
 
+static bool gbDrawParticles = true;
+
+static bool gbDrawParticlesDebugInfo = false;
+static bool gbDrawParticlesBox = false;
+static bool gbMakeParticlesStandOut = false;
+
 MKParticleGenType::Envelope wobbleEnv[16] = {
     {0.0f, -10.0f, 10.0f, 0.0f, 0.0f, 0.0f},
     {3.8f, -7.10f, 9.20f, 0.0f, 0.0f, 0.0f},
@@ -41,12 +47,6 @@ MKParticleGenType::Envelope testEnv[12] = {
 MKParticleGenType::Envelope defaultPGTEnvelope[1] = {
     {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
 };
-
-static bool gbDrawParticles = true;
-
-static bool gbDrawParticlesDebugInfo = false;
-static bool gbDrawParticlesBox = false;
-static bool gbMakeParticlesStandOut = false;
 
 // Unused / stripped
 void MKParticleGenType::Init(void) {

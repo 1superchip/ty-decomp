@@ -10,24 +10,12 @@ Matrix ParticleSystem::identityMatrix = {
     0.0f, 0.0f, 0.0f, 1.0f
 };
 
-static ParticleEnvelope defaultEnvelope[2] = {
-    {
-        0.0f, 1.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f
-    }, 
-    {
-        1.0f, 1.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f
-    }
-};
-
 bool ParticleSystem::bDrawBoundingBox = false;
 bool ParticleSystem::bDrawPos = false;
 bool ParticleSystem::bPaused = false;
 int ParticleSystem::nextUniqueId = 0;
 
 bool ParticleSystem::bDraw = true;
-static int numDefaultEnvelopeNodes = 2;
 
 void BaseParticleSystemType::Init(char* _pName, Material* pMat, float f1, float f2, float f3, int r6) {
     updateFunc = NULL;
@@ -336,44 +324,6 @@ void ParticleSystem::Draw(void) {
     }
 }
 
-// Not sure if these functions should be declared as inline or just defined in the header
-// They have to be weak and it is probably easier to declare them as inline
-
-inline void ParticleSystem::DrawCPU(void) {
-    for (int i = 0; i < mNumDyn; i++) {
-        if (!pDynamicData[i].unk10 && !(pDynamicData[i].unkC <= 0.0f) && 
-            pDynamicData[i].unk0 != 0.0f) {
-            ParticleChunk* pCurrChunk = mpChunks;
-            while (pCurrChunk) {
-                DrawCPUChunk(&pDynamicData[i], pCurrChunk);
-                pCurrChunk = pCurrChunk->mpNext;
-            }
-        }
-    }
-    
-    // Update System Manager debug fields
-    pSystemManager->vu_numParticles += numLiveParticles;
-    pSystemManager->vu_numChunks += numParticleChunks;
-    pSystemManager->vu_numVirtualParticles += numLiveParticles * mNumDyn;
-    pSystemManager->unk1C += numParticleChunks * mNumDyn;
-
-    pSystemManager->minParticles = pSystemManager->minParticles < numLiveParticles ?
-        pSystemManager->minParticles : numLiveParticles;
-    
-    pSystemManager->maxParticles = pSystemManager->maxParticles > numLiveParticles ?
-        pSystemManager->maxParticles : numLiveParticles;
-    
-    pSystemManager->minChunks = pSystemManager->minChunks < numParticleChunks ?
-        pSystemManager->minChunks : numParticleChunks;
-    
-    pSystemManager->maxChunks = pSystemManager->maxChunks > numParticleChunks ?
-        pSystemManager->maxChunks : numParticleChunks;
-    
-    pSystemManager->avgParticles = (pSystemManager->avgParticles + numLiveParticles) * 0.5f;
-
-    pSystemManager->avgChunks = (pSystemManager->avgChunks + numParticleChunks) * 0.5f;
-}
-
 inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, ParticleChunk* pChunk) {
     int r26 = mpType->unk14 - 1;
 
@@ -461,6 +411,44 @@ inline void ParticleSystem::DrawCPUChunk(ParticleSystem::DynamicData* pDynamic, 
         GXColor4u8(r, g, b, a);
         GXTexCoord2f32(f27, f26);
     }
+}
+
+// Not sure if these functions should be declared as inline or just defined in the header
+// They have to be weak and it is probably easier to declare them as inline
+
+inline void ParticleSystem::DrawCPU(void) {
+    for (int i = 0; i < mNumDyn; i++) {
+        if (!pDynamicData[i].unk10 && !(pDynamicData[i].unkC <= 0.0f) && 
+            pDynamicData[i].unk0 != 0.0f) {
+            ParticleChunk* pCurrChunk = mpChunks;
+            while (pCurrChunk) {
+                DrawCPUChunk(&pDynamicData[i], pCurrChunk);
+                pCurrChunk = pCurrChunk->mpNext;
+            }
+        }
+    }
+    
+    // Update System Manager debug fields
+    pSystemManager->vu_numParticles += numLiveParticles;
+    pSystemManager->vu_numChunks += numParticleChunks;
+    pSystemManager->vu_numVirtualParticles += numLiveParticles * mNumDyn;
+    pSystemManager->unk1C += numParticleChunks * mNumDyn;
+
+    pSystemManager->minParticles = pSystemManager->minParticles < numLiveParticles ?
+        pSystemManager->minParticles : numLiveParticles;
+    
+    pSystemManager->maxParticles = pSystemManager->maxParticles > numLiveParticles ?
+        pSystemManager->maxParticles : numLiveParticles;
+    
+    pSystemManager->minChunks = pSystemManager->minChunks < numParticleChunks ?
+        pSystemManager->minChunks : numParticleChunks;
+    
+    pSystemManager->maxChunks = pSystemManager->maxChunks > numParticleChunks ?
+        pSystemManager->maxChunks : numParticleChunks;
+    
+    pSystemManager->avgParticles = (pSystemManager->avgParticles + numLiveParticles) * 0.5f;
+
+    pSystemManager->avgChunks = (pSystemManager->avgChunks + numParticleChunks) * 0.5f;
 }
 
 inline bool ParticleSystem::IsVisible(ParticleSystem::DynamicData* pDynamicData) {
@@ -630,6 +618,18 @@ void ParticleSystemType::Update(ParticleSystem* pSys) {
         pCurrChunk = pCurrChunk->GetNext();
     }
 }
+
+static ParticleEnvelope defaultEnvelope[2] = {
+    {
+        0.0f, 1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f
+    }, 
+    {
+        1.0f, 1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f
+    }
+};
+static int numDefaultEnvelopeNodes = 2;
 
 void SimpleParticleSystemType::Init(char* _pName, Material* pMat, float f1, float f2, float f3, int r6) {
     BaseParticleSystemType::Init(_pName, pMat, f1, f2, f3, r6);

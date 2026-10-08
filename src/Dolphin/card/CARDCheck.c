@@ -10,28 +10,28 @@
 
 #define __CARDGetDirCheck(dir) ((CARDDirCheck*)&(dir)[CARD_MAX_FILE])
 
-void __CARDCheckSum(void* ptr, int length, u16* checksum, u16* checksumInv) {
+void __CARDCheckSum(void* ptr, int length, u16* checkSum, u16* checkSumInv) {
   u16* p;
   int i;
 
   length /= sizeof(u16);
-  *checksum = *checksumInv = 0;
+  *checkSum = *checkSumInv = 0;
   for (i = 0, p = ptr; i < length; i++, p++) {
-    *checksum += *p;
-    *checksumInv += ~*p;
+    *checkSum += *p;
+    *checkSumInv += ~*p;
   }
-  if (*checksum == 0xffff) {
-    *checksum = 0;
+  if (*checkSum == 0xffff) {
+    *checkSum = 0;
   }
-  if (*checksumInv == 0xffff) {
-    *checksumInv = 0;
+  if (*checkSumInv == 0xffff) {
+    *checkSumInv = 0;
   }
 }
 
 static s32 VerifyID(CARDControl* card) {
   CARDID* id;
-  u16 checksum;
-  u16 checksumInv;
+  u16 checkSum;
+  u16 checkSumInv;
   OSSramEx* sramEx;
   OSTime rand;
   int i;
@@ -42,8 +42,8 @@ static s32 VerifyID(CARDControl* card) {
     return CARD_RESULT_BROKEN;
   }
 
-  __CARDCheckSum(id, sizeof(CARDID) - sizeof(u32), &checksum, &checksumInv);
-  if (id->checkSum != checksum || id->checkSumInv != checksumInv) {
+  __CARDCheckSum(id, sizeof(CARDID) - sizeof(u32), &checkSum, &checkSumInv);
+  if (id->checkSum != checkSum || id->checkSumInv != checkSumInv) {
     return CARD_RESULT_BROKEN;
   }
   
@@ -68,7 +68,7 @@ static s32 VerifyID(CARDControl* card) {
   return CARD_RESULT_READY;
 }
 
-static s32 VerifyDir(CARDControl* card, int* outCurrent) {
+static int VerifyDir(CARDControl* card, int* pcurrent) {
   CARDDir* dir[2];
   CARDDirCheck* check[2];
   u16 checkSum;
@@ -102,13 +102,13 @@ static s32 VerifyDir(CARDControl* card, int* outCurrent) {
       current = (card->currentDir == dir[0]) ? 0 : 1;
     }
   }
-  if (outCurrent) {
-    *outCurrent = current;
+  if (pcurrent) {
+    *pcurrent = current;
   }
   return errors;
 }
 
-static s32 VerifyFAT(CARDControl* card, int* outCurrent) {
+static s32 VerifyFAT(CARDControl* card, int* pcurrent) {
   u16* fat[2];
   u16* fatp;
   u16 nBlock;
@@ -159,8 +159,8 @@ static s32 VerifyFAT(CARDControl* card, int* outCurrent) {
       current = (card->currentFat == fat[0]) ? 0 : 1;
     }
   }
-  if (outCurrent) {
-    *outCurrent = current;
+  if (pcurrent) {
+    *pcurrent = current;
   }
   return errors;
 }

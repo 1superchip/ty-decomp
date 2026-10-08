@@ -123,19 +123,20 @@ void Animation::Tween(float frameNmbr, float arg2) {
     float fVar1 = Clamp<float>(0.0f, arg2, 1.0f);
 
     Animation::FrameInstance* pFrames = frames;
-    
     AnimationData::Node* pNodes = pTemplate->pAnimData->pNodes;
 
     for (int i = 0; i < pTemplate->pAnimData->nmbrOfNodes; i++) {
-
-        if (!pFrames[i].frameCalc && fVar1 != 1.0f) {
-            Animation_CalculateFrame(&pFrames[i], &pNodes[i]);
+        if (pFrames->frameCalc == false && fVar1 != 1.0f) {
+            Animation_CalculateFrame(pFrames, pNodes);
         }
+        
+        pFrames->targetFrame = frameNmbr;
+        pFrames->targetWeight = fVar1;
+        pFrames->frameCalc = false;
+        pFrames->matrixCalc = false;
 
-        pFrames[i].targetFrame = frameNmbr;
-        pFrames[i].targetWeight = fVar1;
-        pFrames[i].frameCalc = false;
-        pFrames[i].matrixCalc = false;
+        pFrames++;
+        pNodes++;
     }
 }
 
@@ -143,7 +144,7 @@ void Animation::TweenNode(float frameNmbr, float weight, int arg3) {
     Animation::FrameInstance* pFrame = &frames[arg3];
     AnimationData::Node* pNode = &pTemplate->pAnimData->pNodes[arg3];
     
-    if (!pFrame->frameCalc && pFrame->targetWeight != 1.0f) {
+    if (pFrame->frameCalc == false && pFrame->targetWeight != 1.0f) {
         Animation_CalculateFrame(pFrame, pNode);
     }
 

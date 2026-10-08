@@ -8,19 +8,20 @@ extern "C" int stricmp(char*, char*);
 
 static float scroll[3];
 
-static View waterView;
-
-static WaterSlideEffect waterslideEffect;
-static CausticEffect causticEffect;
-static LavaEffect lavaEffect;
-
 Material* pWaterMat = NULL;
+
 static Material* pWaterLow = NULL;
 static Material* pWaterHigh = NULL;
 static Material* pWaterOutput = NULL;
 
 static float waterLowHeight = 0.0f;
 static float waterHighHeight = 0.0f;
+
+static View waterView;
+
+static WaterSlideEffect waterslideEffect;
+static CausticEffect causticEffect;
+static LavaEffect lavaEffect;
 
 void RenderTexture_LoadResources(void) {
     waterslideEffect.bHasRenderTarget = false;

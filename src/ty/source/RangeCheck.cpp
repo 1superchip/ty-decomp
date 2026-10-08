@@ -15,14 +15,14 @@ extern "C" void strncpy(char*, char*, int);
 int strnicmp(char const*, char const*, int);
 void Draw_AddPostDrawModel(Model*, float, bool);
 
-static int nextAvailableLODEntryIndex;
-static LODEntry* lodEntryPool = NULL;
-
 static Vector cameraPos;
 static Vector cameraVector; // camera direction
 
 static int heroState = TY_AS_35;
 static int maxLODEntries = 0x400;
+
+static int nextAvailableLODEntryIndex;
+static LODEntry* lodEntryPool = NULL;
 
 void LOD_Deinit(void) {
     if (lodEntryPool != NULL) {

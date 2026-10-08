@@ -8,26 +8,6 @@
 #include "common/system_extras.h"
 #include "ty/global.h"
 
-// array of pregenerated random floats
-float randomFloats[32] = { 
-    -0.14911457896232605f, 0.2968113124370575f,
-    -0.242182657122612f, -0.03677469864487648,
-    0.23941156268119812f, -0.0910588949918747,
-    0.3864505887031555f, 0.1572219431400299,
-    -0.3298359513282776f, -0.41071179509162903,
-    0.38811826705932617f, 0.47512078285217285,
-    -0.13219785690307617f, 0.3332674503326416,
-    0.21101564168930054f, -0.36352109909057617,
-    0.3474756181240082f, -0.2174292355775833,
-    -0.08759672194719315f, 0.3332221508026123,
-    -0.4258323311805725f, 0.05197399854660034,
-    0.1978643536567688f, -0.18719148635864258,
-    0.44926562905311584f, 0.37327125668525696,
-    -0.10966271907091141f, 0.18100666999816895,
-    -0.13058409f, 0.2125595f,
-    -0.16995443f, -0.4468846f
-};
-
 extern "C" void Sound_SetPitch(int, float);
 extern "C" void strcpy(char*, const char*);
 
@@ -442,6 +422,26 @@ void Tools_RenderToTarget(Material* pMaterial, float f0, float fv0f, float fa1, 
     image.Draw(1);
 }
 */
+
+// array of pregenerated random floats
+float randomFloats[32] = { 
+    -0.14911457896232605f, 0.2968113124370575f,
+    -0.242182657122612f, -0.03677469864487648,
+    0.23941156268119812f, -0.0910588949918747,
+    0.3864505887031555f, 0.1572219431400299,
+    -0.3298359513282776f, -0.41071179509162903,
+    0.38811826705932617f, 0.47512078285217285,
+    -0.13219785690307617f, 0.3332674503326416,
+    0.21101564168930054f, -0.36352109909057617,
+    0.3474756181240082f, -0.2174292355775833,
+    -0.08759672194719315f, 0.3332221508026123,
+    -0.4258323311805725f, 0.05197399854660034,
+    0.1978643536567688f, -0.18719148635864258,
+    0.44926562905311584f, 0.37327125668525696,
+    -0.10966271907091141f, 0.18100666999816895,
+    -0.13058409f, 0.2125595f,
+    -0.16995443f, -0.4468846f
+};
 
 // UNUSED
 float Extra_WobbleFunction(float f1) {
@@ -1010,6 +1010,45 @@ int Tools_GetAnimationLength(MKAnimScript* pAnimScript) {
     return 0;
 }
 
+// may have been defined within the header?
+// might be a different header?
+// need the inline qualifer so it generates as weak after Tools_DropShadow_Draw 
+inline void ShadowInfo::Draw(void) {
+    Matrix transform;
+    Vector fwd = {0.0f, 0.0f, 1.0f, 0.0f};
+
+    transform.SetIdentity();
+    Tools_BuildLTWMatrix(&transform, &fwd, &unk10);
+
+    transform.Row3()->Copy(&pos);
+    transform.Row3()->y += 3.0f;
+
+    View::GetCurrent()->SetLocalToWorldMatrix(&transform);
+
+    Blitter_TriStrip vertices[4];
+    vertices[0].pos.Set(-unk20 / 2.0f, 0.0f, unk20 / 2.0f);
+    vertices[1].pos.Set(unk20 / 2.0f, 0.0f, unk20 / 2.0f);
+    vertices[2].pos.Set(-unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
+    vertices[3].pos.Set(unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
+    
+    vertices[0].color.Set(1.0f, 1.0f, 1.0f, alpha);
+    vertices[3].color = vertices[2].color = vertices[1].color = vertices[0].color;
+    
+    vertices[0].uv.x = 0.0f;
+    vertices[0].uv.y = 1.0f;
+    
+    vertices[1].uv.x = 1.0f;
+    vertices[1].uv.y = 1.0f;
+    
+    vertices[2].uv.x = 0.0f;
+    vertices[2].uv.y = 0.0f;
+    
+    vertices[3].uv.x = 1.0f;
+    vertices[3].uv.y = 0.0f;
+    
+    vertices[0].Draw(ARRAY_SIZE(vertices), 1.0f);
+}
+
 void Tools_ParticleRef::Init(Model* pModel, char* pRefPointName) {
     refPointIdx = pModel->GetRefPointIndex(Str_Printf("%s_origin", pRefPointName));
     pModel->GetRefPointWorldPosition(refPointIdx, &refPointWorldPos);
@@ -1062,45 +1101,6 @@ void Tools_DropShadow_Add(float f1, Vector* pPos, Vector* pNormal, float alpha) 
     pShadow->unk20 = f1;
     pShadow->pos.Copy(pPos);
     pShadow->unk10.Copy(pNormal);
-}
-
-// may have been defined within the header?
-// might be a different header?
-// need the inline qualifer so it generates as weak after Tools_DropShadow_Draw 
-inline void ShadowInfo::Draw(void) {
-    Matrix transform;
-    Vector fwd = {0.0f, 0.0f, 1.0f, 0.0f};
-
-    transform.SetIdentity();
-    Tools_BuildLTWMatrix(&transform, &fwd, &unk10);
-
-    transform.Row3()->Copy(&pos);
-    transform.Row3()->y += 3.0f;
-
-    View::GetCurrent()->SetLocalToWorldMatrix(&transform);
-
-    Blitter_TriStrip vertices[4];
-    vertices[0].pos.Set(-unk20 / 2.0f, 0.0f, unk20 / 2.0f);
-    vertices[1].pos.Set(unk20 / 2.0f, 0.0f, unk20 / 2.0f);
-    vertices[2].pos.Set(-unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
-    vertices[3].pos.Set(unk20 / 2.0f, 0.0f, -unk20 / 2.0f);
-    
-    vertices[0].color.Set(1.0f, 1.0f, 1.0f, alpha);
-    vertices[3].color = vertices[2].color = vertices[1].color = vertices[0].color;
-    
-    vertices[0].uv.x = 0.0f;
-    vertices[0].uv.y = 1.0f;
-    
-    vertices[1].uv.x = 1.0f;
-    vertices[1].uv.y = 1.0f;
-    
-    vertices[2].uv.x = 0.0f;
-    vertices[2].uv.y = 0.0f;
-    
-    vertices[3].uv.x = 1.0f;
-    vertices[3].uv.y = 0.0f;
-    
-    vertices[0].Draw(ARRAY_SIZE(vertices), 1.0f);
 }
 
 void Tools_DropShadow_Draw(void) {

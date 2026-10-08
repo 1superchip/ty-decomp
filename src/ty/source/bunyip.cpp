@@ -5,8 +5,6 @@
 static AnimatingPropDesc bunyipDesc;
 static ModuleInfo<Bunyip> bunyipModule;
 
-static bool bIsLastEventGroundHit = false;
-
 static Tools_AnimEntry animEntries[11] = {
     {"breathe", NULL},
     {"idle01a", NULL},
@@ -27,6 +25,8 @@ static Tools_AnimEvent animEvents[4] = {
     {"thud", NULL},
     {"footThud", NULL},
 };
+
+static bool bIsLastEventGroundHit = false;
 
 void Bunyip_LoadResources(KromeIni* pIni) {
 

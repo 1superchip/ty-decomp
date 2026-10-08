@@ -7,18 +7,20 @@
 
 extern "C" void memset(void*, int, int);
 
+DDASession dda;
+
 bool DDASession::bInitialised = false;
 bool DDASession::bSessionStarted = false;
+
+bool DDASession::bSaveEnabled = true;
+
 bool DDASession::bConvertToReadable = false;
+
 static int pDDAMenu;
 static int pDDADrawEnabled;
 static int pDDADrawCameraEnabled;
 static int pDDASaveEnabled;
 static int pDDAConvertToReadable;
-
-bool DDASession::bSaveEnabled = true;
-
-DDASession dda;
 
 void DDASession::Init(void) {
     bInitialised = true;

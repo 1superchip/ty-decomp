@@ -14,7 +14,7 @@ static void* AudioDecoder(void*);
 
 #define AUDIO_STACK_SIZE (0x1000)
 
-static int AudioDecodeThreadCreated;
+static int AudioDecodeThreadCreated = 0;
 static OSThread AudioDecodeThread;
 static char AudioDecodeThreadStack[AUDIO_STACK_SIZE];
 static OSMessageQueue FreeAudioBufferQueue;

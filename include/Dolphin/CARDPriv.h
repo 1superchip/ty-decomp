@@ -53,10 +53,10 @@ typedef struct CARDControl {
   BOOL attached;
   s32 result;
   u16 size;
-  u16 pageSize;
+  // u16 pageSize;
   s32 sectorSize;
   u16 cBlock;
-  u16 vendorID;
+  // u16 vendorID;
   s32 latency;
   u8 id[12];
   int mountStep;
@@ -87,7 +87,7 @@ typedef struct CARDControl {
   CARDCallback unlockCallback;
   OSAlarm alarm;
   u32 cid;
-  const DVDDiskID* diskID;
+  DVDDiskID* diskID;
 } CARDControl;
 
 typedef struct CARDID {

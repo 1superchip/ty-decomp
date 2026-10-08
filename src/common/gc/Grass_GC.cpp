@@ -4,33 +4,6 @@
 
 #define NUM_RANDOM_TIME_ENTRIES (32)
 
-static float randomTimes[NUM_RANDOM_TIME_ENTRIES][3];
-
-static GrassInfo GrassInfoGC[MAX_GRASS_ENTRIES];
-
-static Vector* pGrassCameraPos;
-
-static float GrassHeight;
-static float GrassX;
-static float GrassZ;
-static float SwayX;
-static float SwayZ;
-
-static float GrassUOffset;
-
-static bool bGrassEnabled;
-
-Vector* pGrassPushAway;
-
-static u16 GrassColor;
-
-static float pushAwayRadius;
-static float maxPushAway;
-
-static float movement;
-
-static bool bEnableAnimation = true;
-
 float GCSinTable[256] = {
     0.0f, 0.02454099990427494f, 0.04906800016760826f, 0.07356499880552292f, 
     0.09801699966192245f, 0.12241099774837494f, 0.14673000574111938f, 0.17096200585365295f, 
@@ -97,6 +70,33 @@ float GCSinTable[256] = {
     -0.19508999586105347f, -0.17096200585365295f, -0.14673000574111938f, -0.12240999937057495f, 
     -0.09801699966192245f, -0.07356499880552292f, -0.04906800016760826f, -0.02454099990427494f
 };
+
+static float randomTimes[NUM_RANDOM_TIME_ENTRIES][3];
+
+static GrassInfo GrassInfoGC[MAX_GRASS_ENTRIES];
+
+static Vector* pGrassCameraPos;
+
+static float GrassHeight;
+static float GrassX;
+static float GrassZ;
+static float SwayX;
+static float SwayZ;
+
+static float GrassUOffset;
+
+static bool bGrassEnabled = false;
+
+Vector* pGrassPushAway;
+
+static u16 GrassColor;
+
+static float pushAwayRadius;
+static float maxPushAway;
+
+static float movement;
+
+static bool bEnableAnimation = true;
 
 float GrassGCMaxRadius = 12000.0f;
 

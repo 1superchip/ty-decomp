@@ -7,20 +7,20 @@ extern bool gAssertBool;
 
 ShatterStruct* Shatter_Add(Model*, float, float, int);
 
-static Material* pSlideMat;
-
 static ParticleSystemType slideType;
-
-static ModuleInfo<ShatterableFX> shatterableFXModuleInfo;
-static ShatterableDescriptor desc;
-
-static ModuleInfo<Shatterable> moduleInfo;
 
 static ParticleEnvelope slideEnvelope[3] = {
     {0.0f, 0.3f, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f},
     {0.4f, 0.8f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f},
     {1.0f, 0.1f, 1.2f, 0.0f, 0.0f, 0.0f, 0.0f}
 };
+
+static Material* pSlideMat;
+
+static ModuleInfo<ShatterableFX> shatterableFXModuleInfo;
+static ShatterableDescriptor desc;
+
+static ModuleInfo<Shatterable> moduleInfo;
 
 void Shatterable_LoadResources(KromeIni* pIni) {
     desc.Init(&moduleInfo, "", "", SHATTERABLE_SEARCHMASK | 1, 0);

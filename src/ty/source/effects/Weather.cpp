@@ -2,17 +2,17 @@
 
 #include "ty/tytypes.h"
 
-MKParticleGen gParticleGen;
-
-Rain gRain;
-
-Lightning gLightning;
-
 static WeatherInit* gpInit = NULL;
 
 static int gNumTypes = 0;
 static int gCurType = -1;
 static int gCurTypeMenu = 0;
+
+MKParticleGen gParticleGen;
+
+Rain gRain;
+
+Lightning gLightning;
 
 static bool gbEnableWeather = true;
 static bool gbPauseWeather = false;

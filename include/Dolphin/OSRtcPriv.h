@@ -22,8 +22,7 @@ typedef struct OSSramEx {
   u8 dvdErrorCode;
   u8 _padding0;
   u8 flashIDCheckSum[2];
-  u16 gbs;
-  u8 _padding1[2];
+  u8 _padding1[4];
 } OSSramEx;
 
 OSSram* __OSLockSram();

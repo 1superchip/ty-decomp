@@ -144,7 +144,7 @@ if not config.non_matching:
 # Tool versions
 config.binutils_tag = "2.42-1"
 config.compilers_tag = "20240706"
-config.dtk_tag = "v1.3.0"
+config.dtk_tag = "v1.8.4"
 config.objdiff_tag = "v2.4.0"
 config.sjiswrap_tag = "v1.2.0"
 config.wibo_tag = "0.6.11"
@@ -164,7 +164,11 @@ config.ldflags = [
     "-fp hardware",
     "-nodefaults",
 ]
-if args.debug:
+
+# Need to link with "-g" to have ".rela.debug" and ".rela.line" in the final elf
+INCLUDE_RELA_DEBUG_LINE_SECTIONS = 1
+
+if args.debug or INCLUDE_RELA_DEBUG_LINE_SECTIONS:
     config.ldflags.append("-g")  # Or -gdwarf-2 for Wii linkers
 if args.map:
     config.ldflags.append("-mapunused")
@@ -227,6 +231,7 @@ cflags_dol = [
     "-RTTI on",
     "-fp_contract off",
     "-O4,p",
+    '-pragma "cats on"',
 ]
 
 # REL flags
@@ -511,6 +516,7 @@ config.libs = [
             Object(NonMatching, "ty/source/barbedWire.cpp"),
             Object(Matching, "ty/source/BezierPathFollower.cpp"),
             Object(Matching, "ty/source/bilby.cpp"),
+            # Missing BiteTrail.cpp?
             Object(Matching, "ty/source/boomerang.cpp"),
             Object(NonMatching, "ty/source/BoomerangHud.cpp"),
             Object(Matching, "ty/source/boomerangManager.cpp"),
@@ -574,6 +580,7 @@ config.libs = [
             Object(Matching, "ty/source/SignPost.cpp"),
             Object(Matching, "ty/source/soundbank.cpp"),
             Object(Matching, "ty/source/SpecialPickup.cpp"),
+            # Missing SpeedUpCrate.cpp?
             Object(NonMatching, "ty/source/SpikeyIce.cpp"),
             Object(Matching, "ty/source/Spline.cpp"),
             Object(NonMatching, "ty/source/staticSpikes.cpp"),
@@ -693,6 +700,7 @@ config.libs = [
             Object(Matching, "common/Source/FileSys.cpp"),
             Object(Matching, "common/Source/Font.cpp"),
             Object(Matching, "common/Source/Heap.cpp"),
+            # Missing a file here that has a .text section
             Object(Matching, "common/Source/KromeIni.cpp"),
             Object(Matching, "common/Source/Matrix.cpp"),
             Object(Matching, "common/Source/MKAnimScript.cpp"),
@@ -701,6 +709,7 @@ config.libs = [
             Object(Matching, "common/Source/MKRumble.cpp"),
             Object(Matching, "common/Source/MKSceneManager.cpp"),
             Object(Matching, "common/Source/Model.cpp"),
+            # Missing OmniLight.cpp here?
             Object(Matching, "common/Source/ParticleSystem.cpp"),
             Object(Matching, "common/Source/ParticleSystemManager.cpp"),
             Object(Matching, "common/Source/QuatRotation.cpp"),
@@ -725,6 +734,7 @@ config.libs = [
             Object(Matching, "common/gc/Texture.cpp"),
             Object(Matching, "common/gc/THPAudioDecode.c"),
             Object(NonMatching, "THPPlayer.c"),
+            # Missing THPDraw.c?
             Object(NonMatching, "THPRead.c"),
             Object(NonMatching, "THPVideoDecode.c"),
             Object(Matching, "common/gc/Video.cpp"),
@@ -866,9 +876,12 @@ config.libs = [
             Object(Matching, "Dolphin/dtk.c"),
         ]
     ),
-    DolphinLib(
-        "card",
-        [
+    {
+        "lib": "card",
+        "mw_version": "GC/1.2.5n",
+        "cflags": [*cflags_base, "-sym on"],
+        "progress_category": "sdk",
+        "objects": [
             Object(Matching, "Dolphin/card/CARDBios.c"),
             Object(Matching, "Dolphin/card/CARDUnlock.c"),
             Object(Matching, "Dolphin/card/CARDRdwr.c"),
@@ -885,7 +898,7 @@ config.libs = [
             Object(NonMatching, "Dolphin/card/CARDStat.c"),
             Object(NonMatching, "Dolphin/card/CARDNet.c"),
         ]
-    ),
+    },
     DolphinLib(
         "si",
         [

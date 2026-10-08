@@ -8,11 +8,11 @@
 
 u8 GameChoice : (OS_BASE_CACHED | 0x000030E3);
 
-static u32 SectorSizeTable[8] = {
+static s32 SectorSizeTable[8] = {
     8 * 1024, 16 * 1024, 32 * 1024, 64 * 1024, 128 * 1024, 256 * 1024, 0, 0,
 };
 
-static u32 LatencyTable[8] = {
+static s32 LatencyTable[8] = {
     4, 8, 16, 32, 64, 128, 256, 512,
 };
 

@@ -46,7 +46,7 @@ static GXTexObj restorationTexObj __attribute__ ((aligned (16)));
 static char restorationTexData[32768];
 
 static GXTexObj rawCaptureTexObj;
-char captureTexData[32768];
+static char captureTexData[32768];
 
 Material* Material::pCurrMat[2];
 static void* pCaptureTexture = NULL;

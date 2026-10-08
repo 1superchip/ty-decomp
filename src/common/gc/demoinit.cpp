@@ -30,12 +30,14 @@ static void __DEMOInitGX(void);
 /// @brief XFB
 static char pBuffer[0x84000] ATTRIBUTE_ALIGN(32);
 
+static void* DefaultFifo;
+static GXFifoObj* DefaultFifoObj;
+
+static GXRenderModeObj* rmode;
+
 /// @brief Render Mode Object
 static GXRenderModeObj rmodeobj;
 
-static void* DefaultFifo;
-static GXFifoObj* DefaultFifoObj;
-static GXRenderModeObj* rmode;
 static bool bNeedAFlip;
 u32 gCPUCycles;
 u32 gGXCycles;
