@@ -63,31 +63,28 @@ bool MobilePlatform::LoadLine(KromeIniLine* pLine) {
 }
 
 void MobilePlatform::LoadDone(void) {
-    Tools_WayPoints* pWayPoints = &mpfLoadInfo.wayPoints;
-
     gameObjFlags.SetDefaultFlags();
 
     Vector* pPos = GetPos();
-    pPos->x = pWayPoints->vecs[0].x;
-    pPos->y = pWayPoints->vecs[0].y;
-    pPos->z = pWayPoints->vecs[0].z;
+    pPos->x = mpfLoadInfo.wayPoints.vecs[0].x;
+    pPos->y = mpfLoadInfo.wayPoints.vecs[0].y;
+    pPos->z = mpfLoadInfo.wayPoints.vecs[0].z;
 
-    if (pWayPoints->unk104 > 1) {
-        if (pWayPoints->unk104 > 2 && !mpfLoadInfo.bNonCircular) {
+    if (mpfLoadInfo.wayPoints.unk104 > 1) {
+        if (mpfLoadInfo.wayPoints.unk104 > 2 && !mpfLoadInfo.bNonCircular) {
             bCircular = true;
         }
 
         // Face the platform towards the second waypoint
-        // mixing pWayPoints and mpfLoadInfo is needed to match
         float dx = mpfLoadInfo.wayPoints.vecs[1].x - mpfLoadInfo.wayPoints.vecs[0].x;
-        float dz = mpfLoadInfo.wayPoints.vecs[1].z - pWayPoints->vecs[0].z;
+        float dz = mpfLoadInfo.wayPoints.vecs[1].z - mpfLoadInfo.wayPoints.vecs[0].z;
         if (dx * dx + dz * dz > 0.0001f && turnSpeed > 0.0f) {
             StaticProp::loadInfo.defaultRot.y = PI2 + (float)atan2(dz, dx);
         }
 
-        spline.Init(pWayPoints->unk104 + bCircular, true);
+        spline.Init(mpfLoadInfo.wayPoints.unk104 + bCircular, true);
 
-        for (int i = 0; i < pWayPoints->unk104; i++) {
+        for (int i = 0; i < mpfLoadInfo.wayPoints.unk104; i++) {
             spline.AddNode(&mpfLoadInfo.wayPoints.vecs[i]);
         }
 
@@ -103,7 +100,7 @@ void MobilePlatform::LoadDone(void) {
 
         pathFrames = gDisplay.fps * (spline.unk8 / mpfLoadInfo.speed);
     } else {
-        spline.Init(pWayPoints->unk104, false);
+        spline.Init(mpfLoadInfo.wayPoints.unk104, false);
         spline.AddNode(&mpfLoadInfo.wayPoints.vecs[0]);
     }
 
