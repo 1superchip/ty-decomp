@@ -109,8 +109,7 @@ void MobilePlatform::LoadDone(void) {
     frameOffset = startFrame - gb.logicGameCount;
 
     if (GetDesc()->bobSpeed) {
-        MobilePlatformDesc* pDesc = GetDesc();
-        bobFrameOffset = (gDisplay.fps * RandomFR(&gb.mRandSeed, 0.0f, 1.0f)) / pDesc->bobSpeed;
+        bobFrameOffset = (gDisplay.fps * RandomFR(&gb.mRandSeed, 0.0f, 1.0f)) / GetDesc()->bobSpeed;
     }
 
     GameCamera_AddDynamicCollisionItem(pModel, -1);
