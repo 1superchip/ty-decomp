@@ -242,8 +242,7 @@ Vector* Tools_GetRefPointPos(Model* pModel, char*);
 
 void Tools_ApplyFrictionAndGravity(Vector*, Vector*, Vector*, float);
 
-// Tools_RandomRadialVectorXZ__FR6Vector
-void Tools_RandomRadialVectorXZ(Vector&); // might be the wrong signature
+void Tools_RandomRadialVectorXZ(Vector&);
 Vector* Tools_RandomNormal(Vector*);
 
 float Tools_TurnToAngle(float currentAngle, float maxAngle, float maxTurnAngle);
@@ -266,8 +265,8 @@ struct Tools_DynamicStringTable {
 
 void Tools_EnableWideScreen(View* pView, bool bEnableWideScreen);
 
-float Tools_CylinderTest(Vector*, Vector*, float radius, Vector* pTestPoint);
-bool Tools_CapsuleTest(Vector*, Vector*, float, float, Vector*);
+float Tools_CylinderTest(Vector* pStart, Vector* pEnd, float radius, Vector* pTestPoint);
+bool Tools_CapsuleTest(Vector* pStart, Vector* pEnd, float capsuleRadius, float cylinderRadius, Vector* pTestPoint);
 
 #define NUM_PADKEYS 16
 struct PadKey {

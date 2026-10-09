@@ -669,8 +669,13 @@ bool Tools_TestFloor(Vector* pt, CollisionResult* pCr, float f1, bool bCollision
     CollisionResult localCR;
     pCr = pCr ? pCr : &localCR;
     Vector end = {pt->x, pt->y - f1, pt->z};
-    return Collision_RayCollide(pt, &end, pCr,
-        bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, 0);
+    
+    return Collision_RayCollide(
+        pt, &end,
+        pCr,
+        bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY,
+        0
+    );
 }
 
 // Returns the y coordinate of the floor under pPos
@@ -679,10 +684,16 @@ float Tools_GetFloor(const Vector& pPos, CollisionResult* pCr, float maxRayDist,
     CollisionResult localCR;
     pCr = pCr ? pCr : &localCR;
     Vector end = {pPos.x, pPos.y - maxRayDist, pPos.z};
-    if (Collision_RayCollide((Vector*)&pPos, &end, pCr, 
-            bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY, collisionFlags)) {
+
+    if (Collision_RayCollide(
+        (Vector*)&pPos, &end,
+        pCr,
+        bCollisionMode ? COLLISION_MODE_ALL : COLLISION_MODE_POLY,
+        collisionFlags
+    )) {
         return pCr->pos.y;
     }
+
     return pPos.y;
 }
 
@@ -1515,34 +1526,35 @@ bool Tools_SideOfLine2D(Vector* pVec, Vector* pVec1, Vector* pVec2) {
 //     return f0;
 // }
 
-// pVec is the bottom of the cylinder?
-// pVec1 is the top of the cylinder?
-float Tools_CylinderTest(Vector* pVec, Vector* pVec1, float radius, Vector* pTestPoint) {
+float Tools_CylinderTest(Vector* pStart, Vector* pEnd, float radius, Vector* pTestPoint) {
     float radSq = Sqr<float>(radius);
-    Vector tmp; // difference between pVec1 and pVec (pVec1 - pVec)
-    Vector tmp2;
-    tmp.Sub(pVec1, pVec);
-    tmp2.Sub(pTestPoint, pVec);
-    float cylinderEndDist = tmp.MagSquared(); // distance between the 2 cylinder ends (pVec1, pVec)
-    float f1_ = tmp.Dot(&tmp2);
+
+    Vector tmp; // pEnd - pStart
+    Vector tmp2; // pTestPoint - pStart
+
+    tmp.Sub(pEnd, pStart);
+    tmp2.Sub(pTestPoint, pStart);
+
+    float axisLenSq = tmp.MagSquared();
+    float proj = tmp.Dot(&tmp2);
     
-    if (f1_ < 0.0f || f1_ > cylinderEndDist) {
-        // cylinder end test?
+    if (proj < 0.0f || proj > axisLenSq) {
+        return -1.0f; // outside the end planes
+    }
+
+    float distSq = tmp2.MagSquared() - ((proj * proj) / axisLenSq);
+    if (distSq > radSq) {
         return -1.0f;
     }
 
-    float f0 = tmp2.MagSquared() - ((f1_ * f1_) / cylinderEndDist);
-    if (f0 > radSq) {
-        return -1.0f;
-    }
-
-    return f0;
+    return distSq;
 }
 
 
-bool Tools_CapsuleTest(Vector* pVec, Vector* pVec1, float f1, float f2, Vector* pVec2) {
-    return pVec->IsInsideSphere(pVec2, f1) || pVec1->IsInsideSphere(pVec2, f1) ||
-        Tools_CylinderTest(pVec, pVec1, f2, pVec2) >= 0.0f;
+bool Tools_CapsuleTest(Vector* pStart, Vector* pEnd, float capsuleRadius, float cylinderRadius, Vector* pTestPoint) {
+    return pStart->IsInsideSphere(pTestPoint, capsuleRadius) || 
+            pEnd->IsInsideSphere(pTestPoint, capsuleRadius) ||
+            Tools_CylinderTest(pStart, pEnd, cylinderRadius, pTestPoint) >= 0.0f;
 }
 
 // should this be defined here?

@@ -73,8 +73,8 @@ void Camera::DeinitModule(void) {
 void Camera::Init(void) {
     pMap = keyMapDS;
 
-    mode = (Camera_Mode)0;
-    unk4 = 2;
+    mode = CM_0;
+    direction = CD_2;
     unkC = 1.0f;
 
     pos.Set(0.0f, 0.0f, -10.0f);
@@ -104,7 +104,7 @@ void Camera::Reposition(Camera_Mode camMode, Vector* pPosition, Vector* pTarget)
     #endif // defined(BARBIE_ICESKATING) && BARBIE_ICESKATING == 1
     
     mode = camMode;
-    unk4 = (Camera_Direction)2;
+    direction = CD_2;
     pos = *pPosition;
     target = *pTarget;
     
@@ -115,7 +115,7 @@ void Camera::Reposition(Camera_Mode camMode, Vector* pPosition, Vector* pTarget)
 }
 
 void Camera::SetMode(Camera_Mode camMode) {
-    if (mode != (int)camMode) {
+    if (mode != camMode) {
         mode = camMode;
     }
 }
@@ -123,8 +123,8 @@ void Camera::SetMode(Camera_Mode camMode) {
 void Camera::SetFixedDir(Camera_Direction camDir) {
     unk40.w = 1.0f;
     
-    if (unk4 != (int)camDir) {
-        unk4 = camDir;
+    if (direction != camDir) {
+        direction = camDir;
     }
 }
 
@@ -220,12 +220,12 @@ bool Camera::Update(InputDevices device, Vector* p) {
         SetMode((Camera_Mode)(mode + 1));
     }
 
-    if (p == NULL && mode != 0) {
-        SetMode((Camera_Mode)0);
+    if (p == NULL && mode != CM_0) {
+        SetMode(CM_0);
     }
 
     if (bChangeDir) {
-        SetFixedDir((Camera_Direction)(unk4 + 1));
+        SetFixedDir((Camera_Direction)(direction + 1));
     }
 
     if (unk40.w == 1.0f && (Abs<float>(f27) > 1e-06f || Abs<float>(f22) > 1e-06f)) {
@@ -241,7 +241,7 @@ bool Camera::Update(InputDevices device, Vector* p) {
     float mag;
 
     switch (mode) {
-        case 0:
+        case CM_0:
             ySignMod = 1.0f;
             if (Abs<float>(f23) > 1e-06f) {
                 tempv.Set(0.0f, f23 * 0.2f, 0.0f);
@@ -263,7 +263,7 @@ bool Camera::Update(InputDevices device, Vector* p) {
                 pos.Add(&tempv);
             }
             break;
-        case 1:
+        case CM_1:
             if (bChangeMode) {
                 tempv.Sub(p, &pos);
                 dir.w = tempv.Magnitude();
@@ -293,7 +293,7 @@ bool Camera::Update(InputDevices device, Vector* p) {
                 target = *p;
             }
             break;
-        case 2:
+        case CM_2:
             if (bChangeMode) {
                 tempv.Sub(p, &pos);
                 dir.w = tempv.Magnitude();
@@ -401,11 +401,11 @@ bool Camera::Update(InputDevices device, Vector* p) {
     }
     
     switch (mode) {
-        case 0:
+        case CM_0:
             target.Add(&pos, &dir);
             break;
-        case 1:
-        case 2:
+        case CM_1:
+        case CM_2:
             tempv.Sub(&pos, &target);
             mag = tempv.Magnitude();
             if (mag - dir.w > scaledSpeed * 0.2f) {
