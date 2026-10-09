@@ -75,7 +75,7 @@ void MobilePlatform::LoadDone(void) {
         // Face the platform towards the second waypoint
         float dx = mpfLoadInfo.wayPoints.vecs[1].x - mpfLoadInfo.wayPoints.vecs[0].x;
         float dz = mpfLoadInfo.wayPoints.vecs[1].z - mpfLoadInfo.wayPoints.vecs[0].z;
-        if (dx * dx + dz * dz > 0.0001f && turnSpeed > 0.0f) {
+        if (Sqr<float>(dx) + Sqr<float>(dz) > Sqr<float>(0.01f) && turnSpeed > 0.0f) {
             StaticProp::loadInfo.defaultRot.y = PI2 + (float)atan2(dz, dx);
         }
 
@@ -207,7 +207,7 @@ void MobilePlatform::SetYaw(float time, float maxTurn) {
         rider.ToWorldDir(&dir);
         dir.y = 0.0f;
 
-        if (dir.MagSquared() > 0.0001f) {
+        if (dir.MagSquared() > Sqr<float>(0.01f)) {
             float yaw = atan2(dir.z, dir.x);
             float direction;
             if (bReverse == 0) {
