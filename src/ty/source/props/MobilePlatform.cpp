@@ -65,10 +65,7 @@ bool MobilePlatform::LoadLine(KromeIniLine* pLine) {
 void MobilePlatform::LoadDone(void) {
     gameObjFlags.SetDefaultFlags();
 
-    Vector* pPos = GetPos();
-    pPos->x = mpfLoadInfo.wayPoints.vecs[0].x;
-    pPos->y = mpfLoadInfo.wayPoints.vecs[0].y;
-    pPos->z = mpfLoadInfo.wayPoints.vecs[0].z;
+    GetPos()->Copy(&mpfLoadInfo.wayPoints.vecs[0]);
 
     if (mpfLoadInfo.wayPoints.unk104 > 1) {
         if (mpfLoadInfo.wayPoints.unk104 > 2 && !mpfLoadInfo.bNonCircular) {
