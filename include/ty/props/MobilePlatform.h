@@ -9,15 +9,15 @@
 void MobilePlatform_LoadResources(KromeIni* pIni);
 
 struct MobilePlatformDesc : PlatformDesc {
-    float bobSpeed; // Number of bobs per second
-    float bobHeight;
+    float bobSpeed; // Unofficial: unkF0. Number of bobs per second
+    float bobHeight; // Unofficial: unkF4
 
     virtual void Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags);
 };
 
 // Temporary info used while loading a MobilePlatform
 struct MobilePlatformLoadInfo {
-    Tools_WayPoints wayPoints;
+    Tools_WayPoints wayPoints; // Unofficial: unk0
     float speed;
     float startTime; // Normalised starting position on the path [0, 1]
     bool bNonCircular;
@@ -25,18 +25,18 @@ struct MobilePlatformLoadInfo {
 
 struct MobilePlatform : Platform {
     float turnSpeed;
-    int bReverse; // Set when moving backwards along a non-circular path
-    int pathFrames; // Number of frames to travel the path once
-    int startFrame;
-    int defaultStartFrame;
-    int frameOffset;
-    int bobFrameOffset;
-    UniformSpline spline;
+    int bReverse; // Unofficial: unkD8. Set when moving backwards along a non-circular path
+    int pathFrames; // Unofficial: unkDC. Number of frames to travel the path once
+    int startFrame; // Unofficial: unkE0
+    int defaultStartFrame; // Unofficial: unkE4
+    int frameOffset; // Unofficial: unkE8
+    int bobFrameOffset; // Unofficial: unkEC
+    UniformSpline spline; // Unofficial: unkF0
     bool bCircular;
     bool bMoveOne; // Deactivates once the end of the path is reached
-    CommonGameObjFlagsComponent gameObjFlags;
+    CommonGameObjFlagsComponent gameObjFlags; // Unofficial: unk106
 
-    static MobilePlatformLoadInfo mpfLoadInfo;
+    static MobilePlatformLoadInfo mpfLoadInfo; // Unofficial
 
     virtual bool LoadLine(KromeIniLine* pLine);
     virtual void LoadDone(void);
@@ -48,7 +48,7 @@ struct MobilePlatform : Platform {
     void UpdateMove(void);
     void UpdateBob(void);
     float GetTime(void);
-    void SetYaw(float time, float maxTurn);
+    void SetYaw(float time, float maxTurn); // Unofficial: time, maxTurn
 
     MobilePlatformDesc* GetDesc(void) {
         return descr_cast<MobilePlatformDesc*>(pDescriptor);

@@ -7,7 +7,7 @@
 extern "C" double atan2(double, double);
 void GameCamera_AddDynamicCollisionItem(Model* pModel, int subObjectIndex);
 
-static ModuleInfo<MobilePlatform> mobilePlatformModuleInfo;
+static ModuleInfo<MobilePlatform> mobilePlatformModuleInfo; // Unofficial
 MobilePlatformLoadInfo MobilePlatform::mpfLoadInfo;
 
 void MobilePlatformDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescrName, int _searchMask, int _flags) {
@@ -16,8 +16,8 @@ void MobilePlatformDesc::Init(ModuleInfoBase* pMod, char* pMdlName, char* pDescr
     bobHeight = 0.0f;
 }
 
-void MobilePlatform_LoadResources(KromeIni* pIni) {
-    MobilePlatformDesc defaultMobilePlatformDesc;
+void MobilePlatform_LoadResources(KromeIni* pIni) { // Unofficial: pIni
+    MobilePlatformDesc defaultMobilePlatformDesc; // Unofficial
     defaultMobilePlatformDesc.Init(&mobilePlatformModuleInfo, "", "", GOID_Platform, 1);
     LoadDescriptors<MobilePlatformDesc>(pIni, "MobilePlatforms", &defaultMobilePlatformDesc);
 }
@@ -73,15 +73,15 @@ void MobilePlatform::LoadDone(void) {
         }
 
         // Face the platform towards the second waypoint
-        float dx = mpfLoadInfo.wayPoints.vecs[1].x - mpfLoadInfo.wayPoints.vecs[0].x;
-        float dz = mpfLoadInfo.wayPoints.vecs[1].z - mpfLoadInfo.wayPoints.vecs[0].z;
+        float dx = mpfLoadInfo.wayPoints.vecs[1].x - mpfLoadInfo.wayPoints.vecs[0].x; // Unofficial
+        float dz = mpfLoadInfo.wayPoints.vecs[1].z - mpfLoadInfo.wayPoints.vecs[0].z; // Unofficial
         if (Sqr<float>(dx) + Sqr<float>(dz) > Sqr<float>(0.01f) && turnSpeed > 0.0f) {
             StaticProp::loadInfo.defaultRot.y = PI2 + (float)atan2(dz, dx);
         }
 
         spline.Init(mpfLoadInfo.wayPoints.unk104 + bCircular, true);
 
-        for (int i = 0; i < mpfLoadInfo.wayPoints.unk104; i++) {
+        for (int i = 0; i < mpfLoadInfo.wayPoints.unk104; i++) { // Unofficial: i
             spline.AddNode(&mpfLoadInfo.wayPoints.vecs[i]);
         }
 
@@ -136,7 +136,7 @@ void MobilePlatform::Message(MKMessage* pMsg) {
         case MSG_Resolve:
             rider.Resolve();
             rider.Attach(this);
-            for (int i = 0; i < spline.mNumPoints; i++) {
+            for (int i = 0; i < spline.mNumPoints; i++) { // Unofficial: i
                 rider.ToLocal(&spline.mpPoints[i].mPos);
                 rider.ToLocalDir(&spline.mpPoints[i].unk10);
             }
@@ -156,7 +156,7 @@ void MobilePlatform::Message(MKMessage* pMsg) {
 
 void MobilePlatform::UpdateMove(void) {
     if (spline.mNumPoints > 1) {
-        float time = GetTime();
+        float time = GetTime(); // Unofficial
         *GetPos() = spline.GetPosition(time);
         GetPos()->w = 1.0f;
         rider.ToWorld(GetPos());
@@ -166,7 +166,7 @@ void MobilePlatform::UpdateMove(void) {
         }
 
         if (bMoveOne && gameObjFlags.CheckFlags(GameObjFlags_Active) && time > 0.99f && bReverse == 0) {
-            MKMessage msg = {MSG_Deactivate};
+            MKMessage msg = {MSG_Deactivate}; // Unofficial
             Message(&msg);
         }
     } else {
@@ -178,8 +178,8 @@ void MobilePlatform::UpdateMove(void) {
 
 void MobilePlatform::UpdateBob(void) {
     if (GetDesc()->bobHeight > 0.0f && GetDesc()->bobSpeed > 0.0f) {
-        int bobFrames = gDisplay.fps / GetDesc()->bobSpeed;
-        float t = (float)((gb.logicGameCount + bobFrameOffset) % bobFrames) / (float)bobFrames;
+        int bobFrames = gDisplay.fps / GetDesc()->bobSpeed; // Unofficial
+        float t = (float)((gb.logicGameCount + bobFrameOffset) % bobFrames) / (float)bobFrames; // Unofficial: t
         GetPos()->y += _table_sinf((2.0f * PI) * t) * GetDesc()->bobHeight;
     }
 }
@@ -189,7 +189,7 @@ float MobilePlatform::GetTime(void) {
         frameOffset = startFrame - gb.logicGameCount;
     }
 
-    float time = (float)((gb.logicGameCount + frameOffset) % GetCycleFrames()) / (float)pathFrames;
+    float time = (float)((gb.logicGameCount + frameOffset) % GetCycleFrames()) / (float)pathFrames; // Unofficial: time
 
     if (time > 1.0f) {
         bReverse = 1;
@@ -201,22 +201,22 @@ float MobilePlatform::GetTime(void) {
     return time;
 }
 
-void MobilePlatform::SetYaw(float time, float maxTurn) {
+void MobilePlatform::SetYaw(float time, float maxTurn) { // Unofficial: time, maxTurn
     if (spline.mNumPoints > 0) {
-        Vector dir = spline.GetVelocity(time);
+        Vector dir = spline.GetVelocity(time); // Unofficial
         rider.ToWorldDir(&dir);
         dir.y = 0.0f;
 
         if (dir.MagSquared() > Sqr<float>(0.01f)) {
-            float yaw = atan2(dir.z, dir.x);
-            float direction;
+            float yaw = atan2(dir.z, dir.x); // Unofficial
+            float direction; // Unofficial
             if (bReverse == 0) {
                 direction = 1.0f;
             } else {
                 direction = -1.0f;
             }
 
-            float angle = GetSmallestAngle(mCurrRot.y, (2.0f * PI) * direction + (PI2 + yaw));
+            float angle = GetSmallestAngle(mCurrRot.y, (2.0f * PI) * direction + (PI2 + yaw)); // Unofficial: angle
             mCurrRot.y += Clamp<float>(-Abs<float>(maxTurn), angle, Abs<float>(maxTurn));
         }
     }
