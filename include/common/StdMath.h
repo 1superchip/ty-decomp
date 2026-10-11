@@ -107,7 +107,8 @@ inline float AdjustFloat(float x, float param_2, float t) {
 // Returns the smallest angle needed for ang1 to reach ang2
 // Returns a value between [-PI, PI]
 inline float GetSmallestAngle(float ang1, float ang2) {
-    float ang = NormaliseAngle(ang2) - NormaliseAngle(ang1);
+    ang1 = NormaliseAngle(ang1);
+    float ang = NormaliseAngle(ang2) - ang1;
 
     if (ang > PI) {
         return ang - (2.0f * PI);

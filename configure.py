@@ -494,7 +494,7 @@ config.libs = [
             Object(NonMatching, "ty/source/props/TreasureChest.cpp"),
             Object(NonMatching, "ty/source/props/TriggerProp.cpp"),
             Object(NonMatching, "ty/source/props/TumbleWeed.cpp"),
-            Object(NonMatching, "ty/source/props/TurningPlatform.cpp"),
+            Object(Matching, "ty/source/props/TurningPlatform.cpp"),
             Object(NonMatching, "ty/source/props/WarpFlower.cpp"),
             Object(NonMatching, "ty/source/props/WaterPipe.cpp"),
             Object(Matching, "ty/source/props/WaterVolume.cpp"),
