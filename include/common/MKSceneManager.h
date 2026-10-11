@@ -19,6 +19,7 @@
 // these are the values used in GameObject::Message
 #define MKMSG_Reset -1
 #define MKMSG_Deinit -2
+#define MKMSG_UNK_3 -3
 struct MKMessage {
     int unk0;
 };
