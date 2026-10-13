@@ -310,21 +310,37 @@ static void NearestPointOnPolyEdge(Vector* pVec, Vector* pVec1, int* indices, in
     }
 }
 
-float CylTest_CapsFirst(Vector* pVec, Vector* pVec1, float param_3, float param_4, Vector* pVec2) {
-    float x0 = pVec1->x - pVec->x;
-    float y0 = pVec1->y - pVec->y;
-    float z0 = pVec1->z - pVec->z;
-    float x1 = pVec2->x - pVec->x;
-    float y1 = pVec2->y - pVec->y;
-    float z1 = pVec2->z - pVec->z;
-    float local_3C = (x1 * x0) + (y1 * y0) + (z1 * z0);
-    if (local_3C < 0.0f || local_3C > param_3) {
+/// @brief 
+/// @param pStart Start point the cylinder axis (A).
+/// @param pEnd End point the cylinder axis B).
+/// @param axisLenSq Squared length of the axis segment, |B - A|^2.
+///                  The caller must precompute this (e.g. v.MagSquared()).
+///                  Must be > 0, since it is used as a divisor.
+/// @param param_4 
+/// @param pPoint The point to test (P).
+/// @return 
+float CylTest_CapsFirst(Vector* pStart, Vector* pEnd, float axisLenSq, float param_4, Vector* pPoint) {
+    float x0 = pEnd->x - pStart->x;
+    float y0 = pEnd->y - pStart->y;
+    float z0 = pEnd->z - pStart->z;
+
+    float x1 = pPoint->x - pStart->x;
+    float y1 = pPoint->y - pStart->y;
+    float z1 = pPoint->z - pStart->z;
+
+    float projDot = (x1 * x0) + (y1 * y0) + (z1 * z0);
+
+    // Check if projection lies between A and B
+    if (projDot < 0.0f || projDot > axisLenSq) {
         return -1.0f;
     }
-    float t = (x1 * x1) + (y1 * y1) + (z1 * z1) - (local_3C * local_3C) / (param_3);
+
+    float t = (x1 * x1) + (y1 * y1) + (z1 * z1) - ((projDot * projDot) / axisLenSq);
+
     if (t > param_4) {
         return -1.0f;
     }
+
     return t;
 }
 
@@ -354,10 +370,20 @@ static bool PointInPoly(Vector* pVec, Vector* pVec1, Vector* pVec2, int* indices
     return !IsPointOnFrontSide(pVec, pVec1, &pVec2[indices[nmbrOfVertices - 1]], &pVec2[indices[0]]);
 }
 
-float SubDot(Vector* vec, Vector* vec1, Vector* vec2) {
-    Vector tmp;
-    tmp.Sub(vec, vec1);
-    return tmp.Dot(vec2);
+/// @brief Computes the signed distance from a point to a plane, defined by a point on
+///        the plane and the plane's normal: (pPoint - pPlanePoint) . pPlaneNormal
+///
+///        The result is positive when pPoint is on the side the normal faces, negative
+///        on the opposite side, and zero when pPoint lies on the plane.
+///
+/// @param pPoint The point being tested.
+/// @param pPlanePoint Any point on the plane.
+/// @param pPlaneNormal The plane's normal (expected to be normalized).
+/// @return Signed distance from the plane to pPoint.
+float SignedDistanceToPlane(Vector* pPoint, Vector* pPlanePoint, Vector* pPlaneNormal) {
+    Vector v;
+    v.Sub(pPoint, pPlanePoint);
+    return v.Dot(pPlaneNormal);
 }
 
 static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, int numVerts, Vector* arg5, Vector* arg6, CollisionResult* pResult) {
@@ -369,7 +395,7 @@ static bool SweepSphereToPoly(SphereRay* pRay, Vector* pVectors, int* indices, i
         return false;
     }
     
-    float d = SubDot(&pRay->mStart, &pVectors[indices[0]], arg5);
+    float d = SignedDistanceToPlane(&pRay->mStart, &pVectors[indices[0]], arg5);
     if (d > pRay->mLength + pRay->radius) {
         return false;
     }
@@ -446,7 +472,7 @@ static bool SweepSphereToTri(SphereRay* pRay, Vector* pVert0, Vector* pVert1,
         return false;
     }
 
-    float d = SubDot(&pRay->mStart, pVert0, pVec3);
+    float d = SignedDistanceToPlane(&pRay->mStart, pVert0, pVec3);
     if (d > pRay->mLength + pRay->radius) {
         return false;
     }
@@ -586,8 +612,13 @@ int Collision_SphereCollide(Vector* pPos, float radius, CollisionResult* pCr, in
                     Vector* triVert0 = (Vector*)&pItem->collisionThing->verts[0];
                     Vector* triVert1 = (Vector*)&pItem->collisionThing->verts[1];
                     Vector* triVert2 = (Vector*)&pItem->collisionThing->verts[2];
-                    float fVar19 =
-                        SubDot(pPos, (Vector*)&pItem->collisionThing->verts[0], (Vector*)&pItem->collisionThing->normal);
+
+                    float fVar19 = SignedDistanceToPlane(
+                        pPos, 
+                        (Vector*)&pItem->collisionThing->verts[0], 
+                        (Vector*)&pItem->collisionThing->normal
+                    );
+
                     float fVar0 = Abs<float>(fVar19);
                     if (!(fVar0 > radius)) {
                         Vector v1;
@@ -728,21 +759,32 @@ bool InFrontOfItem(Vector* pPoint, Item* pItem) {
         v.z * pItem->collisionThing->normal[2] >= 0.0f;
 }
 
-bool CheckItemSphereRay(Item* pItem, Vector* pVec, Vector* pVec1) {
-    CollisionThing* pThing = pItem->collisionThing;
-    bool ret = false;
-    if ((((pThing->verts[0].pos[1] < pVec->y && pThing->verts[1].pos[1] < pVec->y &&
-        pItem->collisionThing->verts[2].pos[1] < pVec->y) || (pThing->verts[0].pos[1] > pVec1->y &&
-        pItem->collisionThing->verts[1].pos[1] > pVec1->y && pThing->verts[2].pos[1] > pVec1->y)) ||
-        ((pItem->collisionThing->verts[0].pos[0] < pVec->x && pThing->verts[1].pos[0] < pVec->x &&
-        pItem->collisionThing->verts[2].pos[0] < pVec->x) || (pThing->verts[0].pos[0] > pVec1->x &&
-        pItem->collisionThing->verts[1].pos[0] > pVec1->x && pThing->verts[2].pos[0] > pVec1->x)) ||
-        ((pItem->collisionThing->verts[0].pos[2] < pVec->z && pThing->verts[1].pos[2] < pVec->z &&
-        pItem->collisionThing->verts[2].pos[2] < pVec->z) || (pThing->verts[0].pos[2] > pVec1->z &&
-        pItem->collisionThing->verts[1].pos[2] > pVec1->z && pThing->verts[2].pos[2] > pVec1->z)))) {
-        ret = true;
-    }
-    return ret;
+bool CheckItemSphereRay(Item* pItem, Vector* pRayMinPos, Vector* pRayMaxPos) {
+    return (
+        pItem->collisionThing->verts[0].pos[1] < pRayMinPos->y && 
+        pItem->collisionThing->verts[1].pos[1] < pRayMinPos->y && 
+        pItem->collisionThing->verts[2].pos[1] < pRayMinPos->y
+    ) || (
+        pItem->collisionThing->verts[0].pos[1] > pRayMaxPos->y && 
+        pItem->collisionThing->verts[1].pos[1] > pRayMaxPos->y && 
+        pItem->collisionThing->verts[2].pos[1] > pRayMaxPos->y
+    ) || (
+        pItem->collisionThing->verts[0].pos[0] < pRayMinPos->x && 
+        pItem->collisionThing->verts[1].pos[0] < pRayMinPos->x && 
+        pItem->collisionThing->verts[2].pos[0] < pRayMinPos->x
+    ) || (
+        pItem->collisionThing->verts[0].pos[0] > pRayMaxPos->x && 
+        pItem->collisionThing->verts[1].pos[0] > pRayMaxPos->x && 
+        pItem->collisionThing->verts[2].pos[0] > pRayMaxPos->x
+    ) || (
+        pItem->collisionThing->verts[0].pos[2] < pRayMinPos->z && 
+        pItem->collisionThing->verts[1].pos[2] < pRayMinPos->z && 
+        pItem->collisionThing->verts[2].pos[2] < pRayMinPos->z
+    ) || (
+        pItem->collisionThing->verts[0].pos[2] > pRayMaxPos->z && 
+        pItem->collisionThing->verts[1].pos[2] > pRayMaxPos->z && 
+        pItem->collisionThing->verts[2].pos[2] > pRayMaxPos->z
+    );
 }
 
 /// @brief Tests if a collision occurs against a poly from the ray formed by vectors pStart and pEnd

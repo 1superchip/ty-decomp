@@ -5,13 +5,17 @@
 #include "common/Vector.h"
 
 enum Camera_Mode {
-    CM_FIRST = 0,
-    // 
-    CM_COUNT = 3,
+    CM_FIRST    = 0,
+    CM_0        = 0,
+    CM_1        = 1,
+    CM_2        = 2,
+    CM_COUNT    = 3,
 };
 
 enum Camera_Direction {
-
+    CD_0 = 0,
+    CD_1 = 1,
+    CD_2 = 2,
 };
 
 struct KeyMap {
@@ -40,7 +44,7 @@ struct Camera {
     bool Update(InputDevices device, Vector*);
     
     Camera_Mode mode;
-    int unk4;
+    Camera_Direction direction;
     KeyMap* pMap;
     float unkC;
     Vector pos;
