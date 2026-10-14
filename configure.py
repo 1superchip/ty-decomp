@@ -524,7 +524,7 @@ config.libs = [
             Object(Matching, "ty/source/BoundingRegion.cpp"),
             Object(Matching, "ty/source/bunyip.cpp"),
             Object(NonMatching, "ty/source/BushPig.cpp"),
-            Object(NonMatching, "ty/source/checkpoint.cpp"),
+            Object(Matching, "ty/source/checkpoint.cpp"),
             Object(Matching, "ty/source/CollisionObject.cpp"),
             Object(Matching, "ty/source/controlval.cpp"),
             Object(NonMatching, "ty/source/crate.cpp"),

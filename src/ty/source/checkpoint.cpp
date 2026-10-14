@@ -2,9 +2,17 @@
 #include "ty/Hero.h"
 #include "ty/GameObjectManager.h"
 #include "ty/global.h"
+#include "ty/Ty.h"
+
+enum CheckpointAnim {
+    CPA_DORMANT     = 0,
+    CPA_APPEAR      = 1,
+    CPA_DOOROPEN    = 2,
+    CPA_COUNT
+};
 
 static MKAnimScript DunnyBAD;
-static MKAnim* anims[3];
+static MKAnim* anims[CPA_COUNT];
 
 static bool bCheckpointsLoaded = false;
 
@@ -19,9 +27,9 @@ void Checkpoint_LoadResources(KromeIni* pIni) {
     if (!bCheckpointsLoaded) {
         DunnyBAD.Init("Prop_0018_Thunderbox");
 
-        anims[0] = DunnyBAD.GetAnim("dormant");
-        anims[1] = DunnyBAD.GetAnim("appear");
-        anims[2] = DunnyBAD.GetAnim("dooropen");
+        anims[CPA_DORMANT]  = DunnyBAD.GetAnim("dormant");
+        anims[CPA_APPEAR]   = DunnyBAD.GetAnim("appear");
+        anims[CPA_DOOROPEN] = DunnyBAD.GetAnim("dooropen");
 
         LODInfo.Init(pIni, DunnyBAD.GetMeshName());
 
@@ -42,6 +50,11 @@ void Checkpoint_LoadResources(KromeIni* pIni) {
 void CheckpointStruct::Init(GameObjDesc* pDesc) {
     GameObject::Init(pDesc);
 
+    pos.SetZero();
+    rot.SetZero();
+
+    scale = 1.0f;
+
     mAnimScript.Init(&DunnyBAD);
 
     pModel = Model::Create(
@@ -55,6 +68,12 @@ void CheckpointStruct::Init(GameObjDesc* pDesc) {
 
     unk48 = Model::Create("Prop_0092_DunnyRoll", NULL);
     unk48->renderType = 3;
+
+    unk4C = pModel->GetAnimation();
+
+    cameraSource.SetZero();
+
+    mCollisionInfo.Init(true, 2, this);
 
     Reset();
 }
@@ -77,7 +96,41 @@ bool CheckpointStruct::LoadLine(KromeIniLine* pLine) {
 }
 
 void CheckpointStruct::LoadDone(void) {
+    Vector trans = pos;
+    trans.y += 65.0f;
 
+    pModel->matrices[0].Scale(scale);
+    pModel->matrices[0].RotatePYR(&rot);
+    pModel->matrices[0].SetTranslation(&trans);
+
+    unk48->matrices[0].Scale(scale);
+    unk48->matrices[0].RotatePYR(&rot);
+    unk48->matrices[0].SetTranslation(&pos);
+
+    objectManager.AddObject(this, &pModel->matrices[0], NULL);
+
+    checkpointBoundVolume.v1.Set(-200.0f, -600.0f, -200.0f, 0.0f);
+    checkpointBoundVolume.v2.Set(400.0f, 1200.0f, 400.0f, 0.0f);
+
+    pDescriptor->pVolume = &checkpointBoundVolume;
+
+    Vector start = {0.0f, 300.0f, 0.0f};
+    start.Add(pModel->matrices[0].Row3());
+    
+    Vector end = {0.0f, -12300.0f, 0.0f};
+    end.Add(pModel->matrices[0].Row3());
+    
+    CollisionResult cr;
+
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
+        pModel->colour = Tools_GroundColor(&cr);
+    }
+
+    if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
+        unk48->colour = Tools_GroundColor(&cr);
+    }
+
+    Collision_AddDynamicModel(pModel, &mCollisionInfo, -1);
 }
 
 void CheckpointStruct::Draw(void) {
@@ -90,27 +143,44 @@ void CheckpointStruct::Draw(void) {
 }
 
 void CheckpointStruct::Reset(void) {
+    mCollisionInfo.Enable();
     GameObject::Reset();
     SetState(CPS_1);
 }
 
 void CheckpointStruct::Update(void) {
+    float oldRotY = rot.y;
+    float oldScale = scale;
+
     switch (mState) {
-        case CPS_0:
-            return;
         case CPS_1:
             Dormant();
             break;
         case CPS_2:
             Activating();
             break;
-        case CPS_3:
-            return;
         case CPS_4:
             SpringOpen();
             break;
-        case CPS_5:
+        default:
             return;
+    }
+
+    if (oldScale != scale || oldRotY != rot.y) {
+        pos = *pModel->matrices[0].Row3();
+
+        pModel->matrices[0].SetIdentity();
+        pModel->matrices[0].Scale(scale);
+        pModel->matrices[0].RotatePYR(&rot);
+        pModel->matrices[0].SetTranslation(&pos);
+
+        pModel->SetLocalToWorldDirty();
+    }
+
+    Vector sp8 = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y + 80.0f, pModel->matrices[0].Row3()->z};
+
+    if (pHero->IsTy()) {
+        ty.mAutoTarget.Set(TP_1, NULL, NULL, &sp8, pModel);
     }
 }
 
@@ -137,10 +207,36 @@ void CheckpointStruct::Dormant(void) {
 
 void CheckpointStruct::Activating(void) {
     mAnimScript.Animate();
+
+    if (mAnimScript.Condition()) {
+        if (GetPos()->IsInsideSphere(&pHero->pos, 200.0f)) {
+            return;
+        }
+
+        SetState(CPS_3);
+    }
 }
 
 void CheckpointStruct::SpringOpen(void) {
+    switch (unk7C) {
+        case 0:
+            unk88--;
+            if (unk88 <= 0) {
+                unk7C = 1;
+            }
+            break;
+        case 1:
+            mAnimScript.Animate();
+            if (mAnimScript.Condition()) {
+                if (GetPos()->IsInsideSphere(&pHero->pos, 200.0f)) {
+                    return;
+                }
 
+                SetState(CPS_3);
+                mCollisionInfo.Enable();
+            }
+            break;
+    }
 }
 
 void GameCamera_SnapSource(Vector*);
@@ -155,7 +251,7 @@ void CheckpointStruct::SetState(CheckpointState nState) {
 
     switch (mState) {
         case CPS_1:
-            mAnimScript.SetAnim(anims[0]);
+            mAnimScript.SetAnim(anims[CPA_DORMANT]);
             break;
         case CPS_2:
             if (pHero->pLastCheckPoint && pHero->pLastCheckPoint != this) {
@@ -166,7 +262,7 @@ void CheckpointStruct::SetState(CheckpointState nState) {
 
             SoundBank_Play(SFX_CheckPointAppear, NULL, 0);
 
-            mAnimScript.SetAnim(anims[1]);
+            mAnimScript.SetAnim(anims[CPA_APPEAR]);
 
             if (gb.mGameData.IsDirty()) {
                 TyMemCard_AutoSaveGame();
@@ -175,7 +271,7 @@ void CheckpointStruct::SetState(CheckpointState nState) {
         case CPS_3:
             break;
         case CPS_4:
-            mAnimScript.SetAnim(anims[2]);
+            mAnimScript.SetAnim(anims[CPA_DOOROPEN]);
             unk7C = 0;
             unk88 = 60;
             mCollisionInfo.Disable();
