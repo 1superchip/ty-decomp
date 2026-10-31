@@ -96,10 +96,10 @@ void Bilby_Update(void) {
         pCurr->unk38++;
 
         switch (pCurr->mState) {
-            case BS_1:
+            case BilbyState_1:
                 pCurr->Idle();
                 break;
-            case BS_2:
+            case BilbyState_2:
                 pCurr->Rescued();
                 break;
         }
@@ -117,7 +117,7 @@ void Bilby_Draw(void) {
     while (*pBilbies) {
         BilbyStruct* pCurr = *pBilbies;
 
-        if (pCurr->mState > BS_0) {
+        if (pCurr->mState > BilbyState_0) {
             pCurr->mAnimScript.Apply(pCurr->pModel->GetAnimation());
             pCurr->unk124 = pCurr->pModel->Draw(NULL);
             if (pCurr->unk31) {
@@ -137,7 +137,7 @@ void Bilby_Draw(void) {
                 pCurr->pModel2->Draw(NULL);
             }
 
-            if (pCurr->mState == BS_2 && !gb.bOnPauseScreen) {
+            if (pCurr->mState == BilbyState_2 && !gb.bOnPauseScreen) {
                 for (int i = 0; i < ARRAY_SIZE(pCurr->unk84); i++) {
                     Vector pos;
 
@@ -193,7 +193,7 @@ void BilbyStruct::Init(BilbyLoadInfo* loadInfo) {
     );
 
     unk30 = false;
-    mState = BS_1;
+    mState = BilbyState_1;
     unk38 = 0;
     unk31 = true;
 
@@ -268,7 +268,7 @@ void BilbyStruct::Idle(void) {
     if (pHero->IsBushPig()) {
         if (GetPos()->IsInsideSphere(&pHero->pos, pHero->objectRadiusAdjustment)) {
             gb.mGameData.RescueBilby(mType);
-            SetState(BS_2);
+            SetState(BilbyState_2);
         }
     } else {
         Vector centrePos = {
@@ -300,7 +300,7 @@ void BilbyStruct::Idle(void) {
             }
 
             VibrateJoystick(0.8f, 1.0f, 0.17f, 0, 4.0f);
-            SetState(BS_2);
+            SetState(BilbyState_2);
             gb.mGameData.RescueBilby(mType);
         } else {
             ty.mAutoTarget.Set(TP_2, NULL, &centrePos, &lookPos, pModel2);
@@ -427,7 +427,7 @@ void BilbyStruct::Rescued(void) {
         }
 
         if (unk3E > 180) {
-            SetState(BS_0);
+            SetState(BilbyState_0);
         }
 
         if (r27) {
@@ -489,7 +489,7 @@ void Bilby_SetRescued(BilbyType type, bool r4) {
             (*pBilbies)->unk31 = false;
             (*pBilbies)->mCollisionInfo.Disable();
 
-            (*pBilbies)->SetState(BS_0);
+            (*pBilbies)->SetState(BilbyState_0);
 
             if (r4) {
                 SpecialPickupStruct* pEgg = GetThunderEgg(TE_1);

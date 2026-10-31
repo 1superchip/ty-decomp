@@ -312,12 +312,18 @@ void Ty::StartBlendAnimation(MKAnim* pAnim, bool r5) {
     }
 }
 
-void Ty::StartAnimation(MKAnimScript* pAnimScript, MKAnim* pAnim, int r6, bool r7) {
+/// @brief Starts playing an animation on an anim script, optionally blending into it from the current animation.
+/// @param pAnimScript Anim script to start the animation on
+/// @param pAnim Animation to start. If null, the anim script is left unchanged.
+/// @param tweenFrameCount Number of in-between frames to blend over. If greater than 0, the script tweens to
+///                        pAnim. Otherwise the animation is immediately switched to.
+/// @param r7 Unused
+void Ty::StartAnimation(MKAnimScript* pAnimScript, MKAnim* pAnim, int tweenFrameCount, bool r7) {
     unk530 = 0.0f;
     
     if (pAnim) {
-        if (r6 > 0) {
-            pAnimScript->TweenAnim(pAnim, r6);
+        if (tweenFrameCount > 0) {
+            pAnimScript->TweenAnim(pAnim, tweenFrameCount);
         } else {
             pAnimScript->SetAnim(pAnim);
         }
@@ -326,12 +332,17 @@ void Ty::StartAnimation(MKAnimScript* pAnimScript, MKAnim* pAnim, int r6, bool r
     unkF98 = false;
 }
 
-void Ty::StartAnimIfNew(MKAnimScript* pAnimScript, MKAnim* pAnim, int r6, bool r7) {
-    bool a = pAnimScript->currAnim == pAnim;
-    bool b = pAnimScript->unk1C > 0 && pAnimScript->nextAnim == pAnim;
+/// @brief Starts an animation on an anim script unless it is already playing or being tweened to.
+/// @param pAnimScript Anim script to start the animation on
+/// @param pAnim Animation to start
+/// @param tweenFrameCount Number of in-between frames to blend over, passed to Ty::StartAnimation
+/// @param r7 Unused, passed to Ty::StartAnimation
+void Ty::StartAnimIfNew(MKAnimScript* pAnimScript, MKAnim* pAnim, int tweenFrameCount, bool r7) {
+    bool bIsCurrent = pAnimScript->currAnim == pAnim;
+    bool bIsTweeningTo = pAnimScript->tweenFramesRemaining > 0 && pAnimScript->nextAnim == pAnim;
 
-    if (!a && !b) {
-        ty.StartAnimation(pAnimScript, pAnim, r6, r7);
+    if (!bIsCurrent && !bIsTweeningTo) {
+        ty.StartAnimation(pAnimScript, pAnim, tweenFrameCount, r7);
     }
 }
 
@@ -353,6 +364,9 @@ void Ty::UpdateHorzVel(float smoothing) {
 }
 
 extern "C" double atan2(double, double);
+extern "C" inline float atan2f(float y, float x) {
+    return atan2(y, x);
+}
 
 float GameCamera_GetMoveYaw(void);
 
@@ -360,7 +374,7 @@ void Ty::UpdateYaw(float scale) {
     if (!IsJoyPadZero()) {
         float moveYaw = GameCamera_GetMoveYaw();
 
-        unk1414 = atan2(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C());
+        unk1414 = atan2f(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C());
         unk1414 += moveYaw;
         
         unk1414 = NormaliseAngle(unk1414);
@@ -380,7 +394,7 @@ float Ty::GetYawFromJoy(void) {
         return ty.mRot.unk4;
     } else {
         float moveYaw = GameCamera_GetMoveYaw();
-        return -NormaliseAngle(moveYaw + (float)atan2(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C()));
+        return -NormaliseAngle(moveYaw + atan2f(-gb.mJoyPad1.GetUnk58(), gb.mJoyPad1.GetUnk5C()));
     }
 }
 
@@ -520,6 +534,7 @@ void Ty::Init(void) {
         EnableHead(TYH_Normal);
 
         mWaterSlide.Init();
+        unk1A68 = 0.0f;
         tySounds.Init();
         tyBite.Init();
 
@@ -696,6 +711,9 @@ void Ty::Deinit(void) {
     mHeadTurningInfo.mNodeOverride.pAnimation = NULL;
 }
 
+extern void GameCamera_Reset(GameCameraHeroInfo*, int);
+extern void GameCamera_SnapBehindHero(bool, bool);
+
 void Ty::Reset(void) {
     if (pHero->IsTy()) {
         ResetVars();
@@ -703,6 +721,13 @@ void Ty::Reset(void) {
         lastSafePos = pos;
 
         mTyRainbowEffect.Reset();
+
+        GameCamera_Reset(
+            Main_UpdateGlobalGameCameraHeroInfo(),
+            Main_GetCameraDistanceTypeForLevel()
+        );
+
+        GameCamera_SnapBehindHero(true, false);
 
         tyHealth.SetType(HEALTH_TYPE_0);
         tySounds.Reset();

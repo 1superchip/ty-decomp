@@ -6,6 +6,8 @@
 
 //extern void LoadLevel_LoadInt(KromeIniLine*, char*, int*);
 
+#define MAX_TMP_MEM (0x1000)
+
 static ModuleInfo<Platform> platformModuleInfo;
 static void* tempMem;
 static void* pCurrMem = tempMem;
@@ -29,7 +31,7 @@ void TempFree(void* mem) {
 }
 
 void Platform_LoadResources(KromeIni* pIni) {
-    pCurrMem = tempMem = Heap_MemAlloc(0x1000);
+    pCurrMem = tempMem = Heap_MemAlloc(MAX_TMP_MEM);
     
     PlatformDesc defaultPlatformDesc;
     defaultPlatformDesc.Init(&platformModuleInfo, "", "", GOID_Platform, 1);

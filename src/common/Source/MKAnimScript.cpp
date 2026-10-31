@@ -129,8 +129,7 @@ static void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
     pLine = GetStartLine_Fake(&ini);
     while (pLine != NULL) {
         if (pLine->section != NULL) {
-            MKAnimTemplateSection* pTemplateSection = pTemplate->pSection;
-            pCurAnim = &pTemplateSection->anims[pTemplateSection->animCount++];
+            pCurAnim = &pTemplate->pSection->anims[pTemplate->pSection->animCount++];
             pCurAnim->unk0 = AddToStringTable(pStringTable, pLine->section);
             pCurAnim->nmbrOfRanges = 0;
             pCurAnim->pAnimRanges = pRanges;
@@ -142,8 +141,7 @@ static void ParseBadFile(char* arg0, MKAnimScriptTemplate* pTemplate) {
                 SplitLine2(pLine->data);
                 pTemplate->pSection->pAnimName = AddToStringTable(pStringTable, pLine->data);
             } else if (strcmpi(pLine->pFieldName, "anim") == 0) {
-                MKAnimTemplateSection* pTemplateSection = pTemplate->pSection;
-                pCurAnim = &pTemplateSection->anims[pTemplateSection->animCount++];
+                pCurAnim = &pTemplate->pSection->anims[pTemplate->pSection->animCount++];
                 pCurAnim->unk0 = AddToStringTable(pStringTable, pLine->data);
                 pCurAnim->nmbrOfRanges = 0;
                 pCurAnim->cycleType = 0;
@@ -286,7 +284,7 @@ void MKAnimScript::Init(char* pFilename) {
     unk1A = 0;
 
     unk1E = 0;
-    unk1C = 0;
+    tweenFramesRemaining = 0;
 }
 
 // currently this does not inline Init(char*)
@@ -339,7 +337,7 @@ void MKAnimScript::Init(MKAnimScript* pOther) {
     unk18 = 0;
     unk1A = 0;
     unk1E = 0;
-    unk1C = 0;
+    tweenFramesRemaining = 0;
 }
 
 void MKAnimScript::Deinit(void) {
@@ -396,15 +394,15 @@ void MKAnimScript::SetAnim(MKAnim* pMKAnim) {
     unk1E = 0;
     s16 tmp = currAnim->pAnimRanges->unk4;
     unk14 = (tmp != 0) ? 1.0f / (float)tmp : 1.0f;
-    unk1C = 0;
+    tweenFramesRemaining = 0;
     nextAnim = NULL;
     unk18 = 0;
 }
 
-void MKAnimScript::TweenAnim(MKAnim* pToAnim, short arg2) {
+void MKAnimScript::TweenAnim(MKAnim* pToAnim, short tweenFrameCount) {
     nextAnim = pToAnim;
     unk10 = (float)nextAnim->pAnimRanges->startFrame;
-    unk1C = arg2;
+    tweenFramesRemaining = tweenFrameCount;
     unk18 = 0;
 }
 
@@ -414,9 +412,8 @@ void MKAnimScript::Animate(void) {
         float tempC = unkC;
         float fVar1 = tempC + (unk14 * advanceAmount);
         AnimRange* pRange = &currAnim->pAnimRanges[unk1E];
-        MKAnim* pAnim = currAnim;
         if (fVar1 < ((float)pRange->startFrame) || fVar1 > ((float)pRange->endFrame)) {
-            if (unk14 > 0.0f && (unk1E + 1 < pAnim->nmbrOfRanges)) {
+            if (unk14 > 0.0f && (unk1E + 1 < currAnim->nmbrOfRanges)) {
                 AnimRange* pRange = &currAnim->pAnimRanges[++unk1E];
                 float fVar5;
                 fVar1 = (float)pRange->startFrame;
@@ -437,7 +434,7 @@ void MKAnimScript::Animate(void) {
                 }
                 unk14 = fVar5;
             } else {
-                switch (pAnim->cycleType) {
+                switch (currAnim->cycleType) {
                 case CycleType_Stop:
                     unk14 = 0.0f;
                     fVar1 = tempC;
@@ -470,9 +467,9 @@ void MKAnimScript::Animate(void) {
 }
 
 void MKAnimScript::Apply(Animation* pAnimation) {
-    if (unk1C != 0) {
-        pAnimation->Tween(unk10, 1.0f / (float)unk1C);
-        if (--unk1C == 0) {
+    if (tweenFramesRemaining != 0) {
+        pAnimation->Tween(unk10, 1.0f / (float)tweenFramesRemaining);
+        if (--tweenFramesRemaining == 0) {
             SetAnim(nextAnim);
         }
     } else {
@@ -481,9 +478,9 @@ void MKAnimScript::Apply(Animation* pAnimation) {
 }
 
 void MKAnimScript::ApplyNode(Animation* pAnimation, int nodeIndex) {
-    if (unk1C != 0) {
-        pAnimation->TweenNode(unk10, 1.0f / (float)unk1C, nodeIndex);
-        if (--unk1C == 0) {
+    if (tweenFramesRemaining != 0) {
+        pAnimation->TweenNode(unk10, 1.0f / (float)tweenFramesRemaining, nodeIndex);
+        if (--tweenFramesRemaining == 0) {
             SetAnim(nextAnim);
         }
     } else {
@@ -509,7 +506,7 @@ char* MKAnimScript::GetEventByName(char* pName) {
 char* MKAnimScript::GetEvent(int eventIdx) {
     int j = 0;
     s16 iUnkC = unkC;
-    if (currAnim != NULL && iUnkC != unk1A && unk1C == 0) {
+    if (currAnim != NULL && iUnkC != unk1A && tweenFramesRemaining == 0) {
         AnimRange* pRange = &currAnim->pAnimRanges[unk1E];
         for (int i = 0; i < pRange->nmbrOfEvents; i++) {
             if (iUnkC >= pRange->pEvents[i].startEventFrame && iUnkC <= pRange->pEvents[i].endEventFrame && j++ == eventIdx) {
@@ -523,7 +520,7 @@ char* MKAnimScript::GetEvent(int eventIdx) {
 
 bool MKAnimScript::HasLooped(void) {
     return currAnim && (unkC == (float)currAnim->pAnimRanges[0].startFrame) &&
-        (currAnim->pAnimRanges[currAnim->nmbrOfRanges - 1].endFrame == unk1A);
+        (unk1A == currAnim->pAnimRanges[currAnim->nmbrOfRanges - 1].endFrame);
 }
 
 int MKAnimScript::UpdatesUntilFinished(void) {
@@ -532,10 +529,9 @@ int MKAnimScript::UpdatesUntilFinished(void) {
     }
     float fVar3 = currAnim->pAnimRanges[unk1E].endFrame - unkC;
     int start = unk1E + 1;
-
+    
     while (start < currAnim->nmbrOfRanges) {
-        AnimRange* pRange = &currAnim->pAnimRanges[start];
-        fVar3 += pRange->startFrame - pRange->endFrame;
+        fVar3 += currAnim->pAnimRanges[start].startFrame - currAnim->pAnimRanges[start].endFrame;
         start++;
     }
 
@@ -565,12 +561,10 @@ void MKAnimScript::SetAnimKeepingPosition(MKAnim* pMKAnim) {
     if (currAnim != NULL) {
         float fVar1 = 0.0f;
         float fVar2 = 0.0f;
-        int i = 0;
         for (int index = 0; index < currAnim->nmbrOfRanges; index++) {
-            if (i == unk1E) {
+            if (index == unk1E) {
                 fVar2 = fVar1 + (unkC - (float)currAnim->pAnimRanges[index].startFrame);
             }
-            i++;
             fVar1 += currAnim->pAnimRanges[index].endFrame - currAnim->pAnimRanges[index].startFrame;
         }
 
@@ -599,13 +593,12 @@ float MKAnimScript::GetNormalPosition(void) {
         float fVar1 = 0.0f;
         float fVar2 = 0.0f;
         int index = currAnim->nmbrOfRanges;
-        int i = 0;
 
         for (int index = 0; index < currAnim->nmbrOfRanges; index++) {
-            if (i == unk1E) {
+            if (index == unk1E) {
                 fVar2 = fVar1 + (unkC - (float)currAnim->pAnimRanges[index].startFrame);
             }
-            i++;
+            
             fVar1 += currAnim->pAnimRanges[index].endFrame - currAnim->pAnimRanges[index].startFrame;
         }
 
@@ -619,17 +612,15 @@ float MKAnimScript::GetNormalPosition(void) {
 
 float MKAnimScript::GetFrameOfNormalPosition(float arg1, MKAnim* pAnim) {
     float fVar3 = (float)pAnim->unk6 * arg1;
-    int index = 0;
 
     for (int i = 0; i < pAnim->nmbrOfRanges; i++) {
         AnimRange* pRange = &pAnim->pAnimRanges[i];
         float fVar1 = fVar3 + (float)pRange->startFrame;
         
         if (fVar1 < pRange->endFrame) {
-            return pAnim->pAnimRanges[index].startFrame + fVar3;
+            return pAnim->pAnimRanges[i].startFrame + fVar3;
         }
 
-        index++;
         fVar3 -= (float)(pRange->endFrame - pRange->startFrame);
     }
 

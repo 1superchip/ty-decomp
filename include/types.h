@@ -8,7 +8,13 @@ typedef signed long long s64;
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned long u32;
+
+#ifdef mips
+typedef unsigned int size_t;
+#else
 typedef unsigned long size_t;
+#endif
+
 typedef unsigned long long u64;
 
 typedef unsigned short ushort;

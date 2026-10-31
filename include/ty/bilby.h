@@ -9,9 +9,9 @@
 #include "common/Vector.h"
 
 enum BilbyState {
-    BS_0 = 0,
-    BS_1 = 1,
-    BS_2 = 2,
+    BilbyState_0 = 0,
+    BilbyState_1 = 1,
+    BilbyState_2 = 2,
 };
 
 enum BilbyType {

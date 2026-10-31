@@ -449,6 +449,16 @@ struct LearnToDiveData {
     int unk18;
 };
 
+enum BiteState {
+    BS_0 = 0,
+    BS_1 = 1,
+    BS_2 = 2,
+    BS_3 = 3,
+    BS_4 = 4,
+    BS_5 = 5,
+    BS_6 = 6,
+};
+
 struct TyBite {
     StateMachine<TyBite> fsm;
     Matrix unk10[3];
@@ -485,7 +495,60 @@ struct TyBite {
     void Deinit(void);
     void Reset(void);
 
+    bool InAir(Vector*);
+
+    void TurnTy(float ang);
+
+    void ApplyGravity(void);
+
+    void DrawSuperGlow(void);
+
+    // States
+    
+    void InitBiteCharge(void);
+    void BiteCharge(void);
+    void DeinitBiteCharge(void);
+
+    void InitBiteUncharge(void);
+    void BiteUncharge(void);
+    void DeinitBiteUncharge(void);
+
+    void InitSuperBite(void);
+    void SuperBite(void);
+    void DeinitSuperBite(void);
+
+    void InitRolyPoly(void);
+    void RolyPoly(void);
+    void DeinitRolyPoly(void);
+
+    void InitBite(void);
+    void Bite(void);
+    void DeinitBite(void);
+
+    void InitBiteGrowl(void);
+    void BiteGrowl(void);
+    void DeinitBiteGrowl(void);
+
+    void InitDiveBiteStart(void);
+    void DiveBiteStart(void);
+
+    void InitDiveBite(void);
+    void DiveBite(void);
+    void DeinitDiveBite(void);
+
+    void InitDiveBiteToFall(void);
+    void DiveBiteToFall(void);
+    void DeinitDiveBiteToFall(void);
+
+    // End states
+
     bool HasBitten(Model*, Vector*, float);
+
+    bool CheckBitten(Model*);
+
+    void EnableAutoTarget(Model*, bool);
+
+    bool IsTargeting(Model*);
 };
 
 struct WaterSlideManager;
@@ -949,8 +1012,8 @@ struct Ty : Hero {
 
     // Animation related
     void StartBlendAnimation(MKAnim*, bool);
-    void StartAnimation(MKAnimScript*, MKAnim*, int, bool);
-    void StartAnimIfNew(MKAnimScript*, MKAnim*, int, bool);
+    void StartAnimation(MKAnimScript*, MKAnim*, int tweenFrameCount, bool);
+    void StartAnimIfNew(MKAnimScript*, MKAnim*, int tweenFrameCount, bool);
 
     void ProcessAnimationEvents(MKAnimScript*);
     void UpdateAnimation(void);
@@ -1091,6 +1154,17 @@ struct Ty : Hero {
     void EnableHead(TyHeads);
 
     void SetFakeFloor(void);
+
+    // Bite
+    void InitBite(void);
+    void Bite(void);
+    void DeinitBite(void);
+    void EventBite(char*);
+    //
+
+    void AirToWaterTransition(void);
+
+    void SetTyCameraChecks(uint);
 };
 
 extern Ty ty;

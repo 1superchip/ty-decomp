@@ -194,6 +194,10 @@ struct JoyPad {
         return (mNewButtonsPressedThisFrame & tyControl.activeControls[index]);
     }
 
+    bool IsNewlyPressed3(int index) {
+        return (mButtonsPressed & tyControl.activeControls[index]) && !(mPrevButtonsPressed & tyControl.activeControls[index]);
+    }
+
     bool HavePressedButtonsChanged(void) {
         return mButtonsPressed != mPrevButtonsPressed;
     }

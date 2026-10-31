@@ -270,6 +270,10 @@ struct GameData {
         SetDataDirty(true);
     }
 
+    bool CheckChargeBites(void) {
+        return numChargeBites >= 100;
+    }
+
     void SetChargeBites(int count) {
         // Set the charge bite opal count to (count * 100)
         numChargeBites = count * 100;

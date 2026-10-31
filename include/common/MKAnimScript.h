@@ -65,7 +65,9 @@ struct MKAnimScript {
     float unk14;
     short unk18;
     short unk1A;
-    short unk1C; // inbetween frame count (1/unk1C is used as weight for animations)
+    short tweenFramesRemaining; // Number of in-between frames remaining when tweening from currAnim to nextAnim.
+                                // 1 / tweenFramesRemaining is used as the blend weight for the animations.
+                                // 0 when no tween is in progress.
     u16 unk1E;
     
     static float advanceAmount;
@@ -79,7 +81,7 @@ struct MKAnimScript {
     char* GetMeshName(void);
     char* GetAnimName(void);
     void SetAnim(MKAnim*);
-    void TweenAnim(MKAnim* pToAnim, short arg2);
+    void TweenAnim(MKAnim* pToAnim, short tweenFrameCount);
     void Animate(void);
     void Apply(Animation*);
     void ApplyNode(Animation*, int);
@@ -102,7 +104,7 @@ struct MKAnimScript {
         unk18 = 0;
         unk1A = 0;
         unk1E = 0;
-        unk1C = 0;
+        tweenFramesRemaining = 0;
     }
     
     void Reset(void) {
@@ -110,12 +112,12 @@ struct MKAnimScript {
         currAnim = NULL;
         unkC = unk10 = unk14 = 0.0f;
         unk18 = 0;
-        unk1C = 0;
+        tweenFramesRemaining = 0;
         unk1A = 0;
     }
 
     bool Condition(void) {
-        return unk1C == 0 && unk14 == 0.0f;
+        return tweenFramesRemaining == 0 && unk14 == 0.0f;
     }
 };
 

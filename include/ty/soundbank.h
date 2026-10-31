@@ -202,6 +202,9 @@ enum SoundID {
     SFX_OpalCollect = 0xB7,
     SFX_TyDiveBiteHitGround = 0x10C,
     SFX_TyWaterSlideJump = 0x127,
+
+    SFX_TyBiteObject = 0x12B,
+    
     SFX_TySkid = 0x12C,
 
     SFX_TyRangStdHit = 0x171,

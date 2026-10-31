@@ -426,11 +426,11 @@ float Gem::GetMagneticRangeSqr(void) {
     if (pHero->IsTy()) {
         if (ty.mFsm.BiteState()) {
             switch (ty.tyBite.fsm.GetState()) {
-                case 0:
-                case 1:
-                case 2:
-                case 5:
-                case 6:
+                case BS_0:
+                case BS_1:
+                case BS_2:
+                case BS_5:
+                case BS_6:
                     magneticRadius += (ty.tyBite.superBiteCharge / 150.0f) * (500000.0f - magneticRadius);
                     break;
             }
@@ -543,11 +543,11 @@ void Gem::Magnetised(void) {
     } else if (pHero->IsTy()) {
         if (ty.mFsm.BiteState()) {
             switch (ty.tyBite.fsm.GetState()) {
-                case 0:
-                case 1:
-                case 2:
-                case 5:
-                case 6:
+                case BS_0:
+                case BS_1:
+                case BS_2:
+                case BS_5:
+                case BS_6:
                     f31 = 0.25f;
                     break;
             }
