@@ -462,7 +462,7 @@ config.libs = [
             Object(NonMatching, "ty/source/props/LavaBurner.cpp"),
             Object(NonMatching, "ty/source/props/LilyPad.cpp"),
             Object(NonMatching, "ty/source/props/Log.cpp"),
-            Object(NonMatching, "ty/source/props/MobilePlatform.cpp"),
+            Object(Matching, "ty/source/props/MobilePlatform.cpp"),
             Object(NonMatching, "ty/source/props/MorayEel.cpp"),
             Object(NonMatching, "ty/source/props/MusicalIcicle.cpp"),
             Object(NonMatching, "ty/source/props/OpalCollector.cpp"),

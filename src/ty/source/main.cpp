@@ -12,6 +12,7 @@
 #include "ty/Mist.h"
 
 #include "ty/props/AnimatingProp.h"
+#include "ty/props/MobilePlatform.h"
 #include "ty/props/Shatterable.h"
 #include "ty/props/WeatherProp.h"
 
@@ -118,6 +119,7 @@ void Main_LoadStaticResources(void) {
     Shatterable_LoadResources(&ini);
 
     Platform_LoadResources(&ini);
+    MobilePlatform_LoadResources(&ini);
     AnimatingProp_LoadResources(&ini);
 
     TyAttributes_LoadResources(&ini);
