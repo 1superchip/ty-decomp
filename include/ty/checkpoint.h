@@ -58,6 +58,9 @@ struct CheckpointStruct : GameObject {
     MKAnimScript mAnimScript;
 
     TyCollisionInfo mCollisionInfo;
+    
+    int unkCC;
+    int unkD0;
 };
 
 #endif // CHECKPOINT_H
