@@ -96,12 +96,12 @@ bool CheckpointStruct::LoadLine(KromeIniLine* pLine) {
 }
 
 void CheckpointStruct::LoadDone(void) {
-    Vector trans = pos;
-    trans.y += 65.0f;
+    Vector tempPos = pos;
+    tempPos.y += 65.0f;
 
     pModel->matrices[0].Scale(scale);
     pModel->matrices[0].RotatePYR(&rot);
-    pModel->matrices[0].SetTranslation(&trans);
+    pModel->matrices[0].SetTranslation(&tempPos);
 
     unk48->matrices[0].Scale(scale);
     unk48->matrices[0].RotatePYR(&rot);
@@ -114,13 +114,13 @@ void CheckpointStruct::LoadDone(void) {
 
     pDescriptor->pVolume = &checkpointBoundVolume;
 
+    CollisionResult cr;
+    
     Vector start = {0.0f, 300.0f, 0.0f};
     start.Add(pModel->matrices[0].Row3());
     
     Vector end = {0.0f, -12300.0f, 0.0f};
     end.Add(pModel->matrices[0].Row3());
-    
-    CollisionResult cr;
 
     if (Collision_RayCollide(&start, &end, &cr, COLLISION_MODE_POLY, ID_WATER_BLUE)) {
         pModel->colour = Tools_GroundColor(&cr);
@@ -177,10 +177,10 @@ void CheckpointStruct::Update(void) {
         pModel->SetLocalToWorldDirty();
     }
 
-    Vector sp8 = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y + 80.0f, pModel->matrices[0].Row3()->z};
+    Vector lookPos = {pModel->matrices[0].Row3()->x, pModel->matrices[0].Row3()->y + 80.0f, pModel->matrices[0].Row3()->z};
 
     if (pHero->IsTy()) {
-        ty.mAutoTarget.Set(TP_1, NULL, NULL, &sp8, pModel);
+        ty.mAutoTarget.Set(TP_1, NULL, NULL, &lookPos, pModel);
     }
 }
 
